@@ -1,16 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
+import { getAuth } from "firebase/auth";
 import Text from "components/Text";
+import Image from "components/Image";
 import Button from "components/Button";
 import Avatar from "components/Avatar";
 import Wrapper from "components/Wrapper";
 import PageHeader from "components/PageHeader";
 import IconButton from "components/IconButton";
 import AlertDrawer from "components/AlertDrawer";
-import avatar from "assets/images/png/avatar.png";
+// import avatar from "assets/images/png/avatar.png";
+
+type ProfileType = {
+  uid: string | null;
+  displayName: string | null;
+  email: string | null;
+  photoUrl: string | undefined;
+};
+
+const initalValues = {
+  uid: "",
+  displayName: "",
+  email: "",
+  photoUrl: "",
+};
 
 const Profile: React.FC = () => {
   const history = useHistory();
+  const auth = getAuth();
+
+  const [profile, setProfile] = useState<ProfileType>(initalValues);
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user !== null) {
+      // The user object has basic properties such as display name, email, etc.
+      setProfile({
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoUrl: typeof user.photoURL === "string" ? user.photoURL : "",
+      });
+      //  The user's ID, unique to the Firebase project. Do NOT use
+      //  this value to authenticate with your backend server, if
+      // you have one. Use User.getToken() instead.
+      // const uid = user.uid;
+    }
+  }, [auth]);
+
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const closeDrawer = () => {
@@ -62,7 +98,7 @@ const Profile: React.FC = () => {
         >
           <Wrapper justifyContent="center" alignItems="center">
             <Avatar>
-              <img src={avatar} alt="Profile avatar" />
+              <Image src={profile.photoUrl} alt="profile-avatar" />
             </Avatar>
           </Wrapper>
           <Wrapper
@@ -80,7 +116,7 @@ const Profile: React.FC = () => {
                 <span>Full Name</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
-                <p>Contact Name</p>
+                <p>{profile.displayName}</p>
               </Text>
             </Wrapper>
             <Wrapper
@@ -104,7 +140,7 @@ const Profile: React.FC = () => {
                 <span>Email</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
-                <p>example@xyz.com</p>
+                <p>{profile.email}</p>
                 {/* <p>{user?.emails![0]!.address}</p> */}
               </Text>
             </Wrapper>

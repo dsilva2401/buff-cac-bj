@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 // import { logMessage } from '../../utils/index';
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,8 +31,24 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>("");
 
   const handleGoogleAuth = useCallback(() => {
-    history.push("/collection");
-  }, [history]);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
+        console.log("SIGNIN TOKEN: ", token);
+        if (user) history.push("/collection");
+      })
+      .catch((error) => {
+        console.log("ERROR CODE: ", error.code);
+        console.log("ERROR MSG: ", error.message);
+        // // The email of the user's account used.
+        // const email = error.email;
+        // // The AuthCredential type that was used.
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+      });
+  }, [auth, history]);
 
   const handleFacebookAuth = useCallback(() => {
     history.push("/collection");
@@ -72,7 +93,7 @@ const Login: React.FC = () => {
       })
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
-        console.log("ERROR CODE: ", error.message);
+        console.log("ERROR MSG: ", error.message);
         setLoading(false);
       });
   };

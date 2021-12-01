@@ -35,12 +35,12 @@ const SignUp: React.FC = () => {
     if (error !== "") setError("");
     createUserWithEmailAndPassword(auth, email, password)
       .then((result: any) => {
-        console.log(result);
-        history.push("/collection");
+        console.log("SIGNUP: ", result);
+        history.push("/");
       })
       .catch((error: any) => {
         console.log("ERROR CODE: ", error.code);
-        console.log("ERROR CODE: ", error.message);
+        console.log("ERROR MSG: ", error.message);
 
         if (error.code.includes("auth/weak-password")) {
           setError("Please enter a stronger password.");
