@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { getAuth } from "firebase/auth";
 import Text from "components/Text";
@@ -26,13 +27,16 @@ const initalValues = {
 };
 
 const Profile: React.FC = () => {
+  const [profile, setProfile] = useState<ProfileType>(initalValues);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const { t } = useTranslation("translation", { keyPrefix: "profile" });
   const history = useHistory();
   const auth = getAuth();
 
-  const [profile, setProfile] = useState<ProfileType>(initalValues);
   useEffect(() => {
     const user = auth.currentUser;
     if (user !== null) {
+      console.log("USER: ", user)
       // The user object has basic properties such as display name, email, etc.
       setProfile({
         uid: user.uid,
@@ -46,8 +50,6 @@ const Profile: React.FC = () => {
       // const uid = user.uid;
     }
   }, [auth]);
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -113,7 +115,7 @@ const Profile: React.FC = () => {
               justifyContent="flex-start"
             >
               <Text fontSize="0.5rem" color="#98A3AA">
-                <span>Full Name</span>
+                <span>{t("fullName")}</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
                 <p>{profile.displayName}</p>
@@ -125,10 +127,10 @@ const Profile: React.FC = () => {
               justifyContent="flex-start"
             >
               <Text fontSize="0.5rem" color="#98A3AA">
-                <span>Phone Number</span>
+                <span>{t("phoneNumber")}</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
-                <p>XXXX-XXXX-XXX</p>
+                <p></p>
               </Text>
             </Wrapper>
             <Wrapper
@@ -137,7 +139,7 @@ const Profile: React.FC = () => {
               justifyContent="flex-start"
             >
               <Text fontSize="0.5rem" color="#98A3AA">
-                <span>Email</span>
+                <span>{t("email")}</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
                 <p>{profile.email}</p>
@@ -156,10 +158,10 @@ const Profile: React.FC = () => {
         padding="0 1rem 1.5rem"
       >
         <Button theme="light" onClick={() => history.push("/reset-password")}>
-          Reset Password
+          {t("resetPassword")}
         </Button>
         <Button theme="light" warning onClick={() => setIsDrawerOpen(true)}>
-          Delete Account
+          {t("deleteAccount")}
         </Button>
       </Wrapper>
     </Wrapper>

@@ -48,6 +48,23 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     setSuccessDrawer(true);
   };
 
+
+
+  // const handleGoogleAuth = useCallback(() => {
+  //   const provider = new GoogleAuthProvider();
+  //   signInWithPopup(auth, provider)
+  //     .then((result) => setUser(result.user))
+  //     .catch((error) => {
+  //       console.log("ERROR CODE: ", error.code);
+  //       console.log("ERROR MSG: ", error.message);
+  //       // // The email of the user's account used.
+  //       // const email = error.email;
+  //       // // The AuthCredential type that was used.
+  //       // const credential = GoogleAuthProvider.credentialFromError(error);
+  //     });
+  // }, [auth]);
+
+
   useEffect(() => {
     if (successDrawer) {
       setTimeout(() => {

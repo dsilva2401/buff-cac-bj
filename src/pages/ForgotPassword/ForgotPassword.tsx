@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import Wrapper from "components/Wrapper";
 import PageHeader from "components/PageHeader";
+import Wrapper from "components/Wrapper";
 import Button from "components/Button";
 import Input from "components/Input";
 
 const ForgotPassword: React.FC = () => {
-  const history = useHistory();
-
+  const { t } = useTranslation("translation", { keyPrefix: "forgotPassword" });
   const [emailInput, setEmailInput] = useState<string>("");
+  const history = useHistory();
 
   return (
     <Wrapper
@@ -21,7 +22,7 @@ const ForgotPassword: React.FC = () => {
     >
       <PageHeader
         border
-        title="Forgot Password"
+        title={t("pageHeaderTitle")}
         goBack={() => history.push("/")}
       />
       <Wrapper
@@ -43,13 +44,12 @@ const ForgotPassword: React.FC = () => {
           <Input
             type="text"
             value={emailInput}
-            placeholder="Enter email..."
+            placeholder={t("emailInput")}
             onChange={({ target: { value } }) => setEmailInput(value)}
             margin="0 0 1rem"
           />
         </Wrapper>
       </Wrapper>
-
       <Wrapper
         width="100%"
         justifyContent="center"
@@ -57,7 +57,7 @@ const ForgotPassword: React.FC = () => {
         padding="0 1rem 1.5rem"
       >
         <Button theme="dark">
-          <Link to="/">Email me a Link!</Link>
+          <Link to="/">{t("sendEmailLink")}</Link>
         </Button>
       </Wrapper>
     </Wrapper>

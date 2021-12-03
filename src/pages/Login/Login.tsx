@@ -1,10 +1,12 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
+  User,
   getAuth,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { toast } from "react-toastify";
 // import { logMessage } from '../../utils/index';
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -29,26 +31,27 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [token, setToken] = useState<string | undefined>("");
+  const [user, setUser] = useState<User | undefined>(undefined);
+
+  const notify = () => {
+    toast.error("Error Notification !");
+  };
 
   const handleGoogleAuth = useCallback(() => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
-        console.log("SIGNIN TOKEN: ", token);
-        if (user) history.push("/collection");
-      })
+      .then((result) => setUser(result.user))
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
+        notify();
         // // The email of the user's account used.
         // const email = error.email;
         // // The AuthCredential type that was used.
         // const credential = GoogleAuthProvider.credentialFromError(error);
       });
-  }, [auth, history]);
+  }, [auth]);
 
   const handleFacebookAuth = useCallback(() => {
     history.push("/collection");
@@ -69,27 +72,54 @@ const Login: React.FC = () => {
     []
   );
 
-  // if (loading) {
-  //   logMessage('Loading indicator');
-  // }
+  useEffect(() => {
+    async function fetchData() {
+      const token = await user?.getIdToken();
+      setToken(token);
+      console.log("TOKEN: ", token);
+    }
+    if (user) fetchData();
+  }, [user]);
 
-  // if (error) {
-  //   logMessage('There was an error logging in');
-  // }
+  useEffect(() => {
+    if (token) {
+      let myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
 
-  // if (user) {
-  //   history.push('/');
-  // }
+      let raw = JSON.stringify({
+        email: user?.email,
+        phoneNumber: user?.phoneNumber,
+        firstName: user?.displayName,
+        lastName: "",
+      });
+
+      fetch("https://damp-wave-40564.herokuapp.com/auth", {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            history.push("/collection");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR CODE: ", error.code);
+          console.log("ERROR MSG: ", error.message);
+          notify();
+        });
+      setLoading(false);
+    }
+  }, [user, token, history]);
 
   const handleLogin = () => {
     setLoading(true);
     if (error !== "") setError("");
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
-        // Signed in
-        // const user = userCredential.user;
-        console.log(userCredential);
-        history.push("/collection");
+        setUser(userCredential.user);
       })
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
@@ -106,7 +136,7 @@ const Login: React.FC = () => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <PageHeader border title={t("title")} logo={logo} />
+      <PageHeader border title={t("pageHeaderTitle")} logo={logo} />
       <Wrapper
         width="100%"
         height="100%"

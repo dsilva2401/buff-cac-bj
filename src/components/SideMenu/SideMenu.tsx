@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { GlobalContext } from "context";
 import Menu from "./styles";
@@ -15,13 +16,14 @@ import { ReactComponent as External } from "assets/icons/svg/external.svg";
 import { ReactComponent as Collection } from "assets/icons/svg/collection.svg";
 
 const SideMenu: React.FC = () => {
-  const location = useLocation();
-  const history = useHistory();
-  const auth = getAuth();
+  const { t } = useTranslation("translation", { keyPrefix: "sideMenu" });
   const { isMenuOpen, setIsMenuOpen } = useContext(GlobalContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [signedIn, setSignedIn] = useState<boolean>(false);
+  const location = useLocation();
+  const history = useHistory();
+  const auth = getAuth();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -42,7 +44,7 @@ const SideMenu: React.FC = () => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
       });
-      setIsMenuOpen(false);
+    setIsMenuOpen(false);
   }, [setIsMenuOpen, auth, history, error]);
 
   return (
@@ -62,13 +64,13 @@ const SideMenu: React.FC = () => {
           <nav>
             {signedIn ? (
               <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
-                My Profile
+                {t("myProfile")}
                 <Profile />
               </Link>
             ) : null}
-            {location.pathname !== "/collection" ? (
+            {signedIn && location.pathname !== "/collection" ? (
               <Link to="/collection" onClick={() => setIsMenuOpen(false)}>
-                My Collection
+                {t("myCollection")}
                 <Collection />
               </Link>
             ) : null}
@@ -78,23 +80,23 @@ const SideMenu: React.FC = () => {
               rel="noopener noreferrer"
               onClick={() => setIsMenuOpen(false)}
             >
-              Visit Website
+              {t("visitWebsite")}
               <External />
             </a>
             {signedIn ? (
               <Link to="/" onClick={handleLogoutButtonClicked}>
-                Sign Out
+                {t("signOut")}
                 {loading ? <LoadingIndicator /> : <Logout />}
               </Link>
             ) : (
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                Sign In
+                {t("signIn")}
                 <Logout />
               </Link>
             )}
           </nav>
           <span>
-            <Image width="auto" src={brijLogo} alt="Brij logo" />
+            <Image width="auto" src={brijLogo} alt="brij-logo" />
           </span>
         </div>
       </Menu>

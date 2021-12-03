@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CameraIcon } from "assets/icons/svg/camera.svg";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import Avatar from "components/Avatar";
 import Button from "components/Button";
@@ -9,6 +10,7 @@ import PageHeader from "components/PageHeader";
 import avatar from "assets/images/png/avatar.png";
 
 const ProfileEdit: React.FC = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "profileEdit" });
   const history = useHistory();
 
   const [userName, setUserName] = useState<string>("");
@@ -41,7 +43,10 @@ const ProfileEdit: React.FC = () => {
       justifyContent="space-between"
       overflow="auto"
     >
-      <PageHeader title="Profile" goBack={() => history.goBack()} />
+      <PageHeader
+        title={t("pageHeaderTitle")}
+        goBack={() => history.goBack()}
+      />
       <Wrapper
         width="100%"
         height="100%"
@@ -53,29 +58,29 @@ const ProfileEdit: React.FC = () => {
         <Wrapper width="100%" justifyContent="center" alignItems="center">
           <Wrapper width="40%" justifyContent="center" alignItems="center">
             <Avatar>
-              <img src={avatar} alt="Profile avatar" />
+              <img src={avatar} alt="profile-avatar" />
             </Avatar>
           </Wrapper>
           <Wrapper width="60%" justifyContent="center" alignItems="center">
             <Button>
-              <CameraIcon /> Change Image
+              <CameraIcon /> {t("changeImage")}
             </Button>
           </Wrapper>
         </Wrapper>
         <Wrapper width="100%" direction="column" gap="1rem" padding="2rem 0">
           <EditInput
             value={userName}
-            placeholder="Full Name"
+            placeholder={t("fullNameInput")}
             onChange={handleUserName}
           />
           <EditInput
             value={userPhone}
-            placeholder="Phone Number"
+            placeholder={t("phoneNumberInput")}
             onChange={handleUserPhone}
           />
           <EditInput
             value={userEmail}
-            placeholder="Email"
+            placeholder={t("emailInput")}
             onChange={handleUserEmail}
           />
         </Wrapper>
@@ -87,7 +92,7 @@ const ProfileEdit: React.FC = () => {
         padding="1rem"
       >
         <Button theme="dark" onClick={() => history.push("/profile")}>
-          Save Changes
+          {t("saveChanges")}
         </Button>
       </Wrapper>
     </Wrapper>

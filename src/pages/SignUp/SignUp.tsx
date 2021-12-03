@@ -1,6 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import {
+  User,
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import PageHeader from "components/PageHeader";
 import PageFooter from "components/PageFooter";
 import Wrapper from "components/Wrapper";
@@ -14,44 +22,96 @@ import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 
 const SignUp: React.FC = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "signUp" });
   const history = useHistory();
   const auth = getAuth();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [token, setToken] = useState<string | undefined>("");
+  const [user, setUser] = useState<User | undefined>(undefined);
 
-  const logo = <Image width="auto" src={brijLogo} alt="Brij logo" />;
+  const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
 
-  // const validateLogin = () => {
-  //   if (email && password) {
-  //     history.push("/collection");
-  //   }
-  // };
+  const handleGoogleAuth = useCallback(() => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => setUser(result.user))
+      .catch((error) => {
+        console.log("ERROR CODE: ", error.code);
+        console.log("ERROR MSG: ", error.message);
+        // // The email of the user's account used.
+        // const email = error.email;
+        // // The AuthCredential type that was used.
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+      });
+  }, [auth]);
 
   const signUpWithEmailAndPassword = () => {
     setLoading(true);
-    if (error !== "") setError("");
+    if (errorMessage !== "") setErrorMessage("");
     createUserWithEmailAndPassword(auth, email, password)
-      .then((result: any) => {
-        console.log("SIGNUP: ", result);
-        history.push("/");
-      })
-      .catch((error: any) => {
+      .then((result) => setUser(result.user))
+      .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
 
         if (error.code.includes("auth/weak-password")) {
-          setError("Please enter a stronger password.");
+          setErrorMessage("Please enter a stronger password.");
         } else if (error.code.includes("auth/email-already-in-use")) {
-          setError("Email already in use.");
+          setErrorMessage("Email already in use.");
         } else {
-          setError("Unable to register. Please try again later.");
+          setErrorMessage("Unable to register. Please try again later.");
         }
+        toast.error(error);
         setLoading(false);
       });
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const token = await user?.getIdToken();
+      setToken(token);
+    }
+    if (user) fetchData();
+  }, [user]);
+
+  useEffect(() => {
+    if (token) {
+      let myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
+
+      // console.log("GOOGLE USER OBJECT: ", user);
+
+      let raw = JSON.stringify({
+        email: user?.email,
+        phoneNumber: user?.phoneNumber,
+        firstName: user?.displayName,
+        lastName: "",
+      });
+
+      fetch("https://damp-wave-40564.herokuapp.com/auth", {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            history.push("/collection");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR CODE: ", error.code);
+          console.log("ERROR MSG: ", error.message);
+          toast.error(error.message);
+        });
+      setLoading(false);
+    }
+  }, [user, token, history]);
 
   return (
     <Wrapper
@@ -61,7 +121,7 @@ const SignUp: React.FC = () => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <PageHeader border title="Sign Up" logo={logo} />
+      <PageHeader border title={t("pageHeaderTitle")} logo={logo} />
       <Wrapper
         width="100%"
         height="100%"
@@ -79,11 +139,11 @@ const SignUp: React.FC = () => {
           alignItems="center"
           gap="1rem"
         >
-          <Button theme="light" onClick={() => history.push("/collection")}>
-            <GoogleLogo /> Continue with Google
+          <Button theme="light" onClick={handleGoogleAuth}>
+            <GoogleLogo /> {t("googleButton")}
           </Button>
           <Button theme="light" onClick={() => history.push("/collection")}>
-            <FacebookLogo /> Continue with Facebook
+            <FacebookLogo /> {t("facebookButton")}
           </Button>
         </Wrapper>
 
@@ -102,14 +162,14 @@ const SignUp: React.FC = () => {
           <Input
             type="text"
             value={email}
-            placeholder="Enter email..."
+            placeholder={t("emailInput")}
             onChange={({ target: { value } }) => setEmail(value)}
             margin="0 0 1rem"
           />
           <Input
             type="password"
             value={password}
-            placeholder="Enter password..."
+            placeholder={t("passwordInput")}
             onChange={({ target: { value } }) => setPassword(value)}
           />
         </Wrapper>
@@ -118,14 +178,14 @@ const SignUp: React.FC = () => {
             <LoadingIndicator />
           ) : (
             <Button theme="dark" onClick={() => signUpWithEmailAndPassword()}>
-              Sign Up
+              {t("signUpButton")}
             </Button>
           )}
         </Wrapper>
       </Wrapper>
       <PageFooter>
-        <p>Already have a BRIJ account?</p>
-        <Link to={"/"}>Sign in!</Link>
+        <p>{t("existingUser")}</p>
+        <Link to={"/"}>{t("signInLink")}</Link>
       </PageFooter>
     </Wrapper>
   );

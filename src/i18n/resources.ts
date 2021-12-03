@@ -1,8 +1,40 @@
 export const resources = {
   en: {
     translation: {
+      sideMenu: {
+        myProfile: "My Profile",
+        myCollection: "My Collection",
+        visitWebsite: "Visit Website",
+        signOut: "Sign Out",
+        signIn: "Sign In",
+      },
+      profile: {
+        fullName: "Full Name",
+        phoneNumber: "Phone Number",
+        email: "Email",
+        resetPassword: "Reset Password",
+        deleteAccount: "Delete Account",
+      },
+      profileEdit: {
+        pageHeaderTitle: "Profile",
+        changeImage: "Change Image",
+        fullNameInput: "Full Name",
+        phoneNumberInput: "Phone Number",
+        emailInput: "Email",
+        saveChanges: "Save Changes",
+      },
+      signUp: {
+        pageHeaderTitle: "Sign Up",
+        signUpButton: "Sign Up",
+        googleButton: "Continue with Google",
+        facebookButton: "Continue with Facebook",
+        emailInput: "Enter email...",
+        passwordInput: "Enter password...",
+        existingUser: "Already have a BRIJ account?",
+        signInLink: "Sign in!",
+      },
       signIn: {
-        title: "Sign In",
+        pageHeaderTitle: "Sign In",
         signInButton: "Sign In",
         googleButton: "Continue with Google",
         facebookButton: "Continue with Facebook",
@@ -11,6 +43,11 @@ export const resources = {
         forgotPassword: "Forgot Password?",
         newToBrij: "New to BRIJ?",
         signUpLink: "Sign up!",
+      },
+      forgotPassword: {
+        pageHeaderTitle: "Forgot Password",
+        emailInput: "Enter email...",
+        sendEmailLink: "Email me a Link!",
       },
       productDetails: {
         modules: {

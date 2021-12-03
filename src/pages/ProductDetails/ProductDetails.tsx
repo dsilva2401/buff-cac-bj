@@ -1,14 +1,8 @@
-import React, {
-  useCallback,
-  // useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { useParams } from "react-router";
-import { useTranslation } from "react-i18next";
-// import { DataContext } from "../../context/data/DataContext";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useGlobal } from "../../context/global/GlobalContext";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router";
+import { getAuth } from "firebase/auth";
 import RegistrationDrawer from "components/RegistrationDrawer";
 import LoadingIndicator from "components/LoadingIndicator";
 import WarrantyDrawer from "components/WarrantyDrawer";
@@ -39,39 +33,34 @@ enum DrawerPages {
 }
 
 const ProductDetails: React.FC = () => {
-  const [details, setDetails] = useState<ProductDetailsType | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<boolean>(false)
+  const [details, setDetails] = useState<ProductDetailsType | undefined>(
+    undefined
+  );
+  const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
+  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<DrawerPages>(0);
+  const [pageTitle, setPageTitle] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
 
   const { t } = useTranslation("translation", { keyPrefix: "productDetails" });
+  const { setIsMenuOpen } = useGlobal();
   const { id } = useParams<UrlParam>();
-  // const {
-  //   productDetailsError: error,
-  //   productDetailsLoading: loading,
-  //   productDetails: details,
-  //   getProductDetails,
-  // } = useContext(DataContext);
+  const auth = getAuth();
 
   useEffect(() => {
-    if(id) {
-      let product = null
-      product = products.find(product => product.tag.slug === id)
-      product ? setDetails(product) : setError(true)
+    const user = auth.currentUser;
+    setAuthenticated(user !== null ? true : false)
+  }, [auth]);
+
+  useEffect(() => {
+    if (id) {
+      let product: ProductDetailsType | undefined;
+      product = products.find((product) => product.tag.slug === id);
+      product ? setDetails(product) : setError(true);
     }
-    setLoading(false)
-  }, [id])
-
-  const { setIsMenuOpen } = useGlobal();
-
-  const [isDrawerPageOpen, setIsDrawerPageOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<DrawerPages>(0);
-  const [pageTitle, setPageTitle] = useState("");
-
-  // useEffect(() => {
-  //   if (id) {
-  //     getProductDetails(id);
-  //   }
-  // }, [id, getProductDetails]);
+    setLoading(false);
+  }, [id]);
 
   useEffect(() => {
     if (!!details && !isDrawerPageOpen) {
@@ -103,7 +92,7 @@ const ProductDetails: React.FC = () => {
       case DrawerPages.registration:
         return (
           <RegistrationDrawer
-            isAuthenticated={false} //useUser to fetch user's authentication status
+            isAuthenticated={isAuthenticated}
             registrationData={details?.modules.registration}
             closePage={closeDrawerPage}
           />
@@ -139,7 +128,7 @@ const ProductDetails: React.FC = () => {
         return <CustomDrawer drawerData={details?.modules.custom} />;
       // complete missing modules
     }
-  }, [currentPage, closeDrawerPage, details]);
+  }, [currentPage, closeDrawerPage, details, isAuthenticated]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt="brand-logo" maxWidth="110px" />,
