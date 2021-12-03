@@ -6,7 +6,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { toast } from "react-toastify";
 // import { logMessage } from '../../utils/index';
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -34,10 +33,6 @@ const Login: React.FC = () => {
   const [token, setToken] = useState<string | undefined>("");
   const [user, setUser] = useState<User | undefined>(undefined);
 
-  const notify = () => {
-    toast.error("Error Notification !");
-  };
-
   const handleGoogleAuth = useCallback(() => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -45,7 +40,6 @@ const Login: React.FC = () => {
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
-        notify();
         // // The email of the user's account used.
         // const email = error.email;
         // // The AuthCredential type that was used.
@@ -108,7 +102,6 @@ const Login: React.FC = () => {
         .catch((error) => {
           console.log("ERROR CODE: ", error.code);
           console.log("ERROR MSG: ", error.message);
-          notify();
         });
       setLoading(false);
     }

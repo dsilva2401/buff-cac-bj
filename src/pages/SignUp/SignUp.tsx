@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import {
   User,
   getAuth,
@@ -65,7 +64,6 @@ const SignUp: React.FC = () => {
         } else {
           setErrorMessage("Unable to register. Please try again later.");
         }
-        toast.error(error);
         setLoading(false);
       });
   };
@@ -107,7 +105,6 @@ const SignUp: React.FC = () => {
         .catch((error) => {
           console.log("ERROR CODE: ", error.code);
           console.log("ERROR MSG: ", error.message);
-          toast.error(error.message);
         });
       setLoading(false);
     }
