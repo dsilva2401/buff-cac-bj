@@ -80,14 +80,23 @@ export const resources = {
         registrationDrawer: {
           signInDisclaimer:
             "By registering you agree to email communications from Gucci and accept Brij’s Terms & Conditions",
-          signinButton: "Sign in with Email",
-          googleButton: "Continue with Google",
-          facebookButton: "Continue with Facebook",
+          emailRegisterButton: "Register with Email",
+          googleButton: "Register with Google",
+          facebookButton: "Register with Facebook",
           emailInput: "Enter email...",
-          passwordInput: "Enter password...",
           successDrawer: {
             title: "Product Regsitered!",
             description: "Check your email for details",
+          },
+          detailsForm: {
+            title: "Complete your profile",
+            firstNameInput: "Enter first name...",
+            lastNameInput: "Enter last name...",
+            phoneNumberInput: "Enter phone number...",
+            passwordInput: "Enter password...",
+            confirmPasswordInput: "Confirm password...",
+            submitButton: "Submit",
+            doLaterButton: "I'll do this later",
           },
         },
         warrantyDrawer: {
@@ -106,13 +115,18 @@ export const resources = {
           activateDetails: "Activate Warranty",
           detailsModal: {
             activateWarrantyHeading: "Activate Warranty",
+            updateWarrantyHeading: "Update Details",
             description:
               "To activate your warranty please enter the purchase date and upload a dated receipt.",
+            updateDescription:
+              "To update your purchase details, please enter the new purchase date and upload a dated receipt.",
             activateButton: "Activate",
+            updateButton: "Update",
             cancelButton: "Cancel",
           },
           successDrawer: {
             title: "Warranty Activated!",
+            modifiedTitle: "Details Updated!",
             description: "Check your email for details",
           },
         },

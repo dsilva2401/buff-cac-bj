@@ -41,10 +41,6 @@ const SignUp: React.FC = () => {
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
-        // // The email of the user's account used.
-        // const email = error.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
       });
   }, [auth]);
 
@@ -82,7 +78,7 @@ const SignUp: React.FC = () => {
       myHeaders.append("Authorization", `Bearer ${token}`);
       myHeaders.append("Content-Type", "application/json");
 
-      // console.log("GOOGLE USER OBJECT: ", user);
+      console.log("GOOGLE USER OBJECT: ", user);
 
       let raw = JSON.stringify({
         email: user?.email,

@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import Wrapper from "components/Wrapper";
-import DatePicker from "components/DatePicker";
 import { Modal } from "./styles";
-import Text from "components/Text";
-import Button from "components/Button";
+import { useTranslation } from "react-i18next";
+import DatePicker from "components/DatePicker";
 import UploadInput from "components/UploadInput";
-import { useTranslation } from "react-i18next"
+import Wrapper from "components/Wrapper";
+import Button from "components/Button";
+import Text from "components/Text";
 
 type DetailsModalProps = {
   isOpen: boolean;
   close(): void;
+  warrantyActivated: boolean | undefined;
   confirmWarranty(): void;
 };
 
 const DetailsModal: React.FC<DetailsModalProps> = ({
   isOpen,
   close,
+  warrantyActivated,
   confirmWarranty,
 }) => {
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -57,11 +59,15 @@ const DetailsModal: React.FC<DetailsModalProps> = ({
           gap="0.1rem"
         >
           <Text fontSize="1.6rem" fontWeight="700" textAlign="center">
-            <h2>{t('activateWarrantyHeading')}</h2>
+            <h2>
+              {warrantyActivated
+                ? t("updateWarrantyHeading")
+                : t("activateWarrantyHeading")}
+            </h2>
           </Text>
           <Text fontSize="0.8rem" textAlign="center" color="#414149">
             <p>
-              {t('description')}
+              {warrantyActivated ? t("updateDescription") : t("description")}
             </p>
           </Text>
         </Wrapper>
@@ -87,10 +93,10 @@ const DetailsModal: React.FC<DetailsModalProps> = ({
             disabled={!selectedDate || !selectedFile}
             onClick={confirmWarranty}
           >
-            {t('activateButton')}
+            {warrantyActivated ? t("updateButton") : t("activateButton")}
           </Button>
           <Button theme="light" onClick={close}>
-          {t('cancelButton')}
+            {t("cancelButton")}
           </Button>
         </Wrapper>
       </Wrapper>

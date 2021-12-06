@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 export const products: ProductDetailsType[] = [
   {
     tag: {
-      slug: "p1",
+      slug: "qb7f",
     },
     brand: {
       id: uuidv4(),
@@ -55,7 +55,7 @@ export const products: ProductDetailsType[] = [
   },
   {
     tag: {
-      slug: "p2",
+      slug: "y33z",
     },
     brand: {
       id: uuidv4(),
@@ -106,7 +106,7 @@ export const products: ProductDetailsType[] = [
   },
   {
     tag: {
-      slug: "p3",
+      slug: "3xpm",
     },
     brand: {
       id: uuidv4(),
@@ -160,9 +160,28 @@ export const products: ProductDetailsType[] = [
           "This warranty protects your device for 1 year after purchase. Register below to activate your warranty.",
         nextLink: "/collection",
       },
+      // warranty: {
+      //   id: uuidv4(),
+      //   type: "warranty",
+      //   title: "Warranty Activated",
+      //   activated: true,
+      //   banner: "",
+      //   heading: "Care Free",
+      //   description:
+      //     "This warranty can be claimed for up to one year. Register below to activate your warranty now.",
+      //   warrantyStatus: {
+      //     details:
+      //       "Products purchased from an Authorized Retailer are fully warranted against defects in materials and workmanship for 1 year for the original owner. Register this product now to activate its warranty.",
+      //     duration: "1 year",
+      //     status: "Warranty Activated",
+      //     purchaseDate: "March 29, 2021",
+      //     expirationDate: "March 29, 2022",
+      //   },
+      // },
       warranty: {
         id: uuidv4(),
         type: "warranty",
+        title: "Activate Warranty",
         activated: false,
         banner: "",
         heading: "Care Free",
@@ -172,9 +191,9 @@ export const products: ProductDetailsType[] = [
           details:
             "Products purchased from an Authorized Retailer are fully warranted against defects in materials and workmanship for 1 year for the original owner. Register this product now to activate its warranty.",
           duration: "1 year",
-          status: "Warranty Activated",
-          purchaseDate: "March 29, 2021",
-          expirationDate: "March 29, 2022",
+          status: "Activate Warranty",
+          purchaseDate: "",
+          expirationDate: "",
         },
       },
       shop: {
