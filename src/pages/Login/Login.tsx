@@ -34,6 +34,7 @@ const Login: React.FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const handleGoogleAuth = useCallback(() => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => setUser(result.user))

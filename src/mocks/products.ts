@@ -323,4 +323,118 @@ export const products: ProductDetailsType[] = [
       },
     },
   },
+  // {
+  //   tag: {
+  //     slug: "0SVJ"
+  //   },
+  //   brand: {
+  //     id: "phF9A7KcwPSnziL6F",
+  //     image: "/cdn/storage/tmp/JLD4pu4cy8EBF6rvE.png",
+  //     social: {
+  //       phone: "5127311342",
+  //       email: "outeredge@brij.it",
+  //       twitter: "www.twitter.com/outeredge",
+  //       instagram: "www.instagram.com/outeredge",
+  //       facebook: "www.facebook.com/outeredge"
+  //     }
+  //   },
+  //   product: {
+  //     id: "abWhbe4SWvD2Jm6JR",
+  //     name: "Ranger Parka",
+  //     image: {
+  //       _id: "abWhbe4SWvD2Jm6JR",
+  //       name: "1638267820753.png",
+  //       extension: "png",
+  //       ext: "png",
+  //       extensionWithDot: ".png",
+  //       path: "/tmp/abWhbe4SWvD2Jm6JR.png",
+  //       meta: {
+  //         originalName: "ProductImagesinviewer-2.png"
+  //       },
+  //       type: "image/png",
+  //       mime: "image/png",
+  //       mime-type: "image/png",
+  //       size: 3079,
+  //       userId: null,
+  //       versions: {
+  //         original: {
+  //           path: "/tmp/abWhbe4SWvD2Jm6JR.png",
+  //           size: 3079,
+  //           type: "image/png",
+  //           extension:"png"
+  //         }
+  //       },
+  //       _downloadRoute: "/cdn/storage",
+  //       _collectionName: "files",
+  //       isVideo: false,
+  //       isAudio: false,
+  //       isImage: true,
+  //       isText: false,
+  //       isJSON: false,
+  //       isPDF: false,
+  //       _storagePath: "/tmp"
+  //     },
+  //     registered: false,
+  //     ageGateEnabled: false
+  //   },
+  //   modules: {
+  //     registration: {
+  //       _id: "",
+  //       name: "pop up",
+  //       enableIncentive: true,
+  //       couponCode: {
+  //         allocationLimit: "",
+  //         allocationMethod: "",
+  //         customerSelection: "",
+  //         id: "",
+  //         onePerCustomer: false,
+  //         startsAt: "2021-12-01T08:01:00.585Z",
+  //         targetSelection: "",
+  //         targetType: "",
+  //         value: "",
+  //         valueType: "",
+  //         title: "None"
+  //       },
+  //       enableCouponEmail: false,
+  //       ctaShopNow: "gfdggdfg",
+  //       registrationText: "df",
+  //       confirmationText: "gdfgf",
+  //       enablePostRegistration: true,
+  //       postRegistrationCallToAction: "dfgdfgdf",
+  //       postRegistrationBtnLink: "",
+  //       active: true,
+  //       brand: "phF9A7KcwPSnziL6F",
+  //       selectedModule: {
+  //         _id: "",
+  //         action: "",
+  //         brand: "",
+  //         enabled: false,
+  //         whereUsed: [],
+  //         name: "Add new module",
+  //         active: false,
+  //         confirmationText: "",
+  //         couponCode: null,
+  //         enableCouponEmail: false,
+  //         enableIncentive: false,
+  //         enablePostRegistration: false,
+  //         postRegistrationBtnLink: "",
+  //         postRegistrationCallToAction: "",
+  //         registrationText: "",
+  //         postRegistrationCouponCode: null
+  //       },
+  //       whereUsed: ["Ranger Parka"],
+  //       enabled:true
+  //       },
+  //       info: null,
+  //       warranty: null,
+  //       shop: null,
+  //       subscription: null,
+  //       custom: null,
+  //       referral: null,
+  //       sms: null,
+  //       lostAndFound: null,
+  //       link:null
+  //     },
+  //   },
+  // },
 ];

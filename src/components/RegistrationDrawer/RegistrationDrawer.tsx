@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
+  User,
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
@@ -19,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { ReactComponent as Mail } from "assets/icons/svg/mail.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
+import LoadingIndicator from "components/LoadingIndicator";
 
 type RegistrationDrawerProps = {
   isAuthenticated: boolean;
@@ -35,15 +37,18 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(isAuthenticated);
   const [profileComplete, setProfileComplete] = useState<boolean>(false);
-  const [email, setEmail] = React.useState(
+  const [email, setEmail] = useState<string>(
     window.localStorage.getItem("emailForSignIn") || ""
   );
-  const [errorResponse, setErrorResponse] = React.useState("");
+  const [errorResponse, setErrorResponse] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [token, setToken] = useState<string | undefined>("");
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   const history = useHistory();
   const auth = getAuth();
@@ -103,17 +108,59 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   ]);
 
   const handleGoogleAuth = useCallback(() => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        console.log("SIGNIN RESULT: ", result);
-        confirmRegistration();
+        console.log("SIGNIN RESULT: ", result.user);
+        setUser(result.user);
       })
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
       });
   }, [auth]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const token = await user?.getIdToken();
+      setToken(token);
+      console.log("TOKEN: ", token);
+    }
+    if (user) fetchData();
+  }, [user]);
+
+  useEffect(() => {
+    if (token) {
+      let myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Content-Type", "application/json");
+
+      let raw = JSON.stringify({
+        email: user?.email,
+        phoneNumber: user?.phoneNumber,
+        firstName: user?.displayName,
+        lastName: "",
+      });
+
+      fetch("https://damp-wave-40564.herokuapp.com/auth", {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            confirmRegistration();
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR CODE: ", error.code);
+          console.log("ERROR MSG: ", error.message);
+        });
+      setLoading(false);
+    }
+  }, [user, token, history]);
 
   const clearError = () => {
     if (errorResponse !== "") {
@@ -304,12 +351,15 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   return (
     <>
-      <SuccessDrawer
-        isOpen={successDrawer}
-        title={t("successDrawer.title")}
-        description={t("successDrawer.description")}
-        close={closeSuccess}
-      />
+      {loading && <LoadingIndicator />}
+      {!loading && (
+        <SuccessDrawer
+          isOpen={successDrawer}
+          title={t("successDrawer.title")}
+          description={t("successDrawer.description")}
+          close={closeSuccess}
+        />
+      )}
       {!profileComplete && ProfileForm()}
     </>
   );

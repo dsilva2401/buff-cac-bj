@@ -35,6 +35,7 @@ const SignUp: React.FC = () => {
   const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
 
   const handleGoogleAuth = useCallback(() => {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => setUser(result.user))
