@@ -1,159 +1,107 @@
-export type ModuleTypeName =
-  | "warranty"
-  | "shop"
-  | "info"
-  | "sms"
-  | "registration"
-  | "custom";
+export type PossibleModulesType =
+  | 'WARRANTY_MODULE'
+  | 'CUSTOM_MODULE'
+  | 'LINK_MODULE'
+  | 'SHOPPING_MODULE';
 
-export type ModuleBaseType = {
-  /* Indicates the type of module */
-  type: ModuleTypeName;
-  /* Module Id */
+export type ModuleInfoType = {
+  // Find this in Products => modules array
+
+  // Module Id
   id: string;
-  /* Module title. If this doesn't exist, then we should use one in constants from i18n */
-  title?: string;
+  // Module type
+  type: PossibleModulesType;
+  // Sort order is the order in which it is shown in modal screen
+  // sortOrder: number;
+  // If it is lead module, then it should be shown highlighted in primary color
+  // isLeadModule: boolean;
+  // this is action field from the actual module data. All modules will have an action field that refers to name shown in title. We call it title as it is title displayed
+  title: string;
+  // this indicates whether we need an actual login to unlock this module
+  locked: boolean;
+  // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
+  moduleInfo: CustomModuleType | LinkModuleType | WarrantyModuleType | null;
 };
 
-export type ProductInfoModuleType = ModuleBaseType & {
-  /* Product serial number */
-  serialNumber: string;
-  /* Product image */
-  image?: string;
-  /* Product description */
-  description?: string;
-  /* Product features */
-  features?: string[];
+export type CustomModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+
+  // customModule collection
+
+  // content field
+  // @arqam: the content will be html string. We need to render it as an html. It may have image, text, heading etc.
+  content: string;
 };
 
-export type RegistrationModuleType = ModuleBaseType & {
-  /* Registration banner */
-  banner?: string;
-  /* Warranty heading text below the banner */
-  heading?: string;
-  /* Warranty description */
-  description: string;
-  /* Link to redirect to after registration */
-  nextLink?: string;
-};
+export type LinkModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+  // leadModule collection
 
-export type WarrantyModuleType = ModuleBaseType & {
-  /* Is warranty active? */
-  activated: boolean;
-  /* Banner image */
-  banner: string;
-  /* The heading text directly below the banner */
-  heading: string;
-  /* Description below banner image */
-  description: string;
-  warrantyStatus: {
-    /* Details of warranty shown in warranty status page */
-    details: string;
-    /* Duration of warranty */
-    duration: string;
-    /* Status of warranty */
-    status: string;
-    /* Purchase date */
-    purchaseDate?: string;
-    /* Expiration date */
-    expirationDate?: string;
-    /* receiptRequired true indicates receipt uploader should be shown */
-    receiptRequired?: boolean;
-  };
-};
-
-export type ShoppingVaraintOptionsType = {
-  /* name and values for available variant options  */
-  options: {
-    name: string;
-    value: string;
-  }[];
-  /* link to the checkout page of the product */
-  checkoutUri: string;
-  /* comparator string to make comparisions within the frontend */
-  variantComparatorStr: string;
-  /* image for a specific product variant */
-  image: string;
-  /* available quantity for a specific product variant */
-  inventoryQuantity?: number;
-  /* price of a specific product variant */
-  price: number;
-  /* indicates if a specific product variant is available for sale */
-  availableForSale: boolean;
-  /* hash of the variant to verify integrity */
-  objectHash: string;
-};
-
-export type ShoppingModuleType = ModuleBaseType & {
-  shoppingVariantDetails: {
-    /* available options for product variants and their values */
-    allOptions: {
-      name: string;
-      values: string[];
-    }[];
-    /* default image to show if no variant is selected */
-    productImage: string;
-    /* any available percentage of discount */
-    discount?: number;
-    /* data for any valid variant of the product */
-    validVariantOptions: ShoppingVaraintOptionsType[];
-  };
-  /* meta data for the variant */
-  meta?: {
-    /* time taken to load form */
-    timeTaken?: string;
-    /* fetch source */
-    source?: string;
-  };
-};
-
-export type SubscriptionModuleType = ModuleBaseType &
-  ShoppingModuleType & {
-    subscriptionDetails: {
-      /* Shopping plan Id */
-      id: string;
-      /* Description of subscription option e.g. Every 10 days */
-      description: string;
-      /* Indicates whether this is selected by default in radio box */
-      selected: boolean;
-    }[];
-  };
-
-export type CustomModuleType = ModuleBaseType & {
-  /* html for custom module's content */
-  html: string;
-};
-
-export type ReferralModuleType = ModuleBaseType & {
-  banner: string;
-  description: string;
-  referralUri: string;
-  qrCode: string;
-};
-
-export type SMSModuleType = ModuleBaseType & {
-  banner: string;
-  details: string;
-  sendSmsUri: string;
-};
-
-export type LostAndFoundModuleType = ModuleBaseType & {
-  // TODO
-};
-
-export type LinkModuleType = ModuleBaseType & {
+  // link refers to destination field
+  // @arqam: This will be a url which when the user clicks will go directly to this page
   link: string;
 };
 
+export type WarrantyModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+  // Find this in warrantyModule collection
+
+  // details field
+  details: string;
+
+  // period field
+  period: number;
+
+  // duration
+  duration: string;
+
+  // This field should be stored prob. under user -> profile -> warranty object and created when user registers for warranty
+  activated: boolean;
+
+  // same as above, created when user called activateWarranty mutation. If not set, returned undefined
+  purchaseDate?: string; // UTC timestamp
+
+  // same as above, created and set when user called activateWarranty mutation, If not set, it is undefined
+  // expirationDate = purchaseDate + period duration
+  expirationDate?: string; // UTC timestamp
+};
+
+export type ShoppingModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+
+  // You will get productId from shoppingModule collection
+  // You will get rest of details from shopping microservice by passing this id
+
+  // image of the lead product
+  image: string;
+  discountedPrice: string;
+  price: string;
+  name: string;
+  defaultQuantity: number;
+  checkoutUri: string;
+  details?: {
+    key: string;
+    possibleValues: string[];
+    defaultValue: string;
+  }[];
+};
+
 export type ProductDetailsType = {
+  // @manoj: Find this in Tag => slug
+  // brand refers to brandId which is userId in Users collection
+  // product refers to productId which is _id in Products collection
   tag: {
     slug: string;
   };
+  // Find this data in  Users => profile
   brand: {
     id: string;
+    // @manoj: Construct complete image url from Image object and set value to it.
     image: string;
     name: string;
     social: {
+      // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
+      // Otherwise, set phone is undefined. Similarly for others
       phone?: string;
       email?: string;
       twitter?: string;
@@ -161,44 +109,20 @@ export type ProductDetailsType = {
       facebook?: string;
     };
   };
+  // Find this data in Products
   product: {
     id: string;
     name: string;
+    // @manoj: same as brand image i.e. construct and send a full url
     image: string;
+    // @sush: I need to clarify where to get this from. For now, just set it to false
     registered: boolean;
-    ageGateEnabled?: boolean;
+    // ageGate field in document
+    ageGateEnabled: boolean;
   };
-  modules: {
-    // List all possible modules and their types
-
-    /* Registration module */
-    registration?: RegistrationModuleType;
-
-    /* Info module */
-    info?: ProductInfoModuleType;
-
-    /* Warranty module */
-    warranty?: WarrantyModuleType;
-
-    /* Shopping module */
-    shop?: ShoppingModuleType;
-
-    /* Subscription module */
-    subscription?: SubscriptionModuleType;
-
-    /* Custom module */
-    custom?: CustomModuleType;
-
-    /* Referral module */
-    referral?: ReferralModuleType;
-
-    /* SMS module */
-    sms?: SMSModuleType;
-
-    /* Lost and Found module */
-    lostAndFound?: LostAndFoundModuleType;
-
-    /* Link Module */
-    link?: LinkModuleType;
-  };
+  // @arqam: modules will now be sent as an array of ModulesUnion type
+  // You need to loop through it to check what kind of module it is and then
+  // get resulting info. Also sort order indicates the order in which it is shown
+  // leadModule = true is the first module that should be shown
+  modules: ModuleInfoType[];
 };

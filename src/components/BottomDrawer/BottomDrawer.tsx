@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { ReactComponent as Close } from "assets/icons/svg/close.svg";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import Text from "components/Text";
-import Image from "components/Image";
-import Button from "components/Button";
-import DrawerMask from "components/DrawerMask";
+import { ReactComponent as LockBlack } from "assets/icons/svg/lock-black.svg";
+import { PageStateType } from "context/global/GlobalContext";
+import { GlobalContext } from "context";
+import { useHistory } from "react-router";
 import {
   Drawer,
   DrawerBody,
@@ -12,20 +13,42 @@ import {
   DrawerHeader,
   DrawerIconLink,
 } from "./styles";
-import { ReactComponent as Close } from "assets/icons/svg/close.svg";
-import phoneCallIcon from "assets/icons/svg/social_phone-call.svg";
+import Text from "components/Text";
+import Image from "components/Image";
+import Button from "components/Button";
+import Wrapper from "components/Wrapper";
+import DrawerMask from "components/DrawerMask";
 import emailIcon from "assets/icons/svg/social_email.svg";
 import twitterIcon from "assets/icons/svg/social_twitter.svg";
 import instagramIcon from "assets/icons/svg/social_instagram.svg";
+import phoneCallIcon from "assets/icons/svg/social_phone-call.svg";
 import facebookIcon from "assets/icons/svg/social_facebook.svg";
-import Wrapper from "components/Wrapper";
+
+type ButtonType = {
+  title: string | undefined;
+  onClick: () => void;
+  isHighlight: boolean;
+  locked: boolean;
+  pageState: PageStateType;
+};
+
+type SocialsType =
+  | {
+      phone?: string | undefined;
+      email?: string | undefined;
+      twitter?: string | undefined;
+      instagram?: string | undefined;
+      facebook?: string | undefined;
+    }
+  | undefined;
 
 type BottomDrawerProps = {
-  title: string;
+  title: string | undefined;
   children: React.ReactNode;
   isChildOpen: boolean;
   closeChild: () => void;
-  buttons: { title: string; onClick(): void; isHighlight: boolean }[];
+  buttons: ButtonType[] | null;
+  socials: SocialsType;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -34,7 +57,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   isChildOpen,
   closeChild,
   buttons,
+  socials,
 }) => {
+  const history = useHistory();
+  const context = useContext(GlobalContext);
   const topHeight = -window.innerHeight * 0.85;
   const bottomHeight = -window.innerHeight * 0.3;
 
@@ -117,7 +143,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             <DrawerBody id="not-draggable">
               {!isDrawerOpen && (
                 <>
-                  {buttons.map((button) => {
+                  {buttons?.map((button) => {
                     if (button.isHighlight) {
                       return (
                         <Button
@@ -125,9 +151,17 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           onClick={() => {
                             setPosition({ ...position, y: topHeight });
                             button.onClick();
+                            if (button.pageState)
+                              context.setPageState(button.pageState);
                           }}
                         >
                           {button.title}
+                          {button.locked && (
+                            <LockBlack
+                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
+                              width="20px"
+                            />
+                          )}
                         </Button>
                       );
                     }
@@ -141,55 +175,71 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </Button>
                 </>
               )}
-              {isDrawerOpen ? (
-                isChildOpen ? (
-                  children
-                ) : (
-                  buttons.map((button) => {
-                    return (
-                      <Button
-                        key={button.title}
-                        theme={button.isHighlight ? "dark" : "light"}
-                        onClick={() => button.onClick()}
-                      >
-                        {button.title}
-                      </Button>
-                    );
-                  })
-                )
-              ) : (
-                <></>
-              )}
+              {isDrawerOpen &&
+                (isChildOpen
+                  ? children
+                  : buttons?.map((button) => {
+                      return (
+                        <Button
+                          key={button.title}
+                          theme={button.isHighlight ? "dark" : "light"}
+                          onClick={() => {
+                            if (button.locked) history.push("/");
+                            else button.onClick();
+                            if (button.pageState)
+                              context.setPageState(button.pageState);
+                          }}
+                        >
+                          {button.title}
+                          {button.locked && (
+                            <LockBlack
+                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
+                              width="20px"
+                            />
+                          )}
+                        </Button>
+                      );
+                    }))}
             </DrawerBody>
             {!isChildOpen && (
               <DrawerFooter>
-                <DrawerIconLink href="tel:+">
-                  <Image src={phoneCallIcon} alt="Phone icon" />
-                </DrawerIconLink>
-                <DrawerIconLink href="mailto:">
-                  <Image src={emailIcon} alt="Envelope icon" />
-                </DrawerIconLink>
-                <DrawerIconLink
-                  href="http://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image src={twitterIcon} alt="Twitter icon" />
-                </DrawerIconLink>
-                <DrawerIconLink
-                  href="http://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image src={instagramIcon} alt="Instagram Icon" />
-                </DrawerIconLink>
-                <DrawerIconLink
-                  href="http://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image src={facebookIcon} alt="Facebook icon" />
-                </DrawerIconLink>
+                {socials?.phone && (
+                  <DrawerIconLink href={`tel:+${socials.phone}`}>
+                    <Image src={phoneCallIcon} alt="phone-icon" />
+                  </DrawerIconLink>
+                )}
+                {socials?.email && (
+                  <DrawerIconLink href={`mailto:${socials?.email}`}>
+                    <Image src={emailIcon} alt="email-icon" />
+                  </DrawerIconLink>
+                )}
+                {socials?.twitter && (
+                  <DrawerIconLink
+                    href={`http://${socials?.twitter}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src={twitterIcon} alt="twitter-icon" />
+                  </DrawerIconLink>
+                )}
+                {socials?.instagram && (
+                  <DrawerIconLink
+                    href={`http://${socials?.instagram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src={instagramIcon} alt="instagram-icon" />
+                  </DrawerIconLink>
+                )}
+                {socials?.facebook && (
+                  <DrawerIconLink
+                    href={`http://${socials?.facebook}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src={facebookIcon} alt="facebook-icon" />
+                  </DrawerIconLink>
+                )}
               </DrawerFooter>
             )}
           </Wrapper>

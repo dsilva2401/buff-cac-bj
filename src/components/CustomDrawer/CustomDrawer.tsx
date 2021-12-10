@@ -12,7 +12,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ drawerData }) => {
       gap="0.75rem"
       direction="column"
       padding="0 0.5rem"
-      dangerouslySetInnerHTML={{ __html: drawerData.html }}
+      dangerouslySetInnerHTML={{ __html: drawerData.content }}
     />
   );
 };

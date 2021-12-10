@@ -47,6 +47,6 @@ export const transformProductDetailsObj = (
         facebook: facebookEnable ? facebookURL : null,
       },
     },
-    modules: {},
+    modules: [],
   };
 };

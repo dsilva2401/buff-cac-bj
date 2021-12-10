@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 import {
   User,
   getAuth,
@@ -7,6 +13,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 // import { logMessage } from '../../utils/index';
+import { GlobalContext } from "context";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageFooter from "components/PageFooter";
@@ -23,15 +30,22 @@ import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
+  const context = useContext(GlobalContext);
   const history = useHistory();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [redirect, setRedirect] = useState<string>(
+    context.signInRedirect || ""
+  );
   const [error, setError] = useState<string>("");
   const [token, setToken] = useState<string | undefined>("");
   const [user, setUser] = useState<User | undefined>(undefined);
+
+  console.log("GLOBAL PAGE STATE: ", context.pageState);
+  console.log("GLOBAL REDIRECT STATE: ", context.signInRedirect);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);
@@ -97,7 +111,10 @@ const Login: React.FC = () => {
       })
         .then((response) => {
           if (response.status === 200) {
-            history.push("/collection");
+            if (redirect) {
+              console.log("REDIRECT LINK: ", redirect);
+              history.push(redirect);
+            } else history.push("/collection");
           }
         })
         .catch((error) => {
@@ -106,7 +123,7 @@ const Login: React.FC = () => {
         });
       setLoading(false);
     }
-  }, [user, token, history]);
+  }, [user, token, history, context, redirect]);
 
   const handleLogin = () => {
     setLoading(true);

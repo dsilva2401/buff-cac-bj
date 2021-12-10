@@ -1,20 +1,24 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useGlobal } from "../../context/global/GlobalContext";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+} from "react";
+import { productDataWithoutUserToken as productNoToken } from "mocks/products";
+import { productDataWithUserToken as productToken } from "mocks/products";
 import { ProductDetailsType } from "types/ProductDetailsType";
-import { products } from "../../mocks/products";
-import { useTranslation } from "react-i18next";
+import { PageStateType } from "context/global/GlobalContext";
 import { useParams } from "react-router";
+import { GlobalContext } from "context";
 import { getAuth } from "firebase/auth";
-import RegistrationDrawer from "components/RegistrationDrawer";
 import LoadingIndicator from "components/LoadingIndicator";
 import WarrantyDrawer from "components/WarrantyDrawer";
 import CustomDrawer from "components/CustomDrawer";
 import BottomDrawer from "components/BottomDrawer";
-import ShopDrawer from "components/ShopDrawer";
+import LinkModule from "components/LinkModule";
 import IconButton from "components/IconButton";
-import InfoDrawer from "components/InfoDrawer";
 import PageHeader from "components/PageHeader";
-import SmsDrawer from "components/SmsDrawer";
 import Wrapper from "components/Wrapper";
 import Image from "components/Image";
 
@@ -22,14 +26,13 @@ type UrlParam = {
   id: string;
 };
 
-enum DrawerPages {
-  registration,
-  warranty,
-  custom,
-  shop,
-  info,
-  sms,
-}
+type ButtonType = {
+  title: string | undefined;
+  onClick: () => void;
+  isHighlight: boolean;
+  locked: boolean;
+  pageState: PageStateType;
+};
 
 const ProductDetails: React.FC = () => {
   const [details, setDetails] = useState<ProductDetailsType | undefined>(
@@ -37,17 +40,15 @@ const ProductDetails: React.FC = () => {
   );
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<DrawerPages>(0);
-  const [pageTitle, setPageTitle] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const { t } = useTranslation("translation", { keyPrefix: "productDetails" });
-  const { setIsMenuOpen } = useGlobal();
+  const [pageTitle, setPageTitle] = useState<string | undefined>("");
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const context = useContext(GlobalContext);
   const { id } = useParams<UrlParam>();
   const auth = getAuth();
 
   // either to load data from local source or from an API call
-  const localDataSource = true;
+  const localDataSource = false;
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -58,99 +59,103 @@ const ProductDetails: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      let product: ProductDetailsType | undefined;
-      if (localDataSource === true) {
-        product = products.find((product) => product.tag.slug === id);
-        product ? setDetails(product) : setError(true);
+      if (localDataSource) {
+        if (isAuthenticated) {
+          setDetails(productToken);
+        }
+        setDetails(productNoToken);
       } else {
-        // let myHeaders = new Headers();
-        // let raw = "";
-        // fetch(`https://damp-wave-40564.herokuapp.com/product/${id}`, {
-        //   method: "GET",
-        //   headers: myHeaders,
-        //   body: raw,
-        //   redirect: "follow",
-        // })
-        //   .then((result) => {
-        //     setDetails(result.body)
-        //   })
-        //   .catch((error) => {
-        //     console.log("ERROR CODE: ", error.code);
-        //     console.log("ERROR MSG: ", error.message);
-        //   });
+        fetch(`https://damp-wave-40564.herokuapp.com/products/${id}`, {
+          method: "GET",
+          redirect: "follow",
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            setDetails(result);
+          })
+          .catch((error) => {
+            console.log("ERROR CODE: ", error.code);
+            console.log("ERROR MSG: ", error.message);
+          });
       }
     }
-    setLoading(false);
-  }, [id, localDataSource]);
+  }, [id, localDataSource, isAuthenticated]);
 
   useEffect(() => {
     if (!!details && !isDrawerPageOpen) {
-      setPageTitle(details.product.name);
+      setPageTitle(details?.product.name);
     }
-  }, [isDrawerPageOpen, details]);
+  }, [isDrawerPageOpen, details, currentPage]);
 
   const closeDrawerPage = useCallback(() => {
+    setCurrentPage(0);
     setIsDrawerPageOpen(false);
   }, []);
 
   const changeDrawerPage = useCallback(
-    (
-      page: "warranty" | "shop" | "info" | "sms" | "registration" | "custom"
-    ) => {
-      setIsDrawerPageOpen(true);
-      setPageTitle(
-        page !== "shop"
-          ? details?.modules[page]?.title || t(`modules.${page}.title`)
-          : ""
-      );
-      setCurrentPage(DrawerPages[page]);
+    (index, moduleType) => {
+      setCurrentPage(index);
+      setIsDrawerPageOpen(moduleType !== "LINK_MODULE");
+      if (moduleType !== "LINK_MODULE")
+        setPageTitle(details?.modules[index].title);
     },
-    [details, t]
+    [details]
   );
 
-  const renderDrawerPage = useCallback(() => {
-    switch (currentPage) {
-      case DrawerPages.registration:
-        return (
-          <RegistrationDrawer
-            isAuthenticated={isAuthenticated}
-            registrationData={details?.modules.registration}
-            setPageTitle={setPageTitle}
-            closePage={closeDrawerPage}
-          />
-        );
-      case DrawerPages.warranty:
-        return (
-          <WarrantyDrawer
-            isAuthenticated={isAuthenticated}
-            warrantyActivated={details?.modules.warranty?.activated}
-            closePage={closeDrawerPage}
-            warrantyData={details?.modules.warranty}
-          />
-        );
-      case DrawerPages.shop:
-        return (
-          <ShopDrawer
-            product={details?.product}
-            data={details?.modules.shop}
-            closePage={closeDrawerPage}
-          />
-        );
-      case DrawerPages.info:
-        return (
-          <InfoDrawer
-            productInfo={details?.modules.info}
-            product={details?.product}
-            closePage={closeDrawerPage}
-          />
-        );
-      case DrawerPages.sms:
-        return <SmsDrawer smsModuleData={details?.modules.sms} />;
-      case DrawerPages.custom:
-        return <CustomDrawer drawerData={details?.modules.custom} />;
-      // complete missing modules
+  let buttonsArray = useMemo(() => {
+    let arr: ButtonType[] = [];
+    if (details) {
+      for (let x = 0; x < details?.modules?.length; x++) {
+        if (details?.modules[x]?.locked) {
+          context.setSignInRedirect(`/product/${id}`);
+        }
+        let buttonObject: ButtonType = {
+          title: details?.modules[x].title,
+          onClick: () => changeDrawerPage(x, details.modules[currentPage].type),
+          isHighlight: x === 0,
+          locked: details?.modules[x].locked,
+          pageState: {
+            currentPage: x,
+            isDrawerOpen: true,
+            pageTitle: details?.modules[x].title,
+          },
+        };
+        arr.push(buttonObject);
+      }
     }
-  }, [currentPage, closeDrawerPage, details, isAuthenticated]);
+    return arr;
+  }, [changeDrawerPage, id, context, details, currentPage]);
+
+  const renderDrawerPage = useCallback(() => {
+    if (details) {
+      let moduleType: string | undefined = details?.modules[currentPage]?.type;
+      switch (moduleType) {
+        case "CUSTOM_MODULE":
+          return (
+            <CustomDrawer
+              drawerData={details?.modules[currentPage]?.moduleInfo}
+            />
+          );
+        case "WARRANTY_MODULE":
+          return (
+            <WarrantyDrawer
+              closePage={closeDrawerPage}
+              warrantyActivated={false}
+              warrantyData={details?.modules[currentPage]?.moduleInfo}
+            />
+          );
+        case "LINK_MODULE":
+          return (
+            <LinkModule
+              closePage={closeDrawerPage}
+              moduleData={details?.modules[currentPage]?.moduleInfo}
+            />
+          );
+        default:
+          return null;
+      }
+    }
+  }, [currentPage, closeDrawerPage, details]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt="brand-logo" maxWidth="110px" />,
@@ -158,8 +163,8 @@ const ProductDetails: React.FC = () => {
   );
 
   const handleOpenMenuClicked = useCallback(
-    () => setIsMenuOpen(true),
-    [setIsMenuOpen]
+    () => context.setIsMenuOpen(true),
+    [context]
   );
 
   const menuButton = useMemo(
@@ -175,67 +180,30 @@ const ProductDetails: React.FC = () => {
     [handleOpenMenuClicked]
   );
 
-  const buttonsArray = useMemo(
-    () => [
-      {
-        title: details?.modules.registration?.title || "Product Regsitration",
-        onClick: () => changeDrawerPage("registration"),
-        isHighlight: true,
-      },
-      {
-        title: details?.modules.info?.title || "Product Info & Care",
-        onClick: () => changeDrawerPage("info"),
-        isHighlight: false,
-      },
-      {
-        title:
-          details?.modules.warranty?.warrantyStatus.status ||
-          "Activate Warranty",
-        onClick: () => changeDrawerPage("warranty"),
-        isHighlight: false,
-      },
-      {
-        title: details?.modules.shop?.title || "Shop the Collection",
-        onClick: () => changeDrawerPage("shop"),
-        isHighlight: false,
-      },
-      {
-        title: details?.modules.sms?.title || "Become a Canopy Club VIP",
-        onClick: () => changeDrawerPage("sms"),
-        isHighlight: false,
-      },
-      {
-        title: details?.modules.custom?.title || "Custom Drawer",
-        onClick: () => changeDrawerPage("custom"),
-        isHighlight: false,
-      },
-    ],
-    [details, changeDrawerPage]
-  );
-
-  if (error) {
-    // TODO: Write component for showing error modal
-    // create error component here with msg
-
-    //create an alert (component already exists)
-    return <div>Error</div>;
-  }
+  // useEffect(() => {
+  //   if(context?.pageState !== null) {
+  //     setCurrentPage(context?.pageState?.currentPage);
+  //     setIsDrawerPageOpen(context?.pageState?.isDrawerOpen);
+  //     setPageTitle(context?.pageState?.pageTitle);
+  //     context.setPageState(null);
+  //   }
+  // }, [context?.pageState, context])
 
   return (
     <>
-      <Wrapper
-        width="100%"
-        height="100%"
-        direction="column"
-        justifyContent="space-between"
-        overflow="auto"
-      >
-        {loading ? (
-          <LoadingIndicator />
-        ) : (
-          <>
+      {!details ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <Wrapper
+            width="100%"
+            height="100%"
+            direction="column"
+            justifyContent="space-between"
+            overflow="auto"
+          >
             <PageHeader
-              logo={logo(details?.brand.image ?? "")}
+              logo={logo(details?.brand?.image ?? "")}
               actionButton={menuButton}
               border={false}
             />
@@ -247,19 +215,20 @@ const ProductDetails: React.FC = () => {
               padding="2rem 1rem"
               responsiveImg
             >
-              <Image src={details?.product.image} alt="product" />
+              <Image src={details?.product?.image} alt="product" />
             </Wrapper>
-          </>
-        )}
-      </Wrapper>
-      <BottomDrawer
-        title={pageTitle}
-        buttons={buttonsArray}
-        isChildOpen={isDrawerPageOpen}
-        closeChild={closeDrawerPage}
-      >
-        {renderDrawerPage()}
-      </BottomDrawer>
+          </Wrapper>
+          <BottomDrawer
+            title={pageTitle}
+            buttons={buttonsArray}
+            socials={details?.brand?.social}
+            isChildOpen={isDrawerPageOpen}
+            closeChild={closeDrawerPage}
+          >
+            {renderDrawerPage()}
+          </BottomDrawer>
+        </>
+      )}
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { ProductDetailsType } from '../types/ProductDetailsType';
-import { products } from './products';
+import { productDataWithUserToken } from './products';
 
 export type CollectionDetailsType =
   | {
@@ -11,7 +11,7 @@ export type CollectionDetailsType =
 export const initialData: CollectionDetailsType = [
   {
     brand: 'Gucci',
-    products: products,
+    products: [productDataWithUserToken],
   },
 ];
 

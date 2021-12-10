@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext } from "react";
 
 export type ThemeType = {
   button: {
@@ -10,21 +10,27 @@ export type ThemeType = {
 
 export const lightTheme: ThemeType = {
   button: {
-    primary: '#000',
-    secondary: '#fff',
+    primary: "#000",
+    secondary: "#fff",
   },
-  background: '#fef',
+  background: "#fef",
 };
 
 export const darkTheme: ThemeType = {
   button: {
-    primary: '#fff',
-    secondary: '#000',
+    primary: "#fff",
+    secondary: "#000",
   },
-  background: '#000',
+  background: "#000",
 };
 
-export type ThemeMode = 'dark' | 'light';
+export type ThemeMode = "dark" | "light";
+
+export type PageStateType = {
+  currentPage: number;
+  isDrawerOpen: boolean;
+  pageTitle: string;
+};
 
 export type GlobalContextProps = {
   isMenuOpen: boolean;
@@ -33,15 +39,23 @@ export type GlobalContextProps = {
   darkTheme: ThemeType;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
+  signInRedirect: string;
+  setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
+  pageState: PageStateType | null;
+  setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
   isMenuOpen: false,
-  theme: 'light',
+  theme: "light",
   lightTheme: { ...lightTheme },
   darkTheme: { ...darkTheme },
   setIsMenuOpen: () => {},
   setTheme: () => {},
+  signInRedirect: "",
+  setSignInRedirect: () => {},
+  pageState: null,
+  setPageState: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

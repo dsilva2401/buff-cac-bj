@@ -49,33 +49,6 @@ export const resources = {
         emailInput: "Enter email...",
         sendEmailLink: "Email me a Link!",
       },
-      productDetails: {
-        modules: {
-          info: {
-            title: "Product Info & Care",
-          },
-          registration: {
-            title: "Product Registration",
-          },
-          warranty: {
-            title: "Warranty Status",
-          },
-          shop: {
-            title: "Shop the Collection",
-          },
-          sms: {
-            title: "Become a Canopy Club VIP",
-          },
-          custom: {
-            title: "Custom Module",
-          },
-          subscription: {},
-          setup: {},
-          referral: {},
-          return: {},
-          membership: {},
-        },
-      },
       drawers: {
         registrationDrawer: {
           signInDisclaimer:

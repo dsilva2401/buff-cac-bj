@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { GlobalContext } from "context";
 import {
   User,
   getAuth,
@@ -22,6 +23,7 @@ import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signUp" });
+  const context = useContext(GlobalContext);
   const history = useHistory();
   const auth = getAuth();
 
@@ -96,7 +98,11 @@ const SignUp: React.FC = () => {
       })
         .then((response) => {
           if (response.status === 200) {
-            history.push("/collection");
+            if (context.signInRedirect) {
+              const link = context.signInRedirect;
+              context.setSignInRedirect("");
+              history.push(link);
+            } else history.push("/collection");
           }
         })
         .catch((error) => {
@@ -105,7 +111,7 @@ const SignUp: React.FC = () => {
         });
       setLoading(false);
     }
-  }, [user, token, history]);
+  }, [user, token, history, context]);
 
   return (
     <Wrapper
