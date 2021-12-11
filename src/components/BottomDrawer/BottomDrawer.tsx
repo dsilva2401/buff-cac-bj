@@ -1,10 +1,20 @@
-import React, { useEffect, useState, useContext } from "react";
-import { ReactComponent as Close } from "assets/icons/svg/close.svg";
-import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import { ReactComponent as LockBlack } from "assets/icons/svg/lock-black.svg";
-import { PageStateType } from "context/global/GlobalContext";
-import { GlobalContext } from "context";
-import { useHistory } from "react-router";
+import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
+import { ReactComponent as LockBlack } from 'assets/icons/svg/lock-black.svg';
+import emailIcon from 'assets/icons/svg/social_email.svg';
+import facebookIcon from 'assets/icons/svg/social_facebook.svg';
+import instagramIcon from 'assets/icons/svg/social_instagram.svg';
+import phoneCallIcon from 'assets/icons/svg/social_phone-call.svg';
+import twitterIcon from 'assets/icons/svg/social_twitter.svg';
+import Button from 'components/Button';
+import DrawerMask from 'components/DrawerMask';
+import Image from 'components/Image';
+import Text from 'components/Text';
+import Wrapper from 'components/Wrapper';
+import { PageStateType } from 'context/global/GlobalContext';
+import React, { useEffect, useState } from 'react';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import { useHistory } from 'react-router';
+import { useGlobal } from '../../context/global/GlobalContext';
 import {
   Drawer,
   DrawerBody,
@@ -12,17 +22,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerIconLink,
-} from "./styles";
-import Text from "components/Text";
-import Image from "components/Image";
-import Button from "components/Button";
-import Wrapper from "components/Wrapper";
-import DrawerMask from "components/DrawerMask";
-import emailIcon from "assets/icons/svg/social_email.svg";
-import twitterIcon from "assets/icons/svg/social_twitter.svg";
-import instagramIcon from "assets/icons/svg/social_instagram.svg";
-import phoneCallIcon from "assets/icons/svg/social_phone-call.svg";
-import facebookIcon from "assets/icons/svg/social_facebook.svg";
+} from './styles';
 
 type ButtonType = {
   title: string | undefined;
@@ -60,7 +60,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   socials,
 }) => {
   const history = useHistory();
-  const context = useContext(GlobalContext);
+  const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.85;
   const bottomHeight = -window.innerHeight * 0.3;
 
@@ -108,24 +108,24 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         // onClick={() => setPosition({ ...position, y: bottomHeight })}
       />
       <Draggable
-        axis="y"
+        axis='y'
         bounds={{ top: topHeight, bottom: bottomHeight }}
         position={position}
         onStart={handleStart}
         onDrag={handleDrag}
         onStop={handleStop}
-        cancel="a, button, #not-draggable"
+        cancel='a, button, #not-draggable'
       >
         <Drawer isControlled={isControlled}>
           <Wrapper
-            width="100%"
-            height="100%"
-            direction="column"
-            justifyContent="space-between"
-            alignItems="center"
+            width='100%'
+            height='100%'
+            direction='column'
+            justifyContent='space-between'
+            alignItems='center'
           >
             <DrawerHeader>
-              <Text fontSize="1rem" fontWeight="600">
+              <Text fontSize='1rem' fontWeight='600'>
                 <h1>{title}</h1>
               </Text>
               {isDrawerOpen && (
@@ -140,26 +140,26 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 </DrawerClose>
               )}
             </DrawerHeader>
-            <DrawerBody id="not-draggable">
+            <DrawerBody id='not-draggable'>
               {!isDrawerOpen && (
                 <>
                   {buttons?.map((button) => {
                     if (button.isHighlight) {
                       return (
                         <Button
-                          theme="dark"
+                          theme='dark'
                           onClick={() => {
                             setPosition({ ...position, y: topHeight });
                             button.onClick();
                             if (button.pageState)
-                              context.setPageState(button.pageState);
+                              setPageState(button.pageState);
                           }}
                         >
                           {button.title}
                           {button.locked && (
                             <LockBlack
-                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
-                              width="20px"
+                              fill={button.isHighlight ? '#FFFFFF' : '#000000'}
+                              width='20px'
                             />
                           )}
                         </Button>
@@ -168,7 +168,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     return <></>;
                   })}
                   <Button
-                    theme="light"
+                    theme='light'
                     onClick={() => setPosition({ ...position, y: topHeight })}
                   >
                     More
@@ -182,19 +182,19 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       return (
                         <Button
                           key={button.title}
-                          theme={button.isHighlight ? "dark" : "light"}
+                          theme={button.isHighlight ? 'dark' : 'light'}
                           onClick={() => {
-                            if (button.locked) history.push("/");
+                            if (button.locked) history.push('/');
                             else button.onClick();
                             if (button.pageState)
-                              context.setPageState(button.pageState);
+                              setPageState(button.pageState);
                           }}
                         >
                           {button.title}
                           {button.locked && (
                             <LockBlack
-                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
-                              width="20px"
+                              fill={button.isHighlight ? '#FFFFFF' : '#000000'}
+                              width='20px'
                             />
                           )}
                         </Button>
@@ -205,39 +205,39 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               <DrawerFooter>
                 {socials?.phone && (
                   <DrawerIconLink href={`tel:+${socials.phone}`}>
-                    <Image src={phoneCallIcon} alt="phone-icon" />
+                    <Image src={phoneCallIcon} alt='phone-icon' />
                   </DrawerIconLink>
                 )}
                 {socials?.email && (
                   <DrawerIconLink href={`mailto:${socials?.email}`}>
-                    <Image src={emailIcon} alt="email-icon" />
+                    <Image src={emailIcon} alt='email-icon' />
                   </DrawerIconLink>
                 )}
                 {socials?.twitter && (
                   <DrawerIconLink
                     href={`http://${socials?.twitter}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    <Image src={twitterIcon} alt="twitter-icon" />
+                    <Image src={twitterIcon} alt='twitter-icon' />
                   </DrawerIconLink>
                 )}
                 {socials?.instagram && (
                   <DrawerIconLink
                     href={`http://${socials?.instagram}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    <Image src={instagramIcon} alt="instagram-icon" />
+                    <Image src={instagramIcon} alt='instagram-icon' />
                   </DrawerIconLink>
                 )}
                 {socials?.facebook && (
                   <DrawerIconLink
                     href={`http://${socials?.facebook}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                   >
-                    <Image src={facebookIcon} alt="facebook-icon" />
+                    <Image src={facebookIcon} alt='facebook-icon' />
                   </DrawerIconLink>
                 )}
               </DrawerFooter>

@@ -1,8 +1,12 @@
-import "./i18n";
-import App from "./App";
-import React from "react";
-import ReactDOM from "react-dom";
-import { GlobalProvider } from "./context";
+import { initializeApp } from '@firebase/app';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { GlobalProvider } from './context';
+import config from './firebase/config';
+import './i18n';
+
+initializeApp(config.firebase);
 
 ReactDOM.render(
   <React.StrictMode>
@@ -10,5 +14,5 @@ ReactDOM.render(
       <App />
     </GlobalProvider>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

@@ -1,4 +1,6 @@
-import React, { createContext, useContext } from "react";
+import { User } from 'firebase/auth';
+import React, { createContext, useContext } from 'react';
+import { ProductDetailsType } from '../../types/ProductDetailsType';
 
 export type ThemeType = {
   button: {
@@ -10,21 +12,21 @@ export type ThemeType = {
 
 export const lightTheme: ThemeType = {
   button: {
-    primary: "#000",
-    secondary: "#fff",
+    primary: '#000',
+    secondary: '#fff',
   },
-  background: "#fef",
+  background: '#fef',
 };
 
 export const darkTheme: ThemeType = {
   button: {
-    primary: "#fff",
-    secondary: "#000",
+    primary: '#fff',
+    secondary: '#000',
   },
-  background: "#000",
+  background: '#000',
 };
 
-export type ThemeMode = "dark" | "light";
+export type ThemeMode = 'dark' | 'light';
 
 export type PageStateType = {
   currentPage: number;
@@ -43,19 +45,35 @@ export type GlobalContextProps = {
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
   pageState: PageStateType | null;
   setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
+  user: User | null;
+  productDetails: ProductDetailsType | null;
+  getProductDetails: (slug: string, token?: string) => Promise<void>;
+  activateWarranty: (warrantyId: string) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+  slug: string | null;
+  setSlug: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
   isMenuOpen: false,
-  theme: "light",
+  theme: 'light',
   lightTheme: { ...lightTheme },
   darkTheme: { ...darkTheme },
   setIsMenuOpen: () => {},
   setTheme: () => {},
-  signInRedirect: "",
+  signInRedirect: '',
   setSignInRedirect: () => {},
   pageState: null,
   setPageState: () => {},
+  user: null,
+  productDetails: null,
+  getProductDetails: () => new Promise((res, rej) => res()),
+  loading: false,
+  error: null,
+  activateWarranty: () => new Promise((res, rej) => res()),
+  slug: null,
+  setSlug: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);
