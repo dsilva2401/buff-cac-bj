@@ -1,48 +1,51 @@
-import { ReactComponent as Close } from 'assets/icons/svg/close-white.svg';
-import { ReactComponent as Collection } from 'assets/icons/svg/collection.svg';
-import { ReactComponent as External } from 'assets/icons/svg/external.svg';
-import { ReactComponent as LoadingIndicator } from 'assets/icons/svg/loading-small.svg';
-import { ReactComponent as Logout } from 'assets/icons/svg/log-out.svg';
-import { ReactComponent as Profile } from 'assets/icons/svg/person.svg';
-import brijLogo from 'assets/logos/svg/brij.svg';
-import DrawerMask from 'components/DrawerMask';
-import Image from 'components/Image';
-import { getAuth, signOut } from 'firebase/auth';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import { Link, useLocation } from 'react-router-dom';
-import { useGlobal } from '../../context/global/GlobalContext';
-import Menu from './styles';
+import React, { useCallback, useEffect, useState } from "react";
+import { useGlobal } from "../../context/global/GlobalContext";
+import { Link, useLocation } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
+import { ReactComponent as Close } from "assets/icons/svg/close-white.svg";
+import { ReactComponent as Collection } from "assets/icons/svg/collection.svg";
+import { ReactComponent as External } from "assets/icons/svg/external.svg";
+import { ReactComponent as LoadingIndicator } from "assets/icons/svg/loading-small.svg";
+import { ReactComponent as Logout } from "assets/icons/svg/log-out.svg";
+import { ReactComponent as Profile } from "assets/icons/svg/person.svg";
+import brijLogo from "assets/logos/svg/brij.svg";
+import DrawerMask from "components/DrawerMask";
+import Image from "components/Image";
+import Menu from "./styles";
 
 const SideMenu: React.FC = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
+  const { t } = useTranslation("translation", { keyPrefix: "sideMenu" });
   const { isMenuOpen, setIsMenuOpen } = useGlobal();
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [signedIn, setSignedIn] = useState<boolean>(false);
   const location = useLocation();
   const history = useHistory();
   const auth = getAuth();
 
+  const { productDetails: details } = useGlobal();
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      if (user) setSignedIn(true);
-      else setSignedIn(false);
+      if (user) {
+        setSignedIn(true);
+      } else setSignedIn(false);
     });
   }, [auth]);
 
   const handleLogoutButtonClicked = useCallback(() => {
-    if (error !== '') setError('');
+    if (error !== "") setError("");
     setLoading(true);
     signOut(auth)
       .then(() => {
         setLoading(false);
-        history.push('/');
+        history.push("/");
       })
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
+        console.log("ERROR CODE: ", error.code);
+        console.log("ERROR MSG: ", error.message);
       });
     setIsMenuOpen(false);
   }, [setIsMenuOpen, auth, history, error]);
@@ -63,40 +66,42 @@ const SideMenu: React.FC = () => {
           </span>
           <nav>
             {signedIn ? (
-              <Link to='/profile' onClick={() => setIsMenuOpen(false)}>
-                {t('myProfile')}
+              <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
+                {t("myProfile")}
                 <Profile />
               </Link>
             ) : null}
-            {signedIn && location.pathname !== '/collection' ? (
-              <Link to='/collection' onClick={() => setIsMenuOpen(false)}>
-                {t('myCollection')}
+            {signedIn && location.pathname !== "/collection" ? (
+              <Link to="/collection" onClick={() => setIsMenuOpen(false)}>
+                {t("myCollection")}
                 <Collection />
               </Link>
             ) : null}
-            <a
-              href='https://www.gucci.com/us/en/'
-              target='_blank'
-              rel='noopener noreferrer'
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('visitWebsite')}
-              <External />
-            </a>
+            {details && (
+              <a
+                href={details?.brand?.website || ""}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {t("visitWebsite")}
+                <External />
+              </a>
+            )}
             {signedIn ? (
-              <Link to='/' onClick={handleLogoutButtonClicked}>
-                {t('signOut')}
+              <Link to="/" onClick={handleLogoutButtonClicked}>
+                {t("signOut")}
                 {loading ? <LoadingIndicator /> : <Logout />}
               </Link>
             ) : (
-              <Link to='/' onClick={() => setIsMenuOpen(false)}>
-                {t('signIn')}
+              <Link to="/" onClick={() => setIsMenuOpen(false)}>
+                {t("signIn")}
                 <Logout />
               </Link>
             )}
           </nav>
           <span>
-            <Image width='auto' src={brijLogo} alt='brij-logo' />
+            <Image width="auto" src={brijLogo} alt="brij-logo" />
           </span>
         </div>
       </Menu>

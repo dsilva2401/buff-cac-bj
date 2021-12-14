@@ -76,7 +76,6 @@ const Login: React.FC = () => {
     async function fetchData() {
       const token = await user?.getIdToken();
       setToken(token);
-      console.log('TOKEN: ', token);
     }
     if (user) fetchData();
   }, [user]);

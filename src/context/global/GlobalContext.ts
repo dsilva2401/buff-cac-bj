@@ -1,6 +1,6 @@
-import { User } from 'firebase/auth';
-import React, { createContext, useContext } from 'react';
-import { ProductDetailsType } from '../../types/ProductDetailsType';
+import { User } from "firebase/auth";
+import React, { createContext, useContext } from "react";
+import { ProductDetailsType } from "../../types/ProductDetailsType";
 
 export type ThemeType = {
   button: {
@@ -12,27 +12,27 @@ export type ThemeType = {
 
 export const lightTheme: ThemeType = {
   button: {
-    primary: '#000',
-    secondary: '#fff',
+    primary: "#000",
+    secondary: "#fff",
   },
-  background: '#fef',
+  background: "#fef",
 };
 
 export const darkTheme: ThemeType = {
   button: {
-    primary: '#fff',
-    secondary: '#000',
+    primary: "#fff",
+    secondary: "#000",
   },
-  background: '#000',
+  background: "#000",
 };
 
-export type ThemeMode = 'dark' | 'light';
+export type ThemeMode = "dark" | "light";
 
 export type PageStateType = {
   currentPage: number;
   isDrawerOpen: boolean;
   pageTitle: string;
-};
+} | null;
 
 export type GlobalContextProps = {
   isMenuOpen: boolean;
@@ -57,12 +57,12 @@ export type GlobalContextProps = {
 
 export const GlobalContext = createContext<GlobalContextProps>({
   isMenuOpen: false,
-  theme: 'light',
+  theme: "light",
   lightTheme: { ...lightTheme },
   darkTheme: { ...darkTheme },
   setIsMenuOpen: () => {},
   setTheme: () => {},
-  signInRedirect: '',
+  signInRedirect: "",
   setSignInRedirect: () => {},
   pageState: null,
   setPageState: () => {},

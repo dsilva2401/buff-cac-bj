@@ -53,7 +53,10 @@ export type WarrantyModuleType = {
   period: number;
 
   // duration
-  duration: string;
+  duration: {
+    label: string;
+    value: string;
+  };
 
   // This field should be stored prob. under user -> profile -> warranty object and created when user registers for warranty
   activated: boolean;
@@ -64,6 +67,16 @@ export type WarrantyModuleType = {
   // same as above, created and set when user called activateWarranty mutation, If not set, it is undefined
   // expirationDate = purchaseDate + period duration
   expirationDate?: string; // UTC timestamp
+};
+
+export type ReferralModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+  // Find this in referralModule collection
+
+  // This is from text field rich html text
+  details: string;
+  url: string;
+  qrcode: string;
 };
 
 export type ShoppingModuleType = {
@@ -99,6 +112,7 @@ export type ProductDetailsType = {
     // @manoj: Construct complete image url from Image object and set value to it.
     image: string;
     name: string;
+    website: string;
     social: {
       // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
       // Otherwise, set phone is undefined. Similarly for others

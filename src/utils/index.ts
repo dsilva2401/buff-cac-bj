@@ -22,6 +22,7 @@ export const transformProductDetailsObj = (
     facebookURL,
     brandLogo,
     brandName,
+    brandWebsite,
   } = brand.profile;
 
   return {
@@ -39,6 +40,7 @@ export const transformProductDetailsObj = (
       id: brand._id,
       image: brandLogo,
       name: brandName,
+      website: brandWebsite,
       social: {
         phone: socialPhoneNumberEnable ? socialPhoneNumber : null,
         email: socialEmailEnable ? socialEmail : null,
