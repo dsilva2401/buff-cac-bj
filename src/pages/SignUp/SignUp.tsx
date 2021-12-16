@@ -13,9 +13,11 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   GoogleAuthProvider,
+  sendSignInLinkToEmail,
   signInWithPopup,
   User,
 } from 'firebase/auth';
+import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
@@ -27,6 +29,7 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const auth = getAuth();
 
+  const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,6 +38,14 @@ const SignUp: React.FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const logo = <Image width='auto' src={brijLogo} alt='brij-logo' />;
+
+  // get magic link header
+  const {
+    handleMagicLink,
+    loading: magicLinkLoading,
+    error,
+    success
+  } = useMagicLinkHandler(email);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);
@@ -113,6 +124,17 @@ const SignUp: React.FC = () => {
     }
   }, [user, token, history]);
 
+  const passwordInput = (
+    !usingMagicLink ? (
+      <Input
+        type='password'
+        value={password}
+        placeholder={t('passwordInput')}
+        onChange={({ target: { value } }) => setPassword(value)}
+      />
+    ) : null
+  )
+
   return (
     <Wrapper
       width='100%'
@@ -146,7 +168,6 @@ const SignUp: React.FC = () => {
             <FacebookLogo /> {t('facebookButton')}
           </Button>
         </Wrapper>
-
         <Wrapper justifyContent='center' alignItems='center'>
           <Text fontSize='1.2rem' color='#98A3AA'>
             <p>or</p>
@@ -166,21 +187,39 @@ const SignUp: React.FC = () => {
             onChange={({ target: { value } }) => setEmail(value)}
             margin='0 0 1rem'
           />
-          <Input
-            type='password'
-            value={password}
-            placeholder={t('passwordInput')}
-            onChange={({ target: { value } }) => setPassword(value)}
-          />
+          {passwordInput}
+          <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+            <Text fontSize='0.7rem' textDecoration='unset' onClick={() => setUsingMagicLink(!usingMagicLink)}>
+              <span>
+                { usingMagicLink ? 'Use password' : 'Use magic link'}
+              </span>
+            </Text>
+          </Wrapper>
         </Wrapper>
         <Wrapper width='100%' justifyContent='center' alignItems='center'>
-          {loading ? (
+          {loading || magicLinkLoading ? (
             <LoadingIndicator />
           ) : (
-            <Button theme='dark' onClick={() => signUpWithEmailAndPassword()}>
-              {t('signUpButton')}
+            <Button theme='dark' onClick={() => usingMagicLink ? handleMagicLink() : signUpWithEmailAndPassword()}>
+              {
+                usingMagicLink ? t('magicLinkButton') : t('signUpButton')
+              }
             </Button>
           )}
+        </Wrapper>
+        <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+          <Text fontSize='0.7rem' textDecoration='unset'>
+            <span>
+              {error}
+            </span>
+          </Text>
+        </Wrapper>
+        <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+          <Text fontSize='0.7rem' textDecoration='unset'>
+            <span>
+              {success}
+            </span>
+          </Text>
         </Wrapper>
       </Wrapper>
       <PageFooter>
