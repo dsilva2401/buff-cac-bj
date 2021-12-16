@@ -11,8 +11,8 @@ import Text from "components/Text";
 
 type WarrantyDrawerProps = {
   closePage(): void;
-  warrantyData: WarrantyModuleType;
   warrantyId: string;
+  warrantyData: WarrantyModuleType;
 };
 
 const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({

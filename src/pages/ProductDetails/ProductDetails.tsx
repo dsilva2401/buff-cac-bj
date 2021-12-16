@@ -1,12 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { WarrantyModuleType } from "../../types/ProductDetailsType";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { PageStateType } from "context/global/GlobalContext";
 import { useParams } from "react-router";
+import {
+  LinkModuleType,
+  CustomModuleType,
+  ReferralModuleType,
+  WarrantyModuleType,
+} from "../../types/ProductDetailsType";
 import Image from "components/Image";
 import Wrapper from "components/Wrapper";
 import CustomDrawer from "components/CustomDrawer";
 import BottomDrawer from "components/BottomDrawer";
+import ReferralDrawer from "components/ReferralDrawer";
 import WarrantyDrawer from "components/WarrantyDrawer";
 import LoadingIndicator from "components/LoadingIndicator";
 import IconButton from "components/IconButton";
@@ -114,7 +120,9 @@ const ProductDetails: React.FC = () => {
         case "CUSTOM_MODULE":
           return (
             <CustomDrawer
-              drawerData={details?.modules[currentPage]?.moduleInfo}
+              drawerData={
+                details?.modules[currentPage]?.moduleInfo as CustomModuleType
+              }
             />
           );
         case "WARRANTY_MODULE":
@@ -131,12 +139,20 @@ const ProductDetails: React.FC = () => {
           return (
             <LinkModule
               closePage={closeDrawerPage}
-              moduleData={details?.modules[currentPage]?.moduleInfo}
+              moduleData={
+                details?.modules[currentPage]?.moduleInfo as LinkModuleType
+              }
             />
           );
         case "REFERRAL_MODULE":
-          console.log("REFERRAL: ", details?.modules[currentPage]?.moduleInfo)
-          return null
+          console.log("REFERRAL: ", details?.modules[currentPage]?.moduleInfo);
+          return (
+            <ReferralDrawer
+              referralData={
+                details?.modules[currentPage]?.moduleInfo as ReferralModuleType
+              }
+            />
+          );
         default:
           return null;
       }

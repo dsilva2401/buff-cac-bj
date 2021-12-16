@@ -1,8 +1,9 @@
 export type PossibleModulesType =
-  | 'WARRANTY_MODULE'
-  | 'CUSTOM_MODULE'
-  | 'LINK_MODULE'
-  | 'SHOPPING_MODULE';
+  | "WARRANTY_MODULE"
+  | "CUSTOM_MODULE"
+  | "LINK_MODULE"
+  | "REFERRAL_MODULE"
+  | "SHOPPING_MODULE";
 
 export type ModuleInfoType = {
   // Find this in Products => modules array
@@ -20,7 +21,7 @@ export type ModuleInfoType = {
   // this indicates whether we need an actual login to unlock this module
   locked: boolean;
   // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
-  moduleInfo: CustomModuleType | LinkModuleType | WarrantyModuleType | null;
+  moduleInfo: CustomModuleType | LinkModuleType | WarrantyModuleType | ReferralModuleType | null;
 };
 
 export type CustomModuleType = {
