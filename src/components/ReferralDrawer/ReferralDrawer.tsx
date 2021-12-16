@@ -1,5 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ReferralModuleType } from "types/ProductDetailsType";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import qrcode from "assets/images/png/qrcode.png";
 import Wrapper from "components/Wrapper";
 import Button from "components/Button";
@@ -12,6 +14,10 @@ type ReferralDrawerProps = {
 };
 
 const ReferralDrawer: React.FC<ReferralDrawerProps> = ({ referralData }) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "drawers.referralDrawer",
+  });
+
   return (
     <Wrapper
       width="100%"
@@ -36,8 +42,11 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({ referralData }) => {
         alignItems="center"
         gap="0.625rem"
       >
-        <Button theme="light">Copy link</Button>
-        <Button theme="light">Share link</Button>
+        {/* <CopyToClipboard text={referralData?.url} onCopy={() => toast()}> */}
+        <CopyToClipboard text={referralData?.url}>
+          <Button theme="light">{t("copyLinkButton")}</Button>
+        </CopyToClipboard>
+        <Button theme="light">{t("shareLinkButton")}</Button>
       </Wrapper>
       <Text fontSize="1.125rem" color="#98A3AA" margin="0.75rem 0">
         <p>or</p>
@@ -56,7 +65,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({ referralData }) => {
           color="#414149"
           padding="0rem 0.25rem"
         >
-          <p>Have your friend scan this code</p>
+          <p>{t("helpText")}</p>
         </Text>
         <Image src={qrcode} alt="qr-code" maxWidth="45%" />
       </Wrapper>

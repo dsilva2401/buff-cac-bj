@@ -67,16 +67,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(
-    pageState?.isDrawerOpen || false
-  );
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  // const [triggerChild, setTriggerChild] = useState<number>(-1)
+  // const [references, setReferences] = useState<string[] | undefined>([])
 
   useEffect(() => {
-    if (isDrawerOpen && pageState !== null) {
-      setPosition({ ...position, y: topHeight });
-      setDeltaPosition(topHeight);
+    if (pageState !== null) {
+      setPosition({ x: 0, y: topHeight });
+      // setTriggerChild(pageState?.currentPage);
     }
-  }, [isDrawerOpen, position, topHeight, pageState]);
+  }, [isDrawerOpen, topHeight, pageState]);
 
   useEffect(() => {
     if (position.y === topHeight) {

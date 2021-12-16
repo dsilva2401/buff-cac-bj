@@ -102,9 +102,13 @@ export const resources = {
           },
           successDrawer: {
             title: "Warranty Activated!",
-            modifiedTitle: "Details Updated!",
             description: "Check your email for details",
           },
+        },
+        referralDrawer: {
+          copyLinkButton: "Copy link",
+          shareLinkButton: "Share link",
+          helpText: "Have your friend scan this code",
         },
         smsDrawer: {
           signUpButton: "Sign up for VIP texts",

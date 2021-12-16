@@ -126,6 +126,10 @@ const ProductDetails: React.FC = () => {
             />
           );
         case "WARRANTY_MODULE":
+          console.log(
+            "WARRANTY DATA: ",
+            details?.modules[currentPage]?.moduleInfo
+          );
           return (
             <WarrantyDrawer
               closePage={closeDrawerPage}
@@ -145,7 +149,6 @@ const ProductDetails: React.FC = () => {
             />
           );
         case "REFERRAL_MODULE":
-          console.log("REFERRAL: ", details?.modules[currentPage]?.moduleInfo);
           return (
             <ReferralDrawer
               referralData={

@@ -55,21 +55,22 @@ export const GlobalProvider: React.FC = ({ children }) => {
         console.log("ACTIVATE TRIGGER")
         setLoading(true);
         const token = await user!.getIdToken();
-        const res = await fetch(
-          "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ warrantyId }),
-          }
-        );
-        if (res.status !== 204) {
-          throw new Error("Error activating warranty");
-        }
-        // refetch data to show updated state
-        // TODO: use optimistic UI
+
+        // const res = await fetch(
+        //   "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //     body: JSON.stringify({ warrantyId }),
+        //   }
+        // );
+        // if (res.status !== 200) {
+        //   throw new Error("Error activating warranty");
+        // }
+        // // refetch data to show updated state
+        // // TODO: use optimistic UI
         getProductDetails(slug!, token);
       } catch (e) {
         setError(JSON.stringify(e));
