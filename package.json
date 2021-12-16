@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
+    "@types/query-string": "^6.3.0",
     "firebase": "^9.5.0",
     "i18next": "^21.3.2",
     "object-hash": "^2.2.0",
