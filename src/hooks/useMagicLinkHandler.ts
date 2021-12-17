@@ -8,7 +8,7 @@ interface MagicHandlerMap {
     success: string;
 }
 
-const useMagicLinkHandler = (email: string): MagicHandlerMap => {
+const useMagicLinkHandler = (email: string, isNewUser: boolean = false): MagicHandlerMap => {
     const auth = getAuth();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -17,7 +17,7 @@ const useMagicLinkHandler = (email: string): MagicHandlerMap => {
 
     const handleMagicLink = useCallback(() => {
         const actionCodeSettings = {
-            url: `http://localhost:3000/magic-link?email=${email}`,
+            url: `${window.location.protocol}//${window.location.host}/magic-link?email=${email}&isNewUser=${isNewUser}`,
             handleCodeInApp: true
         };
 

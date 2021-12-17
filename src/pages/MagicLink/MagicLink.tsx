@@ -1,33 +1,62 @@
 import qs from "query-string";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useGlobal } from "context/global/GlobalContext";
+import { useCallback, useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import LoadingIndicator from "components/LoadingIndicator";
-import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
 import {
-  User,
   getAuth,
   signInWithEmailLink,
   isSignInWithEmailLink,
+  User,
 } from "firebase/auth";
+import { useAPI } from "utils/api";
+import { useGlobal } from "context/global/GlobalContext";
+
+interface UserCreatePayload {
+  email: string | null,
+  phoneNumber: string | null,
+  firstName: string | null,
+  lastName: string | null,
+  tag?: string
+}
 
 const MagicLink = () => {
-  const [user, setUser] = useState<User | undefined>();
-  const [token, setToken] = useState<string | undefined>();
+  const { user, setUser, signInRedirect } = useGlobal();
 
   const auth = getAuth();
   const location = useLocation();
-  const { email } = qs.parse(location.search);
-  const { signInRedirect } = useGlobal();
+  const history = useHistory();
 
-  useRedirectLoggedInUser(token, user, signInRedirect);
-  useEffect(() => {
-    async function fetchData() {
-      const token = await user?.getIdToken();
-      setToken(token);
+  const { email, isNewUser } = qs.parse(location.search);
+
+  const onSuccess = useCallback(() => {
+    let link = signInRedirect || '/collection';
+
+    if (isNewUser === 'true') {
+      link = '/personal-details'
     }
-    if (user) fetchData();
-  }, [user]);
+
+    history.push(link);
+  }, [history, signInRedirect])
+
+  const onError = useCallback((error) => {
+    console.log('ERROR CODE: ', error.code);
+    console.log('ERROR MSG: ', error.message);
+  }, [])
+
+  const [getUser] = useAPI<UserCreatePayload>({
+    method: 'POST',
+    endpoint: 'auth',
+    onSuccess,
+    onError
+  })
+
+  useEffect(() => {
+    if (user) {
+      const { email, phoneNumber, displayName } = user;
+      console.log(email, phoneNumber, displayName, 'email, phoneNumber, displayName')
+      getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
+    }
+  }, [user, getUser])
 
   useEffect(() => {
     if (isSignInWithEmailLink(auth, window.location.href)) {

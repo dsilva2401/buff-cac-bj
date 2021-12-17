@@ -1,16 +1,26 @@
+import { useGlobal } from "context/global/GlobalContext";
 import { User } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 
 const useRedirectLoggedInUser = (
     token?: string,
     user?: User,
-    redirect?: string,
 ) => {
     const history = useHistory();
 
+    const { signInRedirect, setSignInRedirect } = useGlobal();
+
+    // create a copy of signInRedirect so it doesn't change when singInRedirect
+    // sets to empty which will cause the redirection to occur again
+    // We will fix this once the user will be in the global context
+
+    const redirect = useRef<string>(signInRedirect);
+
     useEffect(() => {
         if (token) {
+            console.log(token, 'token');
+
             let myHeaders = new Headers();
             myHeaders.append('Authorization', `Bearer ${token}`);
             myHeaders.append('Content-Type', 'application/json');
@@ -30,9 +40,10 @@ const useRedirectLoggedInUser = (
             })
             .then((response) => {
                 if (response.status === 200) {
-                    if (redirect) {
-                        console.log('REDIRECT LINK: ', redirect);
-                        history.push(redirect);
+                    if (redirect.current) {
+                        console.log('REDIRECT LINK: ', redirect.current);
+                        setSignInRedirect('');
+                        history.push(redirect.current);
                     } else history.push('/collection');
                 }
             })
@@ -41,7 +52,7 @@ const useRedirectLoggedInUser = (
                 console.log('ERROR MSG: ', error.message);
             });
         }
-    }, [user, token, history, redirect]);
+    }, [user, token, history, redirect.current]);
 }
 
 export default useRedirectLoggedInUser;

@@ -12,7 +12,6 @@ import Wrapper from 'components/Wrapper';
 import {
   getAuth,
   GoogleAuthProvider,
-  sendSignInLinkToEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   User,
@@ -26,24 +25,22 @@ import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 
 const Login: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { signInRedirect, pageState } = useGlobal();
+  const { pageState } = useGlobal();
   const history = useHistory();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [redirect, setRedirect] = useState<string>(signInRedirect || '');
   const [error, setError] = useState<string>('');
   const [token, setToken] = useState<string | undefined>('');
   const [user, setUser] = useState<User | undefined>(undefined);
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
 
   console.log('GLOBAL PAGE STATE: ', pageState);
-  console.log('GLOBAL REDIRECT STATE: ', signInRedirect);
 
   // redirect loggedIn user
-  useRedirectLoggedInUser(token, user, redirect);
+  useRedirectLoggedInUser(token, user);
 
   // get magic link header
   const {
