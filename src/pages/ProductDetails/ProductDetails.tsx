@@ -1,25 +1,25 @@
-import BottomDrawer from 'components/BottomDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import IconButton from 'components/IconButton';
-import Image from 'components/Image';
-import LinkModule from 'components/LinkModule';
-import LoadingIndicator from 'components/LoadingIndicator';
-import PageHeader from 'components/PageHeader';
-import ReferralDrawer from 'components/ReferralDrawer';
-import ShopDrawer from 'components/ShopDrawer';
-import WarrantyDrawer from 'components/WarrantyDrawer';
-import Wrapper from 'components/Wrapper';
-import { PageStateType } from 'context/global/GlobalContext';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router';
-import { useGlobal } from '../../context/global/GlobalContext';
+import BottomDrawer from "components/BottomDrawer";
+import CustomDrawer from "components/CustomDrawer";
+import IconButton from "components/IconButton";
+import Image from "components/Image";
+import LinkModule from "components/LinkModule";
+import LoadingIndicator from "components/LoadingIndicator";
+import PageHeader from "components/PageHeader";
+import ReferralDrawer from "components/ReferralDrawer";
+import ShopDrawer from "components/ShopDrawer";
+import WarrantyDrawer from "components/WarrantyDrawer";
+import Wrapper from "components/Wrapper";
+import { PageStateType } from "context/global/GlobalContext";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router";
+import { useGlobal } from "../../context/global/GlobalContext";
 import {
   CustomModuleType,
   LinkModuleType,
   ReferralModuleType,
   ShoppingModuleType,
   WarrantyModuleType,
-} from '../../types/ProductDetailsType';
+} from "../../types/ProductDetailsType";
 
 type UrlParam = {
   id: string;
@@ -35,7 +35,7 @@ type ButtonType = {
 
 const ProductDetails: React.FC = () => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
-  const [pageTitle, setPageTitle] = useState<string | undefined>('');
+  const [pageTitle, setPageTitle] = useState<string | undefined>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const {
     productDetails: details,
@@ -59,7 +59,7 @@ const ProductDetails: React.FC = () => {
     if (!!details && !isDrawerPageOpen) {
       setPageTitle(details?.product.name);
     }
-  }, [isDrawerPageOpen, details, currentPage]);
+  }, [isDrawerPageOpen, details, currentPage, pageState]);
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(0);
@@ -69,8 +69,8 @@ const ProductDetails: React.FC = () => {
   const changeDrawerPage = useCallback(
     (index, moduleType) => {
       setCurrentPage(index);
-      setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
-      if (moduleType !== 'LINK_MODULE')
+      setIsDrawerPageOpen(moduleType !== "LINK_MODULE");
+      if (moduleType !== "LINK_MODULE")
         setPageTitle(details?.modules[index].title);
     },
     [details]
@@ -85,12 +85,12 @@ const ProductDetails: React.FC = () => {
         }
         let title: string;
         switch (details.modules[x].type) {
-          case 'WARRANTY_MODULE':
+          case "WARRANTY_MODULE":
             const moduleInfo = details.modules[x]
               .moduleInfo as WarrantyModuleType;
             title = moduleInfo?.activated
-              ? 'View Warranty'
-              : 'Activate Warranty';
+              ? "View Warranty"
+              : "Activate Warranty";
             break;
           default:
             title = details.modules[x].title;
@@ -119,7 +119,7 @@ const ProductDetails: React.FC = () => {
     if (details) {
       let moduleType: string | undefined = details?.modules[currentPage]?.type;
       switch (moduleType) {
-        case 'CUSTOM_MODULE':
+        case "CUSTOM_MODULE":
           return (
             <CustomDrawer
               drawerData={
@@ -127,11 +127,7 @@ const ProductDetails: React.FC = () => {
               }
             />
           );
-        case 'WARRANTY_MODULE':
-          console.log(
-            'WARRANTY DATA: ',
-            details?.modules[currentPage]?.moduleInfo
-          );
+        case "WARRANTY_MODULE":
           return (
             <WarrantyDrawer
               closePage={closeDrawerPage}
@@ -141,7 +137,7 @@ const ProductDetails: React.FC = () => {
               warrantyId={details?.modules[currentPage]?.id}
             />
           );
-        case 'LINK_MODULE':
+        case "LINK_MODULE":
           return (
             <LinkModule
               closePage={closeDrawerPage}
@@ -150,7 +146,7 @@ const ProductDetails: React.FC = () => {
               }
             />
           );
-        case 'REFERRAL_MODULE':
+        case "REFERRAL_MODULE":
           return (
             <ReferralDrawer
               referralData={
@@ -158,7 +154,7 @@ const ProductDetails: React.FC = () => {
               }
             />
           );
-        case 'SHOPPING_MODULE':
+        case "SHOPPING_MODULE":
           // const data = details?.modules[currentPage]
           //   ?.moduleInfo as ShoppingModuleType;
           const data: ShoppingModuleType = {
@@ -272,7 +268,7 @@ const ProductDetails: React.FC = () => {
   }, [currentPage, closeDrawerPage, details]);
 
   const logo = useCallback(
-    (image: string) => <Image src={image} alt='brand-logo' maxWidth='110px' />,
+    (image: string) => <Image src={image} alt="brand-logo" maxWidth="110px" />,
     []
   );
 
@@ -283,10 +279,10 @@ const ProductDetails: React.FC = () => {
 
   const menuButton = useMemo(
     () => (
-      <Wrapper width='100%' justifyContent='flex-end'>
+      <Wrapper width="100%" justifyContent="flex-end">
         <IconButton
-          theme='dark'
-          iconName='menu'
+          theme="dark"
+          iconName="menu"
           onClick={handleOpenMenuClicked}
         />
       </Wrapper>
@@ -301,26 +297,26 @@ const ProductDetails: React.FC = () => {
       ) : (
         <>
           <Wrapper
-            width='100%'
-            height='100%'
-            direction='column'
-            justifyContent='space-between'
-            overflow='auto'
+            width="100%"
+            height="100%"
+            direction="column"
+            justifyContent="space-between"
+            overflow="auto"
           >
             <PageHeader
-              logo={logo(details?.brand?.image ?? '')}
+              logo={logo(details?.brand?.image ?? "")}
               actionButton={menuButton}
               border={false}
             />
             <Wrapper
-              width='100%'
-              height='100%'
-              justifyContent='center'
-              alignItems='flex-start'
-              padding='2rem 1rem'
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="flex-start"
+              padding="2rem 1rem"
               responsiveImg
             >
-              <Image src={details?.product?.image} alt='product' />
+              <Image src={details?.product?.image} alt="product" />
             </Wrapper>
           </Wrapper>
           <BottomDrawer

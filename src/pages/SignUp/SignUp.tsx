@@ -18,6 +18,7 @@ import {
   User,
 } from 'firebase/auth';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
+import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
@@ -45,7 +46,9 @@ const SignUp: React.FC = () => {
     loading: magicLinkLoading,
     error,
     success
-  } = useMagicLinkHandler(email);
+  } = useMagicLinkHandler(email, true);
+
+  useRedirectLoggedInUser(token, user);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);
@@ -85,44 +88,6 @@ const SignUp: React.FC = () => {
     }
     if (user) fetchData();
   }, [user]);
-
-  useEffect(() => {
-    if (token) {
-      let myHeaders = new Headers();
-      myHeaders.append('Authorization', `Bearer ${token}`);
-      myHeaders.append('Content-Type', 'application/json');
-
-      console.log('GOOGLE USER OBJECT: ', user);
-
-      let raw = JSON.stringify({
-        email: user?.email,
-        phoneNumber: user?.phoneNumber,
-        firstName: user?.displayName,
-        lastName: '',
-      });
-
-      fetch('https://damp-wave-40564.herokuapp.com/auth', {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow',
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            if (signInRedirect) {
-              const link = signInRedirect;
-              setSignInRedirect('');
-              history.push(link);
-            } else history.push('/collection');
-          }
-        })
-        .catch((error) => {
-          console.log('ERROR CODE: ', error.code);
-          console.log('ERROR MSG: ', error.message);
-        });
-      setLoading(false);
-    }
-  }, [user, token, history]);
 
   const passwordInput = (
     !usingMagicLink ? (

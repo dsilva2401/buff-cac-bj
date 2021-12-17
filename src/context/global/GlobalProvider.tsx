@@ -12,7 +12,9 @@ import {
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState<ThemeMode>("light");
-  const [signInRedirect, setSignInRedirect] = useState<string>("");
+  const [signInRedirect, setSignInRedirect] = useState<string>(
+    localStorage.getItem('signInRedirect') || ''
+  );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -52,10 +54,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const activateWarranty = useCallback(
     async (warrantyId: string) => {
       try {
-        console.log("ACTIVATE TRIGGER")
         setLoading(true);
         const token = await user!.getIdToken();
-
         // const res = await fetch(
         //   "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
         //   {
@@ -74,8 +74,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         getProductDetails(slug!, token);
       } catch (e) {
         setError(JSON.stringify(e));
-      }
-      finally{
+      } finally {
         setLoading(false);
       }
     },
@@ -106,6 +105,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
     }
   }, [slug, user, getProductDetails]);
 
+  useEffect(() => {
+    localStorage.setItem('signInRedirect', signInRedirect);
+
+    console.log('signInRedirect', signInRedirect)
+
+    // upon unmount clear storage
+    return () => localStorage.setItem('signInRedirect', '');
+  }, [signInRedirect]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -127,6 +135,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         activateWarranty,
         slug,
         setSlug,
+        setUser,
       }}
     >
       {children}

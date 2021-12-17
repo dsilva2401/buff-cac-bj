@@ -68,15 +68,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  // const [triggerChild, setTriggerChild] = useState<number>(-1)
-  // const [references, setReferences] = useState<string[] | undefined>([])
 
   useEffect(() => {
     if (pageState !== null) {
       setPosition({ x: 0, y: topHeight });
-      // setTriggerChild(pageState?.currentPage);
+      if (buttons) {
+        buttons[pageState.currentPage].onClick();
+      }
     }
-  }, [isDrawerOpen, topHeight, pageState]);
+  }, [isDrawerOpen, topHeight, pageState, buttons]);
 
   useEffect(() => {
     if (position.y === topHeight) {
@@ -118,10 +118,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   return (
     <>
-      <DrawerMask
-        isDrawerOpen={!!isDrawerOpen}
-        // onClick={() => setPosition({ ...position, y: bottomHeight })}
-      />
+      <DrawerMask isDrawerOpen={!!isDrawerOpen} />
       <Draggable
         axis="y"
         bounds={{ top: topHeight, bottom: bottomHeight }}
