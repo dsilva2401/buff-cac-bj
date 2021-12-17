@@ -22,8 +22,13 @@ type ShopDrawerProps = {
 
 const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const [successDrawer, setSuccessDrawer] = useState(false);
-  const { allOptions, variantDetails, defaultVariantDetails, isProductLevel } =
-    data;
+  const {
+    allOptions,
+    variantDetails,
+    defaultVariantDetails,
+    isProductLevel,
+    discountCode,
+  } = data;
 
   // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
@@ -74,9 +79,15 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
 
   const modifyUrlToIncludeQuantity = useCallback(
     (link: string, quantity: number) => {
-      return link.concat(
-        `%26items[][quantity]=${quantity}%26return_to=/checkout`
-      );
+      if (discountCode) {
+        return link.concat(
+          `%26items[][quantity]=${quantity}%26return_to=/checkout?discount=${discountCode}`
+        );
+      } else {
+        return link.concat(
+          `%26items[][quantity]=${quantity}%26return_to=/checkout`
+        );
+      }
     },
     []
   );
@@ -171,15 +182,14 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                       textDecoration='line-through'
                     >
                       <p>
-                        {(
-                          (parseInt(chosenOption.price) *
-                            (100 - data.discountPercentage!)) /
-                          100
-                        ).toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                          maximumSignificantDigits: 3,
-                        })}
+                        {parseInt(chosenOption.discountedPrice!).toLocaleString(
+                          'en-US',
+                          {
+                            style: 'currency',
+                            currency: 'USD',
+                            maximumSignificantDigits: 3,
+                          }
+                        )}
                       </p>
                     </Text>
                     <Text fontSize='0.9rem' fontWeight='600'>
