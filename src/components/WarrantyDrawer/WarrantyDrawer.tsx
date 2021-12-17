@@ -1,29 +1,28 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReactComponent as Info } from "assets/icons/svg/info-outline.svg";
+import { WarrantyModuleType } from "../../types/ProductDetailsType";
+import { useGlobal } from "../../context/global/GlobalContext";
 import { useTranslation } from "react-i18next";
-import { getAuth } from "@firebase/auth";
-import Text from "components/Text";
-import Wrapper from "components/Wrapper";
 import LoadingIndicator from "components/LoadingIndicator";
 import SuccessDrawer from "components/SuccessDrawer";
 import DetailsModal from "./DetailsModal";
+import Wrapper from "components/Wrapper";
+import Text from "components/Text";
 
 type WarrantyDrawerProps = {
-  warrantyActivated?: boolean;
   closePage(): void;
-  warrantyData: any;
+  warrantyId: string;
+  warrantyData: WarrantyModuleType;
 };
 
 const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
-  warrantyActivated,
   closePage,
   warrantyData,
+  warrantyId,
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [token, setToken] = useState<string | undefined>("");
-  const auth = getAuth();
+  const { loading, activateWarranty, getProductDetails } = useGlobal();
 
   const { t } = useTranslation("translation", {
     keyPrefix: "drawers.warrantyDrawer",
@@ -44,42 +43,14 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   };
 
   useEffect(() => {
-    async function fetchData() {
-      const token = await auth.currentUser?.getIdToken();
-      setToken(token);
-      console.log("TOKEN: ", token);
+    const checkAndActivateWarranty = async () => {
+      // await activateWarranty(warrantyId);
+      setSuccessDrawer(true);
+    };
+    if (warrantyData && !warrantyData?.activated) {
+      checkAndActivateWarranty();
     }
-    if (auth.currentUser) fetchData();
-  }, [auth, token]);
-
-  useEffect(() => {
-    if (token && !warrantyActivated) {
-      setLoading(true);
-      let myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      let raw = JSON.stringify({
-        warrantyId: "QpaaWnCisQWoZFyRu",
-        //make this dynamic
-      });
-
-      fetch("https://damp-wave-40564.herokuapp.com/products/activateWarranty", {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            setSuccessDrawer(true);
-            setLoading(false);
-          }
-        })
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-    }
-  }, [token, warrantyActivated]);
+  }, [warrantyData, warrantyId, activateWarranty, getProductDetails]);
 
   useEffect(() => {
     if (successDrawer) {
@@ -100,18 +71,14 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     <>
       <SuccessDrawer
         isOpen={successDrawer}
-        title={
-          warrantyActivated
-            ? t("successDrawer.modifiedTitle")
-            : t("successDrawer.title")
-        }
+        title={t("successDrawer.title")}
         description={t("successDrawer.description")}
         close={closeSuccess}
       />
       <DetailsModal
         isOpen={isDetailsOpen}
         close={closeDetails}
-        warrantyActivated={warrantyActivated}
+        warrantyActivated={warrantyData?.activated}
         confirmWarranty={confirmWarranty}
       />
       <Wrapper
@@ -154,7 +121,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 <Wrapper width="45%" alignItems="center">
                   <Text fontSize="0.8rem" color="#1b1b1b" fontWeight="700">
                     <p>
-                      {warrantyData?.period} {warrantyData?.duration}
+                      {warrantyData?.period} {warrantyData?.duration?.label}
                     </p>
                   </Text>
                 </Wrapper>
@@ -170,12 +137,14 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 </Wrapper>
                 <Wrapper width="45%" alignItems="center">
                   <Text fontSize="0.8rem" color="#1b1b1b" fontWeight="700">
-                    <p>{warrantyActivated ? "Activated" : "Not Activated"}</p>
+                    <p>
+                      {warrantyData?.activated ? "Activated" : "Not Activated"}
+                    </p>
                   </Text>
                 </Wrapper>
                 <Wrapper width="10%" alignItems="center"></Wrapper>
               </Wrapper>
-              {warrantyActivated && (
+              {warrantyData?.activated && (
                 <>
                   <Wrapper width="100%">
                     <Wrapper width="45%" alignItems="center">
@@ -185,7 +154,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                     </Wrapper>
                     <Wrapper width="45%" alignItems="center">
                       <Text fontSize="0.8rem" color="#1b1b1b" fontWeight="700">
-                        <p>{warrantyData?.purchaseDate}</p>
+                        <p>{warrantyData?.purchaseDate?.substr(0, 10)}</p>
                       </Text>
                     </Wrapper>
                     <Wrapper width="10%" alignItems="center"></Wrapper>
@@ -198,10 +167,10 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                     </Wrapper>
                     <Wrapper width="45%" alignItems="center">
                       <Text fontSize="0.8rem" color="#1b1b1b" fontWeight="700">
-                        <p>{warrantyData?.expirationDate}</p>
+                        <p>{warrantyData?.expirationDate?.substr(0, 10)}</p>
                       </Text>
                     </Wrapper>
-                    <Wrapper width="10%" alignItems="center"></Wrapper>
+                    {/* <Wrapper width="10%" alignItems="center"></Wrapper> */}
                   </Wrapper>
                 </>
               )}

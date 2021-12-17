@@ -1,8 +1,8 @@
-import React from "react";
-import Wrapper from "components/Wrapper";
-import { NumberInput, ControllerButton } from "./styles";
-import { ReactComponent as Plus } from "assets/icons/svg/plus.svg";
-import { ReactComponent as Minus } from "assets/icons/svg/minus.svg";
+import { ReactComponent as Minus } from 'assets/icons/svg/minus.svg';
+import { ReactComponent as Plus } from 'assets/icons/svg/plus.svg';
+import Wrapper from 'components/Wrapper';
+import React from 'react';
+import { ControllerButton, NumberInput } from './styles';
 
 type QuantityControllerProps = {
   value: string;
@@ -15,21 +15,21 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   onChange,
   limit,
 }) => {
-  const changeQuantity = (value: string, operation?: "sum" | "subtract") => {
+  const changeQuantity = (value: string, operation?: 'sum' | 'subtract') => {
     let currValue: number;
 
     if (operation) {
       switch (operation) {
-        case "sum":
+        case 'sum':
           currValue = Number(value) + 1;
-          if(limit && currValue <= limit) {
+          if (limit && currValue <= limit) {
             onChange(currValue.toString());
           }
           break;
-        case "subtract":
+        case 'subtract':
           currValue = Number(value) - 1;
 
-          if (currValue >= 0) {
+          if (currValue >= 1) {
             onChange(currValue.toString());
           }
           break;
@@ -40,21 +40,21 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   };
 
   return (
-    <Wrapper gap="0.3rem">
+    <Wrapper gap='0.3rem'>
       <ControllerButton
-        disabled={Number(value) <= 0 ? true : false}
-        onClick={() => changeQuantity(value, "subtract")}
+        disabled={Number(value) <= 1 ? true : false}
+        onClick={() => changeQuantity(value, 'subtract')}
       >
         <Minus />
       </ControllerButton>
       <NumberInput
-        type="number"
+        type='number'
         value={value}
         onChange={({ target: { value } }) => changeQuantity(value)}
       />
       <ControllerButton
         disabled={limit ? Number(value) >= limit : false}
-        onClick={() => changeQuantity(value, "sum")}
+        onClick={() => changeQuantity(value, 'sum')}
       >
         <Plus />
       </ControllerButton>

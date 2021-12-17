@@ -26,6 +26,7 @@ export const resources = {
       signUp: {
         pageHeaderTitle: "Sign Up",
         signUpButton: "Sign Up",
+        magicLinkButton: "Send magic link",
         googleButton: "Continue with Google",
         facebookButton: "Continue with Facebook",
         emailInput: "Enter email...",
@@ -36,6 +37,8 @@ export const resources = {
       signIn: {
         pageHeaderTitle: "Sign In",
         signInButton: "Sign In",
+        usePassword: "Use password instead",
+        magicLinkButton: "Send magic link",
         googleButton: "Continue with Google",
         facebookButton: "Continue with Facebook",
         emailInput: "Enter email...",
@@ -99,9 +102,14 @@ export const resources = {
           },
           successDrawer: {
             title: "Warranty Activated!",
-            modifiedTitle: "Details Updated!",
             description: "Check your email for details",
           },
+        },
+        referralDrawer: {
+          copyLinkButton: "Copy link",
+          shareLinkButton: "Share link",
+          shareText: "Have a look at this product from Brij",
+          helpText: "Have your friend scan this code",
         },
         smsDrawer: {
           signUpButton: "Sign up for VIP texts",

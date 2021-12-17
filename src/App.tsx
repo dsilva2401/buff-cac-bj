@@ -1,24 +1,20 @@
-import Routes from "./routes";
-import config from "./firebase/config";
-import GlobalStyle from "styles/global";
-import { initializeApp } from "@firebase/app";
-import { useLayoutEffect } from "react";
-import { BrowserRouter } from "react-router-dom";
-import Container from "components/Container/Container";
-import AppFrame from "components/AppFrame/AppFrame";
-import SideMenu from "components/SideMenu/SideMenu";
+import AppFrame from 'components/AppFrame/AppFrame';
+import Container from 'components/Container/Container';
+import SideMenu from 'components/SideMenu/SideMenu';
+import { useLayoutEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import GlobalStyle from 'styles/global';
+import Routes from './routes';
 
 export default function App() {
-  initializeApp(config.firebase);
-
   useLayoutEffect(() => {
     let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-  }, [])
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, []);
 
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
   });
 
   return (

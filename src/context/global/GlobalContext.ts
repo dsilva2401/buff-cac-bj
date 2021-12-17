@@ -1,4 +1,6 @@
+import { User } from "firebase/auth";
 import React, { createContext, useContext } from "react";
+import { ProductDetailsType } from "../../types/ProductDetailsType";
 
 export type ThemeType = {
   button: {
@@ -30,7 +32,7 @@ export type PageStateType = {
   currentPage: number;
   isDrawerOpen: boolean;
   pageTitle: string;
-};
+} | null;
 
 export type GlobalContextProps = {
   isMenuOpen: boolean;
@@ -43,6 +45,15 @@ export type GlobalContextProps = {
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
   pageState: PageStateType | null;
   setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
+  user: User | null;
+  productDetails: ProductDetailsType | null;
+  getProductDetails: (slug: string, token?: string) => Promise<void>;
+  activateWarranty: (warrantyId: string) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+  slug: string | null;
+  setSlug: React.Dispatch<React.SetStateAction<string | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -56,6 +67,15 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setSignInRedirect: () => {},
   pageState: null,
   setPageState: () => {},
+  user: null,
+  productDetails: null,
+  getProductDetails: () => new Promise((res, rej) => res()),
+  loading: false,
+  error: null,
+  activateWarranty: () => new Promise((res, rej) => res()),
+  slug: null,
+  setSlug: () => {},
+  setUser: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

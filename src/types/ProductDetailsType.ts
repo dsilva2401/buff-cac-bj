@@ -2,7 +2,8 @@ export type PossibleModulesType =
   | 'WARRANTY_MODULE'
   | 'CUSTOM_MODULE'
   | 'LINK_MODULE'
-  | 'SHOPPING_MODULE';
+  | 'SHOPPING_MODULE'
+  | 'REFERRAL_MODULE';
 
 export type ModuleInfoType = {
   // Find this in Products => modules array
@@ -20,7 +21,13 @@ export type ModuleInfoType = {
   // this indicates whether we need an actual login to unlock this module
   locked: boolean;
   // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
-  moduleInfo: CustomModuleType | LinkModuleType | WarrantyModuleType | null;
+  moduleInfo:
+    | CustomModuleType
+    | LinkModuleType
+    | WarrantyModuleType
+    | ShoppingModuleType
+    | ReferralModuleType
+    | null;
 };
 
 export type CustomModuleType = {
@@ -53,7 +60,10 @@ export type WarrantyModuleType = {
   period: number;
 
   // duration
-  duration: string;
+  duration: {
+    label: string;
+    value: string;
+  };
 
   // This field should be stored prob. under user -> profile -> warranty object and created when user registers for warranty
   activated: boolean;
@@ -66,24 +76,58 @@ export type WarrantyModuleType = {
   expirationDate?: string; // UTC timestamp
 };
 
+export type ShoppingModuleOptionsType = {
+  /* All options presented as name, values array key pair*/
+  name: string;
+  value: string;
+  values: string[];
+};
+
+export type AllOptionsType = Pick<ShoppingModuleOptionsType, 'name' | 'values'>;
+
+export type OptionsType = {
+  [key: string]: string;
+};
+
+export type VariantDetails = {
+  /* VariantId */
+  id: string;
+  /* name of this variant */
+  name: string;
+  /* Image */
+  image: string;
+  /* Price of item */
+  price: string;
+  /* Discounted price if available */
+  discountedPrice?: string;
+  /* Maximum quantity available */
+  inventoryQuantity: number;
+  /* Checkout link for this variant */
+  checkoutUri: string;
+  /* These are options list for this variant */
+  options?: OptionsType;
+  /* Object hash. Use this field on client side to check if the option chosen is valid */
+  objectHash?: string;
+};
+
 export type ShoppingModuleType = {
   // All of these fields here should not be populated if locked is true and user token is not present
+  defaultVariantDetails: VariantDetails;
+  isDiscountAvailable: boolean;
+  discountPercentage?: number;
+  isProductLevel: boolean;
+  allOptions?: AllOptionsType[];
+  variantDetails?: VariantDetails[];
+};
 
-  // You will get productId from shoppingModule collection
-  // You will get rest of details from shopping microservice by passing this id
+export type ReferralModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+  // Find this in referralModule collection
 
-  // image of the lead product
-  image: string;
-  discountedPrice: string;
-  price: string;
-  name: string;
-  defaultQuantity: number;
-  checkoutUri: string;
-  details?: {
-    key: string;
-    possibleValues: string[];
-    defaultValue: string;
-  }[];
+  // This is from text field rich html text
+  details: string;
+  url: string;
+  qrcode: string;
 };
 
 export type ProductDetailsType = {
@@ -99,6 +143,7 @@ export type ProductDetailsType = {
     // @manoj: Construct complete image url from Image object and set value to it.
     image: string;
     name: string;
+    website: string;
     social: {
       // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
       // Otherwise, set phone is undefined. Similarly for others

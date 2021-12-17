@@ -7,6 +7,8 @@ import Collection from "pages/Collection";
 import Profile from "pages/Profile/Profile";
 import ProfileEdit from "pages/ProfileEdit";
 import ResetPassword from "pages/ResetPassword";
+import MagicLink from "pages/MagicLink";
+import PersonalDetails from "pages/PersonalDetails"
 
 export default function Routes() {
   return (
@@ -19,6 +21,8 @@ export default function Routes() {
       <Route exact path={"/profile/edit"} component={ProfileEdit} />
       <Route exact path={"/reset-password"} component={ResetPassword} />
       <Route exact path={"/product/:id"} component={ProductDetails} />
+      <Route exact path={"/magic-link"} component={MagicLink} />
+      <Route exact path={"/personal-details"} component={PersonalDetails} />
     </Switch>
   );
 }

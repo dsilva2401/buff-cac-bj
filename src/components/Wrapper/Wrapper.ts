@@ -70,7 +70,7 @@ const Wrapper = styled.div<WrapperProps>`
   align-content: ${(props) =>
     props.alignContent ? props.alignContent : "unset"};
   overflow: ${(props) => (props.overflow ? props.overflow : "unset")};
-
+  
   &::before {
     content: ${(props) =>
       props.before?.content ? `"${props.before.content}"` : "none"};

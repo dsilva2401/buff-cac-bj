@@ -1,51 +1,54 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useContext,
-} from "react";
-import {
-  User,
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-// import { logMessage } from '../../utils/index';
-import { GlobalContext } from "context";
-import { Link, useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import PageFooter from "components/PageFooter";
-import PageHeader from "components/PageHeader";
-import Wrapper from "components/Wrapper";
-import Button from "components/Button";
-import Input from "components/Input";
-import Image from "components/Image";
-import Text from "components/Text";
 import brijLogo from "assets/logos/svg/brij-colored.svg";
-import LoadingIndicator from "components/LoadingIndicator";
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
+import Button from "components/Button";
+import Image from "components/Image";
+import Input from "components/Input";
+import LoadingIndicator from "components/LoadingIndicator";
+import PageFooter from "components/PageFooter";
+import PageHeader from "components/PageHeader";
+import Text from "components/Text";
+import Wrapper from "components/Wrapper";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  User,
+} from "firebase/auth";
+import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useHistory } from "react-router-dom";
+import { useGlobal } from "../../context/global/GlobalContext";
+import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
-  const context = useContext(GlobalContext);
+  const { pageState } = useGlobal();
   const history = useHistory();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [redirect, setRedirect] = useState<string>(
-    context.signInRedirect || ""
-  );
   const [error, setError] = useState<string>("");
   const [token, setToken] = useState<string | undefined>("");
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
 
-  console.log("GLOBAL PAGE STATE: ", context.pageState);
-  console.log("GLOBAL REDIRECT STATE: ", context.signInRedirect);
+  console.log("GLOBAL PAGE STATE: ", pageState);
+
+  // redirect loggedIn user
+  useRedirectLoggedInUser(token, user);
+
+  // get magic link header
+  const {
+    handleMagicLink,
+    loading: magicLinkLoading,
+    error: magicLinkError,
+    success,
+  } = useMagicLinkHandler(username);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);
@@ -85,45 +88,9 @@ const Login: React.FC = () => {
     async function fetchData() {
       const token = await user?.getIdToken();
       setToken(token);
-      console.log("TOKEN: ", token);
     }
     if (user) fetchData();
   }, [user]);
-
-  useEffect(() => {
-    if (token) {
-      let myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      let raw = JSON.stringify({
-        email: user?.email,
-        phoneNumber: user?.phoneNumber,
-        firstName: user?.displayName,
-        lastName: "",
-      });
-
-      fetch("https://damp-wave-40564.herokuapp.com/auth", {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            if (redirect) {
-              console.log("REDIRECT LINK: ", redirect);
-              history.push(redirect);
-            } else history.push("/collection");
-          }
-        })
-        .catch((error) => {
-          console.log("ERROR CODE: ", error.code);
-          console.log("ERROR MSG: ", error.message);
-        });
-      setLoading(false);
-    }
-  }, [user, token, history, context, redirect]);
 
   const handleLogin = () => {
     setLoading(true);
@@ -138,6 +105,15 @@ const Login: React.FC = () => {
         setLoading(false);
       });
   };
+
+  const passwordInput = !usingMagicLink ? (
+    <Input
+      type="password"
+      value={password}
+      placeholder={t("passwordInput")}
+      onChange={handlePasswordChanged}
+    />
+  ) : null;
 
   return (
     <Wrapper
@@ -192,26 +168,43 @@ const Login: React.FC = () => {
             onChange={handleUsernameChanged}
             margin="0 0 1rem"
           />
-          <Input
-            type="password"
-            value={password}
-            placeholder={t("passwordInput")}
-            onChange={handlePasswordChanged}
-          />
-          <Wrapper width="100%" justifyContent="flex-end" padding="0 1rem">
+          {passwordInput}
+          <Wrapper width="100%" justifyContent="space-between" padding="0 1rem">
+            <Text
+              fontSize="0.7rem"
+              textDecoration="unset"
+              onClick={() => setUsingMagicLink(!usingMagicLink)}
+            >
+              <span>{usingMagicLink ? "Use password" : "Use magic link"}</span>
+            </Text>
             <Text fontSize="0.7rem" textDecoration="unset">
               <Link to="/forgot-password">{t("forgotPassword")}</Link>
             </Text>
           </Wrapper>
         </Wrapper>
         <Wrapper width="100%" justifyContent="center" alignItems="center">
-          {loading ? (
+          {loading || magicLinkLoading ? (
             <LoadingIndicator />
           ) : (
-            <Button theme="dark" onClick={() => handleLogin()}>
-              {t("signInButton")}
+            <Button
+              theme="dark"
+              onClick={() =>
+                usingMagicLink ? handleMagicLink() : handleLogin()
+              }
+            >
+              {usingMagicLink ? t("magicLinkButton") : t("signInButton")}
             </Button>
           )}
+        </Wrapper>
+        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
+          <Text fontSize="0.7rem" textDecoration="unset">
+            <span>{magicLinkError}</span>
+          </Text>
+        </Wrapper>
+        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
+          <Text fontSize="0.7rem" textDecoration="unset">
+            <span>{success}</span>
+          </Text>
         </Wrapper>
       </Wrapper>
       <PageFooter>
