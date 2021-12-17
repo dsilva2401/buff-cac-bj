@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Select, Option, Label, SelectWrapper } from "./styles";
+import React from 'react';
+import { Label, Option, Select, SelectWrapper } from './styles';
 
 type SelectInputProps = {
   id: string;
   options: string[];
   label: string;
   isSuccess: boolean;
-  onChange: (value: string | number) => void;
+  selected?: string;
+  onChange: (value: string) => void;
 };
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -15,32 +16,22 @@ const SelectInput: React.FC<SelectInputProps> = ({
   label,
   isSuccess,
   onChange,
+  selected,
 }) => {
-  const [currentSelected, setCurrentSelected] = useState<string | number>("");
-
-  useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => {
-        setCurrentSelected("");
-      }, 1000);
-    }
-  }, [isSuccess]);
-
+  console.log('selected: ', selected);
   return (
     <SelectWrapper fullWidth>
       <Label id={id}>{label}</Label>
       <Select
-        labelId="id"
-        value={currentSelected}
+        labelId={selected ?? options[0]}
+        value={selected ?? options[0]}
         onChange={({ target: { value } }) => {
-          setCurrentSelected(value as string | number);
-          onChange(value as string | number);
-          }
-        }
+          onChange(String(value));
+        }}
         MenuProps={{
           anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "left",
+            vertical: 'bottom',
+            horizontal: 'left',
           },
           getContentAnchorEl: null,
         }}

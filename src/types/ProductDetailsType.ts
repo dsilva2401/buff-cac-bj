@@ -1,9 +1,9 @@
 export type PossibleModulesType =
-  | "WARRANTY_MODULE"
-  | "CUSTOM_MODULE"
-  | "LINK_MODULE"
-  | "REFERRAL_MODULE"
-  | "SHOPPING_MODULE";
+  | 'WARRANTY_MODULE'
+  | 'CUSTOM_MODULE'
+  | 'LINK_MODULE'
+  | 'SHOPPING_MODULE'
+  | 'REFERRAL_MODULE';
 
 export type ModuleInfoType = {
   // Find this in Products => modules array
@@ -21,7 +21,13 @@ export type ModuleInfoType = {
   // this indicates whether we need an actual login to unlock this module
   locked: boolean;
   // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
-  moduleInfo: CustomModuleType | LinkModuleType | WarrantyModuleType | ReferralModuleType | null;
+  moduleInfo:
+    | CustomModuleType
+    | LinkModuleType
+    | WarrantyModuleType
+    | ShoppingModuleType
+    | ReferralModuleType
+    | null;
 };
 
 export type CustomModuleType = {
@@ -70,6 +76,50 @@ export type WarrantyModuleType = {
   expirationDate?: string; // UTC timestamp
 };
 
+export type ShoppingModuleOptionsType = {
+  /* All options presented as name, values array key pair*/
+  name: string;
+  value: string;
+  values: string[];
+};
+
+export type AllOptionsType = Pick<ShoppingModuleOptionsType, 'name' | 'values'>;
+
+export type OptionsType = {
+  [key: string]: string;
+};
+
+export type VariantDetails = {
+  /* VariantId */
+  id: string;
+  /* name of this variant */
+  name: string;
+  /* Image */
+  image: string;
+  /* Price of item */
+  price: string;
+  /* Discounted price if available */
+  discountedPrice?: string;
+  /* Maximum quantity available */
+  inventoryQuantity: number;
+  /* Checkout link for this variant */
+  checkoutUri: string;
+  /* These are options list for this variant */
+  options?: OptionsType;
+  /* Object hash. Use this field on client side to check if the option chosen is valid */
+  objectHash?: string;
+};
+
+export type ShoppingModuleType = {
+  // All of these fields here should not be populated if locked is true and user token is not present
+  defaultVariantDetails: VariantDetails;
+  isDiscountAvailable: boolean;
+  discountPercentage?: number;
+  isProductLevel: boolean;
+  allOptions?: AllOptionsType[];
+  variantDetails?: VariantDetails[];
+};
+
 export type ReferralModuleType = {
   // All of these fields here should not be populated if locked is true and user token is not present
   // Find this in referralModule collection
@@ -78,26 +128,6 @@ export type ReferralModuleType = {
   details: string;
   url: string;
   qrcode: string;
-};
-
-export type ShoppingModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
-
-  // You will get productId from shoppingModule collection
-  // You will get rest of details from shopping microservice by passing this id
-
-  // image of the lead product
-  image: string;
-  discountedPrice: string;
-  price: string;
-  name: string;
-  defaultQuantity: number;
-  checkoutUri: string;
-  details?: {
-    key: string;
-    possibleValues: string[];
-    defaultValue: string;
-  }[];
 };
 
 export type ProductDetailsType = {

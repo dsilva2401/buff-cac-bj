@@ -1,93 +1,103 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import hash from "object-hash";
-import QuantityController from "components/QuantityController";
-import SuccessDrawer from "components/SuccessDrawer";
-import SelectInput from "components/SelectInput";
-import Wrapper from "components/Wrapper";
-import Button from "components/Button";
-import Image from "components/Image";
-import Text from "components/Text";
-import "../../../node_modules/slick-carousel/slick/slick-theme.css";
-import "../../../node_modules/slick-carousel/slick/slick.css";
+import Button from 'components/Button';
+import Image from 'components/Image';
+import QuantityController from 'components/QuantityController';
+import SelectInput from 'components/SelectInput';
+import SuccessDrawer from 'components/SuccessDrawer';
+import Text from 'components/Text';
+import Wrapper from 'components/Wrapper';
+import hash from 'object-hash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import '../../../node_modules/slick-carousel/slick/slick-theme.css';
+import '../../../node_modules/slick-carousel/slick/slick.css';
+import {
+  ShoppingModuleType,
+  VariantDetails,
+} from '../../types/ProductDetailsType';
 
 type ShopDrawerProps = {
-  data: any;
-  product: any;
+  data: ShoppingModuleType;
   closePage(): void;
 };
 
-const ShopDrawer: React.FC<ShopDrawerProps> = ({
-  data,
-  product,
-  closePage,
-}) => {
+const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const [successDrawer, setSuccessDrawer] = useState(false);
-  const { shoppingVariantDetails, meta } = data;
-  const { allOptions, validVariantOptions, productImage } =
-    shoppingVariantDetails;
-  const discount: number = shoppingVariantDetails.discount || 0;
-  const validOptionsHash = useRef<{ [key: string]: boolean | undefined }>();
+  const { allOptions, variantDetails, defaultVariantDetails, isProductLevel } =
+    data;
+
+  // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
-  const [isValidCombo, setIsValidCombo] = useState<boolean | null>(null);
-  const [checkoutUri, setCheckoutUri] = useState("invalid");
-  const [isAvailable, setIsAvailable] = useState(false);
-  const [image, setImage] = useState(productImage);
-  const [price, setPrice] = useState<number | undefined>(0);
-  const [quantity, setQuantity] = useState("1");
-  const [inventory, setInventory] = useState<number | undefined>(0);
+
+  // Chosen option will be the one shown always. It may be product or variant
+  const [chosenOption, setChosenOption] = useState<VariantDetails>(
+    defaultVariantDetails
+  );
+
+  const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
+
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   useEffect(() => {
-    const obj: { [key: string]: boolean | undefined } = {};
-    validVariantOptions.map((item: any) => (obj[item.objectHash] = true));
-    validOptionsHash.current = obj;
-  }, [validVariantOptions]);
+    if (defaultVariantDetails.options) {
+      const optionObj: any = {};
+      Object.keys(defaultVariantDetails.options).forEach((key) => {
+        optionObj[key] = defaultVariantDetails.options![key];
+      });
+      updateOption({ ...optionObj });
+    }
+    setChosenOption(defaultVariantDetails);
+  }, [defaultVariantDetails]);
 
   useEffect(() => {
-    if (Object.keys(option).length === allOptions.length) {
-      const objHash = hash(option);
-      const isValid = validOptionsHash.current?.[objHash] ?? false;
-      setIsValidCombo(isValid);
-      if (isValid) {
-        const obj = validVariantOptions.find(
-          (item: any) => item.objectHash === objHash
-        );
-        if (obj?.checkoutUri) setCheckoutUri(obj.checkoutUri);
-        if (obj?.price) setPrice(obj.price);
-        setIsAvailable(!!obj?.inventoryQuantity);
-        setInventory(obj?.inventoryQuantity);
-        if (obj?.image) {
-          setImage(obj.image);
-        } else {
-          setPrice(0);
-          setIsAvailable(false);
-          setCheckoutUri("invalid");
-        }
+    const objHash = hash(option);
+    const variant = variantDetails?.find((item) => item.objectHash === objHash);
+    if (variant) {
+      setIsValidCombo(true);
+      setChosenOption(variant);
+      setSelectedQuantity(1);
+    } else {
+      if (isProductLevel) {
+        setIsValidCombo(true);
+      } else {
+        setIsValidCombo(false);
       }
     }
-  }, [option, validVariantOptions, allOptions]);
+  }, [option, variantDetails, isProductLevel]);
 
-  const { t } = useTranslation("translation", {
-    keyPrefix: "drawers.shopDrawer",
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'drawers.shopDrawer',
   });
 
-  const handleQuantity = (value: string) => {
-    setQuantity(value);
-  };
+  const handleQuantity = useCallback((value: string) => {
+    setSelectedQuantity(parseInt(value));
+  }, []);
 
-  const handleCheckout = (link: string) => {
+  const modifyUrlToIncludeQuantity = useCallback(
+    (link: string, quantity: number) => {
+      return link.concat(
+        `%26items[][quantity]=${quantity}%26return_to=/checkout`
+      );
+    },
+    []
+  );
+
+  const handleCheckout = useCallback(() => {
+    const link = modifyUrlToIncludeQuantity(
+      chosenOption.checkoutUri,
+      selectedQuantity
+    );
     window.open(link);
-  };
+  }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity]);
 
-  const closeSuccess = () => {
+  const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);
     closePage();
-  };
+  }, [closePage]);
 
   useEffect(() => {
     if (successDrawer) {
       setTimeout(() => {
-        setQuantity("1");
+        setSelectedQuantity(1);
       }, 1000);
       setTimeout(() => {
         setSuccessDrawer(false);
@@ -95,117 +105,102 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     }
   }, [successDrawer]);
 
+  console.log('option: ', option);
+
   return (
     <>
       <SuccessDrawer
         isOpen={successDrawer}
-        title={t("successDrawer.title")}
-        description={t("successDrawer.description")}
+        title={''}
+        description={''}
         close={closeSuccess}
       />
       <Wrapper
-        width="100%"
-        height="100%"
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-        overflow="auto"
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='flex-start'
+        alignItems='center'
+        overflow='auto'
         before={{
-          content: `${t("savingBanner.pre")} ${
-            shoppingVariantDetails.discount
-          }${t("savingBanner.post")}`,
-          width: "auto",
-          height: "auto",
-          padding: "0.4rem 1.5rem",
-          position: "absolute",
-          color: "#fff",
-          top: "-1px",
-          background: "#1B1B1B",
-          fontSize: "0.8rem",
-          borderRadius: "0 0 15px 15px",
+          content: data.isDiscountAvailable
+            ? `You are saving ${data.discountPercentage!}% with Brij`
+            : 'Buy with Brij',
+          width: 'auto',
+          height: 'auto',
+          padding: '0.4rem 1.5rem',
+          position: 'absolute',
+          color: '#fff',
+          top: '-1px',
+          background: '#1B1B1B',
+          fontSize: '0.8rem',
+          borderRadius: '0 0 15px 15px',
         }}
       >
         <Wrapper
-          width="100%"
-          justifyContent="space-between"
-          alignItems="center"
-          gap="0.5rem"
+          width='100%'
+          justifyContent='space-between'
+          alignItems='center'
+          gap='0.5rem'
         >
-          <Wrapper width="45%" responsiveImg>
-            <Image src={image} alt="" rounded width="100%" />
+          <Wrapper width='45%' responsiveImg>
+            <Image src={chosenOption.image} alt='' rounded width='100%' />
           </Wrapper>
-          <Wrapper width="50%" height="100%" direction="column" gap="1rem">
-            {data && (
-              <Wrapper width="100%" direction="column" gap="0.1rem">
-                <Text fontSize="1rem" fontWeight="600">
-                  <p>{product.name}</p>
-                </Text>
-
-                {discount > 0 && parseInt(quantity) > 0 ? (
-                  <Wrapper
-                    direction="row"
-                    width="max-content"
-                    alignItems="center"
-                    gap="0.4rem"
+          <Wrapper width='50%' height='100%' direction='column' gap='1rem'>
+            <Wrapper width='100%' direction='column' gap='0.1rem'>
+              <Text
+                color='#98A3AA'
+                fontSize='0.75rem'
+                fontWeight='bold'
+                textDecoration='line-through'
+              >
+                {chosenOption.name}
+              </Text>
+              <Wrapper
+                direction='row'
+                width='max-content'
+                alignItems='center'
+                gap='0.4rem'
+              >
+                {data.isDiscountAvailable && isValidCombo && (
+                  <Text
+                    color='#98A3AA'
+                    fontSize='0.75rem'
+                    fontWeight='500'
+                    textDecoration='line-through'
                   >
-                    <Text
-                      color="#98A3AA"
-                      fontSize="0.75rem"
-                      fontWeight="500"
-                      textDecoration="line-through"
-                    >
-                      <p>
-                        {isValidCombo
-                          ? `${(price! * Number(quantity)).toLocaleString(
-                              "en-US",
-                              {
-                                style: "currency",
-                                currency: "USD",
-                                maximumSignificantDigits: 3,
-                              }
-                            )}`
-                          : null}
-                      </p>
-                    </Text>
-                    <Text fontSize="0.9rem" fontWeight="600">
-                      <p>
-                        {isValidCombo
-                          ? `${(
-                              (price! - price! * (discount / 100)) *
-                              Number(quantity)
-                            ).toLocaleString("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                              maximumSignificantDigits: 3,
-                            })}`
-                          : null}
-                      </p>
-                    </Text>
-                  </Wrapper>
-                ) : (
-                  <Text fontSize="0.9rem" fontWeight="600">
                     <p>
-                      {isValidCombo
-                        ? `${(price! * Number(quantity)).toLocaleString(
-                            "en-US",
-                            {
-                              style: "currency",
-                              currency: "USD",
-                              maximumSignificantDigits: 3,
-                            }
-                          )}`
-                        : null}
+                      {(
+                        (parseInt(chosenOption.price) *
+                          (100 - data.discountPercentage!)) /
+                        100
+                      ).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        maximumSignificantDigits: 3,
+                      })}
+                    </p>
+                  </Text>
+                )}
+                {isValidCombo && (
+                  <Text fontSize='0.9rem' fontWeight='600'>
+                    <p>
+                      {parseInt(chosenOption.price).toLocaleString('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        maximumSignificantDigits: 3,
+                      })}
                     </p>
                   </Text>
                 )}
               </Wrapper>
-            )}
+            </Wrapper>
             {isValidCombo ? (
               <Wrapper>
                 <QuantityController
-                  value={quantity}
+                  value={String(selectedQuantity)}
                   onChange={handleQuantity}
-                  limit={inventory}
+                  limit={chosenOption.inventoryQuantity}
                 />
               </Wrapper>
             ) : null}
@@ -213,54 +208,53 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
         </Wrapper>
 
         <Wrapper
-          width="100%"
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap="0.5rem"
+          width='100%'
+          direction='column'
+          justifyContent='flex-start'
+          alignItems='center'
+          gap='0.5rem'
         >
-          {allOptions.map((optionItem: any) => (
+          {allOptions?.map((optionItem) => (
             <SelectInput
               key={optionItem.name}
               id={optionItem.name}
-              label={`Select ${optionItem.name}...`}
+              label={optionItem.name}
               options={optionItem.values}
               isSuccess={successDrawer}
               onChange={(value) =>
-                updateOption({ ...option, [optionItem.name]: value })
+                updateOption((prev) => ({
+                  ...prev,
+                  [optionItem.name]: String(value),
+                }))
               }
+              selected={option[optionItem.name]}
             />
           ))}
         </Wrapper>
 
         <Wrapper
-          width="100%"
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          margin="1.5rem 0 0"
+          width='100%'
+          direction='column'
+          justifyContent='flex-start'
+          alignItems='center'
+          margin='1.5rem 0 0'
         >
           {isValidCombo ? (
             <Button
-              theme="dark"
-              onClick={() => handleCheckout(checkoutUri)}
-              disabled={
-                !isValidCombo || !isAvailable || parseInt(quantity) <= 0
-              }
+              theme='dark'
+              onClick={handleCheckout}
+              disabled={!isValidCombo}
             >
-              {!isAvailable
-                ? t("checkoutButton.unavailable")
-                : t("checkoutButton.purchaseNow")}
+              {t('checkoutButton.purchaseNow')}
             </Button>
           ) : (
-            <Text fontSize="1rem" fontWeight="600">
+            <Text fontSize='1rem' fontWeight='600'>
               <p>
-                {" "}
                 {isValidCombo === null
-                  ? t("checkoutHint.chooseOptions")
+                  ? t('checkoutHint.chooseOptions')
                   : isValidCombo === false
-                  ? t("checkoutHint.comboUnavailable")
-                  : ""}
+                  ? t('checkoutHint.comboUnavailable')
+                  : ''}
               </p>
             </Text>
           )}
