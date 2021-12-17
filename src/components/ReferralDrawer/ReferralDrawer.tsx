@@ -18,6 +18,21 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({ referralData }) => {
     keyPrefix: "drawers.referralDrawer",
   });
 
+  const handleShare = async () => {
+    const shareData = {
+      title: referralData?.url,
+      text: t("shareText"),
+      url: referralData?.url,
+    };
+    const resultPara = document.querySelector(".result");
+    try {
+      await navigator.share(shareData);
+      if (resultPara) resultPara.textContent = "Shared successfully";
+    } catch (err) {
+      if (resultPara) resultPara.textContent = "Error: " + err;
+    }
+  };
+
   return (
     <Wrapper
       width="100%"
@@ -46,7 +61,13 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({ referralData }) => {
         <CopyToClipboard text={referralData?.url}>
           <Button theme="light">{t("copyLinkButton")}</Button>
         </CopyToClipboard>
-        <Button theme="light">{t("shareLinkButton")}</Button>
+        <Button
+          id="shareButton"
+          onClick={() => handleShare()}
+          theme="light"
+        >
+          {t("shareLinkButton")}
+        </Button>
       </Wrapper>
       <Text fontSize="1.125rem" color="#98A3AA" margin="0.75rem 0">
         <p>or</p>

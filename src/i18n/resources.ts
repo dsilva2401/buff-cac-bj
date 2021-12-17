@@ -108,6 +108,7 @@ export const resources = {
         referralDrawer: {
           copyLinkButton: "Copy link",
           shareLinkButton: "Share link",
+          shareText: "Have a look at this product from Brij",
           helpText: "Have your friend scan this code",
         },
         smsDrawer: {

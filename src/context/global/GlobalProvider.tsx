@@ -52,10 +52,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const activateWarranty = useCallback(
     async (warrantyId: string) => {
       try {
-        console.log("ACTIVATE TRIGGER")
         setLoading(true);
         const token = await user!.getIdToken();
-
         // const res = await fetch(
         //   "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
         //   {
@@ -74,8 +72,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         getProductDetails(slug!, token);
       } catch (e) {
         setError(JSON.stringify(e));
-      }
-      finally{
+      } finally {
         setLoading(false);
       }
     },
