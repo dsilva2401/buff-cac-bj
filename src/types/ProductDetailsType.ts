@@ -115,6 +115,7 @@ export type ShoppingModuleType = {
   defaultVariantDetails: VariantDetails;
   isDiscountAvailable: boolean;
   discountPercentage?: number;
+  discountCode?: string;
   isProductLevel: boolean;
   allOptions?: AllOptionsType[];
   variantDetails?: VariantDetails[];
