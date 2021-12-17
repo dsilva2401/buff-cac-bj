@@ -162,27 +162,38 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                 alignItems='center'
                 gap='0.4rem'
               >
-                {data.isDiscountAvailable && isValidCombo && (
-                  <Text
-                    color='#98A3AA'
-                    fontSize='0.75rem'
-                    fontWeight='500'
-                    textDecoration='line-through'
-                  >
-                    <p>
-                      {(
-                        (parseInt(chosenOption.price) *
-                          (100 - data.discountPercentage!)) /
-                        100
-                      ).toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                        maximumSignificantDigits: 3,
-                      })}
-                    </p>
-                  </Text>
+                {isValidCombo && data.isDiscountAvailable && (
+                  <>
+                    <Text
+                      color='#98A3AA'
+                      fontSize='0.75rem'
+                      fontWeight='500'
+                      textDecoration='line-through'
+                    >
+                      <p>
+                        {(
+                          (parseInt(chosenOption.price) *
+                            (100 - data.discountPercentage!)) /
+                          100
+                        ).toLocaleString('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                          maximumSignificantDigits: 3,
+                        })}
+                      </p>
+                    </Text>
+                    <Text fontSize='0.9rem' fontWeight='600'>
+                      <p>
+                        {parseInt(chosenOption.price).toLocaleString('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                          maximumSignificantDigits: 3,
+                        })}
+                      </p>
+                    </Text>
+                  </>
                 )}
-                {isValidCombo && (
+                {isValidCombo && !data.isDiscountAvailable && (
                   <Text fontSize='0.9rem' fontWeight='600'>
                     <p>
                       {parseInt(chosenOption.price).toLocaleString('en-US', {
