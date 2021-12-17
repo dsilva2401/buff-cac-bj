@@ -53,6 +53,7 @@ export type GlobalContextProps = {
   error: string | null;
   slug: string | null;
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -74,6 +75,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   activateWarranty: () => new Promise((res, rej) => res()),
   slug: null,
   setSlug: () => {},
+  setUser: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

@@ -12,7 +12,9 @@ import {
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState<ThemeMode>("light");
-  const [signInRedirect, setSignInRedirect] = useState<string>("");
+  const [signInRedirect, setSignInRedirect] = useState<string>(
+    localStorage.getItem('signInRedirect') || ''
+  );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -103,6 +105,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
     }
   }, [slug, user, getProductDetails]);
 
+  useEffect(() => {
+    localStorage.setItem('signInRedirect', signInRedirect);
+
+    console.log('signInRedirect', signInRedirect)
+
+    // upon unmount clear storage
+    return () => localStorage.setItem('signInRedirect', '');
+  }, [signInRedirect]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -124,6 +135,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         activateWarranty,
         slug,
         setSlug,
+        setUser,
       }}
     >
       {children}
