@@ -45,7 +45,8 @@ const Menu = styled.div<MenuProps>`
       justify-content: flex-start;
       align-items: flex-end;
       gap: 1.2rem;
-      a {
+      a, span, p {
+        cursor: pointer;
         color: #fff;
         display: flex;
         justify-content: center;

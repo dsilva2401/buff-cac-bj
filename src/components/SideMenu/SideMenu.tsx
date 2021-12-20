@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { Link, useLocation } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
@@ -15,6 +15,16 @@ import DrawerMask from "components/DrawerMask";
 import Image from "components/Image";
 import Menu from "./styles";
 
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>(value);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current
+}
+
 const SideMenu: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "sideMenu" });
   const { isMenuOpen, setIsMenuOpen } = useGlobal();
@@ -25,7 +35,9 @@ const SideMenu: React.FC = () => {
   const history = useHistory();
   const auth = getAuth();
 
-  const { productDetails: details } = useGlobal();
+  const { productDetails: details, user } = useGlobal();
+
+  const previousUser = usePrevious(user);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -35,20 +47,25 @@ const SideMenu: React.FC = () => {
     });
   }, [auth]);
 
+  useEffect(() => {
+    if (previousUser && !user) {
+      history.push('/');
+    };
+  }, [previousUser, user]);
+
   const handleLogoutButtonClicked = useCallback(() => {
     if (error !== "") setError("");
     setLoading(true);
     signOut(auth)
       .then(() => {
         setLoading(false);
-        history.push("/");
       })
       .catch((error) => {
         console.log("ERROR CODE: ", error.code);
         console.log("ERROR MSG: ", error.message);
       });
     setIsMenuOpen(false);
-  }, [setIsMenuOpen, auth, history, error]);
+  }, [setIsMenuOpen, auth, error]);
 
   return (
     <>
@@ -89,10 +106,10 @@ const SideMenu: React.FC = () => {
               </a>
             )}
             {signedIn ? (
-              <Link to="/" onClick={handleLogoutButtonClicked}>
+              <p onClick={handleLogoutButtonClicked}>
                 {t("signOut")}
                 {loading ? <LoadingIndicator /> : <Logout />}
-              </Link>
+              </p>
             ) : (
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
                 {t("signIn")}

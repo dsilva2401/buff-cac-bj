@@ -202,8 +202,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           key={button.title}
                           theme={button.isHighlight ? "dark" : "light"}
                           onClick={() => {
-                            if (button.locked) history.push("/");
-                            else button.onClick();
+                            button.onClick();
                             if (button.pageState !== null)
                               setPageState(button.pageState);
                           }}

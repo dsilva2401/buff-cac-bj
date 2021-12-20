@@ -1,5 +1,3 @@
-import brijLogo from 'assets/logos/svg/brij-colored.svg';
-
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 
@@ -9,11 +7,10 @@ import Text from "components/Text";
 import Input from "components/Input";
 
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
 import { Link, useHistory } from "react-router-dom";
-import Image from "components/Image";
-import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
+// import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
 
@@ -27,12 +24,10 @@ const LoginForm = () => {
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [token, setToken] = useState<string | undefined>('');
-  const [user, setUser] = useState<User | undefined>(undefined);
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
 
   // redirect loggedIn user
-  useRedirectLoggedInUser(token, user);
+  // useRedirectLoggedInUser(token, user);
 
   // get magic link header
   const {
@@ -46,7 +41,7 @@ const LoginForm = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => setUser(result.user))
+      .then((result) => console.log(result.user))
       .catch((error) => {
         console.log('ERROR CODE: ', error.code);
         console.log('ERROR MSG: ', error.message);
@@ -71,25 +66,12 @@ const LoginForm = () => {
     []
   );
 
-  const logo = useMemo(
-    () => <Image width='auto' src={brijLogo} alt='Brij logo' />,
-    []
-  );
-
-  useEffect(() => {
-    async function fetchData() {
-      const token = await user?.getIdToken();
-      setToken(token);
-    }
-    if (user) fetchData();
-  }, [user]);
-
   const handleLogin = () => {
     setLoading(true);
     if (error !== '') setError('');
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
-        setUser(userCredential.user);
+        console.log(userCredential.user);
       })
       .catch((error) => {
         console.log('ERROR CODE: ', error.code);

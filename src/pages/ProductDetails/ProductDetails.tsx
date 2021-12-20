@@ -4,6 +4,7 @@ import IconButton from "components/IconButton";
 import Image from "components/Image";
 import LinkModule from "components/LinkModule";
 import LoadingIndicator from "components/LoadingIndicator";
+import LoginForm from "components/LoginForm";
 import PageHeader from "components/PageHeader";
 import ReferralDrawer from "components/ReferralDrawer";
 import ShopDrawer from "components/ShopDrawer";
@@ -117,13 +118,19 @@ const ProductDetails: React.FC = () => {
 
   const renderDrawerPage = useCallback(() => {
     if (details) {
-      let moduleType: string | undefined = details?.modules[currentPage]?.type;
+      const module = details?.modules[currentPage];
+      let moduleType: string | undefined = module?.type;
+
+      if (module.locked) {
+        return <LoginForm />;
+      }
+
       switch (moduleType) {
         case "CUSTOM_MODULE":
           return (
             <CustomDrawer
               drawerData={
-                details?.modules[currentPage]?.moduleInfo as CustomModuleType
+                module?.moduleInfo as CustomModuleType
               }
             />
           );
@@ -132,9 +139,9 @@ const ProductDetails: React.FC = () => {
             <WarrantyDrawer
               closePage={closeDrawerPage}
               warrantyData={
-                details?.modules[currentPage]?.moduleInfo as WarrantyModuleType
+                module?.moduleInfo as WarrantyModuleType
               }
-              warrantyId={details?.modules[currentPage]?.id}
+              warrantyId={module?.id}
             />
           );
         case "LINK_MODULE":
@@ -142,7 +149,7 @@ const ProductDetails: React.FC = () => {
             <LinkModule
               closePage={closeDrawerPage}
               moduleData={
-                details?.modules[currentPage]?.moduleInfo as LinkModuleType
+                module?.moduleInfo as LinkModuleType
               }
             />
           );
@@ -150,12 +157,12 @@ const ProductDetails: React.FC = () => {
           return (
             <ReferralDrawer
               referralData={
-                details?.modules[currentPage]?.moduleInfo as ReferralModuleType
+                module?.moduleInfo as ReferralModuleType
               }
             />
           );
         case "SHOPPING_MODULE":
-          // const data = details?.modules[currentPage]
+          // const data = module
           //   ?.moduleInfo as ShoppingModuleType;
           const data: ShoppingModuleType = {
             defaultVariantDetails: {

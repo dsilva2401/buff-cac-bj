@@ -48,7 +48,7 @@ const SignUp: React.FC = () => {
     success
   } = useMagicLinkHandler(email, true);
 
-  useRedirectLoggedInUser(token, user);
+  useRedirectLoggedInUser(user);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);

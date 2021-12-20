@@ -1,9 +1,10 @@
 import { useGlobal } from "context/global/GlobalContext";
 import { User } from "firebase/auth";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { useAPI } from "utils/api";
 
-const useRedirectLoggedInUser = (token?: string, user?: User) => {
+const useRedirectLoggedInUser = (user?: User | null) => {
   const history = useHistory();
 
   const { signInRedirect, setSignInRedirect } = useGlobal();
@@ -14,42 +15,34 @@ const useRedirectLoggedInUser = (token?: string, user?: User) => {
 
   const redirect = useRef<string>(signInRedirect);
 
-  useEffect(() => {
-    if (token) {
-      console.log(token, "token");
+  const onSuccess = useCallback(() => {
+    let link = redirect.current || '/collection';
 
-      let myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      myHeaders.append("Content-Type", "application/json");
-
-      let raw = JSON.stringify({
-        email: user?.email,
-        phoneNumber: user?.phoneNumber,
-        firstName: user?.displayName,
-        lastName: "",
-      });
-
-      fetch("https://damp-wave-40564.herokuapp.com/auth", {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            if (redirect.current) {
-              console.log("REDIRECT LINK: ", redirect.current);
-              setSignInRedirect("");
-              history.push(redirect.current);
-            } else history.push("/collection");
-          }
-        })
-        .catch((error) => {
-          console.log("ERROR CODE: ", error.code);
-          console.log("ERROR MSG: ", error.message);
-        });
+    if (redirect.current) {
+      setSignInRedirect('');
     }
-  }, [user, token, history, setSignInRedirect]);
+
+    history.push(link);
+  }, [history, redirect, setSignInRedirect])
+
+  const onError = useCallback((error) => {
+    console.log('ERROR CODE: ', error.code);
+    console.log('ERROR MSG: ', error.message);
+  }, [])
+
+  const [getUser] = useAPI<any>({
+    method: 'POST',
+    endpoint: 'auth',
+    onSuccess,
+    onError
+  })
+
+  useEffect(() => {
+    if (user) {
+      const { email, phoneNumber, displayName } = user;
+      getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
+    }
+  }, [user, getUser]);
 };
 
 export default useRedirectLoggedInUser;
