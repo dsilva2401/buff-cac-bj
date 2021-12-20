@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { showToast } from "components/Toast/Toast";
+import { getNameInitials } from "utils/getInitials";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { getAuth } from "firebase/auth";
 import Text from "components/Text";
 import Image from "components/Image";
-import Button from "components/Button";
 import Avatar from "components/Avatar";
+import Button from "components/Button";
 import Wrapper from "components/Wrapper";
 import PageHeader from "components/PageHeader";
 import IconButton from "components/IconButton";
 import AlertDrawer from "components/AlertDrawer";
-// import avatar from "assets/images/png/avatar.png";
+import LoadingIndicator from "components/LoadingIndicator";
 
 type ProfileType = {
   uid: string | null;
   displayName: string | null;
   email: string | null;
+  phoneNumber: string | null;
   photoUrl: string | undefined;
 };
 
@@ -23,33 +26,36 @@ const initalValues = {
   uid: "",
   displayName: "",
   email: "",
+  phoneNumber: "",
   photoUrl: "",
 };
 
 const Profile: React.FC = () => {
   const [profile, setProfile] = useState<ProfileType>(initalValues);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { t } = useTranslation("translation", { keyPrefix: "profile" });
   const history = useHistory();
   const auth = getAuth();
 
   useEffect(() => {
+    setLoading(true);
     const user = auth.currentUser;
-    if (user !== null) {
-      console.log("USER: ", user)
-      // The user object has basic properties such as display name, email, etc.
+    if (user) {
+      console.log("USER: ", user);
       setProfile({
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
         photoUrl: typeof user.photoURL === "string" ? user.photoURL : "",
       });
-      //  The user's ID, unique to the Firebase project. Do NOT use
-      //  this value to authenticate with your backend server, if
-      // you have one. Use User.getToken() instead.
-      // const uid = user.uid;
+      setLoading(false);
+    } else {
+      showToast({ message: t("errorToastMessage"), type: "error" });
+      setLoading(false);
     }
-  }, [auth]);
+  }, [auth, t]);
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -65,7 +71,9 @@ const Profile: React.FC = () => {
     </Wrapper>
   );
 
-  return (
+  return loading ? (
+    <LoadingIndicator />
+  ) : (
     <Wrapper
       width="100%"
       height="100%"
@@ -98,11 +106,15 @@ const Profile: React.FC = () => {
           alignItems="center"
           gap="1.5rem"
         >
-          <Wrapper justifyContent="center" alignItems="center">
-            <Avatar>
-              <Image src={profile.photoUrl} alt="profile-avatar" />
-            </Avatar>
-          </Wrapper>
+          <Avatar>
+            {profile?.photoUrl ? (
+              <Image src={profile?.photoUrl} alt="profile-avatar" />
+            ) : (
+              <Text color="#414149" fontSize="3rem">
+                <h1>{getNameInitials(profile?.displayName)}</h1>
+              </Text>
+            )}
+          </Avatar>
           <Wrapper
             width="100%"
             direction="column"
@@ -130,9 +142,10 @@ const Profile: React.FC = () => {
                 <span>{t("phoneNumber")}</span>
               </Text>
               <Text fontSize="0.9rem" color="#414149">
-                <p></p>
+                <p>{profile.phoneNumber}</p>
               </Text>
             </Wrapper>
+
             <Wrapper
               width="100%"
               direction="column"
@@ -143,7 +156,6 @@ const Profile: React.FC = () => {
               </Text>
               <Text fontSize="0.9rem" color="#414149">
                 <p>{profile.email}</p>
-                {/* <p>{user?.emails![0]!.address}</p> */}
               </Text>
             </Wrapper>
           </Wrapper>
@@ -160,9 +172,9 @@ const Profile: React.FC = () => {
         <Button theme="light" onClick={() => history.push("/reset-password")}>
           {t("resetPassword")}
         </Button>
-        <Button theme="light" warning onClick={() => setIsDrawerOpen(true)}>
+        {/* <Button theme="light" warning onClick={() => setIsDrawerOpen(true)}>
           {t("deleteAccount")}
-        </Button>
+        </Button> */}
       </Wrapper>
     </Wrapper>
   );

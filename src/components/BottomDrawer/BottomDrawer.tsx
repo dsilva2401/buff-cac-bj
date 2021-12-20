@@ -24,7 +24,7 @@ import {
   DrawerIconLink,
 } from "./styles";
 
-type ButtonType = {
+export type ButtonType = {
   title: string | undefined;
   onClick: () => void;
   isHighlight: boolean;
@@ -136,11 +136,13 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             justifyContent="space-between"
             alignItems="center"
           >
-            <DrawerHeader>
-              <Text fontSize="1rem" fontWeight="600">
-                <h1>{title}</h1>
-              </Text>
-              {isDrawerOpen ? (
+            <DrawerHeader isChildOpen={isChildOpen}>
+              {!isChildOpen && (
+                <Text fontSize="1rem" fontWeight="600">
+                  <h1>{title}</h1>
+                </Text>
+              )}
+              {isDrawerOpen && (
                 <DrawerClose
                   onClick={
                     isChildOpen
@@ -154,7 +156,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 >
                   <Close />
                 </DrawerClose>
-              ) : null}
+              )}
             </DrawerHeader>
             <DrawerBody id="not-draggable">
               {!isDrawerOpen && (

@@ -5,6 +5,7 @@ import { useLayoutEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from 'styles/global';
 import Routes from './routes';
+import Toast from 'components/Toast';
 
 export default function App() {
   useLayoutEffect(() => {
@@ -26,6 +27,7 @@ export default function App() {
           <Routes />
         </BrowserRouter>
       </AppFrame>
+      <Toast />
     </Container>
   );
 }

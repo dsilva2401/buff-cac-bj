@@ -9,7 +9,8 @@ import ReferralDrawer from "components/ReferralDrawer";
 import ShopDrawer from "components/ShopDrawer";
 import WarrantyDrawer from "components/WarrantyDrawer";
 import Wrapper from "components/Wrapper";
-import { PageStateType } from "context/global/GlobalContext";
+import { Redirect } from "react-router-dom";
+import { ButtonType } from "components/BottomDrawer/BottomDrawer";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { useGlobal } from "../../context/global/GlobalContext";
@@ -23,14 +24,6 @@ import {
 
 type UrlParam = {
   id: string;
-};
-
-type ButtonType = {
-  title: string | undefined;
-  onClick: () => void;
-  isHighlight: boolean;
-  locked: boolean;
-  pageState: PageStateType;
 };
 
 const ProductDetails: React.FC = () => {
@@ -57,7 +50,7 @@ const ProductDetails: React.FC = () => {
 
   useEffect(() => {
     if (!!details && !isDrawerPageOpen) {
-      setPageTitle(details?.product.name);
+      setPageTitle(details?.product?.name);
     }
   }, [isDrawerPageOpen, details, currentPage, pageState]);
 
@@ -122,6 +115,7 @@ const ProductDetails: React.FC = () => {
         case "CUSTOM_MODULE":
           return (
             <CustomDrawer
+              drawerTitle={details?.modules[currentPage]?.title}
               drawerData={
                 details?.modules[currentPage]?.moduleInfo as CustomModuleType
               }
@@ -131,6 +125,7 @@ const ProductDetails: React.FC = () => {
           return (
             <WarrantyDrawer
               closePage={closeDrawerPage}
+              drawerTitle={details?.modules[currentPage]?.title}
               warrantyData={
                 details?.modules[currentPage]?.moduleInfo as WarrantyModuleType
               }
@@ -149,6 +144,7 @@ const ProductDetails: React.FC = () => {
         case "REFERRAL_MODULE":
           return (
             <ReferralDrawer
+              drawerTitle={details?.modules[currentPage]?.title}
               referralData={
                 details?.modules[currentPage]?.moduleInfo as ReferralModuleType
               }
@@ -159,104 +155,104 @@ const ProductDetails: React.FC = () => {
           //   ?.moduleInfo as ShoppingModuleType;
           const data: ShoppingModuleType = {
             defaultVariantDetails: {
-              id: 'gid://shopify/ProductVariant/42180557865206',
-              name: 'Ranger Parka',
+              id: "gid://shopify/ProductVariant/42180557865206",
+              name: "Ranger Parka",
               image:
-                'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586',
-              price: '12.00',
-              discountedPrice: '9.60',
+                "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586",
+              price: "12.00",
+              discountedPrice: "9.60",
               inventoryQuantity: 1,
               checkoutUri:
-                'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=gid://shopify/ProductVariant/42180557865206',
-              options: { Size: 'Small', Color: 'Green' },
-              objectHash: 'b538cbcd3886ac0436774ce424ce3c400aff14c0',
+                "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=gid://shopify/ProductVariant/42180557865206",
+              options: { Size: "Small", Color: "Green" },
+              objectHash: "b538cbcd3886ac0436774ce424ce3c400aff14c0",
             },
             isDiscountAvailable: true,
             discountPercentage: 20,
-            discountCode: 'TEST20',
+            discountCode: "TEST20",
             isProductLevel: false,
             allOptions: [
-              { name: 'Size', values: ['Small', 'Large'] },
-              { name: 'Color', values: ['Green', 'Blue', 'Brown'] },
+              { name: "Size", values: ["Small", "Large"] },
+              { name: "Color", values: ["Green", "Blue", "Brown"] },
             ],
             variantDetails: [
               {
-                id: 'gid://shopify/ProductVariant/42180557865206',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42180557865206",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586',
-                price: '12.00',
-                discountedPrice: '9.60',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586",
+                price: "12.00",
+                discountedPrice: "9.60",
                 inventoryQuantity: 1,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557865206',
-                options: { Size: 'Small', Color: 'Green' },
-                objectHash: 'b538cbcd3886ac0436774ce424ce3c400aff14c0',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557865206",
+                options: { Size: "Small", Color: "Green" },
+                objectHash: "b538cbcd3886ac0436774ce424ce3c400aff14c0",
               },
               {
-                id: 'gid://shopify/ProductVariant/42180557897974',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42180557897974",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05b-billion-original-imag75v7kugpxufh.jpg?v=1639769587',
-                price: '13.00',
-                discountedPrice: '10.40',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05b-billion-original-imag75v7kugpxufh.jpg?v=1639769587",
+                price: "13.00",
+                discountedPrice: "10.40",
                 inventoryQuantity: 3,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557897974',
-                options: { Size: 'Small', Color: 'Blue' },
-                objectHash: 'f60b77b44b5c81aa3ae328afd1a7bd3f73252b65',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557897974",
+                options: { Size: "Small", Color: "Blue" },
+                objectHash: "f60b77b44b5c81aa3ae328afd1a7bd3f73252b65",
               },
               {
-                id: 'gid://shopify/ProductVariant/42180557963510',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42180557963510",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05c-billion-original-imag75v7ncyctudk.jpg?v=1639769587',
-                price: '15.00',
-                discountedPrice: '12.00',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05c-billion-original-imag75v7ncyctudk.jpg?v=1639769587",
+                price: "15.00",
+                discountedPrice: "12.00",
                 inventoryQuantity: 5,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557963510',
-                options: { Size: 'Small', Color: 'Brown' },
-                objectHash: '3f6cbc73f505f205b7613edf2d2f79d14230b105',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42180557963510",
+                options: { Size: "Small", Color: "Brown" },
+                objectHash: "3f6cbc73f505f205b7613edf2d2f79d14230b105",
               },
               {
-                id: 'gid://shopify/ProductVariant/42272991936758',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42272991936758",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586',
-                price: '15.00',
-                discountedPrice: '12.00',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586",
+                price: "15.00",
+                discountedPrice: "12.00",
                 inventoryQuantity: 2,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272991936758',
-                options: { Size: 'Large', Color: 'Green' },
-                objectHash: 'ef39ce00effedaa4968952a3da6bfadfe20de9e4',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272991936758",
+                options: { Size: "Large", Color: "Green" },
+                objectHash: "ef39ce00effedaa4968952a3da6bfadfe20de9e4",
               },
               {
-                id: 'gid://shopify/ProductVariant/42272991969526',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42272991969526",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586',
-                price: '12.00',
-                discountedPrice: '9.60',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586",
+                price: "12.00",
+                discountedPrice: "9.60",
                 inventoryQuantity: 0,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272991969526',
-                options: { Size: 'Large', Color: 'Blue' },
-                objectHash: '2fd69e26efab6537e7b1a6337efe8a9cf7e21388',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272991969526",
+                options: { Size: "Large", Color: "Blue" },
+                objectHash: "2fd69e26efab6537e7b1a6337efe8a9cf7e21388",
               },
               {
-                id: 'gid://shopify/ProductVariant/42272992002294',
-                name: 'Ranger Parka',
+                id: "gid://shopify/ProductVariant/42272992002294",
+                name: "Ranger Parka",
                 image:
-                  'https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586',
-                price: '12.00',
-                discountedPrice: '9.60',
+                  "https://cdn.shopify.com/s/files/1/0613/7377/6118/products/m-blaw21wct05a-billion-original-imag75tsgp44hbqy.jpg?v=1639769586",
+                price: "12.00",
+                discountedPrice: "9.60",
                 inventoryQuantity: 0,
                 checkoutUri:
-                  'https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272992002294',
-                options: { Size: 'Large', Color: 'Brown' },
-                objectHash: '1a0144925e4fb7a7c061ef2ce65a51ed6beeca2c',
+                  "https://outer-edge-1.myshopify.com/cart/clear?return_to=/cart/add?items[][id]=42272992002294",
+                options: { Size: "Large", Color: "Brown" },
+                objectHash: "1a0144925e4fb7a7c061ef2ce65a51ed6beeca2c",
               },
             ],
           };
@@ -289,6 +285,8 @@ const ProductDetails: React.FC = () => {
     ),
     [handleOpenMenuClicked]
   );
+
+  if (error) return <Redirect to="/404" />;
 
   return (
     <>
