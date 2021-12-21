@@ -167,8 +167,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           theme="dark"
                           onClick={() => {
                             setPosition({ ...position, y: topHeight });
-                            if (button.locked) history.push("/");
-                            else button.onClick();
+                            button.onClick();
                             if (button.pageState !== null)
                               setPageState(button.pageState);
                           }}

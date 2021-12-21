@@ -1,38 +1,39 @@
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
-
-import Wrapper from "components/Wrapper";
 import Button from "components/Button";
-import Text from "components/Text";
 import Input from "components/Input";
-
-import { useTranslation } from "react-i18next";
-import { useCallback, useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
-import { Link, useHistory } from "react-router-dom";
-// import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
+import LoadingIndicator from "components/LoadingIndicator";
+import Text from "components/Text";
+import Wrapper from "components/Wrapper";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "firebase/auth";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
-import LoadingIndicator from 'components/LoadingIndicator';
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
-const LoginForm = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "signIn" });
-
+const SignUpForm: React.FC = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "signUp" });
   const history = useHistory();
   const auth = getAuth();
 
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   // get magic link header
   const {
     handleMagicLink,
     loading: magicLinkLoading,
-    error: magicLinkError,
-    success
-  } = useMagicLinkHandler(username);
+    error,
+    success,
+  } = useMagicLinkHandler(email, true);
 
   const handleGoogleAuth = useCallback(() => {
     setLoading(true);
@@ -40,53 +41,39 @@ const LoginForm = () => {
     signInWithPopup(auth, provider)
       .then((result) => console.log(result.user))
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
-        // // The email of the user's account used.
-        // const email = error.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log("ERROR CODE: ", error.code);
+        console.log("ERROR MSG: ", error.message);
       });
   }, [auth]);
 
-  const handleFacebookAuth = useCallback(() => {
-    history.push('/collection');
-  }, [history]);
-
-  const handleUsernameChanged = useCallback(
-    ({ target: { value } }) => setUsername(value),
-    []
-  );
-
-  const handlePasswordChanged = useCallback(
-    ({ target: { value } }) => setPassword(value),
-    []
-  );
-
-  const handleLogin = () => {
+  const signUpWithEmailAndPassword = () => {
     setLoading(true);
-    if (error !== '') setError('');
-    signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        console.log(userCredential.user);
-      })
+    if (errorMessage !== "") setErrorMessage("");
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((result) => console.log(result.user))
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
+        console.log("ERROR CODE: ", error.code);
+        console.log("ERROR MSG: ", error.message);
+
+        if (error.code.includes("auth/weak-password")) {
+          setErrorMessage("Please enter a stronger password.");
+        } else if (error.code.includes("auth/email-already-in-use")) {
+          setErrorMessage("Email already in use.");
+        } else {
+          setErrorMessage("Unable to register. Please try again later.");
+        }
         setLoading(false);
       });
   };
 
-  const passwordInput = (
-    !usingMagicLink ? (
-      <Input
-        type='password'
-        value={password}
-        placeholder={t('passwordInput')}
-        onChange={handlePasswordChanged}
-      />
-    ) : null
-  )
+  const passwordInput = !usingMagicLink ? (
+    <Input
+      type="password"
+      value={password}
+      placeholder={t("passwordInput")}
+      onChange={({ target: { value } }) => setPassword(value)}
+    />
+  ) : null;
 
   return (
     <Wrapper
@@ -109,11 +96,10 @@ const LoginForm = () => {
         <Button theme="light" onClick={handleGoogleAuth}>
           <GoogleLogo /> {t("googleButton")}
         </Button>
-        <Button theme="light" onClick={handleFacebookAuth}>
+        <Button theme="light" onClick={() => history.push("/collection")}>
           <FacebookLogo /> {t("facebookButton")}
         </Button>
       </Wrapper>
-
       <Wrapper justifyContent="center" alignItems="center">
         <Text fontSize="1.2rem" color="#98A3AA">
           <p>or</p>
@@ -128,22 +114,19 @@ const LoginForm = () => {
       >
         <Input
           type="text"
-          value={username}
+          value={email}
           placeholder={t("emailInput")}
-          onChange={handleUsernameChanged}
+          onChange={({ target: { value } }) => setEmail(value)}
           margin="0 0 1rem"
         />
         {passwordInput}
-        <Wrapper width="100%" justifyContent="space-between" padding="0 1rem">
+        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
           <Text
             fontSize="0.7rem"
             textDecoration="unset"
             onClick={() => setUsingMagicLink(!usingMagicLink)}
           >
             <span>{usingMagicLink ? "Use password" : "Use magic link"}</span>
-          </Text>
-          <Text fontSize="0.7rem" textDecoration="unset">
-            <Link to="/forgot-password">{t("forgotPassword")}</Link>
           </Text>
         </Wrapper>
       </Wrapper>
@@ -153,15 +136,17 @@ const LoginForm = () => {
         ) : (
           <Button
             theme="dark"
-            onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
+            onClick={() =>
+              usingMagicLink ? handleMagicLink() : signUpWithEmailAndPassword()
+            }
           >
-            {usingMagicLink ? t("magicLinkButton") : t("signInButton")}
+            {usingMagicLink ? t("magicLinkButton") : t("signUpButton")}
           </Button>
         )}
       </Wrapper>
       <Wrapper width="100%" justifyContent="center" padding="0 1rem">
         <Text fontSize="0.7rem" textDecoration="unset">
-          <span>{magicLinkError}</span>
+          <span>{error}</span>
         </Text>
       </Wrapper>
       <Wrapper width="100%" justifyContent="center" padding="0 1rem">
@@ -173,4 +158,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;

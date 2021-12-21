@@ -1,10 +1,9 @@
+import AuthDrawer from "components/AuthDrawer";
 import BottomDrawer from "components/BottomDrawer";
 import CustomDrawer from "components/CustomDrawer";
 import IconButton from "components/IconButton";
 import Image from "components/Image";
 import LinkModule from "components/LinkModule";
-import LoadingIndicator from "components/LoadingIndicator";
-import LoginForm from "components/LoginForm";
 import PageHeader from "components/PageHeader";
 import ReferralDrawer from "components/ReferralDrawer";
 import ShopDrawer from "components/ShopDrawer";
@@ -12,6 +11,7 @@ import WarrantyDrawer from "components/WarrantyDrawer";
 import Wrapper from "components/Wrapper";
 import { PageStateType } from "context/global/GlobalContext";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { useGlobal } from "../../context/global/GlobalContext";
 import {
@@ -35,13 +35,14 @@ type ButtonType = {
 };
 
 const ProductDetails: React.FC = () => {
+  const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
+
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
   const {
     productDetails: details,
     loading,
-    error,
     pageState,
     setSignInRedirect,
     setIsMenuOpen,
@@ -122,7 +123,7 @@ const ProductDetails: React.FC = () => {
       let moduleType: string | undefined = module?.type;
 
       if (module.locked) {
-        return <LoginForm />;
+        return <AuthDrawer />
       }
 
       switch (moduleType) {
@@ -299,10 +300,7 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
-      {loading ? (
-        <LoadingIndicator />
-      ) : (
-        <>
+      <>
           <Wrapper
             width="100%"
             height="100%"
@@ -336,7 +334,6 @@ const ProductDetails: React.FC = () => {
             {renderDrawerPage()}
           </BottomDrawer>
         </>
-      )}
     </>
   );
 };
