@@ -1,27 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CameraIcon } from "assets/icons/svg/camera.svg";
+import { getNameInitials } from "utils/getInitials";
+import { showToast } from "components/Toast/Toast";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
+import { getAuth } from "firebase/auth";
 import Avatar from "components/Avatar";
+import Image from "components/Image";
+import Text from "components/Text";
 import Button from "components/Button";
 import Wrapper from "components/Wrapper";
 import EditInput from "components/EditInput";
 import PageHeader from "components/PageHeader";
-import avatar from "assets/images/png/avatar.png";
+import LoadingIndicator from "components/LoadingIndicator";
 
 const ProfileEdit: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "profileEdit" });
   const history = useHistory();
+  const auth = getAuth();
 
-  const [userName, setUserName] = useState<string>("");
-  const [userPhone, setUserPhone] = useState<string>("");
-  const [userEmail, setUserEmail] = useState<string>("");
+  const [userName, setUserName] = useState<string | null>("");
+  const [userPhone, setUserPhone] = useState<string | null>("");
+  const [userEmail, setUserEmail] = useState<string | null>("");
+  const [userImage, setUserImage] = useState<string | null>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // setUserName(user?.username);
-    // setUserPhone(user?.phone);
-    // setUserEmail(user?.emails[0].address);
-  }, []);
+    setLoading(true);
+    const user = auth.currentUser;
+    if (user) {
+      console.log("USER: ", user);
+      setUserName(user?.displayName);
+      setUserPhone(user?.phoneNumber);
+      setUserEmail(user?.email);
+      setUserImage(user?.photoURL)
+      setLoading(false);
+    } else {
+      showToast({ message: t("errorToastMessage"), type: "error" });
+      setLoading(false);
+    }
+  }, [auth, t]);
 
   const handleUserName = (value: string) => {
     setUserName(value);
@@ -35,7 +53,9 @@ const ProfileEdit: React.FC = () => {
     setUserEmail(value);
   };
 
-  return (
+  return loading ? (
+    <LoadingIndicator />
+  ) : (
     <Wrapper
       width="100%"
       height="100%"
@@ -58,7 +78,13 @@ const ProfileEdit: React.FC = () => {
         <Wrapper width="100%" justifyContent="center" alignItems="center">
           <Wrapper width="40%" justifyContent="center" alignItems="center">
             <Avatar>
-              <img src={avatar} alt="profile-avatar" />
+              {userImage ? (
+                <Image src={userImage} alt="profile-avatar" />
+              ) : (
+                <Text color="#414149" fontSize="3rem">
+                  <h1>{getNameInitials(userName)}</h1>
+                </Text>
+              )}
             </Avatar>
           </Wrapper>
           <Wrapper width="60%" justifyContent="center" alignItems="center">
@@ -69,17 +95,17 @@ const ProfileEdit: React.FC = () => {
         </Wrapper>
         <Wrapper width="100%" direction="column" gap="1rem" padding="2rem 0">
           <EditInput
-            value={userName}
+            value={userName || undefined}
             placeholder={t("fullNameInput")}
             onChange={handleUserName}
           />
           <EditInput
-            value={userPhone}
+            value={userPhone || undefined}
             placeholder={t("phoneNumberInput")}
             onChange={handleUserPhone}
           />
           <EditInput
-            value={userEmail}
+            value={userEmail || undefined}
             placeholder={t("emailInput")}
             onChange={handleUserEmail}
           />

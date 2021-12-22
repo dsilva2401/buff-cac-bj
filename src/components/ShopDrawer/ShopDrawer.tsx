@@ -1,19 +1,19 @@
-import Button from 'components/Button';
-import Image from 'components/Image';
-import QuantityController from 'components/QuantityController';
-import SelectInput from 'components/SelectInput';
-import SuccessDrawer from 'components/SuccessDrawer';
-import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import hash from 'object-hash';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import '../../../node_modules/slick-carousel/slick/slick-theme.css';
-import '../../../node_modules/slick-carousel/slick/slick.css';
+import Button from "components/Button";
+import Image from "components/Image";
+import QuantityController from "components/QuantityController";
+import SelectInput from "components/SelectInput";
+import SuccessDrawer from "components/SuccessDrawer";
+import Text from "components/Text";
+import Wrapper from "components/Wrapper";
+import hash from "object-hash";
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import "../../../node_modules/slick-carousel/slick/slick-theme.css";
+import "../../../node_modules/slick-carousel/slick/slick.css";
 import {
   ShoppingModuleType,
   VariantDetails,
-} from '../../types/ProductDetailsType';
+} from "../../types/ProductDetailsType";
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -69,8 +69,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     }
   }, [option, variantDetails, isProductLevel]);
 
-  const { t } = useTranslation('translation', {
-    keyPrefix: 'drawers.shopDrawer',
+  const { t } = useTranslation("translation", {
+    keyPrefix: "drawers.shopDrawer",
   });
 
   const handleQuantity = useCallback((value: string) => {
@@ -89,7 +89,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         );
       }
     },
-    []
+    [discountCode]
   );
 
   const handleCheckout = useCallback(() => {
@@ -116,87 +116,88 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     }
   }, [successDrawer]);
 
-  console.log('option: ', option);
+  console.log("option: ", option);
 
   return (
     <>
       <SuccessDrawer
         isOpen={successDrawer}
-        title={''}
-        description={''}
+        title={""}
+        description={""}
         close={closeSuccess}
       />
       <Wrapper
-        width='100%'
-        height='100%'
-        direction='column'
-        justifyContent='flex-start'
-        alignItems='center'
-        overflow='auto'
+        width="100%"
+        height="100%"
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="center"
+        overflow="auto"
         before={{
           content: data.isDiscountAvailable
             ? `You are saving ${data.discountPercentage!}% with Brij`
-            : 'Buy with Brij',
-          width: 'auto',
-          height: 'auto',
-          padding: '0.4rem 1.5rem',
-          position: 'absolute',
-          color: '#fff',
-          top: '-1px',
-          background: '#1B1B1B',
-          fontSize: '0.8rem',
-          borderRadius: '0 0 15px 15px',
+            : "Buy with Brij",
+          width: "auto",
+          height: "auto",
+          padding: "0.4rem 1.5rem",
+          position: "absolute",
+          color: "#fff",
+          top: "-1px",
+          background: "#1B1B1B",
+          fontSize: "0.8rem",
+          borderRadius: "0 0 15px 15px",
         }}
       >
         <Wrapper
-          width='100%'
-          justifyContent='space-between'
-          alignItems='center'
-          gap='0.5rem'
+          width="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          gap="0.5rem"
+          margin="4rem 0 0 0"
         >
-          <Wrapper width='45%' responsiveImg>
-            <Image src={chosenOption.image} alt='' rounded width='100%' />
+          <Wrapper width="45%" responsiveImg>
+            <Image src={chosenOption.image} alt="" rounded width="100%" />
           </Wrapper>
-          <Wrapper width='50%' height='100%' direction='column' gap='1rem'>
-            <Wrapper width='100%' direction='column' gap='0.1rem'>
+          <Wrapper width="50%" height="100%" direction="column" gap="1rem">
+            <Wrapper width="100%" direction="column" gap="0.1rem">
               <Text
-                color='#98A3AA'
-                fontSize='0.75rem'
-                fontWeight='bold'
-                textDecoration='line-through'
+                color="#98A3AA"
+                fontSize="0.75rem"
+                fontWeight="bold"
+                textDecoration="line-through"
               >
                 {chosenOption.name}
               </Text>
               <Wrapper
-                direction='row'
-                width='max-content'
-                alignItems='center'
-                gap='0.4rem'
+                direction="row"
+                width="max-content"
+                alignItems="center"
+                gap="0.4rem"
               >
                 {isValidCombo && data.isDiscountAvailable && (
                   <>
                     <Text
-                      color='#98A3AA'
-                      fontSize='0.75rem'
-                      fontWeight='500'
-                      textDecoration='line-through'
+                      color="#98A3AA"
+                      fontSize="0.75rem"
+                      fontWeight="500"
+                      textDecoration="line-through"
                     >
                       <p>
                         {parseInt(chosenOption.discountedPrice!).toLocaleString(
-                          'en-US',
+                          "en-US",
                           {
-                            style: 'currency',
-                            currency: 'USD',
+                            style: "currency",
+                            currency: "USD",
                             maximumSignificantDigits: 3,
                           }
                         )}
                       </p>
                     </Text>
-                    <Text fontSize='0.9rem' fontWeight='600'>
+                    <Text fontSize="0.9rem" fontWeight="600">
                       <p>
-                        {parseInt(chosenOption.price).toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
+                        {parseInt(chosenOption.price).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
                           maximumSignificantDigits: 3,
                         })}
                       </p>
@@ -204,11 +205,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   </>
                 )}
                 {isValidCombo && !data.isDiscountAvailable && (
-                  <Text fontSize='0.9rem' fontWeight='600'>
+                  <Text fontSize="0.9rem" fontWeight="600">
                     <p>
-                      {parseInt(chosenOption.price).toLocaleString('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
+                      {parseInt(chosenOption.price).toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
                         maximumSignificantDigits: 3,
                       })}
                     </p>
@@ -229,11 +230,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         </Wrapper>
 
         <Wrapper
-          width='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          gap='0.5rem'
+          width="100%"
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center"
+          gap="0.5rem"
         >
           {allOptions?.map((optionItem) => (
             <SelectInput
@@ -254,28 +255,28 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         </Wrapper>
 
         <Wrapper
-          width='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          margin='1.5rem 0 0'
+          width="100%"
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center"
+          margin="1.5rem 0 0"
         >
           {isValidCombo ? (
             <Button
-              theme='dark'
+              theme="dark"
               onClick={handleCheckout}
               disabled={!isValidCombo}
             >
-              {t('checkoutButton.purchaseNow')}
+              {t("checkoutButton.purchaseNow")}
             </Button>
           ) : (
-            <Text fontSize='1rem' fontWeight='600'>
+            <Text fontSize="1rem" fontWeight="600">
               <p>
                 {isValidCombo === null
-                  ? t('checkoutHint.chooseOptions')
+                  ? t("checkoutHint.chooseOptions")
                   : isValidCombo === false
-                  ? t('checkoutHint.comboUnavailable')
-                  : ''}
+                  ? t("checkoutHint.comboUnavailable")
+                  : ""}
               </p>
             </Text>
           )}

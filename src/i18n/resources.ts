@@ -1,12 +1,18 @@
 export const resources = {
   en: {
     translation: {
+      magicLink: {
+        linkSentToastMessage: "A magic link is sent to your email",
+        magicLinkError: "An error occurred",
+        redirecting: "Redirecting...",
+      },
       sideMenu: {
         myProfile: "My Profile",
         myCollection: "My Collection",
         visitWebsite: "Visit Website",
         signOut: "Sign Out",
         signIn: "Sign In",
+        signOutToastMessage: "Logout Successful",
       },
       profile: {
         fullName: "Full Name",
@@ -14,6 +20,7 @@ export const resources = {
         email: "Email",
         resetPassword: "Reset Password",
         deleteAccount: "Delete Account",
+        errorToastMessage: "Failed to load data",
       },
       profileEdit: {
         pageHeaderTitle: "Profile",
@@ -33,6 +40,7 @@ export const resources = {
         passwordInput: "Enter password...",
         existingUser: "Already have a BRIJ account?",
         signInLink: "Sign in!",
+        signUpToastMessage: "Sign Up Successful",
       },
       signIn: {
         pageHeaderTitle: "Sign In",
@@ -46,6 +54,7 @@ export const resources = {
         forgotPassword: "Forgot Password?",
         newToBrij: "New to BRIJ?",
         signUpLink: "Sign up!",
+        signInToastMessage: "Login Successful",
       },
       forgotPassword: {
         pageHeaderTitle: "Forgot Password",
@@ -107,6 +116,7 @@ export const resources = {
         },
         referralDrawer: {
           copyLinkButton: "Copy link",
+          copyLinkToastMessage: "Copied to clipboard",
           shareLinkButton: "Share link",
           shareText: "Have a look at this product from Brij",
           helpText: "Have your friend scan this code",

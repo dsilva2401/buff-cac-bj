@@ -1,6 +1,7 @@
 import brijLogo from "assets/logos/svg/brij-colored.svg";
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
+import { showToast } from "components/Toast/Toast";
 import Button from "components/Button";
 import Image from "components/Image";
 import Input from "components/Input";
@@ -54,16 +55,14 @@ const Login: React.FC = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => setUser(result.user))
+      .then((result) => {
+        setUser(result.user);
+        showToast({ message: t("signInToastMessage"), type: "success" });
+      })
       .catch((error) => {
-        console.log("ERROR CODE: ", error.code);
-        console.log("ERROR MSG: ", error.message);
-        // // The email of the user's account used.
-        // const email = error.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
+        showToast({ message: error.message, type: "error" });
       });
-  }, [auth]);
+  }, [auth, t]);
 
   const handleFacebookAuth = useCallback(() => {
     history.push("/collection");
@@ -98,10 +97,10 @@ const Login: React.FC = () => {
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
         setUser(userCredential.user);
+        showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
-        console.log("ERROR CODE: ", error.code);
-        console.log("ERROR MSG: ", error.message);
+        showToast({ message: error.message, type: "error" });
         setLoading(false);
       });
   };
@@ -182,7 +181,12 @@ const Login: React.FC = () => {
             </Text>
           </Wrapper>
         </Wrapper>
-        <Wrapper width="100%" justifyContent="center" alignItems="center">
+        <Wrapper
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+        >
           {loading || magicLinkLoading ? (
             <LoadingIndicator />
           ) : (

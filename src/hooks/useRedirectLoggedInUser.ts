@@ -1,12 +1,14 @@
 import { useGlobal } from "context/global/GlobalContext";
-import { User } from "firebase/auth";
-import { useEffect, useRef } from "react";
+import { showToast } from "components/Toast/Toast";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { User } from "firebase/auth";
 
 const useRedirectLoggedInUser = (token?: string, user?: User) => {
-  const history = useHistory();
-
+  const { t } = useTranslation("translation", { keyPrefix: "magicLink" });
   const { signInRedirect, setSignInRedirect } = useGlobal();
+  const history = useHistory();
 
   // create a copy of signInRedirect so it doesn't change when singInRedirect
   // sets to empty which will cause the redirection to occur again
@@ -27,6 +29,7 @@ const useRedirectLoggedInUser = (token?: string, user?: User) => {
         phoneNumber: user?.phoneNumber,
         firstName: user?.displayName,
         lastName: "",
+        // tag: "0SVJ",
       });
 
       fetch("https://damp-wave-40564.herokuapp.com/auth", {
@@ -38,18 +41,16 @@ const useRedirectLoggedInUser = (token?: string, user?: User) => {
         .then((response) => {
           if (response.status === 200) {
             if (redirect.current) {
-              console.log("REDIRECT LINK: ", redirect.current);
               setSignInRedirect("");
               history.push(redirect.current);
             } else history.push("/collection");
           }
         })
         .catch((error) => {
-          console.log("ERROR CODE: ", error.code);
-          console.log("ERROR MSG: ", error.message);
+          showToast({ message: error.message, type: "error" });
         });
     }
-  }, [user, token, history, setSignInRedirect]);
+  }, [user, token, history, setSignInRedirect, t]);
 };
 
 export default useRedirectLoggedInUser;
