@@ -1,4 +1,5 @@
 import { useGlobal } from "context/global/GlobalContext";
+import { User } from "firebase/auth";
 import { useCallback, useState } from "react";
 
 const API_URL = 'https://damp-wave-40564.herokuapp.com';
@@ -17,10 +18,16 @@ type UseAPIVars<T> = [
 
 export function useAPI<T> (
     payload: APIpayload,
+    currentUser: User | null = null,
     shouldUseToken: boolean = true
 ): UseAPIVars<T> {
     const { user } = useGlobal();
     const { method, endpoint, onSuccess, onError } = payload;
+
+    // in some cases we will call the useAPI hook inside useGlobal
+    // and in that case the user is not always up to date with global context state
+    // Todo: It seems complicated maybe we should refine this in a later stage
+    const userToUse = currentUser || user;
 
     const [loading, setLoading] = useState(false);
 
@@ -33,7 +40,7 @@ export function useAPI<T> (
             let token = null;
 
             if (shouldUseToken) {
-                token = await user?.getIdToken();
+                token = await userToUse?.getIdToken();
             }
 
             if (token) {
@@ -63,7 +70,7 @@ export function useAPI<T> (
                 onError(JSON.stringify(e));
             }
         },
-        [user, shouldUseToken, method, endpoint, onSuccess, onError]
+        [userToUse, shouldUseToken, method, endpoint, onSuccess, onError]
     )
 
     return [apiCall, loading];

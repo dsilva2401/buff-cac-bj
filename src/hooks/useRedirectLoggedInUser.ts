@@ -1,8 +1,7 @@
 import { useGlobal } from "context/global/GlobalContext";
 import { User } from "firebase/auth";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { useAPI } from "utils/api";
 
 const useRedirectLoggedInUser = (user?: User | null) => {
   const history = useHistory();
@@ -15,34 +14,17 @@ const useRedirectLoggedInUser = (user?: User | null) => {
 
   const redirect = useRef<string>(signInRedirect);
 
-  const onSuccess = useCallback(() => {
-    let link = redirect.current || '/collection';
-
-    if (redirect.current) {
-      setSignInRedirect('');
-    }
-
-    history.push(link);
-  }, [history, redirect, setSignInRedirect])
-
-  const onError = useCallback((error) => {
-    console.log('ERROR CODE: ', error.code);
-    console.log('ERROR MSG: ', error.message);
-  }, [])
-
-  const [getUser] = useAPI<any>({
-    method: 'POST',
-    endpoint: 'auth',
-    onSuccess,
-    onError
-  })
-
   useEffect(() => {
     if (user) {
-      const { email, phoneNumber, displayName } = user;
-      getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
+      let link = redirect.current || '/collection';
+
+      if (redirect.current) {
+        setSignInRedirect('');
+      }
+
+      history.push(link);
     }
-  }, [user, getUser]);
+  }, [user, history, redirect, setSignInRedirect]);
 };
 
 export default useRedirectLoggedInUser;

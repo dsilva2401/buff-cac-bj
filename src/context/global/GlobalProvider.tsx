@@ -1,4 +1,5 @@
 import { getAuth, User } from "firebase/auth";
+import usePersonDetails from "hooks/usePersonalDetails";
 import React, { useCallback, useEffect, useState } from "react";
 import { ProductDetailsType } from "../../types/ProductDetailsType";
 import {
@@ -22,6 +23,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [slug, setSlug] = useState<string | null>(null);
   const [productDetails, setProductDetails] =
     useState<ProductDetailsType | null>(null);
+
+  const personDetails = usePersonDetails(user);
 
   const getProductDetails = useCallback(
     async (slug: string, token?: string) => {
@@ -85,7 +88,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     const auth = getAuth();
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("userId: ", user.uid);
         setUser(user);
       } else {
         setUser(null);
@@ -136,6 +138,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         slug,
         setSlug,
         setUser,
+        personDetails
       }}
     >
       {children}
