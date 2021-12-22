@@ -49,8 +49,9 @@ export type GlobalContextProps = {
   user: User | null;
   personDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
-  getProductDetails: (slug: string, token?: string) => Promise<void>;
-  activateWarranty: (warrantyId: string) => Promise<void>;
+  activateWarranty: ({
+    warrantyId
+  }: { warrantyId: string}) => Promise<void>;
   loading: boolean;
   error: string | null;
   slug: string | null;
@@ -72,7 +73,6 @@ export const GlobalContext = createContext<GlobalContextProps>({
   user: null,
   personDetails: null,
   productDetails: null,
-  getProductDetails: () => new Promise((res, rej) => res()),
   loading: false,
   error: null,
   activateWarranty: () => new Promise((res, rej) => res()),

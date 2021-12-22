@@ -12,7 +12,7 @@ interface APIpayload {
 }
 
 type UseAPIVars<T> = [
-    (data: T) => Promise<any>,
+    (data?: T) => Promise<any>,
     boolean
 ]
 
@@ -32,7 +32,7 @@ export function useAPI<T> (
     const [loading, setLoading] = useState(false);
 
     const apiCall = useCallback(
-        async (data: T) => {
+        async (data?: T) => {
             let headers: HeadersInit = {
                 'content-type': 'application/json'
             };
