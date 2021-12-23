@@ -15,7 +15,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState<ThemeMode>("light");
   const [signInRedirect, setSignInRedirect] = useState<string>(
-    localStorage.getItem('signInRedirect') || ''
+    localStorage.getItem("signInRedirect") || ""
   );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -86,7 +86,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
     // upon unmount clear storage
-    return () => localStorage.setItem('signInRedirect', '');
+    return () => localStorage.setItem("signInRedirect", "");
   }, [signInRedirect]);
 
   return (

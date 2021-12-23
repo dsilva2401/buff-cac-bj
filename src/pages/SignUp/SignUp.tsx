@@ -12,26 +12,24 @@ import { useGlobal } from '../../context/global/GlobalContext';
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
-  
   const { user } = useGlobal();
-
-  const logo = <Image width='auto' src={brijLogo} alt='brij-logo' />;
+  const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
 
   useRedirectLoggedInUser(user);
 
   return (
     <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='space-between'
-      alignItems='center'
+      width="100%"
+      height="100%"
+      direction="column"
+      justifyContent="space-between"
+      alignItems="center"
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} />
       <SignUpForm />
       <PageFooter>
-        <p>{t('existingUser')}</p>
-        <Link to={'/'}>{t('signInLink')}</Link>
+        <p>{t("existingUser")}</p>
+        <Link to={"/"}>{t("signInLink")}</Link>
       </PageFooter>
     </Wrapper>
   );

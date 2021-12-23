@@ -4,6 +4,10 @@ type DrawerProps = {
   isControlled: boolean;
 };
 
+type DrawerHeaderProps = {
+  isChildOpen: boolean;
+};
+
 export const Drawer = styled.div<DrawerProps>`
   width: 100%;
   height: 85%;
@@ -40,12 +44,18 @@ export const Drawer = styled.div<DrawerProps>`
   }
 `;
 
-export const DrawerHeader = styled.div`
-  width: 100%;
+export const DrawerHeader = styled.div<DrawerHeaderProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
+  width: ${(props) => (props.isChildOpen ? "max-content" : "100%")};
+  position: ${(props) => (props.isChildOpen ? "absolute" : "relative")};
+  ${(props) => {
+    if (props.isChildOpen) {
+      return `top: 0; right: 0;`;
+    }
+  }}
 `;
 
 export const DrawerBody = styled.div`

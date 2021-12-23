@@ -1,11 +1,12 @@
 import { useGlobal } from "context/global/GlobalContext";
-import { User } from "firebase/auth";
-import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { User } from "firebase/auth";
 
 const useRedirectLoggedInUser = (user?: User | null) => {
   const history = useHistory();
-
+  const { t } = useTranslation("translation", { keyPrefix: "magicLink" });
   const { signInRedirect, setSignInRedirect } = useGlobal();
 
   // create a copy of signInRedirect so it doesn't change when singInRedirect

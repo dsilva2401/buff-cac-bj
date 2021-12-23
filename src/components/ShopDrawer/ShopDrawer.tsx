@@ -89,7 +89,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         );
       }
     },
-    []
+    [discountCode]
   );
 
   const handleCheckout = useCallback(() => {
@@ -97,7 +97,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       chosenOption.checkoutUri,
       selectedQuantity
     );
-    window.open(link);
+    window.open(link, '_blank');
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity]);
 
   const closeSuccess = useCallback(() => {
@@ -116,7 +116,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     }
   }, [successDrawer]);
 
-  console.log('option: ', option);
+  console.log('variant details: ', variantDetails);
 
   return (
     <>
@@ -136,7 +136,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         before={{
           content: data.isDiscountAvailable
             ? `You are saving ${data.discountPercentage!}% with Brij`
-            : 'Buy with Brij',
+            : '',
           width: 'auto',
           height: 'auto',
           padding: '0.4rem 1.5rem',
@@ -153,6 +153,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           justifyContent='space-between'
           alignItems='center'
           gap='0.5rem'
+          margin='4rem 0 0 0'
         >
           <Wrapper width='45%' responsiveImg>
             <Image src={chosenOption.image} alt='' rounded width='100%' />
@@ -234,6 +235,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           justifyContent='flex-start'
           alignItems='center'
           gap='0.5rem'
+          paddingTop='8%'
         >
           {allOptions?.map((optionItem) => (
             <SelectInput
@@ -270,13 +272,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             </Button>
           ) : (
             <Text fontSize='1rem' fontWeight='600'>
-              <p>
-                {isValidCombo === null
-                  ? t('checkoutHint.chooseOptions')
-                  : isValidCombo === false
-                  ? t('checkoutHint.comboUnavailable')
-                  : ''}
-              </p>
+              <p>t("checkoutHint.comboUnavailable")</p>
             </Text>
           )}
         </Wrapper>

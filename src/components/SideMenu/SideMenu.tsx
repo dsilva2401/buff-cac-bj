@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { Link, useLocation } from "react-router-dom";
+import { showToast } from "components/Toast/Toast";
 import { getAuth, signOut } from "firebase/auth";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
@@ -59,13 +60,13 @@ const SideMenu: React.FC = () => {
     signOut(auth)
       .then(() => {
         setLoading(false);
+        showToast({ message: t("signOutToastMessage"), type: "success" });
       })
       .catch((error) => {
-        console.log("ERROR CODE: ", error.code);
-        console.log("ERROR MSG: ", error.message);
+        showToast({ message: error.message, type: "error" });
       });
     setIsMenuOpen(false);
-  }, [setIsMenuOpen, auth, error]);
+  }, [setIsMenuOpen, auth, error, t]);
 
   return (
     <>

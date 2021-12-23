@@ -4,6 +4,7 @@ import Button from "components/Button";
 import Input from "components/Input";
 import LoadingIndicator from "components/LoadingIndicator";
 import Text from "components/Text";
+import { showToast } from "components/Toast/Toast";
 import Wrapper from "components/Wrapper";
 import {
   createUserWithEmailAndPassword,
@@ -39,22 +40,22 @@ const SignUpForm: React.FC = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => console.log(result.user))
+      .then((result) => {
+        showToast({ message: t("signUpToastMessage"), type: "success" });
+      })
       .catch((error) => {
-        console.log("ERROR CODE: ", error.code);
-        console.log("ERROR MSG: ", error.message);
+        showToast({ message: error.message, type: "error" });
       });
-  }, [auth]);
+  }, [auth, t]);
 
   const signUpWithEmailAndPassword = () => {
     setLoading(true);
     if (errorMessage !== "") setErrorMessage("");
     createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => console.log(result.user))
+      .then((result) => {
+        showToast({ message: t("signUpToastMessage"), type: "success" });
+      })
       .catch((error) => {
-        console.log("ERROR CODE: ", error.code);
-        console.log("ERROR MSG: ", error.message);
-
         if (error.code.includes("auth/weak-password")) {
           setErrorMessage("Please enter a stronger password.");
         } else if (error.code.includes("auth/email-already-in-use")) {
@@ -63,6 +64,7 @@ const SignUpForm: React.FC = () => {
           setErrorMessage("Unable to register. Please try again later.");
         }
         setLoading(false);
+        showToast({ message: errorMessage, type: "error" });
       });
   };
 

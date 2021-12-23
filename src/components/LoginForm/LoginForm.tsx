@@ -10,9 +10,9 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
 import { Link, useHistory } from "react-router-dom";
-// import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
+import { showToast } from "components/Toast/Toast";
 
 const LoginForm = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
@@ -38,19 +38,16 @@ const LoginForm = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => console.log(result.user))
+      .then(() => {
+        showToast({ message: t("signInToastMessage"), type: "success" });
+      })
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
-        // // The email of the user's account used.
-        // const email = error.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
+        showToast({ message: error.message, type: "error" });
       });
-  }, [auth]);
+  }, [auth, t]);
 
   const handleFacebookAuth = useCallback(() => {
-    history.push('/collection');
+    history.push("/collection");
   }, [history]);
 
   const handleUsernameChanged = useCallback(
@@ -65,14 +62,13 @@ const LoginForm = () => {
 
   const handleLogin = () => {
     setLoading(true);
-    if (error !== '') setError('');
+    if (error !== "") setError("");
     signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        console.log(userCredential.user);
+      .then(() => {
+        showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
+        showToast({ message: error.message, type: "error" });
         setLoading(false);
       });
   };
