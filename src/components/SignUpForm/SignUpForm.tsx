@@ -8,6 +8,7 @@ import { showToast } from "components/Toast/Toast";
 import Wrapper from "components/Wrapper";
 import {
   createUserWithEmailAndPassword,
+  FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
   signInWithPopup
@@ -15,11 +16,10 @@ import {
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { ProviderName } from "types/Auth";
 
 const SignUpForm: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signUp" });
-  const history = useHistory();
   const auth = getAuth();
 
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
@@ -36,11 +36,24 @@ const SignUpForm: React.FC = () => {
     success,
   } = useMagicLinkHandler(email, true);
 
-  const handleGoogleAuth = useCallback(() => {
+  const handleSocialAuth = useCallback((providerName: ProviderName) => {
     setLoading(true);
-    const provider = new GoogleAuthProvider();
+
+    let provider = null;
+
+    switch (providerName) {
+      case ProviderName.Facebook:
+        provider = new FacebookAuthProvider();
+        break;
+      case ProviderName.Google:
+        provider = new GoogleAuthProvider();
+        break;
+      default:
+        provider = new GoogleAuthProvider();
+    }
+
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(() => {
         showToast({ message: t("signUpToastMessage"), type: "success" });
       })
       .catch((error) => {
@@ -95,10 +108,10 @@ const SignUpForm: React.FC = () => {
         alignItems="center"
         gap="1rem"
       >
-        <Button theme="light" onClick={handleGoogleAuth}>
+        <Button theme="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
           <GoogleLogo /> {t("googleButton")}
         </Button>
-        <Button theme="light" onClick={() => history.push("/collection")}>
+        <Button theme="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
           <FacebookLogo /> {t("facebookButton")}
         </Button>
       </Wrapper>
