@@ -16,7 +16,11 @@ const CheckAnimation: React.FC<CheckAnimationProps> = ({ isDrawerOpen }) => {
     },
   };
 
-  return <Lottie options={defaultOptions} height={100} width={100} />;
+  return <Lottie
+    options={defaultOptions}
+    height={100}
+    width={100}
+  />;
 };
 
 export default CheckAnimation;

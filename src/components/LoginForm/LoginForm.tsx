@@ -8,7 +8,7 @@ import Input from "components/Input";
 
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
+import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
 import { Link, useHistory } from "react-router-dom";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -47,8 +47,16 @@ const LoginForm = () => {
   }, [auth, t]);
 
   const handleFacebookAuth = useCallback(() => {
-    history.push("/collection");
-  }, [history]);
+    setLoading(true);
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(() => {
+        showToast({ message: t("signInToastMessage"), type: "success" });
+      })
+      .catch((error) => {
+        showToast({ message: error.message, type: "error" });
+      });
+  }, [auth, t]);
 
   const handleUsernameChanged = useCallback(
     ({ target: { value } }) => setUsername(value),

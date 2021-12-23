@@ -114,7 +114,7 @@ const ProductDetails: React.FC = () => {
       const module = details?.modules[currentPage];
       let moduleType: string | undefined = module?.type;
 
-      if (module.locked) {
+      if (module?.locked) {
         return <AuthDrawer />
       }
 
