@@ -50,7 +50,8 @@ export const Toast: React.FC = () => (
     transition={Slide}
     position="top-center"
     closeButton={false}
-    autoClose={3000}
+    hideProgressBar
+    autoClose={1500}
     closeOnClick
     newestOnTop
     rtl={false}

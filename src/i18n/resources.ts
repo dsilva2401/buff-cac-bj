@@ -15,20 +15,14 @@ export const resources = {
         signOutToastMessage: "Logout Successful",
       },
       profile: {
-        fullName: "Full Name",
-        phoneNumber: "Phone Number",
-        email: "Email",
-        resetPassword: "Reset Password",
-        deleteAccount: "Delete Account",
-        errorToastMessage: "Failed to load data",
-      },
-      profileEdit: {
         pageHeaderTitle: "Profile",
         changeImage: "Change Image",
         fullNameInput: "Full Name",
         phoneNumberInput: "Phone Number",
         emailInput: "Email",
         saveChanges: "Save Changes",
+        errorToastMessage: "Failed to load data",
+        updateToastMessage: "Profile Updated",
       },
       signUp: {
         pageHeaderTitle: "Sign Up",
