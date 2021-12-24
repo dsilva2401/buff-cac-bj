@@ -3,6 +3,7 @@ import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 import Button from "components/Button";
 import Input from "components/Input";
 import LoadingIndicator from "components/LoadingIndicator";
+import PersonalDetails from "components/PersonalDetails";
 import Text from "components/Text";
 import { showToast } from "components/Toast/Toast";
 import Wrapper from "components/Wrapper";
@@ -18,7 +19,13 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ProviderName } from "types/Auth";
 
-const SignUpForm: React.FC = () => {
+interface SignUpFormProps {
+  onSignup?: (...args: any[]) => void
+}
+
+const SignUpForm: React.FC<SignUpFormProps> = ({
+  onSignup = () => {}
+}) => {
   const { t } = useTranslation("translation", { keyPrefix: "signUp" });
   const auth = getAuth();
 
@@ -27,6 +34,7 @@ const SignUpForm: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showPersonalDetailsForm, togglePersonalDetailsForm] = useState<boolean>(false);
 
   // get magic link header
   const {
@@ -55,17 +63,20 @@ const SignUpForm: React.FC = () => {
     signInWithPopup(auth, provider)
       .then(() => {
         showToast({ message: t("signUpToastMessage"), type: "success" });
+        onSignup();
       })
       .catch((error) => {
         showToast({ message: error.message, type: "error" });
-      });
-  }, [auth, t]);
+      })
+      .finally(() => setLoading(false))
+  }, [auth, t, onSignup]);
 
   const signUpWithEmailAndPassword = () => {
     setLoading(true);
     if (errorMessage !== "") setErrorMessage("");
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
+        togglePersonalDetailsForm(true);
         showToast({ message: t("signUpToastMessage"), type: "success" });
       })
       .catch((error) => {
@@ -78,7 +89,8 @@ const SignUpForm: React.FC = () => {
         }
         setLoading(false);
         showToast({ message: errorMessage, type: "error" });
-      });
+      })
+      .finally(() => setLoading(false))
   };
 
   const passwordInput = !usingMagicLink ? (
@@ -90,6 +102,10 @@ const SignUpForm: React.FC = () => {
     />
   ) : null;
 
+  if (showPersonalDetailsForm) {
+    return <PersonalDetails onPersonalDetailsUpdate={onSignup} />
+  }
+
   return (
     <Wrapper
       width="100%"
@@ -100,6 +116,7 @@ const SignUpForm: React.FC = () => {
       padding="2rem 1rem"
       gap="1.2rem"
       overflow="auto"
+      margin="2rem 0"
     >
       <Wrapper
         width="100%"

@@ -1,5 +1,5 @@
 import qs from "query-string";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import LoadingIndicator from "components/LoadingIndicator";
 import {
@@ -8,9 +8,11 @@ import {
   isSignInWithEmailLink,
 } from "firebase/auth";
 import { useGlobal } from "context/global/GlobalContext";
+import PersonalDetails from "components/PersonalDetails";
 
 const MagicLink = () => {
-  const { user, setUser, signInRedirect } = useGlobal();
+  const { user, setUser, signInRedirect, setSignInRedirect } = useGlobal();
+  const [ showPersonalDetailsForm, togglePersonalDetailsForm ] = useState<boolean>(false);
 
   const auth = getAuth();
   const location = useLocation();
@@ -18,14 +20,27 @@ const MagicLink = () => {
 
   const { email, isNewUser } = qs.parse(location.search);
 
+  const redirectUser = useCallback(() => {
+    if (signInRedirect) {
+      history.push(signInRedirect)
+      setSignInRedirect('');
+    } else {
+      history.push('/collection')
+    }
+  }, [setSignInRedirect, history, signInRedirect]);
+
   useEffect(() => {
     if (user) {
-      let link = signInRedirect || '/collection';
 
+      // a string check: Variable embeded in query params defaults to string
       if (isNewUser === 'true') {
-        link = '/personal-details'
+        togglePersonalDetailsForm(true);
+        return;
       }
 
+      let link = signInRedirect || '/collection';
+
+      setSignInRedirect('');
       history.push(link);
     }
   }, [user, history, isNewUser, signInRedirect])
@@ -41,6 +56,13 @@ const MagicLink = () => {
         });
     }
   }, [auth, email]);
+
+  if (showPersonalDetailsForm) {
+    return <
+      PersonalDetails
+      onPersonalDetailsUpdate={redirectUser}
+    />
+  }
 
   return <LoadingIndicator />;
 };

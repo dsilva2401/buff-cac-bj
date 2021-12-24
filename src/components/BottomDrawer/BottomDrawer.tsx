@@ -70,15 +70,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (pageState !== null) {
-      setPosition({ x: 0, y: topHeight });
-      if (buttons) {
-        buttons[pageState.currentPage].onClick();
-      }
-    }
-  }, [isDrawerOpen, topHeight, pageState, buttons]);
-
-  useEffect(() => {
     if (position.y === topHeight) {
       setIsDrawerOpen(true);
     } else if (position.y === bottomHeight) {
@@ -144,15 +135,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               )}
               {isDrawerOpen && (
                 <DrawerClose
-                  onClick={
-                    isChildOpen
-                      ? () => closeChild()
-                      : () => {
-                          setPageState(null);
-                          setPosition({ ...position, y: bottomHeight });
-                          setIsDrawerOpen(false);
-                        }
-                  }
+                  onClick={() => {
+                    if (isChildOpen) {
+                      closeChild()
+                    } else {
+                      setPageState(null);
+                      setPosition({ ...position, y: bottomHeight });
+                      setIsDrawerOpen(false);
+                    }
+
+                  }}
                 >
                   <Close />
                 </DrawerClose>

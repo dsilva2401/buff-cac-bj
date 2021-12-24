@@ -9,8 +9,8 @@ function useProductDetails(slug: string | null, user: User | null = null): [
 ] {
     const [productDetails, setProductDetails] = useState<ProductDetailsType | null>(null);
 
-    const onSuccess = useCallback((userDetails) => {
-        setProductDetails(userDetails);
+    const onSuccess = useCallback((productDetails) => {
+        setProductDetails(productDetails);
     }, [])
     
     const onError = useCallback((error) => {

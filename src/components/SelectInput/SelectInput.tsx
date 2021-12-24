@@ -18,7 +18,6 @@ const SelectInput: React.FC<SelectInputProps> = ({
   onChange,
   selected,
 }) => {
-  console.log('selected: ', selected);
   return (
     <SelectWrapper fullWidth>
       <Label id={id}>{label}</Label>

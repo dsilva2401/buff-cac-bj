@@ -9,15 +9,20 @@ import Input from "components/Input";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
 import { showToast } from "components/Toast/Toast";
 
-const LoginForm = () => {
+interface LoginFormProps {
+  onLogin?: () => void
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({
+  onLogin = () => {}
+}) => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
 
-  const history = useHistory();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
@@ -39,11 +44,13 @@ const LoginForm = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(() => {
+        onLogin();
         showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
         showToast({ message: error.message, type: "error" });
-      });
+      })
+      .finally(() => setLoading(false))
   }, [auth, t]);
 
   const handleFacebookAuth = useCallback(() => {
@@ -51,11 +58,13 @@ const LoginForm = () => {
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
       .then(() => {
+        onLogin();
         showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
         showToast({ message: error.message, type: "error" });
-      });
+      })
+      .finally(() => setLoading(false))
   }, [auth, t]);
 
   const handleUsernameChanged = useCallback(
@@ -73,12 +82,14 @@ const LoginForm = () => {
     if (error !== "") setError("");
     signInWithEmailAndPassword(auth, username, password)
       .then(() => {
+        onLogin();
         showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
         showToast({ message: error.message, type: "error" });
         setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false))
   };
 
   const passwordInput = (
@@ -102,6 +113,7 @@ const LoginForm = () => {
       padding="2rem 1rem"
       gap="1.2rem"
       overflow="auto"
+      margin="2rem 0"
     >
       <Wrapper
         width="100%"

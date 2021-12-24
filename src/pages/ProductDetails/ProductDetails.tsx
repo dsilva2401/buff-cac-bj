@@ -30,7 +30,8 @@ type UrlParam = {
 const ProductDetails: React.FC = () => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number | null>(null);
+  const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
   const {
     productDetails: details,
     loading,
@@ -56,18 +57,26 @@ const ProductDetails: React.FC = () => {
   }, [isDrawerPageOpen, details, currentPage, pageState]);
 
   const closeDrawerPage = useCallback(() => {
-    setCurrentPage(0);
+    setCurrentPage(null);
     setIsDrawerPageOpen(false);
   }, []);
 
   const changeDrawerPage = useCallback(
-    (index, moduleType) => {
+    (index) => {
       setCurrentPage(index);
-      setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
-      if (moduleType !== 'LINK_MODULE')
+
+      if (currentPage) {
+        const moduleType = details?.modules[currentPage]?.type
+        setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
+
+        if (moduleType !== 'LINK_MODULE')
+          setPageTitle(details?.modules[index].title);
+      } else {
+        setIsDrawerPageOpen(true);
         setPageTitle(details?.modules[index].title);
+      }
     },
-    [details]
+    [details, currentPage]
   );
 
   let buttonsArray = useMemo(() => {
@@ -92,7 +101,11 @@ const ProductDetails: React.FC = () => {
         }
         let buttonObject: ButtonType = {
           title,
-          onClick: () => changeDrawerPage(x, details.modules[currentPage].type),
+          onClick: () => {
+            const module = details?.modules[x];
+            setShowAuthPage(module?.locked);
+            changeDrawerPage(x)
+          },
           isHighlight: x === 0,
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
@@ -111,18 +124,20 @@ const ProductDetails: React.FC = () => {
 
   const renderDrawerPage = useCallback(() => {
     if (details) {
-      const module = details?.modules[currentPage];
+      const module = details?.modules[currentPage  as number];
       let moduleType: string | undefined = module?.type;
+      
+      console.log(showAuthPage, module?.locked, 'module?.locked');
 
-      if (module?.locked) {
-        return <AuthDrawer />
+      if (showAuthPage || module?.locked) {
+        return <AuthDrawer onAuthComplete={() => setShowAuthPage(false)} />
       }
 
       switch (moduleType) {
         case 'CUSTOM_MODULE':
           return (
             <CustomDrawer
-              drawerTitle={details?.modules[currentPage]?.title}
+              drawerTitle={details?.modules[currentPage  as number]?.title}
               drawerData={
                 module?.moduleInfo as CustomModuleType
               }
@@ -132,7 +147,7 @@ const ProductDetails: React.FC = () => {
           return (
             <WarrantyDrawer
               closePage={closeDrawerPage}
-              drawerTitle={details?.modules[currentPage]?.title}
+              drawerTitle={details?.modules[currentPage  as number]?.title}
               warrantyData={
                 module?.moduleInfo as WarrantyModuleType
               }
@@ -151,21 +166,21 @@ const ProductDetails: React.FC = () => {
         case 'REFERRAL_MODULE':
           return (
             <ReferralDrawer
-              drawerTitle={details?.modules[currentPage]?.title}
+              drawerTitle={details?.modules[currentPage as number]?.title}
               referralData={
                 module?.moduleInfo as ReferralModuleType
               }
             />
           );
         case 'SHOPPING_MODULE':
-          const data = details?.modules[currentPage]
+          const data = details?.modules[currentPage as number]
             ?.moduleInfo as ShoppingModuleType;
           return <ShopDrawer data={data} closePage={closeDrawerPage} />;
         default:
           return null;
       }
     }
-  }, [currentPage, closeDrawerPage, details]);
+  }, [currentPage, closeDrawerPage, details, showAuthPage]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt='brand-logo' maxWidth='110px' />,

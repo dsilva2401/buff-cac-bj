@@ -1,6 +1,7 @@
 import LoginForm from 'components/LoginForm';
 import PageFooter from 'components/PageFooter';
 import SignUpForm from 'components/SignUpForm';
+import Wrapper from 'components/Wrapper';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +10,13 @@ enum AuthScreen {
   signup = "signup"
 }
 
-const AuthDrawer = () => {
+interface AuthDrawerProps {
+  onAuthComplete: () => void
+}
+
+const AuthDrawer: React.FC<AuthDrawerProps> = ({
+  onAuthComplete
+}) => {
   const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
 
   const { t: signInTranslation } = useTranslation('translation', { keyPrefix: 'signIn' });
@@ -19,12 +26,12 @@ const AuthDrawer = () => {
     switch (authScreen) {
       case AuthScreen.login:
         return (
-          <LoginForm />
+          <LoginForm onLogin={onAuthComplete} />
         )
       case AuthScreen.signup:
-        return <SignUpForm />
+        return <SignUpForm onSignup={onAuthComplete} />
       default:
-        return <LoginForm />
+        return <LoginForm onLogin={onAuthComplete} />
     }
   }, [authScreen])
 
@@ -59,10 +66,18 @@ const AuthDrawer = () => {
   }, [authScreen, signInTranslation, signUpTranslation])
 
   return (
-    <>
+    <Wrapper
+      width="100%"
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="center"
+      gap="1.2rem"
+      overflow="auto"
+      margin="2rem 0"
+    >
       {authScreenToRender}
       {footerToRender}
-    </>
+    </Wrapper>
   );
 }
 

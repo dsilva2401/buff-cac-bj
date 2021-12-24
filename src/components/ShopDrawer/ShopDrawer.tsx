@@ -116,8 +116,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     }
   }, [successDrawer]);
 
-  console.log('variant details: ', variantDetails);
-
   return (
     <>
       <SuccessDrawer

@@ -27,7 +27,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [productDetails, reFetchProduct] = useProductDetails(slug, user);
 
   const onActivateWarrantySuccess = useCallback(() => {
-    console.log('warranty activated', slug);
     reFetchProduct();
   }, [reFetchProduct]);
 
@@ -41,36 +40,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     onSuccess: onActivateWarrantySuccess,
     onError: onActivateWarrantyError,
   }, user);
-
-  // const activateWarranty = useCallback(
-  //   async (warrantyId: string) => {
-  //     try {
-  //       setLoading(true);
-  //       const token = await user!.getIdToken();
-  //       // const res = await fetch(
-  //       //   "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
-  //       //   {
-  //       //     method: "POST",
-  //       //     headers: {
-  //       //       Authorization: `Bearer ${token}`,
-  //       //     },
-  //       //     body: JSON.stringify({ warrantyId }),
-  //       //   }
-  //       // );
-  //       // if (res.status !== 200) {
-  //       //   throw new Error("Error activating warranty");
-  //       // }
-  //       // // refetch data to show updated state
-  //       // // TODO: use optimistic UI
-  //       // getProductDetails(slug!, token);
-  //     } catch (e) {
-  //       setError(JSON.stringify(e));  
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [user, slug]
-  // );
 
   useEffect(() => {
     const auth = getAuth();
