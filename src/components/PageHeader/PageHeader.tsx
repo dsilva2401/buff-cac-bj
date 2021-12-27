@@ -25,7 +25,7 @@ export default function PageHeader({
           logo
         ) : goBack ? (
           <IconButton
-            theme="light"
+            variant="light"
             iconName="chevron-left"
             onClick={() => goBack()}
           />

@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { theme } from "styles/theme";
 
 type ButtonProps = {
-  theme: "light" | "dark";
+  variant: "light" | "dark";
   warning?: boolean;
 };
 
@@ -18,17 +19,17 @@ const Button = styled.button<ButtonProps>`
   cursor: pointer;
   transition: all 0.3s ease;
   border: ${(props) =>
-    props.theme === "light" ? "1px solid #E7EAEB" : "none"};
+    props.variant === "light" ? `1px solid ${theme.button.border}` : "none"};
   background-color: ${(props) =>
-    props.theme === "dark" ? (props.warning ? "#FD6157" : "#1B1B1B") : "#FFF"};
+    props.variant === "dark" ? (props.warning ? theme.button.warning : theme.button.primary) : theme.button.secondary};
   box-shadow: ${(props) =>
-    props.theme === "dark" ? "" : "0px 1px 4px rgba(0, 0, 0, 0.12)"};
+    props.variant === "dark" ? "" : "0px 1px 4px rgba(0, 0, 0, 0.12)"};
   color: ${(props) =>
-    props.theme === "dark" ? "#FFF" : props.warning ? "#FD6157" : "#202029"};
+    props.variant === "dark" ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
 
   a {
     color: ${(props) =>
-      props.theme === "dark" ? "#FFF" : props.warning ? "#FD6157" : "#202029"};
+    props.variant === "dark" ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
     text-decoration: none;
   }
 
@@ -40,13 +41,13 @@ const Button = styled.button<ButtonProps>`
 
   &:active {
     box-shadow: ${(props) =>
-      props.theme === "dark" ? "" : "-1px -1px 4px rgba(0, 0, 0, 0.12)"};
+    props.variant === "dark" ? "" : "-1px -1px 4px rgba(0, 0, 0, 0.12)"};
   }
 
   &:disabled {
-    background-color: ${(props) => (props.theme === "dark" ? "#ccc" : "#fff")};
+    background-color: ${(props) => (props.variant === "dark" ? "#ccc" : theme.button.secondary)};
     color: ${(props) =>
-      props.theme === "dark" ? "#fff" : "rgba(32, 32, 41, .3)"};
+    props.variant === "dark" ? theme.button.secondary : theme.button.disabled};
   }
 `;
 

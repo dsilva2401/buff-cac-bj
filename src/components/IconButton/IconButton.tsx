@@ -13,7 +13,7 @@ import { ReactComponent as Edit } from "assets/icons/svg/edit.svg";
  */
 
 type IconButtonProps = {
-  theme?: "dark" | "light";
+  variant?: "dark" | "light";
   iconName?: "close" | "chevron-left" | "menu" | "edit";
   children?: React.ReactNode;
   onClick: () => void;
@@ -21,7 +21,7 @@ type IconButtonProps = {
 
 export default function IconButton({
   iconName,
-  theme = "light",
+  variant = "light",
   children,
   onClick,
 }: IconButtonProps) {
@@ -41,7 +41,7 @@ export default function IconButton({
   };
 
   return (
-    <Button theme={theme} onClick={onClick}>
+    <Button variant={variant} onClick={onClick}>
       {children ? children : renderIcon()}
     </Button>
   );

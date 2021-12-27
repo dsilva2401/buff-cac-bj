@@ -63,7 +63,7 @@ const Collection: React.FC = () => {
   const menuButton = useMemo(
     () => (
       <Wrapper width="100%" justifyContent="flex-end">
-        <IconButton theme="dark" iconName="menu" onClick={setMenuOpen} />
+        <IconButton variant="dark" iconName="menu" onClick={setMenuOpen} />
       </Wrapper>
     ),
     [setMenuOpen]
@@ -75,6 +75,8 @@ const Collection: React.FC = () => {
         <Grid
           margin="1rem 0"
           templateColumns="repeat(auto-fit, minmax(150px, 1fr))"
+          width={collection.length === 1 ? "max-content" : "100%"}
+          style={{ background: "red" }}
         >
           <ProductImage
             item={node}
@@ -102,8 +104,8 @@ const Collection: React.FC = () => {
           height="100%"
           direction="column"
           justifyContent="flex-start"
-          alignItems="center"
           padding="1.5rem 1rem"
+          alignItems="flex-start"
         >
           <Wrapper width="100%" justifyContent="flex-start">
             <Text fontSize="1rem" fontWeight="600" textTransform="uppercase">

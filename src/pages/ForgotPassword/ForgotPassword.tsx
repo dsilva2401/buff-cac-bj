@@ -56,7 +56,7 @@ const ForgotPassword: React.FC = () => {
         alignItems="center"
         padding="0 1rem 1.5rem"
       >
-        <Button theme="dark">
+        <Button variant="dark">
           <Link to="/">{t("sendEmailLink")}</Link>
         </Button>
       </Wrapper>

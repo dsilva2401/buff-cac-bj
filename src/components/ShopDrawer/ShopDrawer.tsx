@@ -1,13 +1,14 @@
-import Button from "components/Button";
-import Image from "components/Image";
-import QuantityController from "components/QuantityController";
-import SelectInput from "components/SelectInput";
-import SuccessDrawer from "components/SuccessDrawer";
-import Text from "components/Text";
-import Wrapper from "components/Wrapper";
-import hash from "object-hash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { theme } from "styles/theme";
+import hash from "object-hash";
+import Wrapper from "components/Wrapper";
+import SelectInput from "components/SelectInput";
+import SuccessDrawer from "components/SuccessDrawer";
+import QuantityController from "components/QuantityController";
+import Button from "components/Button";
+import Image from "components/Image";
+import Text from "components/Text";
 import "../../../node_modules/slick-carousel/slick/slick-theme.css";
 import "../../../node_modules/slick-carousel/slick/slick.css";
 import {
@@ -143,7 +144,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           position: "absolute",
           color: "#fff",
           top: "-1px",
-          background: "#1B1B1B",
+          background: theme.primary,
           fontSize: "0.8rem",
           borderRadius: "0 0 15px 15px",
         }}
@@ -158,7 +159,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           <Wrapper width="45%" responsiveImg>
             <Image src={chosenOption.image} alt="" rounded width="100%" />
           </Wrapper>
-          <Wrapper width="50%" height="100%" direction="column" gap="1rem">
+          <Wrapper width="50%" height="100%" direction="column" justifyContent="center" gap="1rem" padding="0rem 0.5rem">
             <Wrapper width="100%" direction="column" gap="0.1rem">
               <Text
                 color="#98A3AA"
@@ -235,6 +236,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           justifyContent="flex-start"
           alignItems="center"
           gap="0.5rem"
+          margin="1rem 0"
         >
           {allOptions?.map((optionItem) => (
             <SelectInput
@@ -263,7 +265,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         >
           {isValidCombo ? (
             <Button
-              theme="dark"
+              variant="dark"
               onClick={handleCheckout}
               disabled={!isValidCombo}
             >
@@ -275,8 +277,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                 {isValidCombo === null
                   ? t("checkoutHint.chooseOptions")
                   : isValidCombo === false
-                  ? t("checkoutHint.comboUnavailable")
-                  : ""}
+                    ? t("checkoutHint.comboUnavailable")
+                    : ""}
               </p>
             </Text>
           )}

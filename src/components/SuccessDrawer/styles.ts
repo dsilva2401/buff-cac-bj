@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { theme } from "styles/theme";
 
 type DrawerType = {
   isOpen?: boolean;
@@ -17,7 +18,7 @@ export const Drawer = styled.div<DrawerType>`
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  background-color: #1b1b1b;
+  background-color: ${theme.primary};
   z-index: 5;
   transition: transform 0.3s ease;
   transform: ${(props) => (props.isOpen ? "translateY(-1001px)" : "none")};
@@ -32,7 +33,7 @@ export const Drawer = styled.div<DrawerType>`
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #1b1b1b;
+    background: ${theme.primary};
     left: 0;
     bottom: -100%;
   }

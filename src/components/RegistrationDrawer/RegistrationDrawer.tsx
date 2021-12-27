@@ -240,7 +240,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         margin="0 0 0.5rem"
       />
       <Button
-        theme="dark"
+        variant="dark"
         onClick={() => setProfileComplete(true)}
         disabled={
           !firstName ||
@@ -253,7 +253,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         {t("detailsForm.submitButton")}
       </Button>
       <Button
-        theme="light"
+        variant="light"
         onClick={() => setProfileComplete(true)}
         disabled={false}
       >
@@ -308,10 +308,10 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
               <p>{t("signInDisclaimer")}</p>
             </Text>
             <Wrapper width="100%" direction="column" gap="1rem">
-              <Button theme="light" onClick={handleGoogleAuth}>
+              <Button variant="light" onClick={handleGoogleAuth}>
                 <GoogleLogo /> {t("googleButton")}
               </Button>
-              <Button theme="light">
+              <Button variant="light">
                 <FacebookLogo /> {t("facebookButton")}
               </Button>
             </Wrapper>
@@ -332,7 +332,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
               margin="0 0 1rem"
             />
             <Button
-              theme="light"
+              variant="light"
               onClick={handleEmailSignIn}
               disabled={
                 !email ||

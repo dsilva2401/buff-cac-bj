@@ -89,13 +89,13 @@ const DetailsModal: React.FC<DetailsModalProps> = ({
         </Wrapper>
         <Wrapper width="100%" direction="column" gap="1rem">
           <Button
-            theme="dark"
+            variant="dark"
             disabled={!selectedDate || !selectedFile}
             onClick={confirmWarranty}
           >
             {warrantyActivated ? t("updateButton") : t("activateButton")}
           </Button>
-          <Button theme="light" onClick={close}>
+          <Button variant="light" onClick={close}>
             {t("cancelButton")}
           </Button>
         </Wrapper>

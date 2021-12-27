@@ -1,19 +1,19 @@
-import BottomDrawer from "components/BottomDrawer";
-import CustomDrawer from "components/CustomDrawer";
-import IconButton from "components/IconButton";
-import Image from "components/Image";
-import LinkModule from "components/LinkModule";
-import LoadingIndicator from "components/LoadingIndicator";
-import PageHeader from "components/PageHeader";
-import ReferralDrawer from "components/ReferralDrawer";
-import ShopDrawer from "components/ShopDrawer";
-import WarrantyDrawer from "components/WarrantyDrawer";
-import Wrapper from "components/Wrapper";
-import { Redirect } from "react-router-dom";
-import { ButtonType } from "components/BottomDrawer/BottomDrawer";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
+import { ButtonType } from "components/BottomDrawer/BottomDrawer";
 import { useGlobal } from "../../context/global/GlobalContext";
+import { Redirect } from "react-router-dom";
+import { useParams } from "react-router";
+import Image from "components/Image";
+import IconButton from "components/IconButton";
+import CustomDrawer from "components/CustomDrawer";
+import BottomDrawer from "components/BottomDrawer";
+import LoadingIndicator from "components/LoadingIndicator";
+import ReferralDrawer from "components/ReferralDrawer";
+import WarrantyDrawer from "components/WarrantyDrawer";
+import LinkModule from "components/LinkModule";
+import PageHeader from "components/PageHeader";
+import ShopDrawer from "components/ShopDrawer";
+import Wrapper from "components/Wrapper";
 import {
   CustomModuleType,
   LinkModuleType,
@@ -96,10 +96,10 @@ const ProductDetails: React.FC = () => {
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
             ? {
-                currentPage: x,
-                isDrawerOpen: true,
-                pageTitle: details?.modules[x].title,
-              }
+              currentPage: x,
+              isDrawerOpen: true,
+              pageTitle: details?.modules[x].title,
+            }
             : null,
         };
         buttons.push(buttonObject);
@@ -277,7 +277,7 @@ const ProductDetails: React.FC = () => {
     () => (
       <Wrapper width="100%" justifyContent="flex-end">
         <IconButton
-          theme="dark"
+          variant="dark"
           iconName="menu"
           onClick={handleOpenMenuClicked}
         />

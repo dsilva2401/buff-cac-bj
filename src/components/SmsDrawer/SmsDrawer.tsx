@@ -26,7 +26,7 @@ const SmsDrawer: React.FC<SmsDrawerProps> = ({ smsModuleData }) => {
           <p>{t("subscriptionDisclaimer")}</p>
         </Text>
       </Wrapper>
-      <Button theme="dark">{t('signUpButton')}</Button>
+      <Button variant="dark">{t('signUpButton')}</Button>
     </Wrapper>
   );
 };

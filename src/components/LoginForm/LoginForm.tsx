@@ -127,10 +127,10 @@ const LoginForm = () => {
         alignItems="center"
         gap="1rem"
       >
-        <Button theme="light" onClick={handleGoogleAuth}>
+        <Button variant="light" onClick={handleGoogleAuth}>
           <GoogleLogo /> {t("googleButton")}
         </Button>
-        <Button theme="light" onClick={handleFacebookAuth}>
+        <Button variant="light" onClick={handleFacebookAuth}>
           <FacebookLogo /> {t("facebookButton")}
         </Button>
       </Wrapper>
@@ -173,7 +173,7 @@ const LoginForm = () => {
           <LoadingIndicator />
         ) : (
           <Button
-            theme="dark"
+            variant="dark"
             onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
           >
             {usingMagicLink ? t("magicLinkButton") : t("signInButton")}

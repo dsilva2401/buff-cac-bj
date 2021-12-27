@@ -140,10 +140,10 @@ const Login: React.FC = () => {
           alignItems="center"
           gap="1rem"
         >
-          <Button theme="light" onClick={handleGoogleAuth}>
+          <Button variant="light" onClick={handleGoogleAuth}>
             <GoogleLogo /> {t("googleButton")}
           </Button>
-          <Button theme="light" onClick={handleFacebookAuth}>
+          <Button variant="light" onClick={handleFacebookAuth}>
             <FacebookLogo /> {t("facebookButton")}
           </Button>
         </Wrapper>
@@ -191,7 +191,7 @@ const Login: React.FC = () => {
             <LoadingIndicator />
           ) : (
             <Button
-              theme="dark"
+              variant="dark"
               onClick={() =>
                 usingMagicLink ? handleMagicLink() : handleLogin()
               }
