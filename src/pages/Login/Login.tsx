@@ -9,14 +9,24 @@ import { Link } from "react-router-dom";
 import LoginForm from "components/LoginForm";
 import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
 import { useGlobal } from "context/global/GlobalContext";
+import IconButton from "components/IconButton";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
-  const { user } = useGlobal();
+  const { user, setIsMenuOpen } = useGlobal();
 
   const logo = useMemo(
     () => <Image width="auto" src={brijLogo} alt="Brij logo" />,
     []
+  );
+
+  const menuButton = useMemo(
+    () => (
+      <Wrapper width="100%" justifyContent="flex-end">
+        <IconButton theme="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
+      </Wrapper>
+    ),
+    [setIsMenuOpen]
   );
 
   useRedirectLoggedInUser(user);
@@ -28,8 +38,9 @@ const Login: React.FC = () => {
       direction="column"
       justifyContent="space-between"
       alignItems="center"
+      overflow='auto'
     >
-      <PageHeader border title={t("pageHeaderTitle")} logo={logo} />
+      <PageHeader border title={t("pageHeaderTitle")} logo={logo} actionButton={menuButton} />
       <LoginForm />
       <PageFooter>
         <p>{t("newToBrij")}?</p>

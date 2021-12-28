@@ -22,6 +22,7 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import Text from "components/Text";
 
 type UrlParam = {
   id: string;
@@ -122,15 +123,42 @@ const ProductDetails: React.FC = () => {
     return buttons;
   }, [changeDrawerPage, id, details, currentPage, setSignInRedirect]);
 
+  const leadModule: any = details?.modules[0] || {}
+
+  const leadInformation = useMemo(() => {
+    switch (leadModule.type) {
+      case 'SHOPPING_MODULE':
+        const defaultVariantDetails = leadModule?.moduleInfo?.defaultVariantDetails;
+
+        return (
+          <Text fontSize="1rem" fontWeight="600">
+            <span>{defaultVariantDetails?.price && `$${defaultVariantDetails?.price}`}</span>
+            <span>{defaultVariantDetails?.discountedPrice && `$${defaultVariantDetails?.discountedPrice}`}</span>
+          </Text>
+        )
+      case 'WARRANTY_MODULE':
+        return (
+          <Text fontSize="1rem" fontWeight="600">
+            <span>{leadModule?.moduleInfo?.registeredTo}</span>
+          </Text>
+        )
+      default:
+        return null;
+    }
+  }, [leadModule]);
+
   const renderDrawerPage = useCallback(() => {
     if (details) {
       const module = details?.modules[currentPage  as number];
       let moduleType: string | undefined = module?.type;
-      
-      console.log(showAuthPage, module?.locked, 'module?.locked');
 
       if (showAuthPage || module?.locked) {
-        return <AuthDrawer onAuthComplete={() => setShowAuthPage(false)} />
+        return (
+          <AuthDrawer
+            html={details?.brand?.registrationDetails}
+            onAuthComplete={() => setShowAuthPage(false)}
+          />
+        )
       }
 
       switch (moduleType) {
@@ -239,6 +267,7 @@ const ProductDetails: React.FC = () => {
             socials={details?.brand?.social}
             isChildOpen={isDrawerPageOpen}
             closeChild={closeDrawerPage}
+            leadInformation={leadInformation}
           >
             {renderDrawerPage()}
           </BottomDrawer>
