@@ -22,9 +22,9 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   warrantyData,
   warrantyId,
 }) => {
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
+  const [successDrawer, setSuccessDrawer] = useState<boolean>(!warrantyData?.activated);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-  const { loading, activateWarranty, getProductDetails } = useGlobal();
+  const { loading, activateWarranty } = useGlobal();
 
   const { t } = useTranslation("translation", {
     keyPrefix: "drawers.warrantyDrawer",
@@ -46,22 +46,26 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
 
   useEffect(() => {
     const checkAndActivateWarranty = async () => {
-      // await activateWarranty(warrantyId);
-      setSuccessDrawer(true);
+      activateWarranty({
+        warrantyId
+      })
+        .then(() => {
+          setSuccessDrawer(true);
+          setTimeout(() => {
+            setSuccessDrawer(false);
+          }, 3000)
+        });
     };
-    if (warrantyData && !warrantyData?.activated) {
+    if (!warrantyData?.activated) {
       checkAndActivateWarranty();
     }
-  }, [warrantyData, warrantyId, activateWarranty, getProductDetails]);
+  }, [warrantyData?.activated, warrantyId, activateWarranty]);
 
   useEffect(() => {
     if (successDrawer) {
       setTimeout(() => {
         setIsDetailsOpen(false);
       }, 1000);
-      setTimeout(() => {
-        setSuccessDrawer(false);
-      }, 3000);
     }
   }, [successDrawer, closePage]);
 
@@ -69,14 +73,19 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     return <LoadingIndicator />;
   }
 
-  return (
-    <>
+  if (successDrawer) {
+    return (
       <SuccessDrawer
-        isOpen={successDrawer}
+        isOpen={true}
         title={t("successDrawer.title")}
         description={t("successDrawer.description")}
         close={closeSuccess}
       />
+    )
+  }
+
+  return (
+    <>
       <DetailsModal
         isOpen={isDetailsOpen}
         close={closeDetails}

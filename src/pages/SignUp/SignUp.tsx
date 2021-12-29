@@ -1,106 +1,30 @@
-import brijLogo from "assets/logos/svg/brij-colored.svg";
-import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
-import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
-import { showToast } from "components/Toast/Toast";
-import Button from "components/Button";
-import Image from "components/Image";
-import Input from "components/Input";
-import LoadingIndicator from "components/LoadingIndicator";
-import PageFooter from "components/PageFooter";
-import PageHeader from "components/PageHeader";
-import Text from "components/Text";
-import Wrapper from "components/Wrapper";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  GoogleAuthProvider,
-  sendSignInLinkToEmail,
-  signInWithPopup,
-  User,
-} from "firebase/auth";
-import useMagicLinkHandler from "hooks/useMagicLinkHandler";
-import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
-import { useGlobal } from "../../context/global/GlobalContext";
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import { useGlobal } from '../../context/global/GlobalContext';
+import brijLogo from 'assets/logos/svg/brij-colored.svg';
+import PageFooter from 'components/PageFooter';
+import PageHeader from 'components/PageHeader';
+import SignUpForm from 'components/SignUpForm';
+import Wrapper from 'components/Wrapper';
+import Image from 'components/Image';
 
 const SignUp: React.FC = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "signUp" });
-  const { signInRedirect, setSignInRedirect } = useGlobal();
-  const history = useHistory();
-  const auth = getAuth();
-
-  const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [token, setToken] = useState<string | undefined>("");
-  const [user, setUser] = useState<User | undefined>(undefined);
-
+  const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
   const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
+  const history = useHistory();
 
-  // get magic link header
-  const {
-    handleMagicLink,
-    loading: magicLinkLoading,
-    error,
-    success,
-  } = useMagicLinkHandler(email, true);
+  const { signInRedirect, setSignInRedirect } = useGlobal();
 
-  useRedirectLoggedInUser(token, user);
+  const redirectUser = useCallback((isNewEmailUser: boolean) => {
+    let link = signInRedirect || '/collection';
 
-  const handleGoogleAuth = useCallback(() => {
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        setUser(result.user);
-        showToast({ message: t("signUpToastMessage"), type: "success" });
-      })
-      .catch((error) => {
-        showToast({ message: error.message, type: "error" });
-      });
-  }, [auth, t]);
-
-  const signUpWithEmailAndPassword = () => {
-    setLoading(true);
-    if (errorMessage !== "") setErrorMessage("");
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => {
-        setUser(result.user);
-        showToast({ message: t("signUpToastMessage"), type: "success" });
-      })
-      .catch((error) => {
-        if (error.code.includes("auth/weak-password")) {
-          setErrorMessage("Please enter a stronger password.");
-        } else if (error.code.includes("auth/email-already-in-use")) {
-          setErrorMessage("Email already in use.");
-        } else {
-          setErrorMessage("Unable to register. Please try again later.");
-        }
-        setLoading(false);
-        showToast({ message: errorMessage, type: "error" });
-      });
-  };
-
-  useEffect(() => {
-    async function fetchData() {
-      const token = await user?.getIdToken();
-      setToken(token);
+    if (signInRedirect) {
+      setSignInRedirect('');
     }
-    if (user) fetchData();
-  }, [user]);
 
-  const passwordInput = !usingMagicLink ? (
-    <Input
-      type="password"
-      value={password}
-      placeholder={t("passwordInput")}
-      onChange={({ target: { value } }) => setPassword(value)}
-    />
-  ) : null;
+    history.push(link);
+  }, [history, signInRedirect, setSignInRedirect])
 
   return (
     <Wrapper
@@ -110,88 +34,8 @@ const SignUp: React.FC = () => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <PageHeader border title={t("pageHeaderTitle")} logo={logo} />
-      <Wrapper
-        width="100%"
-        height="100%"
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-        padding="2rem 1rem"
-        gap="1.2rem"
-        overflow="auto"
-      >
-        <Wrapper
-          width="100%"
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          gap="1rem"
-        >
-          <Button variant="light" onClick={handleGoogleAuth}>
-            <GoogleLogo /> {t("googleButton")}
-          </Button>
-          <Button variant="light" onClick={() => history.push("/collection")}>
-            <FacebookLogo /> {t("facebookButton")}
-          </Button>
-        </Wrapper>
-        <Wrapper justifyContent="center" alignItems="center">
-          <Text fontSize="1.2rem" color="#98A3AA">
-            <p>or</p>
-          </Text>
-        </Wrapper>
-
-        <Wrapper
-          direction="column"
-          width="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Input
-            type="text"
-            value={email}
-            placeholder={t("emailInput")}
-            onChange={({ target: { value } }) => setEmail(value)}
-            margin="0 0 1rem"
-          />
-          {passwordInput}
-          <Wrapper width="100%" justifyContent="center" padding="0 1rem">
-            <Text
-              fontSize="0.7rem"
-              textDecoration="unset"
-              onClick={() => setUsingMagicLink(!usingMagicLink)}
-            >
-              <span>{usingMagicLink ? "Use password" : "Use magic link"}</span>
-            </Text>
-          </Wrapper>
-        </Wrapper>
-        <Wrapper width="100%" justifyContent="center" alignItems="center">
-          {loading || magicLinkLoading ? (
-            <LoadingIndicator />
-          ) : (
-            <Button
-              variant="dark"
-              onClick={() =>
-                usingMagicLink
-                  ? handleMagicLink()
-                  : signUpWithEmailAndPassword()
-              }
-            >
-              {usingMagicLink ? t("magicLinkButton") : t("signUpButton")}
-            </Button>
-          )}
-        </Wrapper>
-        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
-          <Text fontSize="0.7rem" textDecoration="unset">
-            <span>{error}</span>
-          </Text>
-        </Wrapper>
-        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
-          <Text fontSize="0.7rem" textDecoration="unset">
-            <span>{success}</span>
-          </Text>
-        </Wrapper>
-      </Wrapper>
+      <PageHeader border title={t('pageHeaderTitle')} logo={logo} />
+      <SignUpForm onSignup={redirectUser} />
       <PageFooter>
         <p>{t("existingUser")}</p>
         <Link to={"/"}>{t("signInLink")}</Link>

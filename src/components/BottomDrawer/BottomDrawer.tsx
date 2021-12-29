@@ -4,7 +4,6 @@ import { PageStateType } from "context/global/GlobalContext";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
 import { ReactComponent as LockIcon } from "assets/icons/svg/lock-filled.svg";
-import { ReactComponent as LockBlack } from "assets/icons/svg/lock-black.svg";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import phoneCallIcon from "assets/icons/svg/social_phone-call.svg";
 import instagramIcon from "assets/icons/svg/social_instagram.svg";
@@ -69,15 +68,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (pageState !== null) {
-      setPosition({ x: 0, y: topHeight });
-      if (buttons) {
-        buttons[pageState.currentPage].onClick();
-      }
-    }
-  }, [isDrawerOpen, topHeight, pageState, buttons]);
 
   useEffect(() => {
     if (position.y === topHeight) {
@@ -170,8 +160,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           variant="dark"
                           onClick={() => {
                             setPosition({ ...position, y: topHeight });
-                            if (button.locked) history.push("/");
-                            else button.onClick();
+                            button.onClick();
                             if (button.pageState !== null)
                               setPageState(button.pageState);
                           }}

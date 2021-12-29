@@ -1,6 +1,8 @@
 import { getAuth, User } from "firebase/auth";
+import usePersonDetails from "hooks/usePersonalDetails";
+import useProductDetails from "hooks/useProductDetails";
 import React, { useCallback, useEffect, useState } from "react";
-import { ProductDetailsType } from "../../types/ProductDetailsType";
+import { useAPI } from "utils/api";
 import {
   darkTheme,
   GlobalContext,
@@ -20,72 +22,29 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
-  const [productDetails, setProductDetails] =
-    useState<ProductDetailsType | null>(null);
 
-  const getProductDetails = useCallback(
-    async (slug: string, token?: string) => {
-      try {
-        setLoading(true);
-        let res: Response | null = null;
-        const url = `https://damp-wave-40564.herokuapp.com/products/${slug}`;
-        if (token) {
-          console.log("WITH TOKEN");
-          res = await fetch(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        } else {
-          console.log("WITHOUT TOKEN");
-          res = await fetch(url);
-        }
-        const resJson = await res.json();
-        setProductDetails(resJson);
-      } catch (e) {
-        setError(JSON.stringify(e));
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const personDetails = usePersonDetails(user);
+  const [productDetails, reFetchProduct] = useProductDetails(slug, user);
 
-  const activateWarranty = useCallback(
-    async (warrantyId: string) => {
-      try {
-        setLoading(true);
-        const token = await user!.getIdToken();
-        // const res = await fetch(
-        //   "https://damp-wave-40564.herokuapp.com/products/activateWarranty",
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //     body: JSON.stringify({ warrantyId }),
-        //   }
-        // );
-        // if (res.status !== 200) {
-        //   throw new Error("Error activating warranty");
-        // }
-        // // refetch data to show updated state
-        // // TODO: use optimistic UI
-        getProductDetails(slug!, token);
-      } catch (e) {
-        setError(JSON.stringify(e));
-      } finally {
-        setLoading(false);
-      }
-    },
-    [user, slug, getProductDetails]
-  );
+  const onActivateWarrantySuccess = useCallback(() => {
+    reFetchProduct();
+  }, [reFetchProduct]);
+
+  const onActivateWarrantyError = useCallback((error) => {
+    console.log(error)
+  }, []);
+
+  const [activateWarranty] = useAPI({
+    method: 'POST',
+    endpoint: 'products/activateWarranty',
+    onSuccess: onActivateWarrantySuccess,
+    onError: onActivateWarrantyError,
+  }, user);
 
   useEffect(() => {
     const auth = getAuth();
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("userId: ", user.uid);
         setUser(user);
       } else {
         setUser(null);
@@ -94,21 +53,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const refetchProductDetails = async () => {
-      const token = await user!.getIdToken();
-      getProductDetails(slug!, token);
-    };
-    if (slug && !user) {
-      getProductDetails(slug);
-    } else if (slug && user) {
-      refetchProductDetails();
-    }
-  }, [slug, user, getProductDetails]);
-
-  useEffect(() => {
-    localStorage.setItem("signInRedirect", signInRedirect);
-    console.log("signInRedirect", signInRedirect);
-
+    localStorage.setItem('signInRedirect', signInRedirect);
     // upon unmount clear storage
     return () => localStorage.setItem("signInRedirect", "");
   }, [signInRedirect]);
@@ -128,13 +73,13 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPageState,
         user,
         productDetails,
-        getProductDetails,
         loading,
         error,
         activateWarranty,
         slug,
         setSlug,
         setUser,
+        personDetails
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
 import React, { createContext, useContext } from "react";
+import { UserStruct } from "types/User";
 import { ProductDetailsType } from "../../types/ProductDetailsType";
 
 export type ThemeType = {
@@ -46,9 +47,11 @@ export type GlobalContextProps = {
   pageState: PageStateType | null;
   setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
   user: User | null;
+  personDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
-  getProductDetails: (slug: string, token?: string) => Promise<void>;
-  activateWarranty: (warrantyId: string) => Promise<void>;
+  activateWarranty: ({
+    warrantyId
+  }: { warrantyId: string}) => Promise<void>;
   loading: boolean;
   error: string | null;
   slug: string | null;
@@ -68,8 +71,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   pageState: null,
   setPageState: () => {},
   user: null,
+  personDetails: null,
   productDetails: null,
-  getProductDetails: () => new Promise((res, rej) => res()),
   loading: false,
   error: null,
   activateWarranty: () => new Promise((res, rej) => res()),

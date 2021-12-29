@@ -1,5 +1,3 @@
-import brijLogo from 'assets/logos/svg/brij-colored.svg';
-
 import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 
@@ -9,30 +7,29 @@ import Text from "components/Text";
 import Input from "components/Input";
 
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
-import { Link, useHistory } from "react-router-dom";
-import Image from "components/Image";
-import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
+import { useCallback, useState } from "react";
+import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
+import { Link } from "react-router-dom";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
+import { showToast } from "components/Toast/Toast";
 
-const LoginForm = () => {
+interface LoginFormProps {
+  onLogin?: () => void
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({
+  onLogin = () => {}
+}) => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
 
-  const history = useHistory();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [token, setToken] = useState<string | undefined>('');
-  const [user, setUser] = useState<User | undefined>(undefined);
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
-
-  // redirect loggedIn user
-  useRedirectLoggedInUser(token, user);
 
   // get magic link header
   const {
@@ -46,20 +43,29 @@ const LoginForm = () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => setUser(result.user))
+      .then(() => {
+        onLogin();
+        showToast({ message: t("signInToastMessage"), type: "success" });
+      })
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
-        // // The email of the user's account used.
-        // const email = error.email;
-        // // The AuthCredential type that was used.
-        // const credential = GoogleAuthProvider.credentialFromError(error);
-      });
-  }, [auth]);
+        showToast({ message: error.message, type: "error" });
+      })
+      .finally(() => setLoading(false))
+  }, [auth, t]);
 
   const handleFacebookAuth = useCallback(() => {
-    history.push('/collection');
-  }, [history]);
+    setLoading(true);
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(() => {
+        onLogin();
+        showToast({ message: t("signInToastMessage"), type: "success" });
+      })
+      .catch((error) => {
+        showToast({ message: error.message, type: "error" });
+      })
+      .finally(() => setLoading(false))
+  }, [auth, t]);
 
   const handleUsernameChanged = useCallback(
     ({ target: { value } }) => setUsername(value),
@@ -71,31 +77,19 @@ const LoginForm = () => {
     []
   );
 
-  const logo = useMemo(
-    () => <Image width='auto' src={brijLogo} alt='Brij logo' />,
-    []
-  );
-
-  useEffect(() => {
-    async function fetchData() {
-      const token = await user?.getIdToken();
-      setToken(token);
-    }
-    if (user) fetchData();
-  }, [user]);
-
   const handleLogin = () => {
     setLoading(true);
-    if (error !== '') setError('');
+    if (error !== "") setError("");
     signInWithEmailAndPassword(auth, username, password)
-      .then((userCredential) => {
-        setUser(userCredential.user);
+      .then(() => {
+        onLogin();
+        showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
-        console.log('ERROR CODE: ', error.code);
-        console.log('ERROR MSG: ', error.message);
+        showToast({ message: error.message, type: "error" });
         setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false))
   };
 
   const passwordInput = (
@@ -119,6 +113,7 @@ const LoginForm = () => {
       padding="2rem 1rem"
       gap="1.2rem"
       overflow="auto"
+      margin="2rem 0"
     >
       <Wrapper
         width="100%"

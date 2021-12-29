@@ -16,12 +16,10 @@ export const resources = {
       },
       profile: {
         pageHeaderTitle: "Profile",
-        changeImage: "Change Image",
-        fullNameInput: "Full Name",
+        firstNameInput: "First Name",
+        lastNameInput: "Last Name",
         phoneNumberInput: "Phone Number",
-        emailInput: "Email",
         saveChanges: "Save Changes",
-        errorToastMessage: "Failed to load data",
         updateToastMessage: "Profile Updated",
       },
       signUp: {

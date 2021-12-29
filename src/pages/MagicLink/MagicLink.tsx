@@ -6,21 +6,13 @@ import {
   getAuth,
   signInWithEmailLink,
   isSignInWithEmailLink,
-  User,
 } from "firebase/auth";
-import { useAPI } from "utils/api";
 import { useGlobal } from "context/global/GlobalContext";
-
-interface UserCreatePayload {
-  email: string | null,
-  phoneNumber: string | null,
-  firstName: string | null,
-  lastName: string | null,
-  tag?: string
-}
+import PersonalDetails from "components/PersonalDetails";
 
 const MagicLink = () => {
-  const { user, setUser, signInRedirect } = useGlobal();
+  const { user, setUser, signInRedirect, setSignInRedirect } = useGlobal();
+  const [ showPersonalDetailsForm, togglePersonalDetailsForm ] = useState<boolean>(false);
 
   const auth = getAuth();
   const location = useLocation();
@@ -28,35 +20,30 @@ const MagicLink = () => {
 
   const { email, isNewUser } = qs.parse(location.search);
 
-  const onSuccess = useCallback(() => {
-    let link = signInRedirect || '/collection';
-
-    if (isNewUser === 'true') {
-      link = '/personal-details'
+  const redirectUser = useCallback(() => {
+    if (signInRedirect) {
+      history.push(signInRedirect)
+      setSignInRedirect('');
+    } else {
+      history.push('/collection')
     }
-
-    history.push(link);
-  }, [history, signInRedirect])
-
-  const onError = useCallback((error) => {
-    console.log('ERROR CODE: ', error.code);
-    console.log('ERROR MSG: ', error.message);
-  }, [])
-
-  const [getUser] = useAPI<UserCreatePayload>({
-    method: 'POST',
-    endpoint: 'auth',
-    onSuccess,
-    onError
-  })
+  }, [setSignInRedirect, history, signInRedirect]);
 
   useEffect(() => {
     if (user) {
-      const { email, phoneNumber, displayName } = user;
-      console.log(email, phoneNumber, displayName, 'email, phoneNumber, displayName')
-      getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
+
+      // a string check: Variable embeded in query params defaults to string
+      if (isNewUser === 'true') {
+        togglePersonalDetailsForm(true);
+        return;
+      }
+
+      let link = signInRedirect || '/collection';
+
+      setSignInRedirect('');
+      history.push(link);
     }
-  }, [user, getUser])
+  }, [user, history, isNewUser, signInRedirect])
 
   useEffect(() => {
     if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -69,6 +56,13 @@ const MagicLink = () => {
         });
     }
   }, [auth, email]);
+
+  if (showPersonalDetailsForm) {
+    return <
+      PersonalDetails
+      onPersonalDetailsUpdate={redirectUser}
+    />
+  }
 
   return <LoadingIndicator />;
 };
