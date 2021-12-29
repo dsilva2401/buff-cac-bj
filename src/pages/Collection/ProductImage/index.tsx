@@ -11,11 +11,11 @@ type ProductImageProps = {
 const ProductImage: React.FC<ProductImageProps> = ({ item, goToDetails }) => {
   return (
     <ProductCard
-      key={item.product.id}
-      registered={item.product.registered}
+      key={item?.product?.id}
+      registered={item?.product?.registered}
       onClick={() => goToDetails()}
     >
-      <Image src={item.product.image} alt='product' />
+      <Image src={item?.product?.image} alt='product' />
     </ProductCard>
   );
 };

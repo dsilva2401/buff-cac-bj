@@ -1,4 +1,3 @@
-
 import { Redirect } from "react-router-dom";
 import AuthDrawer from "components/AuthDrawer";
 import BottomDrawer from "components/BottomDrawer";
@@ -111,10 +110,10 @@ const ProductDetails: React.FC = () => {
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
             ? {
-                currentPage: x,
-                isDrawerOpen: true,
-                pageTitle: details?.modules[x].title,
-              }
+              currentPage: x,
+              isDrawerOpen: true,
+              pageTitle: details?.modules[x].title,
+            }
             : null,
         };
         buttons.push(buttonObject);
@@ -149,7 +148,7 @@ const ProductDetails: React.FC = () => {
 
   const renderDrawerPage = useCallback(() => {
     if (details) {
-      const module = details?.modules[currentPage  as number];
+      const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
 
       if (showAuthPage || module?.locked) {
@@ -165,7 +164,7 @@ const ProductDetails: React.FC = () => {
         case 'CUSTOM_MODULE':
           return (
             <CustomDrawer
-              drawerTitle={details?.modules[currentPage  as number]?.title}
+              drawerTitle={details?.modules[currentPage as number]?.title}
               drawerData={
                 module?.moduleInfo as CustomModuleType
               }
@@ -175,7 +174,7 @@ const ProductDetails: React.FC = () => {
           return (
             <WarrantyDrawer
               closePage={closeDrawerPage}
-              drawerTitle={details?.modules[currentPage  as number]?.title}
+              drawerTitle={details?.modules[currentPage as number]?.title}
               warrantyData={
                 module?.moduleInfo as WarrantyModuleType
               }
@@ -224,7 +223,7 @@ const ProductDetails: React.FC = () => {
     () => (
       <Wrapper width='100%' justifyContent='flex-end'>
         <IconButton
-          theme='dark'
+          variant='dark'
           iconName='menu'
           onClick={handleOpenMenuClicked}
         />
@@ -238,40 +237,40 @@ const ProductDetails: React.FC = () => {
   return (
     <>
       <>
+        <Wrapper
+          width='100%'
+          height='100%'
+          direction='column'
+          justifyContent='space-between'
+          overflow='auto'
+        >
+          <PageHeader
+            logo={logo(details?.brand?.image ?? '')}
+            actionButton={menuButton}
+            border={false}
+          />
           <Wrapper
             width='100%'
             height='100%'
-            direction='column'
-            justifyContent='space-between'
-            overflow='auto'
+            justifyContent='center'
+            alignItems='flex-start'
+            padding='2rem 1rem'
+            responsiveImg
           >
-            <PageHeader
-              logo={logo(details?.brand?.image ?? '')}
-              actionButton={menuButton}
-              border={false}
-            />
-            <Wrapper
-              width='100%'
-              height='100%'
-              justifyContent='center'
-              alignItems='flex-start'
-              padding='2rem 1rem'
-              responsiveImg
-            >
-              <Image src={details?.product?.image} alt='product' />
-            </Wrapper>
+            <Image src={details?.product?.image} alt='product' />
           </Wrapper>
-          <BottomDrawer
-            title={pageTitle}
-            buttons={buttonsArray}
-            socials={details?.brand?.social}
-            isChildOpen={isDrawerPageOpen}
-            closeChild={closeDrawerPage}
-            leadInformation={leadInformation}
-          >
-            {renderDrawerPage()}
-          </BottomDrawer>
-        </>
+        </Wrapper>
+        <BottomDrawer
+          title={pageTitle}
+          buttons={buttonsArray}
+          socials={details?.brand?.social}
+          isChildOpen={isDrawerPageOpen}
+          closeChild={closeDrawerPage}
+          leadInformation={leadInformation}
+        >
+          {renderDrawerPage()}
+        </BottomDrawer>
+      </>
     </>
   );
 };

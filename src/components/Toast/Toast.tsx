@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "styles/theme";
 import { toast, Slide } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,28 +18,28 @@ export const showToast = (props: ToastProps) => {
     case "info":
       return toast.info(props.message, {
         progressStyle: {
-          backgroundColor: "#4B6EFA",
+          backgroundColor: theme.toast.info,
         },
         icon: <InfoIcon />,
       });
     case "success":
       return toast.success(props.message, {
         progressStyle: {
-          backgroundColor: "#25AE88",
+          backgroundColor: theme.toast.success,
         },
         icon: <SuccessIcon />,
       });
     case "error":
       return toast.error(props.message, {
         progressStyle: {
-          backgroundColor: "#FD6157",
+          backgroundColor: theme.toast.error,
         },
         icon: <ErrorIcon />,
       });
     case "warn":
       return toast.warn(props.message, {
         progressStyle: {
-          backgroundColor: "#FE931E",
+          backgroundColor: theme.toast.warn,
         },
         icon: <CautionIcon />,
       });
@@ -50,7 +51,8 @@ export const Toast: React.FC = () => (
     transition={Slide}
     position="top-center"
     closeButton={false}
-    autoClose={3000}
+    hideProgressBar
+    autoClose={1500}
     closeOnClick
     newestOnTop
     rtl={false}

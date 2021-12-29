@@ -15,20 +15,12 @@ export const resources = {
         signOutToastMessage: "Logout Successful",
       },
       profile: {
-        fullName: "Full Name",
-        phoneNumber: "Phone Number",
-        email: "Email",
-        resetPassword: "Reset Password",
-        deleteAccount: "Delete Account",
-        errorToastMessage: "Failed to load data",
-      },
-      profileEdit: {
         pageHeaderTitle: "Profile",
-        changeImage: "Change Image",
-        fullNameInput: "Full Name",
+        firstNameInput: "First Name",
+        lastNameInput: "Last Name",
         phoneNumberInput: "Phone Number",
-        emailInput: "Email",
         saveChanges: "Save Changes",
+        updateToastMessage: "Profile Updated",
       },
       signUp: {
         pageHeaderTitle: "Sign Up",
@@ -60,6 +52,11 @@ export const resources = {
         pageHeaderTitle: "Forgot Password",
         emailInput: "Enter email...",
         sendEmailLink: "Email me a Link!",
+      },
+      collection: {
+        collectionPageTitle: "My Collection",
+        emptyCollectionMessage: "No Products in your collection",
+        scanCodeButton: "Scan Code",
       },
       drawers: {
         registrationDrawer: {

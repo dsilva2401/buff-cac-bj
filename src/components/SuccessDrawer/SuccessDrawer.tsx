@@ -1,8 +1,8 @@
 import React from "react";
-import DrawerMask from "components/DrawerMask";
-import Text from "components/Text";
 import { Drawer } from "./styles";
+import Text from "components/Text";
 import CheckAnimation from "./CheckAnimation";
+import DrawerMask from "components/DrawerMask";
 
 type SuccessDrawerProps = {
   isOpen: boolean;

@@ -39,7 +39,7 @@ const ResetPassword: React.FC = () => {
         alignItems="center"
         padding="1rem"
       >
-        <Button theme="dark" onClick={() => history.push("/profile")}>
+        <Button variant="dark" onClick={() => history.push("/profile")}>
           Reset
         </Button>
       </Wrapper>

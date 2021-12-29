@@ -24,7 +24,7 @@ interface SignUpFormProps {
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
-  onSignup = () => {}
+  onSignup = () => { }
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "signUp" });
   const auth = getAuth();
@@ -124,10 +124,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         alignItems="center"
         gap="1rem"
       >
-        <Button theme="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
+        <Button variant="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
           <GoogleLogo /> {t("googleButton")}
         </Button>
-        <Button theme="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
+        <Button variant="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
           <FacebookLogo /> {t("facebookButton")}
         </Button>
       </Wrapper>
@@ -166,7 +166,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           <LoadingIndicator />
         ) : (
           <Button
-            theme="dark"
+            variant="dark"
             onClick={() =>
               usingMagicLink ? handleMagicLink() : signUpWithEmailAndPassword()
             }

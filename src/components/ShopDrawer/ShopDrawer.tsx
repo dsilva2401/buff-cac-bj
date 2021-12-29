@@ -1,15 +1,16 @@
-import Button from 'components/Button';
-import Image from 'components/Image';
-import QuantityController from 'components/QuantityController';
-import SelectInput from 'components/SelectInput';
-import SuccessDrawer from 'components/SuccessDrawer';
-import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import hash from 'object-hash';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import '../../../node_modules/slick-carousel/slick/slick-theme.css';
-import '../../../node_modules/slick-carousel/slick/slick.css';
+import React, { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { theme } from "styles/theme";
+import hash from "object-hash";
+import Wrapper from "components/Wrapper";
+import SelectInput from "components/SelectInput";
+import SuccessDrawer from "components/SuccessDrawer";
+import QuantityController from "components/QuantityController";
+import Button from "components/Button";
+import Image from "components/Image";
+import Text from "components/Text";
+import "../../../node_modules/slick-carousel/slick/slick-theme.css";
+import "../../../node_modules/slick-carousel/slick/slick.css";
 import {
   ShoppingModuleType,
   VariantDetails,
@@ -134,16 +135,16 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         before={{
           content: data.isDiscountAvailable
             ? `You are saving ${data.discountPercentage!}% with Brij`
-            : '',
-          width: 'auto',
-          height: 'auto',
-          padding: '0.4rem 1.5rem',
-          position: 'absolute',
-          color: '#fff',
-          top: '-1px',
-          background: '#1B1B1B',
-          fontSize: '0.8rem',
-          borderRadius: '0 0 15px 15px',
+            : "Buy with Brij",
+          width: "auto",
+          height: "auto",
+          padding: "0.4rem 1.5rem",
+          position: "absolute",
+          color: "#fff",
+          top: "-1px",
+          background: theme.primary,
+          fontSize: "0.8rem",
+          borderRadius: "0 0 15px 15px",
         }}
       >
         <Wrapper
@@ -156,8 +157,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           <Wrapper width='45%' responsiveImg>
             <Image src={chosenOption.image} alt='' rounded width='100%' />
           </Wrapper>
-          <Wrapper width='50%' height='100%' direction='column' gap='1rem'>
-            <Wrapper width='100%' direction='column' gap='0.1rem'>
+          <Wrapper width="50%" height="100%" direction="column" justifyContent="center" gap="1rem" padding="0rem 0.5rem">
+            <Wrapper width="100%" direction="column" gap="0.1rem">
               <Text
                 color='#98A3AA'
                 fontSize='0.75rem'
@@ -228,12 +229,12 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         </Wrapper>
 
         <Wrapper
-          width='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          gap='0.5rem'
-          paddingTop='8%'
+          width="100%"
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center"
+          gap="0.5rem"
+          margin="1rem 0"
         >
           {allOptions?.map((optionItem) => (
             <SelectInput
@@ -262,15 +263,21 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         >
           {isValidCombo ? (
             <Button
-              theme='dark'
+              variant="dark"
               onClick={handleCheckout}
               disabled={!isValidCombo}
             >
               {t('checkoutButton.purchaseNow')}
             </Button>
           ) : (
-            <Text fontSize='1rem' fontWeight='600'>
-              <p>t("checkoutHint.comboUnavailable")</p>
+            <Text fontSize="1rem" fontWeight="600">
+              <p>
+                {isValidCombo === null
+                  ? t("checkoutHint.chooseOptions")
+                  : isValidCombo === false
+                    ? t("checkoutHint.comboUnavailable")
+                    : ""}
+              </p>
             </Text>
           )}
         </Wrapper>

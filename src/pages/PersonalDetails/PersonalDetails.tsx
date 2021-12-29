@@ -101,9 +101,9 @@ const PersonalDetails: React.FC = () => {
         <Wrapper width='100%' justifyContent='center' alignItems='center'>
           {
             loading
-              ? (  <LoadingIndicator /> )
+              ? (<LoadingIndicator />)
               : (
-                <Button theme='dark' onClick={() => updateUser({
+                <Button variant='dark' onClick={() => updateUser({
                   firstName,
                   lastName,
                   phoneNumber

@@ -1,3 +1,4 @@
+import { theme } from "styles/theme";
 import styled from "styled-components";
 
 type ProductCardProps = {
@@ -23,7 +24,7 @@ export const ProductCard = styled.button<ProductCardProps>`
     padding: 0.4rem 0.6rem;
     color: #fff;
     font-size: 0.8rem;
-    background-color: #1b1b1b;
+    background-color: ${theme.primary};
     border: 1px solid #fff;
     border-radius: 0 20px 0 0;
   }

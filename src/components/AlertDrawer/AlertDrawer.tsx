@@ -54,10 +54,10 @@ const AlertDrawer: React.FC<AlertDrawerProps> = ({
             </p>
           </Text>
 
-          <Button theme="dark" warning onClick={() => callbackAction()}>
+          <Button variant="dark" warning onClick={() => callbackAction()}>
             Delete Account
           </Button>
-          <Button theme="light" onClick={() => closeDrawer()}>
+          <Button variant="light" onClick={() => closeDrawer()}>
             Cancel
           </Button>
         </Wrapper>

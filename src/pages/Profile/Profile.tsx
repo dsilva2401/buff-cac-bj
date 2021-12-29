@@ -1,79 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
+import { theme } from "styles/theme";
+import { useAPI } from "utils/api";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { showToast } from "components/Toast/Toast";
 import { getNameInitials } from "utils/getInitials";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router";
-import { getAuth } from "firebase/auth";
-import Text from "components/Text";
-import Image from "components/Image";
-import Avatar from "components/Avatar";
-import Button from "components/Button";
-import Wrapper from "components/Wrapper";
-import PageHeader from "components/PageHeader";
-import IconButton from "components/IconButton";
-import AlertDrawer from "components/AlertDrawer";
+import { useGlobal } from "context/global/GlobalContext";
 import LoadingIndicator from "components/LoadingIndicator";
+import PageHeader from "components/PageHeader";
+import Wrapper from "components/Wrapper";
+import Button from "components/Button";
+import Avatar from "components/Avatar";
+import Input from "components/Input";
+import Text from "components/Text";
 
-type ProfileType = {
-  uid: string | null;
-  displayName: string | null;
-  email: string | null;
-  phoneNumber: string | null;
-  photoUrl: string | undefined;
-};
+interface UserUpdatePayload {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}
 
-const initalValues = {
-  uid: "",
-  displayName: "",
-  email: "",
-  phoneNumber: "",
-  photoUrl: "",
-};
+interface PersonalDetailsProps {
+  onPersonalDetailsUpdate?: () => void
+}
 
-const Profile: React.FC = () => {
-  const [profile, setProfile] = useState<ProfileType>(initalValues);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+const Profile: React.FC<PersonalDetailsProps> = ({
+  onPersonalDetailsUpdate = () => { }
+}) => {
   const { t } = useTranslation("translation", { keyPrefix: "profile" });
   const history = useHistory();
-  const auth = getAuth();
+  const { user } = useGlobal();
 
-  useEffect(() => {
-    setLoading(true);
-    const user = auth.currentUser;
-    if (user) {
-      console.log("USER: ", user);
-      setProfile({
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        photoUrl: typeof user.photoURL === "string" ? user.photoURL : "",
-      });
-      setLoading(false);
-    } else {
-      showToast({ message: t("errorToastMessage"), type: "error" });
-      setLoading(false);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+
+  const onSuccess = useCallback(() => {
+    showToast({ message: t("updateToastMessage"), type: "success" })
+    onPersonalDetailsUpdate();
+  }, [])
+
+  const [updateUser, loading] = useAPI<UserUpdatePayload>(
+    {
+      method: 'PUT',
+      endpoint: 'auth/update',
+      onSuccess,
+      onError: (error) => {
+        showToast({ message: error, type: "error" })
+      }
     }
-  }, [auth, t]);
-
-  const closeDrawer = () => {
-    setIsDrawerOpen(false);
-  };
-
-  const editButton = (
-    <Wrapper width="100%" justifyContent="flex-end">
-      <IconButton
-        theme="light"
-        iconName="edit"
-        onClick={() => history.push("/profile/edit")}
-      />
-    </Wrapper>
   );
 
-  return loading ? (
-    <LoadingIndicator />
-  ) : (
+  return (
     <Wrapper
       width="100%"
       height="100%"
@@ -81,15 +59,9 @@ const Profile: React.FC = () => {
       justifyContent="space-between"
       overflow="auto"
     >
-      <AlertDrawer
-        isDrawerOpen={isDrawerOpen}
-        closeDrawer={closeDrawer}
-        callbackAction={closeDrawer}
-      />
       <PageHeader
-        title="Profile"
-        goBack={() => history.push("/collection")}
-        actionButton={editButton}
+        title={t("pageHeaderTitle")}
+        goBack={() => history.goBack()}
       />
       <Wrapper
         width="100%"
@@ -97,84 +69,70 @@ const Profile: React.FC = () => {
         direction="column"
         justifyContent="space-between"
         alignItems="center"
-        padding="1.5rem 3rem"
+        overflow="auto"
+        padding="2rem 1rem"
+        gap="1.2rem"
       >
-        <Wrapper
-          width="100%"
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap="1.5rem"
-        >
-          <Avatar>
-            {profile?.photoUrl ? (
-              <Image src={profile?.photoUrl} alt="profile-avatar" />
-            ) : (
-              <Text color="#414149" fontSize="3rem">
-                <h1>{getNameInitials(profile?.displayName)}</h1>
+        <Wrapper width="100%" alignItems="center" direction="column" margin="2rem 0" gap="1.2rem">
+          <Wrapper width="40%" justifyContent="center" alignItems="center" margin="0 0 1.25rem 0">
+            <Avatar>
+              <Text color={theme.primary} fontSize="3rem">
+                <h1>
+                  {firstName && lastName
+                    ? getNameInitials(firstName + " " + lastName)
+                    : user?.email?.charAt(0)?.toUpperCase()}
+                </h1>
               </Text>
-            )}
-          </Avatar>
-          <Wrapper
-            width="100%"
-            direction="column"
-            justifyContent="flex-start"
-            gap="1rem"
-          >
-            <Wrapper
-              width="100%"
-              direction="column"
-              justifyContent="flex-start"
-            >
-              <Text fontSize="0.5rem" color="#98A3AA">
-                <span>{t("fullName")}</span>
-              </Text>
-              <Text fontSize="0.9rem" color="#414149">
-                <p>{profile.displayName}</p>
-              </Text>
-            </Wrapper>
-            <Wrapper
-              width="100%"
-              direction="column"
-              justifyContent="flex-start"
-            >
-              <Text fontSize="0.5rem" color="#98A3AA">
-                <span>{t("phoneNumber")}</span>
-              </Text>
-              <Text fontSize="0.9rem" color="#414149">
-                <p>{profile.phoneNumber}</p>
-              </Text>
-            </Wrapper>
+            </Avatar>
+          </Wrapper>
 
-            <Wrapper
-              width="100%"
-              direction="column"
-              justifyContent="flex-start"
-            >
-              <Text fontSize="0.5rem" color="#98A3AA">
-                <span>{t("email")}</span>
-              </Text>
-              <Text fontSize="0.9rem" color="#414149">
-                <p>{profile.email}</p>
-              </Text>
-            </Wrapper>
+          <Wrapper
+            direction="column"
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Input
+              type="text"
+              value={firstName}
+              placeholder={t("firstNameInput")}
+              onChange={(e) => setFirstName(e.target.value)}
+              margin="0 0 1rem"
+            />
+            <Input
+              type="text"
+              value={lastName}
+              placeholder={t("lastNameInput")}
+              onChange={(e) => setLastName(e.target.value)}
+              margin="0 0 1rem"
+            />
+            <Input
+              type="text"
+              value={phoneNumber}
+              placeholder={t("phoneNumberInput")}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              margin="0 0 1rem"
+            />
           </Wrapper>
         </Wrapper>
-      </Wrapper>
-      <Wrapper
-        width="100%"
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-        gap="1rem"
-        padding="0 1rem 1.5rem"
-      >
-        <Button theme="light" onClick={() => history.push("/reset-password")}>
-          {t("resetPassword")}
-        </Button>
-        {/* <Button theme="light" warning onClick={() => setIsDrawerOpen(true)}>
-          {t("deleteAccount")}
-        </Button> */}
+        <Wrapper width="100%" justifyContent="center" alignItems="center">
+          {loading ? (
+            <LoadingIndicator />
+          ) : (
+            <Button
+              variant="dark"
+              onClick={() =>
+                updateUser({
+                  firstName,
+                  lastName,
+                  phoneNumber,
+                })
+              }
+            >
+              {t("saveChanges")}
+            </Button>
+          )}
+        </Wrapper>
       </Wrapper>
     </Wrapper>
   );

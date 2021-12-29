@@ -80,9 +80,9 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               showToast({ message: t("copyLinkToastMessage"), type: "success" })
             }
           >
-            <Button theme="light">{t("copyLinkButton")}</Button>
+            <Button variant="light">{t("copyLinkButton")}</Button>
           </CopyToClipboard>
-          <Button id="shareButton" onClick={() => handleShare()} theme="light">
+          <Button id="shareButton" onClick={() => handleShare()} variant="light">
             {t("shareLinkButton")}
           </Button>
         </Wrapper>
@@ -92,7 +92,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
         <Wrapper
           width="100%"
           responsiveImg
-          padding="0.75rem"
+
           alignItems="center"
           justifyContent="space-between"
           style={{ background: "#F7F7F7", borderRadius: "12px" }}
@@ -101,11 +101,11 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
             fontSize="1rem"
             fontWeight="600"
             color="#414149"
-            padding="0rem 0.25rem"
+            padding="0 0.25rem 0 1rem"
           >
             <p>{t("helpText")}</p>
           </Text>
-          <Image src={qrcode} alt="qr-code" maxWidth="45%" />
+          <Image src={qrcode} alt="qr-code" maxWidth="45%" margin="12px" />
         </Wrapper>
       </Wrapper>
     </Wrapper>

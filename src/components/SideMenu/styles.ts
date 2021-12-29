@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { theme } from "styles/theme";
 
 type MenuProps = {
   isMenuOpen: boolean;
@@ -12,7 +13,7 @@ const Menu = styled.div<MenuProps>`
   right: 0;
   border-radius: 26px 0 0 0;
   box-shadow: 0px 16px 40px rgba(0, 0, 0, 0.08);
-  background-color: #1b1b1b;
+  background-color: ${theme.primary};
   z-index: 10;
   transition: all 0.4s ease;
 

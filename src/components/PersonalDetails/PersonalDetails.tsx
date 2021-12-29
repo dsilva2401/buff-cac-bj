@@ -16,7 +16,7 @@ interface PersonalDetailsProps {
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
-  onPersonalDetailsUpdate = () => {}
+  onPersonalDetailsUpdate = () => { }
 }) => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -82,7 +82,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           <LoadingIndicator />
         ) : (
           <Button
-            theme="dark"
+            variant="dark"
             onClick={() =>
               updateUser({
                 firstName,
