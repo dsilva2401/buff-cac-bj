@@ -129,16 +129,55 @@ const ProductDetails: React.FC = () => {
       case 'SHOPPING_MODULE':
         const defaultVariantDetails = leadModule?.moduleInfo?.defaultVariantDetails;
 
+        const price = defaultVariantDetails?.price || 0;
+        const discountedPrice = defaultVariantDetails?.discountedPrice;
+
+        if (!discountedPrice) {
+          return (
+            <Text fontSize="1rem" fontWeight="600">
+              <span>{`$${price}`}</span>
+            </Text>
+          )
+        }
+
         return (
-          <Text fontSize="1rem" fontWeight="600">
-            <span>{defaultVariantDetails?.price && `$${defaultVariantDetails?.price}`}</span>
-            <span>{defaultVariantDetails?.discountedPrice && `$${defaultVariantDetails?.discountedPrice}`}</span>
-          </Text>
+          <Wrapper justifyContent="flex-end" gap="0.5rem">
+            <Text textDecoration="line-through" fontSize="0.8rem" color="grey">
+              <span>{`$${price}`}</span>
+            </Text>
+            <Text fontSize="1rem" fontWeight="600">
+              <span>{`$${discountedPrice}`}</span>
+            </Text>
+          </Wrapper>
         )
       case 'WARRANTY_MODULE':
+        const { activated, registeredTo } = leadModule?.moduleInfo || {};
+
+        if (activated && registeredTo) {
+          return (
+            <Wrapper
+              direction="column"
+              alignItems="flex-end"
+            >
+              <Text fontSize="0.7rem">
+                <span>Registered To</span>
+              </Text>
+              <Text fontSize="0.7rem" fontWeight="600">
+                <span>{registeredTo}</span>
+              </Text>
+            </Wrapper>
+          )
+        }
+
+        const { period, duration } = leadModule?.moduleInfo || {}
+
+        if (!period && !duration) {
+          return null;
+        }
+
         return (
-          <Text fontSize="1rem" fontWeight="600">
-            <span>{leadModule?.moduleInfo?.registeredTo}</span>
+          <Text fontSize="0.7rem">
+            <span>{`${period} ${duration?.label}`} warranty</span>
           </Text>
         )
       default:

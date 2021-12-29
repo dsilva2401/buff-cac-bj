@@ -137,7 +137,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <Text fontSize="1rem" fontWeight="600">
                     <h1>{title}</h1>
                   </Text>
-                  {leadInformation}
+                  {
+                    isDrawerOpen ? null : leadInformation
+                  }
                 </Wrapper>
               )}
               {isDrawerOpen && (
