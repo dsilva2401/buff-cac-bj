@@ -6,8 +6,8 @@ type ProductCardProps = {
 };
 
 export const ProductCard = styled.button<ProductCardProps>`
-  width: 167px;
-  height: 167px;
+  width: 160px;
+  height: 160px;
   position: relative;
   cursor: pointer;
   justify-self: center;

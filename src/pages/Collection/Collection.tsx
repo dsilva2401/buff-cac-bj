@@ -5,13 +5,16 @@ import React, {
   useContext,
   useMemo,
 } from "react";
+import { ReactComponent as ScanCode } from "assets/icons/svg/scan-code.svg";
 import { ProductDetailsType } from "types/ProductDetailsType";
 import { showToast } from "components/Toast/Toast";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { GlobalContext } from "context";
 import { getAuth } from "firebase/auth";
 import Grid from "components/Grid";
 import Text from "components/Text";
+import Button from "components/Button";
 import Wrapper from "components/Wrapper";
 import ProductImage from "./ProductImage";
 import IconButton from "components/IconButton";
@@ -21,8 +24,9 @@ import LoadingIndicator from "components/LoadingIndicator";
 const Collection: React.FC = () => {
   const [collection, setCollection] = useState<ProductDetailsType[]>([]);
   const [token, setToken] = useState<string | undefined>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { setIsMenuOpen } = useContext(GlobalContext);
+  const { t } = useTranslation("translation", { keyPrefix: "collection" });
   const history = useHistory();
   const auth = getAuth();
 
@@ -69,22 +73,32 @@ const Collection: React.FC = () => {
     [setMenuOpen]
   );
 
+  // const sortCollection = (collection: ProductDetailsType[]) => {
+  //   const sorted = collection.sort(
+  //     (a, b) =>
+  //       new Date(b?.product?.registerDate) -
+  //       new Date(a?.product?.registerDate)
+  //   );
+  // };
+
   const renderCollection = useCallback(() => {
-    return collection?.map((node: ProductDetailsType) => {
-      return (
-        <Grid
-          margin="1rem 0"
-          templateColumns="repeat(auto-fit, minmax(150px, 1fr))"
-          width={collection.length === 1 ? "max-content" : "100%"}
-          style={{ background: "red" }}
-        >
-          <ProductImage
-            item={node}
-            goToDetails={() => history.push(`/product/${node.tag.slug}`)}
-          />
-        </Grid>
-      );
-    });
+    return (
+      <Grid
+        margin="1rem 0"
+        templateColumns="repeat(auto-fit, minmax(150px, 1fr))"
+        width={collection.length === 1 ? "max-content" : "100%"}
+      >
+        {collection.map((node: ProductDetailsType) => {
+          return (
+            <ProductImage
+              item={node}
+              key={node.product.id}
+              goToDetails={() => history.push(`/product/${node.tag.slug}`)}
+            />
+          )
+        })}
+      </Grid>
+    );
   }, [collection, history]);
 
   return (
@@ -95,28 +109,61 @@ const Collection: React.FC = () => {
       justifyContent="space-between"
       overflow="auto"
     >
-      <PageHeader title="My Collection" actionButton={menuButton} />
+      <PageHeader title={t("collectionPageTitle")} actionButton={menuButton} />
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <Wrapper
-          width="100%"
-          height="100%"
-          direction="column"
-          justifyContent="flex-start"
-          padding="1.5rem 1rem"
-          alignItems="flex-start"
-        >
-          <Wrapper width="100%" justifyContent="flex-start">
-            <Text fontSize="1rem" fontWeight="600" textTransform="uppercase">
-              <h2>({collection?.length})</h2>
-            </Text>
+        collection?.length > 0 ? (
+          <Wrapper
+            width="100%"
+            height="100%"
+            direction="column"
+            justifyContent="flex-start"
+            padding="0 1.25rem"
+            margin="2.25rem 0 0 0"
+            alignItems="flex-start"
+          >
+            <Wrapper width="100%" justifyContent="flex-start">
+              <Text fontSize="1rem" fontWeight="600">
+                <h2>{brandName}{" "}({collection?.length})</h2>
+              </Text>
+            </Wrapper>
+            {renderCollection()}
           </Wrapper>
-          {renderCollection()}
-        </Wrapper>
+        ) : (
+          <Wrapper
+            width="100%"
+            height="100%"
+            justifyContent="center"
+            padding="0 1.25rem"
+            margin="5rem 0"
+            alignItems="flex-start"
+          >
+            <h4>{t("emptyCollectionMessage")}</h4>
+          </Wrapper>
+        )
       )}
+      <Wrapper
+        width="170px"
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        alignSelf="center"
+        position="absolute"
+        margin="auto"
+        bottom="2.5rem"
+      >
+        <Button variant="dark">
+          <ScanCode />
+          <Text color="#FFFFFF" padding="0 0 0 1.5rem">
+            <p>{t("scanCodeButton")}</p>
+          </Text>
+        </Button>
+      </Wrapper>
     </Wrapper>
   );
 };
 
 export default Collection;
+
+const brandName: string = "Canopy";

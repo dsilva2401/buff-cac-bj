@@ -176,7 +176,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           {button.title}
                           {button.locked && (
                             <LockBlack
-                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
+                              fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
                               width="20px"
                             />
                           )}
@@ -210,7 +210,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         {button.title}
                         {button.locked && (
                           <LockBlack
-                            fill={button.isHighlight ? "#FFFFFF" : "#000000"}
+                            fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
                             width="20px"
                           />
                         )}

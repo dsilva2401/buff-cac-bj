@@ -2,18 +2,11 @@ import { getAuth, User } from "firebase/auth";
 import usePersonDetails from "hooks/usePersonalDetails";
 import useProductDetails from "hooks/useProductDetails";
 import React, { useCallback, useEffect, useState } from "react";
+import { GlobalContext, PageStateType } from "./GlobalContext";
 import { useAPI } from "utils/api";
-import {
-  darkTheme,
-  GlobalContext,
-  lightTheme,
-  PageStateType,
-  ThemeMode,
-} from "./GlobalContext";
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<ThemeMode>("light");
   const [signInRedirect, setSignInRedirect] = useState<string>(
     localStorage.getItem("signInRedirect") || ""
   );
@@ -63,10 +56,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
       value={{
         isMenuOpen,
         setIsMenuOpen,
-        theme,
-        lightTheme,
-        darkTheme,
-        setTheme,
         signInRedirect,
         setSignInRedirect,
         pageState,

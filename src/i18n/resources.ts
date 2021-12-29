@@ -53,6 +53,11 @@ export const resources = {
         emailInput: "Enter email...",
         sendEmailLink: "Email me a Link!",
       },
+      collection: {
+        collectionPageTitle: "My Collection",
+        emptyCollectionMessage: "No Products in your collection",
+        scanCodeButton: "Scan Code",
+      },
       drawers: {
         registrationDrawer: {
           signInDisclaimer:

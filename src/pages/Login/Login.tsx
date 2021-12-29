@@ -6,8 +6,8 @@ import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
 import brijLogo from "assets/logos/svg/brij-colored.svg";
 import PageFooter from "components/PageFooter";
 import PageHeader from "components/PageHeader";
-import LoginForm from "components/LoginForm";
 import IconButton from "components/IconButton";
+import LoginForm from "components/LoginForm";
 import Wrapper from "components/Wrapper";
 import Image from "components/Image";
 
