@@ -4,6 +4,7 @@ import PageFooter from 'components/PageFooter';
 import PageHeader from 'components/PageHeader';
 import SignUpForm from 'components/SignUpForm';
 import Wrapper from 'components/Wrapper';
+import Image from 'components/Image';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { useGlobal } from '../../context/global/GlobalContext';
@@ -29,7 +30,7 @@ const SignUp: React.FC = () => {
   const menuButton = useMemo(
     () => (
       <Wrapper width="100%" justifyContent="flex-end">
-        <IconButton theme="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
+        <IconButton variant="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
       </Wrapper>
     ),
     [setIsMenuOpen]

@@ -7,9 +7,9 @@ import brijLogo from "assets/logos/svg/brij-colored.svg";
 import PageFooter from "components/PageFooter";
 import PageHeader from "components/PageHeader";
 import LoginForm from "components/LoginForm";
-import useRedirectLoggedInUser from "hooks/useRedirectLoggedInUser";
-import { useGlobal } from "context/global/GlobalContext";
 import IconButton from "components/IconButton";
+import Wrapper from "components/Wrapper";
+import Image from "components/Image";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   const menuButton = useMemo(
     () => (
       <Wrapper width="100%" justifyContent="flex-end">
-        <IconButton theme="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
+        <IconButton variant="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
       </Wrapper>
     ),
     [setIsMenuOpen]

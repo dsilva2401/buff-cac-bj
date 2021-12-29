@@ -236,40 +236,39 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
-      <>
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='space-between'
+        overflow='auto'
+      >
+        <PageHeader
+          logo={logo(details?.brand?.image ?? '')}
+          actionButton={menuButton}
+          border={false}
+        />
         <Wrapper
           width='100%'
           height='100%'
-          direction='column'
-          justifyContent='space-between'
-          overflow='auto'
+          justifyContent='center'
+          alignItems='flex-start'
+          padding='2rem 1rem'
+          responsiveImg
         >
-          <PageHeader
-            logo={logo(details?.brand?.image ?? '')}
-            actionButton={menuButton}
-            border={false}
-          />
-          <Wrapper
-            width='100%'
-            height='100%'
-            justifyContent='center'
-            alignItems='flex-start'
-            padding='2rem 1rem'
-            responsiveImg
-          >
-            <Image src={details?.product?.image} alt='product' />
-          </Wrapper>
-          <BottomDrawer
-            title={pageTitle}
-            buttons={buttonsArray}
-            socials={details?.brand?.social}
-            isChildOpen={isDrawerPageOpen}
-            closeChild={closeDrawerPage}
-            leadInformation={leadInformation}
-          >
-            {renderDrawerPage()}
-          </BottomDrawer>
-        </>
+          <Image src={details?.product?.image} alt='product' />
+        </Wrapper>
+        <BottomDrawer
+          title={pageTitle}
+          buttons={buttonsArray}
+          socials={details?.brand?.social}
+          isChildOpen={isDrawerPageOpen}
+          closeChild={closeDrawerPage}
+          leadInformation={leadInformation}
+        >
+          {renderDrawerPage()}
+        </BottomDrawer>
+      </Wrapper>
     </>
   );
 };

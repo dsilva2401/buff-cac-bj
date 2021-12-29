@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { PageStateType } from "context/global/GlobalContext";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
@@ -60,6 +61,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   socials,
   leadInformation
 }) => {
+  const history = useHistory();
   const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.85;
   const bottomHeight = -window.innerHeight * 0.3;
