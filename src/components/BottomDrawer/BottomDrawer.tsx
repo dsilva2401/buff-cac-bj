@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { PageStateType } from "context/global/GlobalContext";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
@@ -49,6 +48,7 @@ type BottomDrawerProps = {
   closeChild: () => void;
   buttons: ButtonType[] | null;
   socials: SocialsType;
+  leadInformation?: React.ReactNode;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -58,9 +58,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   closeChild,
   buttons,
   socials,
+  leadInformation
 }) => {
-  const history = useHistory();
-  const { pageState, setPageState } = useGlobal();
+  const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.85;
   const bottomHeight = -window.innerHeight * 0.3;
 
@@ -129,9 +129,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
           >
             <DrawerHeader isChildOpen={isChildOpen}>
               {!isChildOpen && (
-                <Text fontSize="1rem" fontWeight="600">
-                  <h1>{title}</h1>
-                </Text>
+                <Wrapper
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Text fontSize="1rem" fontWeight="600">
+                    <h1>{title}</h1>
+                  </Text>
+                  {leadInformation}
+                </Wrapper>
               )}
               {isDrawerOpen && (
                 <DrawerClose

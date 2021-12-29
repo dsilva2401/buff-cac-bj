@@ -3,6 +3,7 @@ export type PossibleModulesType =
   | 'CUSTOM_MODULE'
   | 'LINK_MODULE'
   | 'SHOPPING_MODULE'
+  | 'REGISTRATION_MODULE'
   | 'REFERRAL_MODULE';
 
 export type ModuleInfoType = {
@@ -145,6 +146,7 @@ export type ProductDetailsType = {
     image: string;
     name: string;
     website: string;
+    registrationDetails?: string;
     social: {
       // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
       // Otherwise, set phone is undefined. Similarly for others

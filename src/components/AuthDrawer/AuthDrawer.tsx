@@ -11,11 +11,13 @@ enum AuthScreen {
 }
 
 interface AuthDrawerProps {
-  onAuthComplete: () => void
+  onAuthComplete: () => void;
+  html: string | undefined | null;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
-  onAuthComplete
+  onAuthComplete,
+  html
 }) => {
   const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
 
@@ -75,6 +77,18 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       overflow="auto"
       margin="2rem 0"
     >
+      {
+        html ? (
+          <Wrapper
+            width="100%"
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            gap="1rem"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        ) : null
+      }
       {authScreenToRender}
       {footerToRender}
     </Wrapper>

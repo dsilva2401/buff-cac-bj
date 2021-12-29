@@ -34,6 +34,7 @@ const ForgotPassword: React.FC = () => {
         padding="2rem 1rem"
         gap="1.2rem"
         overflow="auto"
+        margin="2rem 0"
       >
         <Wrapper
           direction="column"
