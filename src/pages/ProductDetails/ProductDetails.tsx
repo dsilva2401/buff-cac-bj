@@ -12,8 +12,8 @@ import ShopDrawer from "components/ShopDrawer";
 import WarrantyDrawer from "components/WarrantyDrawer";
 import Wrapper from "components/Wrapper";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useGlobal } from "../../context/global/GlobalContext";
 import { useParams } from "react-router";
+import { useGlobal } from "../../context/global/GlobalContext";
 import {
   CustomModuleType,
   LinkModuleType,
@@ -223,8 +223,8 @@ const ProductDetails: React.FC = () => {
     () => (
       <Wrapper width='100%' justifyContent='flex-end'>
         <IconButton
-          variant="dark"
-          iconName="menu"
+          variant='dark'
+          iconName='menu'
           onClick={handleOpenMenuClicked}
         />
       </Wrapper>
@@ -236,27 +236,29 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
-      <Wrapper
-        width='100%'
-        height='100%'
-        direction='column'
-        justifyContent='space-between'
-        overflow='auto'
-      >
-        <PageHeader
-          logo={logo(details?.brand?.image ?? '')}
-          actionButton={menuButton}
-          border={false}
-        />
+      <>
         <Wrapper
           width='100%'
           height='100%'
-          justifyContent='center'
-          alignItems='flex-start'
-          padding='2rem 1rem'
-          responsiveImg
+          direction='column'
+          justifyContent='space-between'
+          overflow='auto'
         >
-          <Image src={details?.product?.image} alt='product' />
+          <PageHeader
+            logo={logo(details?.brand?.image ?? '')}
+            actionButton={menuButton}
+            border={false}
+          />
+          <Wrapper
+            width='100%'
+            height='100%'
+            justifyContent='center'
+            alignItems='flex-start'
+            padding='2rem 1rem'
+            responsiveImg
+          >
+            <Image src={details?.product?.image} alt='product' />
+          </Wrapper>
         </Wrapper>
         <BottomDrawer
           title={pageTitle}
@@ -268,7 +270,7 @@ const ProductDetails: React.FC = () => {
         >
           {renderDrawerPage()}
         </BottomDrawer>
-      </Wrapper>
+      </>
     </>
   );
 };

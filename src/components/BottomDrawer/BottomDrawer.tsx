@@ -1,9 +1,9 @@
+
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { PageStateType } from "context/global/GlobalContext";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
-import { ReactComponent as LockIcon } from "assets/icons/svg/lock-filled.svg";
+import { ReactComponent as LockBlack } from "assets/icons/svg/lock-filled.svg";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import phoneCallIcon from "assets/icons/svg/social_phone-call.svg";
 import instagramIcon from "assets/icons/svg/social_instagram.svg";
@@ -61,7 +61,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   socials,
   leadInformation
 }) => {
-  const history = useHistory();
   const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.85;
   const bottomHeight = -window.innerHeight * 0.3;
@@ -143,15 +142,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               )}
               {isDrawerOpen && (
                 <DrawerClose
-                  onClick={
-                    isChildOpen
-                      ? () => closeChild()
-                      : () => {
-                        setPageState(null);
-                        setPosition({ ...position, y: bottomHeight });
-                        setIsDrawerOpen(false);
-                      }
-                  }
+                  onClick={() => {
+                    if (isChildOpen) {
+                      closeChild()
+                    } else {
+                      setPageState(null);
+                      setPosition({ ...position, y: bottomHeight });
+                      setIsDrawerOpen(false);
+                    }
+
+                  }}
                 >
                   <Close />
                 </DrawerClose>
@@ -175,8 +175,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         >
                           {button.title}
                           {button.locked && (
-                            <LockIcon
-                              fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
+                            <LockBlack
+                              fill={button.isHighlight ? "#FFFFFF" : "#000000"}
                               width="20px"
                             />
                           )}
@@ -202,16 +202,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         key={button.title}
                         variant={button.isHighlight ? "dark" : "light"}
                         onClick={() => {
-                          if (button.locked) history.push("/");
-                          else button.onClick();
+                          button.onClick();
                           if (button.pageState !== null)
                             setPageState(button.pageState);
                         }}
                       >
                         {button.title}
                         {button.locked && (
-                          <LockIcon
-                            fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
+                          <LockBlack
+                            fill={button.isHighlight ? "#FFFFFF" : "#000000"}
                             width="20px"
                           />
                         )}
