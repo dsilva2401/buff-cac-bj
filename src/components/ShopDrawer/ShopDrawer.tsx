@@ -98,7 +98,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       chosenOption.checkoutUri,
       selectedQuantity
     );
-    window.open(link, '_blank');
+    window.open(`http://${link}`, '_blank');
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity]);
 
   const closeSuccess = useCallback(() => {

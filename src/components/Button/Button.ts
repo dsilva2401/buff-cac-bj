@@ -4,10 +4,11 @@ import { theme } from "styles/theme";
 type ButtonProps = {
   variant: "light" | "dark";
   warning?: boolean;
+  squared?: boolean;
+  width?: string;
 };
 
 const Button = styled.button<ButtonProps>`
-  width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
@@ -15,9 +16,10 @@ const Button = styled.button<ButtonProps>`
   font-size: 1rem;
   font-weight: 600;
   padding: 0.9rem 0;
-  border-radius: 5rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: ${(props) => props.width ? props.width : "100%"};
+  border-radius: ${(props) => props.squared ? "0.5rem" : "5rem"};
   border: ${(props) =>
     props.variant === "light" ? `1px solid ${theme.button.border}` : "none"};
   background-color: ${(props) =>

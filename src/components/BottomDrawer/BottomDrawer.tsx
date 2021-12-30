@@ -23,6 +23,7 @@ import {
   DrawerHeader,
   DrawerIconLink,
 } from "./styles";
+import { theme } from "styles/theme";
 
 export type ButtonType = {
   title: string | undefined;
@@ -182,7 +183,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           {button.title}
                           {button.locked && (
                             <LockBlack
-                              fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
+                              fill={button.isHighlight ? theme.secondary : theme.primary}
                               width="20px"
                             />
                           )}
@@ -216,7 +217,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         {button.title}
                         {button.locked && (
                           <LockBlack
-                            fill={button.isHighlight ? "#FFFFFF" : "#4B6EFA"}
+                            fill={button.isHighlight ? theme.secondary : theme.primary}
                             width="20px"
                           />
                         )}

@@ -23,12 +23,12 @@ export type ModuleInfoType = {
   locked: boolean;
   // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
   moduleInfo:
-    | CustomModuleType
-    | LinkModuleType
-    | WarrantyModuleType
-    | ShoppingModuleType
-    | ReferralModuleType
-    | null;
+  | CustomModuleType
+  | LinkModuleType
+  | WarrantyModuleType
+  | ShoppingModuleType
+  | ReferralModuleType
+  | null;
 };
 
 export type CustomModuleType = {
@@ -167,6 +167,9 @@ export type ProductDetailsType = {
     registered: boolean;
     // ageGate field in document
     ageGateEnabled: boolean;
+    // date on which the product was registered
+    registeredDate: string;
+    // defines the type of tag
     tagType: string;
   };
   // @arqam: modules will now be sent as an array of ModulesUnion type

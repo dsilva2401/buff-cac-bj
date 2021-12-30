@@ -23,6 +23,8 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
     keyPrefix: "drawers.referralDrawer",
   });
 
+  console.log("REFERRAL DATA: ", referralData.qrcode);
+
   const handleShare = async () => {
     const shareData = {
       title: referralData?.url,

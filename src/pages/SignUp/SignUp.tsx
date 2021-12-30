@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import { useGlobal } from '../../context/global/GlobalContext';
 import brijLogo from 'assets/logos/svg/brij-colored.svg';
 import PageFooter from 'components/PageFooter';
 import PageHeader from 'components/PageHeader';
 import SignUpForm from 'components/SignUpForm';
+import IconButton from 'components/IconButton';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
-import { useGlobal } from '../../context/global/GlobalContext';
-import IconButton from 'components/IconButton';
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });

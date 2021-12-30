@@ -57,6 +57,13 @@ export const resources = {
         collectionPageTitle: "My Collection",
         emptyCollectionMessage: "No Products in your collection",
         scanCodeButton: "Scan Code",
+        scanSuccessMessage: "Product Scanned",
+        scanErrorMessage: "Scan Error",
+      },
+      fourZeroFour: {
+        message: "This experience does not exist",
+        learnMoreButton: "Learn about Brij",
+        learnMoreLink: "https://brij.it/",
       },
       drawers: {
         registrationDrawer: {

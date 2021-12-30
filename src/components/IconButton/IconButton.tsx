@@ -1,10 +1,10 @@
 import React from "react";
 import Button from "./styles";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
+import { ReactComponent as CloseLight } from "assets/icons/svg/close-white.svg";
 import { ReactComponent as ChevronLeft } from "assets/icons/svg/chevron-left.svg";
 import { ReactComponent as Menu } from "assets/icons/svg/menu.svg";
 import { ReactComponent as Edit } from "assets/icons/svg/edit.svg";
-
 /**
  * An icon button component
  * @param {"dark" | "light"} theme Defines de background color. Must be 'light' or 'dark'. Default: 'light'
@@ -14,7 +14,7 @@ import { ReactComponent as Edit } from "assets/icons/svg/edit.svg";
 
 type IconButtonProps = {
   variant?: "dark" | "light";
-  iconName?: "close" | "chevron-left" | "menu" | "edit";
+  iconName?: "close" | "close-light" | "chevron-left" | "menu" | "edit";
   children?: React.ReactNode;
   onClick: () => void;
 };
@@ -29,6 +29,8 @@ export default function IconButton({
     switch (iconName) {
       case "close":
         return <Close />;
+      case "close-light":
+        return <CloseLight />;
       case "chevron-left":
         return <ChevronLeft />;
       case "menu":

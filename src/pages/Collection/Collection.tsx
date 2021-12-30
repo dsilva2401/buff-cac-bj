@@ -5,13 +5,14 @@ import React, {
   useContext,
   useMemo,
 } from "react";
-import { ReactComponent as ScanCode } from "assets/icons/svg/scan-code.svg";
+import { ReactComponent as ScanIcon } from "assets/icons/svg/scan-code.svg";
 import { ProductDetailsType } from "types/ProductDetailsType";
 import { showToast } from "components/Toast/Toast";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { GlobalContext } from "context";
 import { getAuth } from "firebase/auth";
+import QrReader from "react-qr-reader";
 import Grid from "components/Grid";
 import Text from "components/Text";
 import Button from "components/Button";
@@ -23,9 +24,12 @@ import LoadingIndicator from "components/LoadingIndicator";
 
 const Collection: React.FC = () => {
   const [collection, setCollection] = useState<ProductDetailsType[]>([]);
+  const [scanMode, toggleScanMode] = useState<boolean>(false);
+  const [scanResult, setScanResult] = useState<any>("");
   const [token, setToken] = useState<string | undefined>("");
   const [loading, setLoading] = useState<boolean>(true);
   const { setIsMenuOpen } = useContext(GlobalContext);
+
   const { t } = useTranslation("translation", { keyPrefix: "collection" });
   const history = useHistory();
   const auth = getAuth();
@@ -62,6 +66,20 @@ const Collection: React.FC = () => {
     if (token) getCollection();
   }, [token]);
 
+  // useEffect(() => {
+  //   const sortCollection = (collection: ProductDetailsType[]) => {
+  //     const sorted = collection.sort(
+  //       (a, b) =>
+  //         new Date(b?.product?.registeredDate).valueOf() -
+  //         new Date(a?.product?.registeredDate).valueOf()
+  //     );
+  //     setCollection(sorted);
+  //   };
+  //   if (collection.length > 0) {
+  //     sortCollection(collection);
+  //   };
+  // }, [collection])
+
   const setMenuOpen = useCallback(() => setIsMenuOpen(true), [setIsMenuOpen]);
 
   const menuButton = useMemo(
@@ -72,14 +90,6 @@ const Collection: React.FC = () => {
     ),
     [setMenuOpen]
   );
-
-  // const sortCollection = (collection: ProductDetailsType[]) => {
-  //   const sorted = collection.sort(
-  //     (a, b) =>
-  //       new Date(b?.product?.registerDate) -
-  //       new Date(a?.product?.registerDate)
-  //   );
-  // };
 
   const renderCollection = useCallback(() => {
     return (
@@ -106,7 +116,7 @@ const Collection: React.FC = () => {
       width="100%"
       height="100%"
       direction="column"
-      justifyContent="space-between"
+      justifyContent="flex-start"
       overflow="auto"
     >
       <PageHeader title={t("collectionPageTitle")} actionButton={menuButton} />
@@ -114,30 +124,54 @@ const Collection: React.FC = () => {
         <LoadingIndicator />
       ) : (
         collection?.length > 0 ? (
-          <Wrapper
-            width="100%"
-            height="100%"
-            direction="column"
-            justifyContent="flex-start"
-            padding="0 1.25rem"
-            margin="2.25rem 0 0 0"
-            alignItems="flex-start"
-          >
-            <Wrapper width="100%" justifyContent="flex-start">
-              <Text fontSize="1rem" fontWeight="600">
-                <h2>{brandName}{" "}({collection?.length})</h2>
-              </Text>
+          scanMode ? (
+            <Wrapper
+              direction="column"
+              width="100%"
+              alignSelf="flex-start"
+              justifyContent="center"
+              padding="0 1.25rem"
+              margin="3rem 0"
+            >
+              <QrReader
+                delay={500}
+                onError={() => showToast({ message: t("scanErrorMessage"), type: "error" })}
+                onScan={(data) => {
+                  if (data) {
+                    setScanResult(data);
+                    toggleScanMode(false);
+                    window.open(data, "_blank");
+                    showToast({ message: t("scanSuccessMessage"), type: "success" })
+                  };
+                }}
+              />
             </Wrapper>
-            {renderCollection()}
-          </Wrapper>
+          ) : (
+            <Wrapper
+              width="100%"
+              height="100%"
+              direction="column"
+              justifyContent="flex-start"
+              padding="0 1.25rem"
+              margin="2.25rem 0 0 0"
+              alignItems="flex-start"
+            >
+              <Wrapper width="100%" justifyContent="flex-start">
+                <Text fontSize="1rem" fontWeight="600">
+                  <h2>{brandName}{" "}({collection?.length})</h2>
+                </Text>
+              </Wrapper>
+              {renderCollection()}
+            </Wrapper>
+          )
         ) : (
           <Wrapper
             width="100%"
             height="100%"
             justifyContent="center"
             padding="0 1.25rem"
-            margin="5rem 0"
-            alignItems="flex-start"
+            margin="0 0 4rem 0"
+            alignItems="center"
           >
             <h4>{t("emptyCollectionMessage")}</h4>
           </Wrapper>
@@ -153,12 +187,16 @@ const Collection: React.FC = () => {
         margin="auto"
         bottom="2.5rem"
       >
-        <Button variant="dark">
-          <ScanCode />
-          <Text color="#FFFFFF" padding="0 0 0 1.5rem">
-            <p>{t("scanCodeButton")}</p>
-          </Text>
-        </Button>
+        {scanMode ? (
+          <IconButton variant="dark" iconName="close-light" onClick={() => toggleScanMode(false)} />
+        ) : (
+          <Button variant="dark" onClick={() => toggleScanMode(!scanMode)}>
+            <ScanIcon />
+            <Text color="#FFFFFF" padding="0 0 0 1.5rem">
+              <p>{t("scanCodeButton")}</p>
+            </Text>
+          </Button>
+        )}
       </Wrapper>
     </Wrapper>
   );

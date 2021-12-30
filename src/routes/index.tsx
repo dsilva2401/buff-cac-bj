@@ -6,8 +6,9 @@ import ProductDetails from "pages/ProductDetails";
 import Collection from "pages/Collection";
 import Profile from "pages/Profile/Profile";
 import ResetPassword from "pages/ResetPassword";
-import MagicLink from "pages/MagicLink";
 import PersonalDetails from "pages/PersonalDetails"
+import MagicLink from "pages/MagicLink";
+import FourZeroFour from "pages/404";
 
 export default function Routes() {
   return (
@@ -21,6 +22,7 @@ export default function Routes() {
       <Route exact path={"/product/:id"} component={ProductDetails} />
       <Route exact path={"/magic-link"} component={MagicLink} />
       <Route exact path={"/personal-details"} component={PersonalDetails} />
+      <Route exact path={"/404"} component={FourZeroFour} />
     </Switch>
   );
 }
