@@ -32,6 +32,7 @@ const ProductDetails: React.FC = () => {
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
+  const [disableModalDismiss, setDisableModalDismiss] = useState<boolean>(false);
   const {
     productDetails: details,
     loading,
@@ -152,17 +153,18 @@ const ProductDetails: React.FC = () => {
         )
       case 'WARRANTY_MODULE':
         const { activated, registeredTo } = leadModule?.moduleInfo || {};
+        const tagType = details?.product?.tagType;
 
-        if (activated && registeredTo) {
+        if (activated && registeredTo && tagType == 'Unit') {
           return (
             <Wrapper
               direction="column"
               alignItems="flex-end"
             >
-              <Text fontSize="0.7rem">
+              <Text height="20px" fontSize="0.8rem">
                 <span>Registered To</span>
               </Text>
-              <Text fontSize="0.7rem" fontWeight="600">
+              <Text fontSize="0.8rem" fontWeight="600">
                 <span>{registeredTo}</span>
               </Text>
             </Wrapper>
@@ -194,7 +196,12 @@ const ProductDetails: React.FC = () => {
         return (
           <AuthDrawer
             html={details?.brand?.registrationDetails}
-            onAuthComplete={() => setShowAuthPage(false)}
+            onPersonalDetailShow={() => setDisableModalDismiss(true)}
+            showFooter={!disableModalDismiss}
+            onAuthComplete={() => {
+              setShowAuthPage(false)
+              setDisableModalDismiss(false)
+            }}
           />
         )
       }
@@ -306,6 +313,7 @@ const ProductDetails: React.FC = () => {
           isChildOpen={isDrawerPageOpen}
           closeChild={closeDrawerPage}
           leadInformation={leadInformation}
+          disableModalDismiss={disableModalDismiss}
         >
           {renderDrawerPage()}
         </BottomDrawer>

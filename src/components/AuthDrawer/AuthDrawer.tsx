@@ -13,13 +13,18 @@ enum AuthScreen {
 interface AuthDrawerProps {
   onAuthComplete: () => void;
   html: string | undefined | null;
+  onPersonalDetailShow?: () => void;
+  showFooter?: boolean;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
+  onPersonalDetailShow = () => {},
+  showFooter,
   html
 }) => {
   const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
+  const [] = useState<boolean>(false);
 
   const { t: signInTranslation } = useTranslation('translation', { keyPrefix: 'signIn' });
   const { t: signUpTranslation } = useTranslation('translation', { keyPrefix: 'signUp' });
@@ -31,7 +36,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           <LoginForm onLogin={onAuthComplete} />
         )
       case AuthScreen.signup:
-        return <SignUpForm onSignup={onAuthComplete} />
+        return <SignUpForm onPersonalDetailShow={onPersonalDetailShow} onSignup={onAuthComplete} />
       default:
         return <LoginForm onLogin={onAuthComplete} />
     }
@@ -90,7 +95,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         ) : null
       }
       {authScreenToRender}
-      {footerToRender}
+      {showFooter ? footerToRender : null}
     </Wrapper>
   );
 }

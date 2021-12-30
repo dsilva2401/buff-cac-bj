@@ -11,9 +11,14 @@ type TextProps = {
   color?: string;
   padding?: string;
   margin?: string;
+  height?: string
 };
 
 const Text = styled.div<TextProps>`
+  & {
+    height: ${(props) => (props.height ? props.height: "auto")}
+  };
+
   h1,
   h2,
   h3,
