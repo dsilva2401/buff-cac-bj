@@ -11,6 +11,7 @@ import { useAPI } from 'utils/api';
 import { useGlobal } from 'context/global/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import LoadingIndicator from 'components/LoadingIndicator';
+import PersonalDetails from 'components/PersonalDetails';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -18,7 +19,7 @@ interface UserUpdatePayload {
   phoneNumber: string;
 }
 
-const PersonalDetails: React.FC = () => {
+const PersonalDetailsPage: React.FC = () => {
   const history = useHistory();
 
   const [firstName, setFirstName] = useState<string>('');
@@ -52,70 +53,8 @@ const PersonalDetails: React.FC = () => {
   );
 
   return (
-    <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='space-between'
-      alignItems='center'
-    >
-      <PageHeader border logo={logo} />
-      <Wrapper
-        width='100%'
-        height='100%'
-        direction='column'
-        justifyContent='flex-start'
-        alignItems='center'
-        padding='2rem 1rem'
-        gap='1.2rem'
-        overflow='auto'
-      >
-        <Wrapper
-          direction='column'
-          width='100%'
-          justifyContent='center'
-          alignItems='center'
-        >
-          <Input
-            type='text'
-            value={firstName}
-            placeholder={"First Name"}
-            onChange={e => setFirstName(e.target.value)}
-            margin='0 0 1rem'
-          />
-          <Input
-            type='text'
-            value={lastName}
-            placeholder={"Last Name"}
-            onChange={e => setLastName(e.target.value)}
-            margin='0 0 1rem'
-          />
-          <Input
-            type='text'
-            value={phoneNumber}
-            placeholder={"Phone Number"}
-            onChange={e => setPhoneNumber(e.target.value)}
-            margin='0 0 1rem'
-          />
-        </Wrapper>
-        <Wrapper width='100%' justifyContent='center' alignItems='center'>
-          {
-            loading
-              ? (<LoadingIndicator />)
-              : (
-                <Button variant='dark' onClick={() => updateUser({
-                  firstName,
-                  lastName,
-                  phoneNumber
-                })}>
-                  Continue
-                </Button>
-              )
-          }
-        </Wrapper>
-      </Wrapper>
-    </Wrapper>
+    <PersonalDetails onPersonalDetailsUpdate={() => {}} />
   );
 };
 
-export default PersonalDetails;
+export default PersonalDetailsPage;

@@ -50,6 +50,7 @@ type BottomDrawerProps = {
   buttons: ButtonType[] | null;
   socials: SocialsType;
   leadInformation?: React.ReactNode;
+  disableModalDismiss?: boolean
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -59,7 +60,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   closeChild,
   buttons,
   socials,
-  leadInformation
+  leadInformation,
+  disableModalDismiss
 }) => {
   const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.85;
@@ -119,6 +121,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         onDrag={handleDrag}
         onStop={handleStop}
         cancel="a, button, #not-draggable"
+        disabled={disableModalDismiss}
       >
         <Drawer isControlled={isControlled}>
           <Wrapper
@@ -133,6 +136,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 <Wrapper
                   justifyContent="space-between"
                   width="100%"
+                  alignItems="center"
                 >
                   <Text fontSize="1rem" fontWeight="600">
                     <h1>{title}</h1>
@@ -142,7 +146,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   }
                 </Wrapper>
               )}
-              {isDrawerOpen && (
+              {isDrawerOpen && !disableModalDismiss && (
                 <DrawerClose
                   onClick={() => {
                     if (isChildOpen) {

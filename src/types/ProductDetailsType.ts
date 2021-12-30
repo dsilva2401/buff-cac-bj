@@ -167,6 +167,7 @@ export type ProductDetailsType = {
     registered: boolean;
     // ageGate field in document
     ageGateEnabled: boolean;
+    tagType: string;
   };
   // @arqam: modules will now be sent as an array of ModulesUnion type
   // You need to loop through it to check what kind of module it is and then

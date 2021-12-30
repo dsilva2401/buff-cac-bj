@@ -20,7 +20,7 @@ function usePersonDetails(user: User | null) {
         endpoint: 'auth',
         onSuccess,
         onError
-    }, user)
+    }, user);
 
     useEffect(() => {
         if (user) {

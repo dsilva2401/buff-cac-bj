@@ -4,6 +4,7 @@ import LoadingIndicator from "components/LoadingIndicator";
 import Wrapper from "components/Wrapper";
 import React, { useCallback, useState } from "react";
 import { useAPI } from "utils/api";
+import InputMask from "react-input-mask";
 
 interface UserUpdatePayload {
   firstName: string;
@@ -69,13 +70,14 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           onChange={(e) => setLastName(e.target.value)}
           margin="0 0 1rem"
         />
-        <Input
+        <InputMask
+          mask='(+1) 999 999 9999'
           type="text"
           value={phoneNumber}
-          placeholder={"Phone Number"}
           onChange={(e) => setPhoneNumber(e.target.value)}
-          margin="0 0 1rem"
-        />
+        >
+          {() => <Input placeholder={"Phone Number"} margin="0 0 1rem" />}
+        </InputMask>
       </Wrapper>
       <Wrapper width="100%" justifyContent="center" alignItems="center">
         {loading ? (
