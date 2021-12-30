@@ -2,8 +2,8 @@ import { useGlobal } from "context/global/GlobalContext";
 import { User } from "firebase/auth";
 import { useCallback, useState } from "react";
 
-// const API_URL = 'https://damp-wave-40564.herokuapp.com';
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://damp-wave-40564.herokuapp.com';
+// const API_URL = 'http://localhost:3000';
 interface APIpayload {
   method: string,
   endpoint: string,
