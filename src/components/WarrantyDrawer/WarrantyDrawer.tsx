@@ -24,7 +24,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(!warrantyData?.activated);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-  const { loading, activateWarranty } = useGlobal();
+  const { loading, activateWarranty, slug } = useGlobal();
 
   const { t } = useTranslation("translation", {
     keyPrefix: "drawers.warrantyDrawer",
@@ -47,7 +47,8 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   useEffect(() => {
     const checkAndActivateWarranty = async () => {
       activateWarranty({
-        warrantyId
+        warrantyId,
+        tag: slug
       })
         .then(() => {
           setSuccessDrawer(true);
