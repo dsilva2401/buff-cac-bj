@@ -20,8 +20,9 @@ export type GlobalContextProps = {
   personDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
   activateWarranty: ({
-    warrantyId
-  }: { warrantyId: string }) => Promise<void>;
+    warrantyId,
+    tag
+  }: { warrantyId: string, tag: string | null }) => Promise<void>;
   loading: boolean;
   error: string | null;
   slug: string | null;
