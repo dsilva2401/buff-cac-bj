@@ -12,11 +12,12 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import { GlobalContext } from "context";
 import { getAuth } from "firebase/auth";
-import QrReader from "react-qr-reader";
 import Grid from "components/Grid";
 import Text from "components/Text";
+import QrReader from "react-qr-reader";
 import Button from "components/Button";
 import Wrapper from "components/Wrapper";
+import logEvent from "utils/eventLogger";
 import ProductImage from "./ProductImage";
 import IconButton from "components/IconButton";
 import PageHeader from "components/PageHeader";
@@ -103,7 +104,14 @@ const Collection: React.FC = () => {
             <ProductImage
               item={node}
               key={node.product.id}
-              goToDetails={() => history.push(`/product/${node.tag.slug}`)}
+              goToDetails={() => {
+                history.push(`/product/${node.tag.slug}`);
+                logEvent({
+                  eventType: "EVENT_COLLECTION",
+                  event: "PRODUCT_CLICKED",
+                  data: node.product
+                });
+              }}
             />
           )
         })}
@@ -141,7 +149,8 @@ const Collection: React.FC = () => {
                     setScanResult(data);
                     toggleScanMode(false);
                     window.open(data, "_blank");
-                    showToast({ message: t("scanSuccessMessage"), type: "success" })
+                    showToast({ message: t("scanSuccessMessage"), type: "success" });
+                    logEvent({ eventType: "EVENT_SCAN", event: "SCAN_TAG", data: data });
                   };
                 }}
               />

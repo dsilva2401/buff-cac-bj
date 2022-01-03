@@ -1,9 +1,9 @@
-import { getAuth, User } from "firebase/auth";
-import usePersonDetails from "hooks/usePersonalDetails";
-import useProductDetails from "hooks/useProductDetails";
 import React, { useCallback, useEffect, useState } from "react";
 import { GlobalContext, PageStateType } from "./GlobalContext";
+import { getAuth, User } from "firebase/auth";
 import { useAPI } from "utils/api";
+import usePersonDetails from "hooks/usePersonalDetails";
+import useProductDetails from "hooks/useProductDetails";
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   }, [reFetchProduct]);
 
   const onActivateWarrantyError = useCallback((error) => {
-    console.log(error)
+    console.log(error);
   }, []);
 
   const [activateWarranty] = useAPI({

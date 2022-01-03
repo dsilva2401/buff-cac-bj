@@ -9,6 +9,7 @@ type PageHeaderProps = {
   actionButton?: React.ReactNode;
   border?: boolean;
   goBack?: () => void;
+  transparent?: boolean;
 };
 
 export default function PageHeader({
@@ -17,9 +18,10 @@ export default function PageHeader({
   actionButton,
   border = true,
   goBack,
+  transparent,
 }: PageHeaderProps) {
   return (
-    <Header border={border}>
+    <Header transparent={transparent} border={border}>
       <Wrapper width="33%" justifyContent="flex-start" alignItems="center">
         {logo ? (
           logo

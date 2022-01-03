@@ -1,5 +1,5 @@
-import { User } from "firebase/auth";
 import React, { createContext, useContext } from "react";
+import { User } from "firebase/auth";
 import { UserStruct } from "types/User";
 import { ProductDetailsType } from "../../types/ProductDetailsType";
 
@@ -26,7 +26,7 @@ export type GlobalContextProps = {
   error: string | null;
   slug: string | null;
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({

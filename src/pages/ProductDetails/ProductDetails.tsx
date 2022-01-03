@@ -1,19 +1,4 @@
-import { Redirect } from "react-router-dom";
-import AuthDrawer from "components/AuthDrawer";
-import BottomDrawer from "components/BottomDrawer";
-import { ButtonType } from "components/BottomDrawer/BottomDrawer";
-import CustomDrawer from "components/CustomDrawer";
-import IconButton from "components/IconButton";
-import Image from "components/Image";
-import LinkModule from "components/LinkModule";
-import PageHeader from "components/PageHeader";
-import ReferralDrawer from "components/ReferralDrawer";
-import ShopDrawer from "components/ShopDrawer";
-import WarrantyDrawer from "components/WarrantyDrawer";
-import Wrapper from "components/Wrapper";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
-import { useGlobal } from "../../context/global/GlobalContext";
 import {
   CustomModuleType,
   LinkModuleType,
@@ -21,6 +6,25 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { useParams } from "react-router";
+import { Redirect } from "react-router-dom";
+import { useGlobal } from "../../context/global/GlobalContext";
+import { ButtonType } from "components/BottomDrawer/BottomDrawer";
+import externalLink from "assets/icons/svg/external-link.svg";
+import placeholder from "assets/images/png/placeholder.png";
+import ProgressiveImage from "react-progressive-image";
+import WarrantyDrawer from "components/WarrantyDrawer";
+import ReferralDrawer from "components/ReferralDrawer";
+import BottomDrawer from "components/BottomDrawer";
+import CustomDrawer from "components/CustomDrawer";
+import AuthDrawer from "components/AuthDrawer";
+import IconButton from "components/IconButton";
+import LinkModule from "components/LinkModule";
+import PageHeader from "components/PageHeader";
+import ShopDrawer from "components/ShopDrawer";
+import Wrapper from "components/Wrapper";
+import logEvent from "utils/eventLogger";
+import Image from "components/Image";
 import Text from "components/Text";
 
 type UrlParam = {
@@ -65,11 +69,9 @@ const ProductDetails: React.FC = () => {
   const changeDrawerPage = useCallback(
     (index) => {
       setCurrentPage(index);
-
       if (currentPage) {
         const moduleType = details?.modules[currentPage]?.type
         setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
-
         if (moduleType !== 'LINK_MODULE')
           setPageTitle(details?.modules[index].title);
       } else {
@@ -105,7 +107,17 @@ const ProductDetails: React.FC = () => {
           onClick: () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
-            changeDrawerPage(x)
+            changeDrawerPage(x);
+            logEvent({
+              eventType: "EVENT_MODULE",
+              event: "MODULE_CLICKED",
+              data: {
+                details: {
+                  moduleId: module.id,
+                  moduleName: module.type,
+                },
+              },
+            });
           },
           isHighlight: x === 0,
           locked: details?.modules[x].locked,
@@ -116,6 +128,8 @@ const ProductDetails: React.FC = () => {
               pageTitle: details?.modules[x].title,
             }
             : null,
+          icon: details?.modules[x].type === "LINK_MODULE" ?
+            <Image margin="0 0 0 0.25rem" src={externalLink} alt="external-link" /> : null,
         };
         buttons.push(buttonObject);
       }
@@ -123,7 +137,7 @@ const ProductDetails: React.FC = () => {
     return buttons;
   }, [changeDrawerPage, id, details, currentPage, setSignInRedirect]);
 
-  const leadModule: any = details?.modules[0] || {}
+  const leadModule: any = details?.modules[0] || {};
 
   const leadInformation = useMemo(() => {
     switch (leadModule.type) {
@@ -138,8 +152,8 @@ const ProductDetails: React.FC = () => {
             <Text fontSize="1rem" fontWeight="600">
               <span>{`$${price}`}</span>
             </Text>
-          )
-        }
+          );
+        };
 
         return (
           <Wrapper justifyContent="flex-end" gap="0.5rem">
@@ -168,14 +182,10 @@ const ProductDetails: React.FC = () => {
                 <span>{registeredTo}</span>
               </Text>
             </Wrapper>
-          )
-        }
-
+          );
+        };
         const { period, duration } = leadModule?.moduleInfo || {}
-
-        if (!period && !duration) {
-          return null;
-        }
+        if (!period && !duration) return null;
 
         return (
           <Text fontSize="0.7rem">
@@ -282,42 +292,50 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
-      <>
-        <Wrapper
-          width='100%'
-          height='100%'
-          direction='column'
-          justifyContent='space-between'
-          overflow='auto'
-        >
-          <PageHeader
-            logo={logo(details?.brand?.image ?? '')}
-            actionButton={menuButton}
-            border={false}
-          />
-          <Wrapper
-            width='100%'
-            height='100%'
-            justifyContent='center'
-            alignItems='flex-start'
-            padding='2rem 1rem'
-            responsiveImg
-          >
-            <Image src={details?.product?.image} alt='product' />
-          </Wrapper>
-        </Wrapper>
-        <BottomDrawer
-          title={pageTitle}
-          buttons={buttonsArray}
-          socials={details?.brand?.social}
-          isChildOpen={isDrawerPageOpen}
-          closeChild={closeDrawerPage}
-          leadInformation={leadInformation}
-          disableModalDismiss={disableModalDismiss}
-        >
-          {renderDrawerPage()}
-        </BottomDrawer>
-      </>
+      {details?.product?.image && (
+        <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
+          {(src: string, loading: boolean) => (
+            <Image
+              src={src}
+              alt={details?.product?.name}
+              position='absolute'
+              height='100%'
+              width='100%'
+              top={0}
+              left={0}
+              objectFit='cover'
+              transition='0.3s'
+              opacity={loading ? 0.5 : 1}
+            />
+          )}
+        </ProgressiveImage>
+      )}
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='space-between'
+        overflow='auto'
+        position='relative'
+      >
+        <PageHeader
+          logo={logo(details?.brand?.image ?? '')}
+          actionButton={menuButton}
+          border={false}
+          transparent
+        />
+      </Wrapper>
+      <BottomDrawer
+        title={pageTitle}
+        buttons={buttonsArray}
+        socials={details?.brand?.social}
+        isChildOpen={isDrawerPageOpen}
+        closeChild={closeDrawerPage}
+        leadInformation={leadInformation}
+        disableModalDismiss={disableModalDismiss}
+      >
+        {renderDrawerPage()}
+      </BottomDrawer>
     </>
   );
 };

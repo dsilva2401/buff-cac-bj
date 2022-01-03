@@ -13,6 +13,10 @@ type ToastProps = {
   type: "info" | "success" | "error" | "warn";
 };
 
+const toastBodyStyle = {
+  height: "70px",
+};
+
 export const showToast = (props: ToastProps) => {
   switch (props.type) {
     case "info":
@@ -20,6 +24,7 @@ export const showToast = (props: ToastProps) => {
         progressStyle: {
           backgroundColor: theme.toast.info,
         },
+        bodyStyle: toastBodyStyle,
         icon: <InfoIcon />,
       });
     case "success":
@@ -27,6 +32,7 @@ export const showToast = (props: ToastProps) => {
         progressStyle: {
           backgroundColor: theme.toast.success,
         },
+        bodyStyle: toastBodyStyle,
         icon: <SuccessIcon />,
       });
     case "error":
@@ -34,6 +40,7 @@ export const showToast = (props: ToastProps) => {
         progressStyle: {
           backgroundColor: theme.toast.error,
         },
+        bodyStyle: toastBodyStyle,
         icon: <ErrorIcon />,
       });
     case "warn":
@@ -41,6 +48,7 @@ export const showToast = (props: ToastProps) => {
         progressStyle: {
           backgroundColor: theme.toast.warn,
         },
+        bodyStyle: toastBodyStyle,
         icon: <CautionIcon />,
       });
   }

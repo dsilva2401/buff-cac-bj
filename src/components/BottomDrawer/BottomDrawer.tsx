@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { PageStateType } from "context/global/GlobalContext";
 import { useGlobal } from "../../context/global/GlobalContext";
 import { ReactComponent as Close } from "assets/icons/svg/close.svg";
@@ -31,6 +31,7 @@ export type ButtonType = {
   isHighlight: boolean;
   locked: boolean;
   pageState: PageStateType | null;
+  icon: ReactElement | null;
 };
 
 type SocialsType =
@@ -157,7 +158,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       setPosition({ ...position, y: bottomHeight });
                       setIsDrawerOpen(false);
                     }
-
                   }}
                 >
                   <Close />
@@ -180,7 +180,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                               setPageState(button.pageState);
                           }}
                         >
-                          {button.title}
+                          {button.title}{button.icon}
                           {button.locked && (
                             <LockBlack
                               fill={button.isHighlight ? theme.secondary : theme.primary}
@@ -214,7 +214,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             setPageState(button.pageState);
                         }}
                       >
-                        {button.title}
+                        {button.title}{button.icon}
                         {button.locked && (
                           <LockBlack
                             fill={button.isHighlight ? theme.secondary : theme.primary}
