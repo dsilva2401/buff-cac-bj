@@ -4,6 +4,7 @@ import { ReferralModuleType } from "types/ProductDetailsType";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { showToast } from "components/Toast/Toast";
 import qrcode from "assets/images/png/qrcode.png";
+import logEvent from "utils/eventLogger";
 import Wrapper from "components/Wrapper";
 import Button from "components/Button";
 import Image from "components/Image";
@@ -22,8 +23,6 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
   const { t } = useTranslation("translation", {
     keyPrefix: "drawers.referralDrawer",
   });
-
-  console.log("REFERRAL DATA: ", referralData.qrcode);
 
   const handleShare = async () => {
     const shareData = {
@@ -78,13 +77,29 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
         >
           <CopyToClipboard
             text={referralData?.url}
-            onCopy={() =>
-              showToast({ message: t("copyLinkToastMessage"), type: "success" })
-            }
+            onCopy={() => {
+              showToast({ message: t("copyLinkToastMessage"), type: "success" });
+              logEvent({
+                eventType: "EVENT_MODULE",
+                event: "REFERRAL_COPIED",
+                data: referralData,
+              });
+            }}
           >
             <Button variant="light">{t("copyLinkButton")}</Button>
           </CopyToClipboard>
-          <Button id="shareButton" onClick={() => handleShare()} variant="light">
+          <Button
+            variant="light"
+            id="shareButton"
+            onClick={() => {
+              handleShare();
+              logEvent({
+                eventType: "EVENT_MODULE",
+                event: "REFERRAL_SHARED",
+                data: referralData,
+              });
+            }}
+          >
             {t("shareLinkButton")}
           </Button>
         </Wrapper>

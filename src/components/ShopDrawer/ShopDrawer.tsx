@@ -1,4 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
+import {
+  ShoppingModuleType,
+  VariantDetails,
+} from '../../types/ProductDetailsType';
+import "../../../node_modules/slick-carousel/slick/slick-theme.css";
+import "../../../node_modules/slick-carousel/slick/slick.css";
 import { useTranslation } from "react-i18next";
 import { theme } from "styles/theme";
 import hash from "object-hash";
@@ -6,15 +12,10 @@ import Wrapper from "components/Wrapper";
 import SelectInput from "components/SelectInput";
 import SuccessDrawer from "components/SuccessDrawer";
 import QuantityController from "components/QuantityController";
+import logEvent from "utils/eventLogger";
 import Button from "components/Button";
 import Image from "components/Image";
 import Text from "components/Text";
-import "../../../node_modules/slick-carousel/slick/slick-theme.css";
-import "../../../node_modules/slick-carousel/slick/slick.css";
-import {
-  ShoppingModuleType,
-  VariantDetails,
-} from '../../types/ProductDetailsType';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -98,6 +99,16 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       chosenOption.checkoutUri,
       selectedQuantity
     );
+    logEvent({
+      eventType: "EVENT_MODULE",
+      event: "SHOPPING_CHECK_OUT",
+      data: {
+        details: {
+          productId: chosenOption.id,
+          quantity: selectedQuantity,
+        },
+      },
+    });
     window.open(`http://${link}`, '_blank');
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity]);
 
