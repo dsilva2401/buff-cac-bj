@@ -1,7 +1,7 @@
-import React, { createContext, useContext } from "react";
-import { User } from "firebase/auth";
-import { UserStruct } from "types/User";
-import { ProductDetailsType } from "../../types/ProductDetailsType";
+import { User } from 'firebase/auth';
+import React, { createContext, useContext } from 'react';
+import { UserStruct } from 'types/User';
+import { ProductDetailsType } from '../../types/ProductDetailsType';
 
 export type PageStateType = {
   currentPage: number;
@@ -19,33 +19,40 @@ export type GlobalContextProps = {
   user: User | null;
   personDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
+  collectionDetails: ProductDetailsType[];
   activateWarranty: ({
     warrantyId,
-    tag
-  }: { warrantyId: string, tag: string | null }) => Promise<void>;
+    tag,
+  }: {
+    warrantyId: string;
+    tag: string | null;
+  }) => Promise<void>;
   loading: boolean;
   error: string | null;
   slug: string | null;
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  getCollection: () => void;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
   isMenuOpen: false,
-  setIsMenuOpen: () => { },
-  signInRedirect: "",
-  setSignInRedirect: () => { },
+  setIsMenuOpen: () => {},
+  signInRedirect: '',
+  setSignInRedirect: () => {},
   pageState: null,
-  setPageState: () => { },
+  setPageState: () => {},
   user: null,
   personDetails: null,
   productDetails: null,
+  collectionDetails: [],
   loading: false,
   error: null,
   activateWarranty: () => new Promise((res, rej) => res()),
   slug: null,
-  setSlug: () => { },
-  setUser: () => { },
+  setSlug: () => {},
+  setUser: () => {},
+  getCollection: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

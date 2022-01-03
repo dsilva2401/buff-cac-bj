@@ -1,14 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { GlobalContext, PageStateType } from "./GlobalContext";
-import { getAuth, User } from "firebase/auth";
-import { useAPI } from "utils/api";
-import usePersonDetails from "hooks/usePersonalDetails";
-import useProductDetails from "hooks/useProductDetails";
+import { getAuth, User } from 'firebase/auth';
+import usePersonDetails from 'hooks/usePersonalDetails';
+import useProductDetails from 'hooks/useProductDetails';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useAPI } from 'utils/api';
+import useCollection from '../../hooks/useCollection';
+import { GlobalContext, PageStateType } from './GlobalContext';
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [signInRedirect, setSignInRedirect] = useState<string>(
-    localStorage.getItem("signInRedirect") || ""
+    localStorage.getItem('signInRedirect') || ''
   );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -18,6 +19,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   const personDetails = usePersonDetails(user);
   const [productDetails, reFetchProduct] = useProductDetails(slug, user);
+  const [collectionDetails, getCollection] = useCollection(user);
 
   const onActivateWarrantySuccess = useCallback(() => {
     reFetchProduct();
@@ -27,12 +29,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
     console.log(error);
   }, []);
 
-  const [activateWarranty] = useAPI({
-    method: 'POST',
-    endpoint: 'products/activateWarranty',
-    onSuccess: onActivateWarrantySuccess,
-    onError: onActivateWarrantyError,
-  }, user);
+  const [activateWarranty] = useAPI(
+    {
+      method: 'POST',
+      endpoint: 'products/activateWarranty',
+      onSuccess: onActivateWarrantySuccess,
+      onError: onActivateWarrantyError,
+    },
+    user
+  );
 
   useEffect(() => {
     const auth = getAuth();
@@ -48,7 +53,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
     // upon unmount clear storage
-    return () => localStorage.setItem("signInRedirect", "");
+    return () => localStorage.setItem('signInRedirect', '');
   }, [signInRedirect]);
 
   return (
@@ -68,7 +73,9 @@ export const GlobalProvider: React.FC = ({ children }) => {
         slug,
         setSlug,
         setUser,
-        personDetails
+        personDetails,
+        collectionDetails,
+        getCollection,
       }}
     >
       {children}
