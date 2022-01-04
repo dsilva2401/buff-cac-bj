@@ -9,16 +9,7 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import Text from "components/Text";
 import { showToast } from "components/Toast/Toast";
 import LoadingIndicator from "components/LoadingIndicator";
-
-const useFirebaseError = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "firebaseErrors" });
-
-  const getErrorMessage = useCallback((code) => {
-    return t(code);
-  }, [t])
-
-  return getErrorMessage;
-}
+import useFirebaseError from "hooks/useFirebaseError";
 
 const ForgotPassword: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "forgotPassword" });

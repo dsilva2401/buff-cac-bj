@@ -1,9 +1,19 @@
 export const resources = {
   en: {
     translation: {
+      socialLogin: {
+        signInToastMessage: "Sign In Successful",
+        googleButton: "Continue with Google",
+        facebookButton: "Continue with Facebook"
+      },
       firebaseErrors: {
         "auth/invalid-email": "Please provie a valid email",
+        "auth/missing-email": "Please provie an email",
         "auth/user-not-found": "User doesn't exist",
+        "auth/wrong-password": "Invalid email or password",
+        "auth/internal-error": "Server error occured",
+        "auth/popup-closed-by-user": "Please complete the signin process",
+        "auth/invalid-credential-or-provider-id": "Invalid credentials"
       },
       magicLink: {
         linkSentToastMessage: "A magic link is sent to your email",
@@ -30,8 +40,6 @@ export const resources = {
         pageHeaderTitle: "Sign Up",
         signUpButton: "Sign Up",
         magicLinkButton: "Send magic link",
-        googleButton: "Continue with Google",
-        facebookButton: "Continue with Facebook",
         emailInput: "Enter email...",
         passwordInput: "Enter password...",
         existingUser: "Already have a BRIJ account?",
@@ -43,8 +51,6 @@ export const resources = {
         signInButton: "Sign In",
         usePassword: "Use password instead",
         magicLinkButton: "Send magic link",
-        googleButton: "Continue with Google",
-        facebookButton: "Continue with Facebook",
         emailInput: "Enter email...",
         passwordInput: "Enter password...",
         forgotPassword: "Forgot Password?",

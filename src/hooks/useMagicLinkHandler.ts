@@ -2,6 +2,7 @@ import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import { showToast } from "components/Toast/Toast";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
+import useFirebaseError from "./useFirebaseError";
 
 interface MagicHandlerMap {
   handleMagicLink: () => void;
@@ -21,6 +22,8 @@ const useMagicLinkHandler = (
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
+  const getErrorMessage = useFirebaseError();
+
   const handleMagicLink = useCallback(() => {
     const actionCodeSettings = {
       url: `${window.location.protocol}//${window.location.host}/magic-link?email=${email}&isNewUser=${isNewUser}`,
@@ -38,9 +41,9 @@ const useMagicLinkHandler = (
           type: "success",
         })
       )
-      .catch(() => showToast({ message: t("magicLinkError"), type: "error" }))
+      .catch((error) => showToast({ message: getErrorMessage(error.code), type: "error" }))
       .finally(() => setLoading(false));
-  }, [email, auth, isNewUser, t]);
+  }, [email, auth, isNewUser, t, getErrorMessage]);
 
   return {
     handleMagicLink,
