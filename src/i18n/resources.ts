@@ -1,6 +1,10 @@
 export const resources = {
   en: {
     translation: {
+      firebaseErrors: {
+        "auth/invalid-email": "Please provie a valid email",
+        "auth/user-not-found": "User doesn't exist",
+      },
       magicLink: {
         linkSentToastMessage: "A magic link is sent to your email",
         magicLinkError: "An error occurred",
