@@ -1,11 +1,11 @@
+import { useLayoutEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import AppFrame from 'components/AppFrame/AppFrame';
 import Container from 'components/Container/Container';
 import SideMenu from 'components/SideMenu/SideMenu';
-import { useLayoutEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from 'styles/global';
-import Routes from './routes';
 import Toast from 'components/Toast';
+import Routes from './routes';
 
 export default function App() {
   useLayoutEffect(() => {

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import LoadingIndicator from "components/LoadingIndicator";
 import SuccessDrawer from "components/SuccessDrawer";
 import DetailsModal from "./DetailsModal";
-import logEvent from "utils/eventLogger";
 import Wrapper from "components/Wrapper";
 import Text from "components/Text";
 
@@ -43,17 +42,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
 
   const confirmWarranty = () => {
     setSuccessDrawer(true);
-    logEvent({
-      eventType: "EVENT_MODULE",
-      event: "WARRANTY_ACTIVATED",
-      data: {
-        details: {
-          warrantyStatus: warrantyData?.activated,
-          activatedDate: warrantyData?.purchaseDate,
-          expirationDate: warrantyData?.expirationDate,
-        },
-      },
-    });
   };
 
   useEffect(() => {
@@ -216,7 +204,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                           <p>{warrantyData?.expirationDate?.substr(0, 10)}</p>
                         </Text>
                       </Wrapper>
-                      {/* <Wrapper width="10%" alignItems="center"></Wrapper> */}
                     </Wrapper>
                   </>
                 )}

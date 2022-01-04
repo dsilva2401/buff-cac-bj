@@ -20,6 +20,12 @@ export const resources = {
         magicLinkError: "An error occurred",
         redirecting: "Redirecting...",
       },
+      personalDetails: {
+        firstNameInputPlaceholder: "First Name",
+        lastNameInputPlaceholder: "Last Name",
+        phoneNumberInputPlaceholder: "Phone Number",
+        continueButton: "Continue",
+      },
       sideMenu: {
         myProfile: "My Profile",
         myCollection: "My Collection",
@@ -45,11 +51,12 @@ export const resources = {
         existingUser: "Already have a BRIJ account?",
         signInLink: "Sign in!",
         signUpToastMessage: "Sign Up Successful",
+        usePassword: "Use password",
+        useMagicLink: "Use magic link",
       },
       signIn: {
         pageHeaderTitle: "Sign In",
         signInButton: "Sign In",
-        usePassword: "Use password instead",
         magicLinkButton: "Send magic link",
         emailInput: "Enter email...",
         passwordInput: "Enter password...",
@@ -57,6 +64,8 @@ export const resources = {
         newToBrij: "New to BRIJ?",
         signUpLink: "Sign up!",
         signInToastMessage: "Login Successful",
+        usePassword: "Use password",
+        useMagicLink: "Use magic link",
       },
       forgotPassword: {
         pageHeaderTitle: "Forgot Password",

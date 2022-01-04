@@ -23,14 +23,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   onSignup = () => { },
   onPersonalDetailShow = () => { }
 }) => {
-  const { t } = useTranslation("translation", { keyPrefix: "signUp" });
+  const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
   const auth = getAuth();
 
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [showPersonalDetailsForm, togglePersonalDetailsForm] = useState<boolean>(false);
 
   // get magic link header
@@ -43,32 +43,34 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
   const signUpWithEmailAndPassword = () => {
     setLoading(true);
-    if (errorMessage !== "") setErrorMessage("");
+    if (errorMessage !== '') setErrorMessage('');
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         togglePersonalDetailsForm(true);
         onPersonalDetailShow();
-        showToast({ message: t("signUpToastMessage"), type: "success" });
+        showToast({ message: t('signUpToastMessage'), type: 'success' });
       })
       .catch((error) => {
-        if (error.code.includes("auth/weak-password")) {
-          setErrorMessage("Please enter a stronger password.");
-        } else if (error.code.includes("auth/email-already-in-use")) {
-          setErrorMessage("Email already in use.");
+        if (error.code.includes('auth/weak-password')) {
+          setErrorMessage('Please enter a stronger password.');
+        } else if (error.code.includes('auth/email-already-in-use')) {
+          setErrorMessage('Email already in use.');
         } else {
-          setErrorMessage("Unable to register. Please try again later.");
+          setErrorMessage('Unable to register. Please try again later.');
         }
         setLoading(false);
-        showToast({ message: errorMessage, type: "error" });
+        showToast({ message: errorMessage, type: 'error' });
       })
       .finally(() => setLoading(false))
   };
 
   const passwordInput = !usingMagicLink ? (
     <Input
-      type="password"
+      type='password'
       value={password}
-      placeholder={t("passwordInput")}
+      margin='0 0 1rem'
+      autoCapitalize='none'
+      placeholder={t('passwordInput')}
       onChange={({ target: { value } }) => setPassword(value)}
     />
   ) : null;
@@ -79,14 +81,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 
   return (
     <Wrapper
-      width="100%"
-      height="100%"
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="center"
-      padding="2rem 1rem"
-      gap="1.2rem"
-      margin="2rem 0"
+      width='100%'
+      height='100%'
+      direction='column'
+      justifyContent='flex-start'
+      alignItems='center'
+      padding='2rem 1rem'
+      gap='1.2rem'
+      margin='2rem 0'
     >
       <SocialLogin
         setLoading={setLoading}
@@ -99,50 +101,51 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       </Wrapper>
 
       <Wrapper
-        direction="column"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
+        direction='column'
+        width='100%'
+        justifyContent='center'
+        alignItems='center'
       >
         <Input
-          type="text"
+          type='text'
           value={email}
-          placeholder={t("emailInput")}
+          placeholder={t('emailInput')}
           onChange={({ target: { value } }) => setEmail(value)}
-          margin="0 0 1rem"
+          autoCapitalize='none'
+          margin='0 0 1rem'
         />
         {passwordInput}
-        <Wrapper width="100%" justifyContent="center" padding="0 1rem">
+        <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
           <Text
-            fontSize="0.7rem"
-            textDecoration="unset"
+            fontSize='0.7rem'
+            textDecoration='unset'
             onClick={() => setUsingMagicLink(!usingMagicLink)}
           >
-            <span>{usingMagicLink ? "Use password" : "Use magic link"}</span>
+            <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
           </Text>
         </Wrapper>
       </Wrapper>
-      <Wrapper width="100%" justifyContent="center" alignItems="center">
+      <Wrapper width='100%' justifyContent='center' alignItems='center'>
         {loading || magicLinkLoading ? (
           <LoadingIndicator />
         ) : (
           <Button
-            variant="dark"
+            variant='dark'
             onClick={() =>
               usingMagicLink ? handleMagicLink() : signUpWithEmailAndPassword()
             }
           >
-            {usingMagicLink ? t("magicLinkButton") : t("signUpButton")}
+            {usingMagicLink ? t('magicLinkButton') : t('signUpButton')}
           </Button>
         )}
       </Wrapper>
-      <Wrapper width="100%" justifyContent="center" padding="0 1rem">
-        <Text fontSize="0.7rem" textDecoration="unset">
+      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+        <Text fontSize='0.7rem' textDecoration='unset'>
           <span>{error}</span>
         </Text>
       </Wrapper>
-      <Wrapper width="100%" justifyContent="center" padding="0 1rem">
-        <Text fontSize="0.7rem" textDecoration="unset">
+      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+        <Text fontSize='0.7rem' textDecoration='unset'>
           <span>{success}</span>
         </Text>
       </Wrapper>

@@ -1,13 +1,3 @@
-import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
-import Button from 'components/Button';
-import Grid from 'components/Grid';
-import IconButton from 'components/IconButton';
-import LoadingIndicator from 'components/LoadingIndicator';
-import PageHeader from 'components/PageHeader';
-import Text from 'components/Text';
-import { showToast } from 'components/Toast/Toast';
-import Wrapper from 'components/Wrapper';
-import { GlobalContext } from 'context';
 import React, {
   useCallback,
   useContext,
@@ -15,13 +5,23 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
-import QrReader from 'react-qr-reader';
+import { GlobalContext } from 'context';
 import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { showToast } from 'components/Toast/Toast';
 import { ProductDetailsType } from 'types/ProductDetailsType';
-import logEvent from 'utils/eventLogger';
 import { useGlobal } from '../../context/global/GlobalContext';
+import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
+import LoadingIndicator from 'components/LoadingIndicator';
+import IconButton from 'components/IconButton';
+import PageHeader from 'components/PageHeader';
 import ProductImage from './ProductImage';
+import logEvent from 'utils/eventLogger';
+import Wrapper from 'components/Wrapper';
+import QrReader from 'react-qr-reader';
+import Button from 'components/Button';
+import Grid from 'components/Grid';
+import Text from 'components/Text';
 
 type BrandCollectionType = {
   brand: string;
@@ -34,11 +34,19 @@ const Collection: React.FC = () => {
     BrandCollectionType[]
   >([]);
   const [scanMode, toggleScanMode] = useState<boolean>(false);
+  const [scanResult, setScanResult] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const { setIsMenuOpen } = useContext(GlobalContext);
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
+  const { setIsMenuOpen } = useContext(GlobalContext);
   const history = useHistory();
+
+  useEffect(() => {
+    if (scanResult) {
+      window.open(scanResult, '_blank');
+      setScanResult('');
+    }
+  }, [scanResult]);
 
   useEffect(() => {
     const fetchCollection = async () => {
@@ -86,7 +94,7 @@ const Collection: React.FC = () => {
         <Grid
           margin='1rem 0'
           templateColumns='repeat(auto-fit, minmax(150px, 1fr))'
-          width={sortedCollection.length === 1 ? 'max-content' : '100%'}
+          width={items.length === 1 ? 'max-content' : '100%'}
         >
           {items.map((node) => {
             return (
@@ -139,7 +147,7 @@ const Collection: React.FC = () => {
               onScan={(data) => {
                 if (data) {
                   toggleScanMode(false);
-                  window.open(data, '_blank');
+                  setScanResult(data);
                   showToast({
                     message: t('scanSuccessMessage'),
                     type: 'success',

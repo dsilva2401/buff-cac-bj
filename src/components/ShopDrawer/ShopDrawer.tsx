@@ -1,21 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { theme } from 'styles/theme';
 import {
   ShoppingModuleType,
   VariantDetails,
 } from '../../types/ProductDetailsType';
-import "../../../node_modules/slick-carousel/slick/slick-theme.css";
-import "../../../node_modules/slick-carousel/slick/slick.css";
-import { useTranslation } from "react-i18next";
-import { theme } from "styles/theme";
-import hash from "object-hash";
-import Wrapper from "components/Wrapper";
-import SelectInput from "components/SelectInput";
-import SuccessDrawer from "components/SuccessDrawer";
-import QuantityController from "components/QuantityController";
-import logEvent from "utils/eventLogger";
-import Button from "components/Button";
-import Image from "components/Image";
-import Text from "components/Text";
+import '../../../node_modules/slick-carousel/slick/slick.css';
+import '../../../node_modules/slick-carousel/slick/slick-theme.css';
+import QuantityController from 'components/QuantityController';
+import SuccessDrawer from 'components/SuccessDrawer';
+import SelectInput from 'components/SelectInput';
+import logEvent from 'utils/eventLogger';
+import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
+import Image from 'components/Image';
+import Text from 'components/Text';
+import hash from 'object-hash';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -100,8 +100,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       selectedQuantity
     );
     logEvent({
-      eventType: "EVENT_MODULE",
-      event: "SHOPPING_CHECK_OUT",
+      eventType: 'EVENT_MODULE',
+      event: 'SHOPPING_CHECK_OUT',
       data: {
         details: {
           productId: chosenOption.id,
@@ -109,7 +109,9 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         },
       },
     });
-    window.open(`http://${link}`, '_blank');
+    setTimeout(() => {
+      window.open(`http://${link}`, '_blank');
+    });
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity]);
 
   const closeSuccess = useCallback(() => {
@@ -125,7 +127,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       setTimeout(() => {
         setSuccessDrawer(false);
       }, 3000);
-    }
+    };
   }, [successDrawer]);
 
   return (
@@ -146,16 +148,16 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         before={{
           content: data.isDiscountAvailable
             ? `You are saving ${data.discountPercentage!}% with Brij`
-            : "Buy with Brij",
-          width: "auto",
-          height: "auto",
-          padding: "0.4rem 1.5rem",
-          position: "absolute",
-          color: "#fff",
-          top: "-1px",
+            : '',
+          width: 'auto',
+          height: 'auto',
+          padding: '0.4rem 1.5rem',
+          position: 'absolute',
+          color: '#fff',
+          top: '-1px',
           background: theme.primary,
-          fontSize: "0.8rem",
-          borderRadius: "0 0 15px 15px",
+          fontSize: '0.8rem',
+          borderRadius: '0 0 15px 15px',
         }}
       >
         <Wrapper
@@ -168,8 +170,15 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           <Wrapper width='45%' responsiveImg>
             <Image src={chosenOption.image} alt='' rounded width='100%' />
           </Wrapper>
-          <Wrapper width="50%" height="100%" direction="column" justifyContent="center" gap="1rem" padding="0rem 0.5rem">
-            <Wrapper width="100%" direction="column" gap="0.1rem">
+          <Wrapper
+            width='50%'
+            height='100%'
+            direction='column'
+            justifyContent='center'
+            gap='1rem'
+            padding='0rem 0.5rem'
+          >
+            <Wrapper width='100%' direction='column' gap='0.1rem'>
               <Text
                 color='#98A3AA'
                 fontSize='0.75rem'
@@ -240,12 +249,12 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         </Wrapper>
 
         <Wrapper
-          width="100%"
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap="0.5rem"
-          margin="1rem 0"
+          width='100%'
+          direction='column'
+          justifyContent='flex-start'
+          alignItems='center'
+          gap='0.5rem'
+          margin='1rem 0'
         >
           {allOptions?.map((optionItem) => (
             <SelectInput
@@ -264,7 +273,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             />
           ))}
         </Wrapper>
-
         <Wrapper
           width='100%'
           direction='column'
@@ -274,20 +282,20 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         >
           {isValidCombo ? (
             <Button
-              variant="dark"
+              variant='dark'
               onClick={handleCheckout}
               disabled={!isValidCombo}
             >
               {t('checkoutButton.purchaseNow')}
             </Button>
           ) : (
-            <Text fontSize="1rem" fontWeight="600">
+            <Text fontSize='1rem' fontWeight='600'>
               <p>
                 {isValidCombo === null
-                  ? t("checkoutHint.chooseOptions")
+                  ? t('checkoutHint.chooseOptions')
                   : isValidCombo === false
-                    ? t("checkoutHint.comboUnavailable")
-                    : ""}
+                    ? t('checkoutHint.comboUnavailable')
+                    : ''}
               </p>
             </Text>
           )}
