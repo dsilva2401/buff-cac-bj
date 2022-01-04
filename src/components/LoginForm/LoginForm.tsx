@@ -1,6 +1,3 @@
-import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
-import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
-
 import Wrapper from "components/Wrapper";
 import Button from "components/Button";
 import Text from "components/Text";
@@ -8,11 +5,13 @@ import Input from "components/Input";
 
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
-import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import { Link } from "react-router-dom";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
 import LoadingIndicator from 'components/LoadingIndicator';
 import { showToast } from "components/Toast/Toast";
+import useFirebaseError from "hooks/useFirebaseError";
+import SocialLogin from "components/SocialLogin";
 
 interface LoginFormProps {
   onLogin?: () => void
@@ -24,6 +23,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
 
   const auth = getAuth();
+  const getErrorMessage = useFirebaseError();
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -38,34 +38,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     error: magicLinkError,
     success
   } = useMagicLinkHandler(username);
-
-  const handleGoogleAuth = useCallback(() => {
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then(() => {
-        onLogin();
-        showToast({ message: t("signInToastMessage"), type: "success" });
-      })
-      .catch((error) => {
-        showToast({ message: error.message, type: "error" });
-      })
-      .finally(() => setLoading(false))
-  }, [auth, t]);
-
-  const handleFacebookAuth = useCallback(() => {
-    setLoading(true);
-    const provider = new FacebookAuthProvider();
-    signInWithPopup(auth, provider)
-      .then(() => {
-        onLogin();
-        showToast({ message: t("signInToastMessage"), type: "success" });
-      })
-      .catch((error) => {
-        showToast({ message: error.message, type: "error" });
-      })
-      .finally(() => setLoading(false))
-  }, [auth, t]);
 
   const handleUsernameChanged = useCallback(
     ({ target: { value } }) => setUsername(value),
@@ -86,7 +58,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         showToast({ message: t("signInToastMessage"), type: "success" });
       })
       .catch((error) => {
-        showToast({ message: error.message, type: "error" });
+        showToast({ message: getErrorMessage(error.code), type: "error" });
         setLoading(false);
       })
       .finally(() => setLoading(false))
@@ -114,20 +86,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
       gap="1.2rem"
       margin="2rem 0"
     >
-      <Wrapper
-        width="100%"
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        gap="1rem"
-      >
-        <Button variant="light" onClick={handleGoogleAuth}>
-          <GoogleLogo /> {t("googleButton")}
-        </Button>
-        <Button variant="light" onClick={handleFacebookAuth}>
-          <FacebookLogo /> {t("facebookButton")}
-        </Button>
-      </Wrapper>
+      <SocialLogin
+        setLoading={setLoading}
+        onSuccess={onLogin}
+      />
 
       <Wrapper justifyContent="center" alignItems="center">
         <Text fontSize="1.2rem" color="#98A3AA">

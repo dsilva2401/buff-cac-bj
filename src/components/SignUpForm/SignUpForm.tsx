@@ -1,23 +1,18 @@
-import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
-import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
 import Button from "components/Button";
 import Input from "components/Input";
 import LoadingIndicator from "components/LoadingIndicator";
 import PersonalDetails from "components/PersonalDetails";
+import SocialLogin from "components/SocialLogin";
 import Text from "components/Text";
 import { showToast } from "components/Toast/Toast";
 import Wrapper from "components/Wrapper";
 import {
   createUserWithEmailAndPassword,
-  FacebookAuthProvider,
   getAuth,
-  GoogleAuthProvider,
-  signInWithPopup
 } from "firebase/auth";
 import useMagicLinkHandler from "hooks/useMagicLinkHandler";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ProviderName } from "types/Auth";
 
 interface SignUpFormProps {
   onSignup?: (...args: any[]) => void,
@@ -45,33 +40,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     error,
     success,
   } = useMagicLinkHandler(email, true);
-
-  const handleSocialAuth = useCallback((providerName: ProviderName) => {
-    setLoading(true);
-
-    let provider = null;
-
-    switch (providerName) {
-      case ProviderName.Facebook:
-        provider = new FacebookAuthProvider();
-        break;
-      case ProviderName.Google:
-        provider = new GoogleAuthProvider();
-        break;
-      default:
-        provider = new GoogleAuthProvider();
-    }
-
-    signInWithPopup(auth, provider)
-      .then(() => {
-        showToast({ message: t("signUpToastMessage"), type: "success" });
-        onSignup();
-      })
-      .catch((error) => {
-        showToast({ message: error.message, type: "error" });
-      })
-      .finally(() => setLoading(false))
-  }, [auth, t, onSignup]);
 
   const signUpWithEmailAndPassword = () => {
     setLoading(true);
@@ -120,20 +88,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       gap="1.2rem"
       margin="2rem 0"
     >
-      <Wrapper
-        width="100%"
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        gap="1rem"
-      >
-        <Button variant="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
-          <GoogleLogo /> {t("googleButton")}
-        </Button>
-        <Button variant="light" onClick={() => handleSocialAuth(ProviderName.Google)}>
-          <FacebookLogo /> {t("facebookButton")}
-        </Button>
-      </Wrapper>
+      <SocialLogin
+        setLoading={setLoading}
+        onSuccess={onSignup}
+      />
       <Wrapper justifyContent="center" alignItems="center">
         <Text fontSize="1.2rem" color="#98A3AA">
           <p>or</p>
