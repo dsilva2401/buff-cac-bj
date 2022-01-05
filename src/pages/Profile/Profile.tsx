@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { theme } from "styles/theme";
 import { useAPI } from "utils/api";
 import { useHistory } from "react-router-dom";
@@ -13,11 +13,12 @@ import Button from "components/Button";
 import Avatar from "components/Avatar";
 import Input from "components/Input";
 import Text from "components/Text";
+import InputMask from "react-input-mask";
 
 interface UserUpdatePayload {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  phoneNumber: string | undefined;
 }
 
 interface PersonalDetailsProps {
@@ -28,12 +29,17 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   onPersonalDetailsUpdate = () => { }
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "profile" });
+  const { t: personalDetailsTranslation } = useTranslation("translation", { keyPrefix: "personalDetails" });
   const history = useHistory();
-  const { user } = useGlobal();
+  const { user, personDetails } = useGlobal();
 
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const { profile } = personDetails || {};
+
+  console.log(profile);
+
+  const [firstName, setFirstName] = useState<string | undefined>('');
+  const [lastName, setLastName] = useState<string | undefined>('');
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>('');
 
   const onSuccess = useCallback(() => {
     showToast({ message: t("updateToastMessage"), type: "success" })
@@ -50,6 +56,14 @@ const Profile: React.FC<PersonalDetailsProps> = ({
       }
     }
   );
+
+  useEffect(() => {
+    if (profile) {
+      setFirstName(profile?.firstName);
+      setLastName(profile?.lastName);
+      setPhoneNumber(profile?.phoneNumber);
+    }
+  }, [profile]);
 
   return (
     <Wrapper
@@ -106,13 +120,20 @@ const Profile: React.FC<PersonalDetailsProps> = ({
               onChange={(e) => setLastName(e.target.value)}
               margin="0 0 1rem"
             />
-            <Input
-              type="text"
+            <InputMask
               value={phoneNumber}
-              placeholder={t("phoneNumberInput")}
+              mask='(+1) 999 999 9999'
               onChange={(e) => setPhoneNumber(e.target.value)}
-              margin="0 0 1rem"
-            />
+            >
+              {() => (
+                <Input
+                  type='tel'
+                  pattern='[+-]?\d+(?:[.,]\d+)?'
+                  placeholder={personalDetailsTranslation('phoneNumberInputPlaceholder')}
+                  margin='0 0 1rem'
+                />
+              )}
+            </InputMask>
           </Wrapper>
         </Wrapper>
         <Wrapper width="100%" justifyContent="center" alignItems="center">

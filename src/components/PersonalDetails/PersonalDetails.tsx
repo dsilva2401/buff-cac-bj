@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import InputMask from 'react-input-mask';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Wrapper from 'components/Wrapper';
+import { useGlobal } from 'context/global/GlobalContext';
 
 interface UserUpdatePayload {
   firstName: string;

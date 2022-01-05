@@ -87,7 +87,7 @@ const ProductDetails: React.FC = () => {
     if (details) {
       for (let x = 0; x < details?.modules?.length; x++) {
         if (details?.modules[x]?.locked) {
-          setSignInRedirect(`/product/${id}`);
+          setSignInRedirect(`/c/${id}`);
         }
         let title: string;
         switch (details.modules[x].type) {
@@ -169,7 +169,7 @@ const ProductDetails: React.FC = () => {
         const { activated, registeredTo } = leadModule?.moduleInfo || {};
         const tagType = details?.product?.tagType;
 
-        if (activated && registeredTo && tagType == 'Unit') {
+        if (registeredTo && tagType == 'Unit') {
           return (
             <Wrapper
               direction="column"
