@@ -44,7 +44,7 @@ const Login: React.FC = () => {
       <PageHeader border title={t("pageHeaderTitle")} logo={logo} actionButton={menuButton} />
       <LoginForm />
       <PageFooter>
-        <p>{t("newToBrij")}?</p>
+        <p>{t("newToBrij")}</p>
         <Link to={RoutesHashMap.Signup.path}>{t("signUpLink")}</Link>
       </PageFooter>
     </Wrapper>

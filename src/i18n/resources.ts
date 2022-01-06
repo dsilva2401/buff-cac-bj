@@ -78,6 +78,7 @@ export const resources = {
         scanCodeButton: "Scan Code",
         scanSuccessMessage: "Product Scanned",
         scanErrorMessage: "Scan Error",
+        invalidScanMessage: "Invalid URL",
       },
       fourZeroFour: {
         message: "This experience does not exist",
