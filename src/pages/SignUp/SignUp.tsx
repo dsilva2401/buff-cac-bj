@@ -9,6 +9,7 @@ import SignUpForm from 'components/SignUpForm';
 import IconButton from 'components/IconButton';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
+import { RoutesHashMap } from 'routes';
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
@@ -18,7 +19,7 @@ const SignUp: React.FC = () => {
   const { signInRedirect, setSignInRedirect, setIsMenuOpen } = useGlobal();
 
   const redirectUser = useCallback((isNewEmailUser: boolean) => {
-    let link = signInRedirect || '/collection';
+    let link = signInRedirect || RoutesHashMap.Collection.path;
 
     if (signInRedirect) {
       setSignInRedirect('');
@@ -49,7 +50,7 @@ const SignUp: React.FC = () => {
       <SignUpForm onSignup={redirectUser} />
       <PageFooter>
         <p>{t("existingUser")}</p>
-        <Link to={"/"}>{t("signInLink")}</Link>
+        <Link to={RoutesHashMap.Login.path}>{t("signInLink")}</Link>
       </PageFooter>
     </Wrapper>
   );

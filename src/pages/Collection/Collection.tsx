@@ -22,6 +22,7 @@ import QrReader from 'react-qr-reader';
 import Button from 'components/Button';
 import Grid from 'components/Grid';
 import Text from 'components/Text';
+import { RoutesHashMap } from 'routes';
 
 type BrandCollectionType = {
   brand: string;
@@ -102,7 +103,7 @@ const Collection: React.FC = () => {
                 item={node}
                 key={node.product.id}
                 goToDetails={() => {
-                  history.push(`/product/${node.tag.slug}`);
+                  history.push(RoutesHashMap.ProductDetails.path(node.tag.slug));
                   logEvent({
                     eventType: 'EVENT_COLLECTION',
                     event: 'PRODUCT_CLICKED',
