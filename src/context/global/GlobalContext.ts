@@ -33,6 +33,7 @@ export type GlobalContextProps = {
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   getCollection: () => void;
+  authFetched: Boolean;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -53,6 +54,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setSlug: () => {},
   setUser: () => {},
   getCollection: () => {},
+  authFetched: false,
 });
 
 export const useGlobal = () => useContext(GlobalContext);

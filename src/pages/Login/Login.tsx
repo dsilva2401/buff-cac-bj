@@ -10,6 +10,7 @@ import IconButton from "components/IconButton";
 import LoginForm from "components/LoginForm";
 import Wrapper from "components/Wrapper";
 import Image from "components/Image";
+import { RoutesHashMap } from "routes";
 
 const Login: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "signIn" });
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
       <LoginForm />
       <PageFooter>
         <p>{t("newToBrij")}?</p>
-        <Link to={"/signup"}>{t("signUpLink")}</Link>
+        <Link to={RoutesHashMap.Signup.path}>{t("signUpLink")}</Link>
       </PageFooter>
     </Wrapper>
   );

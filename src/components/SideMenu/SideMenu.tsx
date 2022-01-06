@@ -15,6 +15,7 @@ import brijLogo from "assets/logos/svg/brij.svg";
 import DrawerMask from "components/DrawerMask";
 import Image from "components/Image";
 import Menu from "./styles";
+import { RoutesHashMap } from "routes";
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
@@ -50,7 +51,7 @@ const SideMenu: React.FC = () => {
 
   useEffect(() => {
     if (previousUser && !user) {
-      history.push('/');
+      history.push(RoutesHashMap.Login.path);
     };
   }, [previousUser, user]);
 
@@ -84,13 +85,13 @@ const SideMenu: React.FC = () => {
           </span>
           <nav>
             {signedIn ? (
-              <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
+              <Link to={RoutesHashMap.Profile.path} onClick={() => setIsMenuOpen(false)}>
                 {t("myProfile")}
                 <Profile />
               </Link>
             ) : null}
-            {signedIn && location.pathname !== "/collection" ? (
-              <Link to="/collection" onClick={() => setIsMenuOpen(false)}>
+            {signedIn && location.pathname !== RoutesHashMap.Collection.path ? (
+              <Link to={RoutesHashMap.Collection.path} onClick={() => setIsMenuOpen(false)}>
                 {t("myCollection")}
                 <Collection />
               </Link>
@@ -112,7 +113,7 @@ const SideMenu: React.FC = () => {
                 {loading ? <LoadingIndicator /> : <Logout />}
               </p>
             ) : (
-              <Link to="/" onClick={() => setIsMenuOpen(false)}>
+              <Link to={RoutesHashMap.Login.path} onClick={() => setIsMenuOpen(false)}>
                 {t("signIn")}
                 <Logout />
               </Link>
