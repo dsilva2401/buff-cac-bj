@@ -13,13 +13,13 @@ enum AuthScreen {
 interface AuthDrawerProps {
   onAuthComplete: () => void;
   html: string | undefined | null;
-  onPersonalDetailShow?: () => void;
+  onPersonalDetailshow?: () => void;
   showFooter?: boolean;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailShow = () => {},
+  onPersonalDetailshow = () => {},
   showFooter,
   html
 }) => {
@@ -36,7 +36,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           <LoginForm onLogin={onAuthComplete} />
         )
       case AuthScreen.signup:
-        return <SignUpForm onPersonalDetailShow={onPersonalDetailShow} onSignup={onAuthComplete} />
+        return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onAuthComplete} />
       default:
         return <LoginForm onLogin={onAuthComplete} />
     }

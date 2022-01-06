@@ -1,5 +1,5 @@
 import { getAuth, User } from 'firebase/auth';
-import usePersonDetails from 'hooks/usePersonalDetails';
+import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAPI } from 'utils/api';
@@ -18,7 +18,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
 
-  const personDetails = usePersonDetails(user);
+  const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
   const [productDetails, reFetchProduct] = useProductDetails(slug, user);
   const [collectionDetails, getCollection] = useCollection(user);
 
@@ -76,10 +76,11 @@ export const GlobalProvider: React.FC = ({ children }) => {
         slug,
         setSlug,
         setUser,
-        personDetails,
+        personalDetails,
         collectionDetails,
         getCollection,
-        authFetched
+        authFetched,
+        getPersonalDetails
       }}
     >
       {children}

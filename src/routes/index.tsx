@@ -36,7 +36,7 @@ export const RoutesHashMap: RoutesType = {
     component: Profile,
     protected: true
   },
-  ProductPage: {
+  ProductDetails: {
     path: (id: string = ":id") =>  `/c/${id}`,
     component: ProductDetails
   },

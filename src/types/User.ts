@@ -14,7 +14,8 @@ export interface UserProfile {
     lastName?: string;
     phoneNumber?: string;
     role: string;
-    warranties?: Warranty[]
+    warranties?: Warranty[];
+    productCollection?: string[]
 }
 
 export interface UserSigninBody {
