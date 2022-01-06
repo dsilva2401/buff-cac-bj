@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { UserCreatePayload, UserStruct } from "types/User";
 import { useAPI } from "utils/api";
 
-function usePersonDetails(user: User | null) {
-    const [personalDetails, setPersonDetails] = useState<UserStruct | null>(null);
+function usePersonalDetails(user: User | null): [UserStruct | null, () => void] {
+    const [personalDetails, setpersonalDetails] = useState<UserStruct | null>(null);
 
     const onSuccess = useCallback((userDetails) => {
-        setPersonDetails(userDetails);
+        setpersonalDetails(userDetails);
     }, [])
     
     const onError = useCallback((error) => {
@@ -25,12 +25,11 @@ function usePersonDetails(user: User | null) {
     useEffect(() => {
         if (user) {
             const { email, phoneNumber, displayName } = user;
-            console.log(email, phoneNumber, displayName, 'email, phoneNumber, displayName')
             getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
         }
     }, [user, getUser])
 
-    return personalDetails;
+    return [personalDetails, getUser];
 }
 
-export default usePersonDetails;
+export default usePersonalDetails;

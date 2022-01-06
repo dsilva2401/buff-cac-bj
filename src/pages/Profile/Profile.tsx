@@ -31,11 +31,9 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   const { t } = useTranslation("translation", { keyPrefix: "profile" });
   const { t: personalDetailsTranslation } = useTranslation("translation", { keyPrefix: "personalDetails" });
   const history = useHistory();
-  const { user, personDetails } = useGlobal();
+  const { user, personalDetails } = useGlobal();
 
-  const { profile } = personDetails || {};
-
-  console.log(profile);
+  const { profile } = personalDetails || {};
 
   const [firstName, setFirstName] = useState<string | undefined>('');
   const [lastName, setLastName] = useState<string | undefined>('');

@@ -26,6 +26,9 @@ import Wrapper from "components/Wrapper";
 import logEvent from "utils/eventLogger";
 import Image from "components/Image";
 import Text from "components/Text";
+import { useAPI } from "utils/api";
+import LoadingIndicator from "components/LoadingIndicator";
+import { showToast } from "components/Toast/Toast";
 
 type UrlParam = {
   id: string;
@@ -45,9 +48,26 @@ const ProductDetails: React.FC = () => {
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
+    personalDetails,
+    getPersonalDetails,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
+
+  const onSuccess = useCallback(() => {
+    getPersonalDetails()
+  }, [getPersonalDetails]);
+
+  const onError = (error: any) => {
+    showToast({ message: error.message, type: "error" })
+  }
+
+  const [updateUser, addToLoading] = useAPI<any>({
+    endpoint: "auth/update",
+    method: "PUT",
+    onSuccess,
+    onError
+  })
 
   useEffect(() => {
     if (id) {
@@ -133,9 +153,42 @@ const ProductDetails: React.FC = () => {
         };
         buttons.push(buttonObject);
       }
+
+      let title = "Add to collection";
+
+      const productCollection = personalDetails?.profile?.productCollection || [];
+
+      const existInCollection = productCollection.find(
+        (productTag: string) => details?.tag?.slug === productTag
+      );
+
+      if (existInCollection) {
+        title = "Remove from collection"
+      }
+
+      let onClick = () => {
+        if (existInCollection) {
+          updateUser({
+            productCollection: [...productCollection.filter(productTag => productTag !== id)]
+          })
+        } else {
+          updateUser({
+            productCollection: [...productCollection, id]
+          })
+        }
+      }
+
+      buttons.push({
+        title,
+        onClick: onClick,
+        isHighlight: false,
+        locked: false,
+        pageState: null,
+        icon: null,
+      })
     }
     return buttons;
-  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect]);
+  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails]);
 
   const leadModule: any = details?.modules[0] || {};
 
@@ -166,7 +219,7 @@ const ProductDetails: React.FC = () => {
           </Wrapper>
         )
       case 'WARRANTY_MODULE':
-        const { activated, registeredTo } = leadModule?.moduleInfo || {};
+        const { registeredTo } = leadModule?.moduleInfo || {};
         const tagType = details?.product?.tagType;
 
         if (registeredTo && tagType == 'Unit') {
@@ -206,7 +259,7 @@ const ProductDetails: React.FC = () => {
         return (
           <AuthDrawer
             html={details?.brand?.registrationDetails}
-            onPersonalDetailShow={() => setDisableModalDismiss(true)}
+            onPersonalDetailshow={() => setDisableModalDismiss(true)}
             showFooter={!disableModalDismiss}
             onAuthComplete={() => {
               setShowAuthPage(false)
@@ -289,6 +342,8 @@ const ProductDetails: React.FC = () => {
   );
 
   if (error) return <Redirect to='/404' />;
+
+  if (addToLoading) return <LoadingIndicator />
 
   return (
     <>

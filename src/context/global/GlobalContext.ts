@@ -17,7 +17,7 @@ export type GlobalContextProps = {
   pageState: PageStateType | null;
   setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
   user: User | null;
-  personDetails: UserStruct | null;
+  personalDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
   collectionDetails: ProductDetailsType[];
   activateWarranty: ({
@@ -34,6 +34,7 @@ export type GlobalContextProps = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   getCollection: () => void;
   authFetched: Boolean;
+  getPersonalDetails: () => void;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -44,7 +45,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   pageState: null,
   setPageState: () => {},
   user: null,
-  personDetails: null,
+  personalDetails: null,
   productDetails: null,
   collectionDetails: [],
   loading: false,
@@ -55,6 +56,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setUser: () => {},
   getCollection: () => {},
   authFetched: false,
+  getPersonalDetails: () => {}
 });
 
 export const useGlobal = () => useContext(GlobalContext);

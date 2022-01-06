@@ -165,6 +165,7 @@ export type ProductDetailsType = {
     image: string;
     // @sush: I need to clarify where to get this from. For now, just set it to false
     registered: boolean;
+    registeredToCurrentUser: boolean;
     // ageGate field in document
     ageGateEnabled: boolean;
     // date on which the product was registered

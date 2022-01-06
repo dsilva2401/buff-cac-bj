@@ -6,9 +6,7 @@ import { RoutesHashMap } from 'routes';
 
 const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const { user, authFetched } = useGlobal();
-
-  console.log(user, authFetched);
-
+  
   if (!authFetched) {
     return <LoadingIndicator />
   }

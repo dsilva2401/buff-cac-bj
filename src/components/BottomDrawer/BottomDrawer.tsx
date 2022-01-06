@@ -26,7 +26,7 @@ import {
 import { theme } from "styles/theme";
 
 export type ButtonType = {
-  title: string | undefined;
+  title: any | undefined;
   onClick: () => void;
   isHighlight: boolean;
   locked: boolean;

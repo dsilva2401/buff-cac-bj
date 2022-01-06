@@ -16,12 +16,12 @@ import { useTranslation } from "react-i18next";
 
 interface SignUpFormProps {
   onSignup?: (...args: any[]) => void,
-  onPersonalDetailShow?: () => void;
+  onPersonalDetailshow?: () => void;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
   onSignup = () => { },
-  onPersonalDetailShow = () => { }
+  onPersonalDetailshow = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
   const auth = getAuth();
@@ -47,7 +47,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         togglePersonalDetailsForm(true);
-        onPersonalDetailShow();
+        onPersonalDetailshow();
         showToast({ message: t('signUpToastMessage'), type: 'success' });
       })
       .catch((error) => {
