@@ -1,5 +1,3 @@
-import { useGlobal } from "context/global/GlobalContext";
-
 export type EventType = {
   eventType: string;
   event: string;
@@ -7,6 +5,7 @@ export type EventType = {
 };
 
 const logEvent = (data: EventType) => {
+  data = Object.assign(data, { userInfo: window.navigator.userAgent });
   return console.log("LOG EVENT: ", data);
 };
 

@@ -42,10 +42,35 @@ const Collection: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
+    const validateUrl = (url: string) => {
+      const regex = new RegExp('https:\/\/v2\.brij\.it\/r\/product\/[A-Z]{4}')
+      return regex.test(url);
+    };
     if (scanResult) {
-      window.open(scanResult, '_blank');
+      if (validateUrl(scanResult.toString())) {
+        window.open(scanResult, '_blank');
+        showToast({
+          message: t('scanSuccessMessage'),
+          type: 'success',
+        });
+        logEvent({
+          eventType: 'EVENT_SCAN',
+          event: 'SCAN_TAG',
+          data: scanResult,
+        });
+      } else if (!validateUrl(scanResult.toString())) {
+        showToast({
+          message: t('invalidScanMessage'),
+          type: 'error',
+        });
+      } else {
+        showToast({
+          message: t('scanErrorMessage'),
+          type: 'error',
+        });
+      };
       setScanResult('');
-    }
+    };
   }, [scanResult]);
 
   useEffect(() => {
@@ -93,8 +118,8 @@ const Collection: React.FC = () => {
       return (
         <Grid
           margin='1rem 0'
-          templateColumns='repeat(auto-fit, minmax(150px, 1fr))'
           width={items.length === 1 ? 'max-content' : '100%'}
+          templateColumns={`repeat(auto-fit, minmax(40%, 1fr))`}
         >
           {items.map((node) => {
             return (
@@ -148,16 +173,7 @@ const Collection: React.FC = () => {
                 if (data) {
                   toggleScanMode(false);
                   setScanResult(data);
-                  showToast({
-                    message: t('scanSuccessMessage'),
-                    type: 'success',
-                  });
-                  logEvent({
-                    eventType: 'EVENT_SCAN',
-                    event: 'SCAN_TAG',
-                    data: data,
-                  });
-                }
+                };
               }}
             />
           </Wrapper>
@@ -168,7 +184,7 @@ const Collection: React.FC = () => {
             direction='column'
             justifyContent='flex-start'
             padding='0 1.25rem'
-            margin='2.25rem 0 0 0'
+            margin='2.25rem 0 7.5rem 0'
             alignItems='flex-start'
           >
             {sortedCollection.map((item) => (
@@ -203,9 +219,9 @@ const Collection: React.FC = () => {
         justifyContent='center'
         alignItems='center'
         alignSelf='center'
-        position='absolute'
-        margin='auto'
+        position='fixed'
         bottom='2.5rem'
+        margin='auto'
       >
         {scanMode ? (
           <IconButton

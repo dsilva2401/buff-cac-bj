@@ -43,8 +43,8 @@ const Login: React.FC = () => {
       <PageHeader border title={t("pageHeaderTitle")} logo={logo} actionButton={menuButton} />
       <LoginForm />
       <PageFooter>
-        <p>{t("newToBrij")}?</p>
-        <Link to={"/signup"}>{t("signUpLink")}</Link>
+        <p>{t("newToBrij")}</p>
+        <Link to={"/app/signup"}>{t("signUpLink")}</Link>
       </PageFooter>
     </Wrapper>
   );

@@ -15,6 +15,7 @@ const ProductImage: React.FC<ProductImageProps> = ({ item, goToDetails }) => {
     <ProductCard
       key={item?.product?.id}
       onClick={() => goToDetails()}
+      registered={item?.product?.registered}
     >
       <ProgressiveImage src={item?.product?.image} placeholder={placeholder}>
         {(src: string, loading: boolean) => (

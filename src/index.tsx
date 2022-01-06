@@ -1,7 +1,7 @@
-import { initializeApp } from '@firebase/app';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
+import ReactDOM from 'react-dom';
+import { initializeApp } from '@firebase/app';
 import { GlobalProvider } from './context';
 import config from './firebase/config';
 import './i18n';

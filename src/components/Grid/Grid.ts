@@ -12,6 +12,7 @@ type GridProps = {
 
 const Grid = styled.div<GridProps>`
   display: grid;
+  position: relative;
   width: ${(props) => (props.width ? props.width : "100%")};
   margin: ${(props) => (props.margin ? props.margin : "unset")};
   padding: ${(props) => (props.padding ? props.padding : "unset")};
