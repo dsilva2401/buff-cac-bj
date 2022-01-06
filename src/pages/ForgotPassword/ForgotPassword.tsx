@@ -10,6 +10,7 @@ import Text from "components/Text";
 import { showToast } from "components/Toast/Toast";
 import LoadingIndicator from "components/LoadingIndicator";
 import useFirebaseError from "hooks/useFirebaseError";
+import { RoutesHashMap } from "routes";
 
 const ForgotPassword: React.FC = () => {
   const { t } = useTranslation("translation", { keyPrefix: "forgotPassword" });
@@ -25,7 +26,7 @@ const ForgotPassword: React.FC = () => {
     try {
       await sendPasswordResetEmail(auth, emailInput);
       showToast({ message: "Password reset email sent", type: "success" });
-      history.push('/');
+      history.push(RoutesHashMap.Login.path);
     } catch (error: any) {
       showToast({ message: getErrorMessage(error.code), type: "error" });
     } finally {
@@ -44,7 +45,7 @@ const ForgotPassword: React.FC = () => {
       <PageHeader
         border
         title={t("pageHeaderTitle")}
-        goBack={() => history.push("/")}
+        goBack={() => history.push(RoutesHashMap.Login.path)}
       />
       <Wrapper
         width="100%"

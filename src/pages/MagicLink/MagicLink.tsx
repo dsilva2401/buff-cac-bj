@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { useGlobal } from "context/global/GlobalContext";
 import PersonalDetails from "components/PersonalDetails";
+import { RoutesHashMap } from "routes";
 
 const MagicLink = () => {
   const { user, setUser, signInRedirect, setSignInRedirect } = useGlobal();
@@ -25,7 +26,7 @@ const MagicLink = () => {
       history.push(signInRedirect)
       setSignInRedirect('');
     } else {
-      history.push('/collection')
+      history.push(RoutesHashMap.Collection.path)
     }
   }, [setSignInRedirect, history, signInRedirect]);
 
@@ -38,7 +39,7 @@ const MagicLink = () => {
         return;
       }
 
-      let link = signInRedirect || '/collection';
+      let link = signInRedirect || RoutesHashMap.Collection.path;
 
       setSignInRedirect('');
       history.push(link);

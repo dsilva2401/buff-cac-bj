@@ -11,6 +11,7 @@ import Wrapper from "components/Wrapper";
 import Button from "components/Button";
 import Input from "components/Input";
 import Text from "components/Text";
+import { RoutesHashMap } from "routes";
 
 interface LoginFormProps {
   onLogin?: () => void
@@ -121,7 +122,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
           </Text>
           <Text fontSize='0.7rem' textDecoration='unset'>
-            <Link to='/forgot-password'>{t('forgotPassword')}</Link>
+            <Link to={RoutesHashMap.ForgotPassword.path}>{t('forgotPassword')}</Link>
           </Text>
         </Wrapper>
       </Wrapper>

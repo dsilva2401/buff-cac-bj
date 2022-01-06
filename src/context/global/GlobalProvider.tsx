@@ -8,6 +8,7 @@ import { GlobalContext, PageStateType } from './GlobalContext';
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [signInRedirect, setSignInRedirect] = useState<string>(
     localStorage.getItem('signInRedirect') || ''
   );
@@ -47,8 +48,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
       } else {
         setUser(null);
       }
+
+      setAuthFetched(true);
     });
-  }, []);
+  }, [setAuthFetched, setUser]);
 
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
@@ -76,6 +79,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         personDetails,
         collectionDetails,
         getCollection,
+        authFetched
       }}
     >
       {children}

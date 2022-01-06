@@ -4,6 +4,7 @@ import PageHeader from "components/PageHeader";
 import Wrapper from "components/Wrapper";
 import Button from "components/Button";
 import Input from "components/Input";
+import { RoutesHashMap } from "routes";
 
 const ResetPassword: React.FC = () => {
   const history = useHistory();
@@ -18,7 +19,7 @@ const ResetPassword: React.FC = () => {
     >
       <PageHeader
         title="Reset Password"
-        goBack={() => history.push("/profile")}
+        goBack={() => history.push(RoutesHashMap.Profile.path)}
       />
       <Wrapper
         width="100%"
@@ -39,7 +40,7 @@ const ResetPassword: React.FC = () => {
         alignItems="center"
         padding="1rem"
       >
-        <Button variant="dark" onClick={() => history.push("/profile")}>
+        <Button variant="dark" onClick={() => history.push(RoutesHashMap.Profile.path)}>
           Reset
         </Button>
       </Wrapper>
