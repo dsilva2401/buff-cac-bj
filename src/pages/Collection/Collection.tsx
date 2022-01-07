@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { RoutesHashMap } from 'routes';
 import { GlobalContext } from 'context';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
 import LoadingIndicator from 'components/LoadingIndicator';
+import AnimatedWrapper from 'components/AnimatedWrapper';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import ProductImage from './ProductImage';
@@ -22,7 +24,6 @@ import QrReader from 'react-qr-reader';
 import Button from 'components/Button';
 import Grid from 'components/Grid';
 import Text from 'components/Text';
-import { RoutesHashMap } from 'routes';
 
 type BrandCollectionType = {
   brand: string;
@@ -30,7 +31,6 @@ type BrandCollectionType = {
 };
 
 const Collection: React.FC = () => {
-  const { collectionDetails, getCollection } = useGlobal();
   const [sortedCollection, setSortedCollection] = useState<
     BrandCollectionType[]
   >([]);
@@ -41,6 +41,12 @@ const Collection: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
   const { setIsMenuOpen } = useContext(GlobalContext);
   const history = useHistory();
+  const {
+    collectionDetails,
+    getCollection,
+    pageTransition,
+    setPageTransition,
+  } = useGlobal();
 
   useEffect(() => {
     const validateUrl = (url: string) => {
@@ -128,6 +134,7 @@ const Collection: React.FC = () => {
                 item={node}
                 key={node.product.id}
                 goToDetails={() => {
+                  setPageTransition('LEFT');
                   history.push(RoutesHashMap.ProductDetails.path(node.tag.slug));
                   logEvent({
                     eventType: 'EVENT_COLLECTION',
@@ -145,101 +152,106 @@ const Collection: React.FC = () => {
   );
 
   return (
-    <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='flex-start'
-      overflow='auto'
-    >
-      <PageHeader title={t('collectionPageTitle')} actionButton={menuButton} />
-      {loading ? (
-        <LoadingIndicator />
-      ) : sortedCollection?.length > 0 ? (
-        scanMode ? (
-          <Wrapper
-            direction='column'
-            width='100%'
-            alignSelf='flex-start'
-            justifyContent='center'
-            padding='0 1.25rem'
-            margin='3rem 0'
-          >
-            <QrReader
-              delay={500}
-              onError={() =>
-                showToast({ message: t('scanErrorMessage'), type: 'error' })
-              }
-              onScan={(data) => {
-                if (data) {
-                  toggleScanMode(false);
-                  setScanResult(data);
-                };
-              }}
-            />
-          </Wrapper>
+    <AnimatedWrapper direction={pageTransition}>
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='flex-start'
+        overflow='auto'
+      >
+        <PageHeader title={t('collectionPageTitle')} actionButton={menuButton} />
+        {loading ? (
+          <LoadingIndicator />
+        ) : sortedCollection?.length > 0 ? (
+          scanMode ? (
+            <AnimatedWrapper direction='LEFT'>
+              <Wrapper
+                direction='column'
+                width='100%'
+                alignSelf='flex-start'
+                justifyContent='center'
+                padding='0 1.25rem'
+                margin='3rem 0'
+              >
+                <QrReader
+                  delay={500}
+                  onError={() =>
+                    showToast({ message: t('scanErrorMessage'), type: 'error' })
+                  }
+                  onScan={(data) => {
+                    if (data) {
+                      toggleScanMode(false);
+                      setScanResult(data);
+                    };
+                  }}
+                />
+              </Wrapper>
+            </AnimatedWrapper>
+          ) : (
+
+            <Wrapper
+              width='100%'
+              height='100%'
+              direction='column'
+              justifyContent='flex-start'
+              padding='0 1.25rem'
+              margin='2.25rem 0 7.5rem 0'
+              alignItems='flex-start'
+            >
+              {sortedCollection.map((item) => (
+                <>
+                  <Wrapper width='100%' justifyContent='flex-start'>
+                    <Text fontSize='1rem' fontWeight='600'>
+                      <h2>
+                        {item.brand} ({item.items.length})
+                      </h2>
+                    </Text>
+                  </Wrapper>
+                  {renderCollection(item.items)}
+                </>
+              ))}
+            </Wrapper>
+          )
         ) : (
           <Wrapper
             width='100%'
             height='100%'
-            direction='column'
-            justifyContent='flex-start'
+            justifyContent='center'
             padding='0 1.25rem'
-            margin='2.25rem 0 7.5rem 0'
-            alignItems='flex-start'
+            margin='0 0 4rem 0'
+            alignItems='center'
           >
-            {sortedCollection.map((item) => (
-              <>
-                <Wrapper width='100%' justifyContent='flex-start'>
-                  <Text fontSize='1rem' fontWeight='600'>
-                    <h2>
-                      {item.brand} ({item.items.length})
-                    </h2>
-                  </Text>
-                </Wrapper>
-                {renderCollection(item.items)}
-              </>
-            ))}
+            <h4>{t('emptyCollectionMessage')}</h4>
           </Wrapper>
-        )
-      ) : (
-        <Wrapper
-          width='100%'
-          height='100%'
-          justifyContent='center'
-          padding='0 1.25rem'
-          margin='0 0 4rem 0'
-          alignItems='center'
-        >
-          <h4>{t('emptyCollectionMessage')}</h4>
-        </Wrapper>
-      )}
-      <Wrapper
-        width='170px'
-        direction='column'
-        justifyContent='center'
-        alignItems='center'
-        alignSelf='center'
-        position='fixed'
-        bottom='2.5rem'
-        margin='auto'
-      >
-        {scanMode ? (
-          <IconButton
-            variant='dark'
-            iconName='close-light'
-            onClick={() => toggleScanMode(false)}
-          />
-        ) : (
-          <Button variant='dark' onClick={() => toggleScanMode(!scanMode)}>
-            <ScanIcon />
-            <Text color='#FFFFFF' padding='0 0 0 1.5rem'>
-              <p>{t('scanCodeButton')}</p>
-            </Text>
-          </Button>
         )}
+        <Wrapper
+          width='170px'
+          direction='column'
+          justifyContent='center'
+          alignItems='center'
+          alignSelf='center'
+          position='fixed'
+          bottom='2.5rem'
+          margin='auto'
+        >
+          {scanMode ? (
+            <IconButton
+              variant='dark'
+              iconName='close-light'
+              onClick={() => toggleScanMode(false)}
+            />
+          ) : (
+            <Button variant='dark' onClick={() => toggleScanMode(!scanMode)}>
+              <ScanIcon />
+              <Text color='#FFFFFF' padding='0 0 0 1.5rem'>
+                <p>{t('scanCodeButton')}</p>
+              </Text>
+            </Button>
+          )}
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
+    </AnimatedWrapper>
   );
 };
 

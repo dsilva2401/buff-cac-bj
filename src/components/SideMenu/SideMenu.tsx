@@ -1,21 +1,21 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useGlobal } from "../../context/global/GlobalContext";
-import { Link, useLocation } from "react-router-dom";
-import { showToast } from "components/Toast/Toast";
-import { getAuth, signOut } from "firebase/auth";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router";
-import { ReactComponent as Close } from "assets/icons/svg/close-white.svg";
-import { ReactComponent as Collection } from "assets/icons/svg/collection.svg";
-import { ReactComponent as External } from "assets/icons/svg/external.svg";
-import { ReactComponent as LoadingIndicator } from "assets/icons/svg/loading-small.svg";
-import { ReactComponent as Logout } from "assets/icons/svg/log-out.svg";
-import { ReactComponent as Profile } from "assets/icons/svg/person.svg";
-import brijLogo from "assets/logos/svg/brij.svg";
-import DrawerMask from "components/DrawerMask";
-import Image from "components/Image";
-import Menu from "./styles";
-import { RoutesHashMap } from "routes";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useGlobal } from '../../context/global/GlobalContext';
+import { Link, useLocation } from 'react-router-dom';
+import { showToast } from 'components/Toast/Toast';
+import { getAuth, signOut } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { RoutesHashMap } from 'routes';
+import { ReactComponent as Close } from 'assets/icons/svg/close-white.svg';
+import { ReactComponent as Collection } from 'assets/icons/svg/collection.svg';
+import { ReactComponent as LoadingIndicator } from 'assets/icons/svg/loading-small.svg';
+import { ReactComponent as External } from 'assets/icons/svg/external.svg';
+import { ReactComponent as Logout } from 'assets/icons/svg/log-out.svg';
+import { ReactComponent as Profile } from 'assets/icons/svg/person.svg';
+import brijLogo from 'assets/logos/svg/brij.svg';
+import DrawerMask from 'components/DrawerMask';
+import Image from 'components/Image';
+import Menu from './styles';
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
@@ -28,18 +28,17 @@ function usePrevious<T>(value: T) {
 }
 
 const SideMenu: React.FC = () => {
-  const { t } = useTranslation("translation", { keyPrefix: "sideMenu" });
-  const { isMenuOpen, setIsMenuOpen } = useGlobal();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [signedIn, setSignedIn] = useState<boolean>(false);
+  const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
+  const { isMenuOpen, setIsMenuOpen, setPageTransition } = useGlobal();
+  const { productDetails: details, user } = useGlobal();
+  const previousUser = usePrevious(user);
   const location = useLocation();
   const history = useHistory();
   const auth = getAuth();
 
-  const { productDetails: details, user } = useGlobal();
-
-  const previousUser = usePrevious(user);
+  const [signedIn, setSignedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -56,15 +55,16 @@ const SideMenu: React.FC = () => {
   }, [previousUser, user]);
 
   const handleLogoutButtonClicked = useCallback(() => {
-    if (error !== "") setError("");
+    setPageTransition('RIGHT');
+    if (error !== '') setError('');
     setLoading(true);
     signOut(auth)
       .then(() => {
         setLoading(false);
-        showToast({ message: t("signOutToastMessage"), type: "success" });
+        showToast({ message: t('signOutToastMessage'), type: 'success' });
       })
       .catch((error) => {
-        showToast({ message: error.message, type: "error" });
+        showToast({ message: error.message, type: 'error' });
       });
     setIsMenuOpen(false);
   }, [setIsMenuOpen, auth, error, t]);
@@ -86,41 +86,53 @@ const SideMenu: React.FC = () => {
           <nav>
             {signedIn ? (
               <Link to={RoutesHashMap.Profile.path} onClick={() => setIsMenuOpen(false)}>
-                {t("myProfile")}
+                {t('myProfile')}
                 <Profile />
               </Link>
             ) : null}
             {signedIn && location.pathname !== RoutesHashMap.Collection.path ? (
-              <Link to={RoutesHashMap.Collection.path} onClick={() => setIsMenuOpen(false)}>
-                {t("myCollection")}
+              <Link
+                to={RoutesHashMap.Collection.path}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setPageTransition('RIGHT');
+                }}
+              >
+                {t('myCollection')}
                 <Collection />
               </Link>
             ) : null}
             {details && (
               <a
-                href={details?.brand?.website || ""}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={details?.brand?.website || ''}
+                target='_blank'
+                rel='noopener noreferrer'
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t("visitWebsite")}
+                {t('visitWebsite')}
                 <External />
               </a>
             )}
             {signedIn ? (
               <p onClick={handleLogoutButtonClicked}>
-                {t("signOut")}
+                {t('signOut')}
                 {loading ? <LoadingIndicator /> : <Logout />}
               </p>
             ) : (
-              <Link to={RoutesHashMap.Login.path} onClick={() => setIsMenuOpen(false)}>
-                {t("signIn")}
+              <Link
+                to={RoutesHashMap.Login.path}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setPageTransition('RIGHT');
+                }}
+              >
+                {t('signIn')}
                 <Logout />
               </Link>
             )}
           </nav>
           <span>
-            <Image width="auto" src={brijLogo} alt="brij-logo" />
+            <Image width='auto' src={brijLogo} alt='brij-logo' />
           </span>
         </div>
       </Menu>

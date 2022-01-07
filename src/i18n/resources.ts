@@ -78,12 +78,16 @@ export const resources = {
         scanCodeButton: "Scan Code",
         scanSuccessMessage: "Product Scanned",
         scanErrorMessage: "Scan Error",
-        invalidScanMessage: "Invalid URL",
+        invalidScanMessage: "Not a valid Brij code",
       },
       fourZeroFour: {
         message: "This experience does not exist",
         learnMoreButton: "Learn about Brij",
         learnMoreLink: "https://brij.it/",
+      },
+      productDetails: {
+        addToCollection: "Add to collection",
+        removeFromCollection: "Remove from collection",
       },
       drawers: {
         registrationDrawer: {

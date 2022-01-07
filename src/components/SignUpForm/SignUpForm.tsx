@@ -1,18 +1,16 @@
-import Button from "components/Button";
-import Input from "components/Input";
-import LoadingIndicator from "components/LoadingIndicator";
-import PersonalDetails from "components/PersonalDetails";
-import SocialLogin from "components/SocialLogin";
-import Text from "components/Text";
-import { showToast } from "components/Toast/Toast";
-import Wrapper from "components/Wrapper";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-} from "firebase/auth";
-import useMagicLinkHandler from "hooks/useMagicLinkHandler";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { showToast } from 'components/Toast/Toast';
+import { useGlobal } from 'context/global/GlobalContext';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
+import LoadingIndicator from 'components/LoadingIndicator';
+import PersonalDetails from 'components/PersonalDetails';
+import SocialLogin from 'components/SocialLogin';
+import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Text from 'components/Text';
 
 interface SignUpFormProps {
   onSignup?: (...args: any[]) => void,
@@ -24,6 +22,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   onPersonalDetailshow = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
+  const { setPageTransition } = useGlobal();
   const auth = getAuth();
 
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
@@ -61,7 +60,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         setLoading(false);
         showToast({ message: errorMessage, type: 'error' });
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false);
+        setPageTransition('LEFT');
+      })
   };
 
   const passwordInput = !usingMagicLink ? (
@@ -94,12 +96,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         setLoading={setLoading}
         onSuccess={onSignup}
       />
-      <Wrapper justifyContent="center" alignItems="center">
-        <Text fontSize="1.2rem" color="#98A3AA">
+      <Wrapper justifyContent='center' alignItems='center'>
+        <Text fontSize='1.2rem' color='#98A3AA'>
           <p>or</p>
         </Text>
       </Wrapper>
-
       <Wrapper
         direction='column'
         width='100%'

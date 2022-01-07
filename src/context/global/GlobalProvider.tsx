@@ -4,7 +4,7 @@ import useProductDetails from 'hooks/useProductDetails';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAPI } from 'utils/api';
 import useCollection from '../../hooks/useCollection';
-import { GlobalContext, PageStateType } from './GlobalContext';
+import { GlobalContext, PageStateType, TransitionType } from './GlobalContext';
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,6 +13,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     localStorage.getItem('signInRedirect') || ''
   );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
+  const [pageTransition, setPageTransition] = useState<TransitionType>('NONE');
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,6 +69,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setSignInRedirect,
         pageState,
         setPageState,
+        pageTransition,
+        setPageTransition,
         user,
         productDetails,
         loading,

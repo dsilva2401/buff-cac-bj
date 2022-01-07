@@ -1,29 +1,30 @@
-import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { showToast } from "components/Toast/Toast";
-import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
-import { Link } from "react-router-dom";
-import useFirebaseError from "hooks/useFirebaseError";
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { showToast } from 'components/Toast/Toast';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useGlobal } from 'context/global/GlobalContext';
+import { Link } from 'react-router-dom';
+import { RoutesHashMap } from 'routes';
+import useFirebaseError from 'hooks/useFirebaseError';
 import LoadingIndicator from 'components/LoadingIndicator';
-import useMagicLinkHandler from "hooks/useMagicLinkHandler";
-import SocialLogin from "components/SocialLogin";
-import Wrapper from "components/Wrapper";
-import Button from "components/Button";
-import Input from "components/Input";
-import Text from "components/Text";
-import { RoutesHashMap } from "routes";
+import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
+import SocialLogin from 'components/SocialLogin';
+import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Text from 'components/Text';
 
 interface LoginFormProps {
-  onLogin?: () => void
-}
+  onLogin?: () => void;
+};
 
 const LoginForm: React.FC<LoginFormProps> = ({
   onLogin = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-
-  const auth = getAuth();
   const getErrorMessage = useFirebaseError();
+  const { setPageTransition } = useGlobal();
+  const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -55,6 +56,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     signInWithEmailAndPassword(auth, username, password)
       .then(() => {
         onLogin();
+        setPageTransition('LEFT');
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {
@@ -122,7 +124,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
           </Text>
           <Text fontSize='0.7rem' textDecoration='unset'>
-            <Link to={RoutesHashMap.ForgotPassword.path}>{t('forgotPassword')}</Link>
+            <Link
+              to={RoutesHashMap.ForgotPassword.path}
+              onClick={() => setPageTransition('LEFT')}
+            >
+              {t('forgotPassword')}
+            </Link>
           </Text>
         </Wrapper>
       </Wrapper>

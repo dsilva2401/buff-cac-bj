@@ -68,6 +68,7 @@ export const DrawerBody = styled.div`
   padding: 0 1rem;
   gap: 1rem;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 export const DrawerFooter = styled.div`

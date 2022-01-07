@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -6,29 +6,31 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
-import { useParams } from "react-router";
-import { Redirect } from "react-router-dom";
-import { useGlobal } from "../../context/global/GlobalContext";
-import { ButtonType } from "components/BottomDrawer/BottomDrawer";
-import externalLink from "assets/icons/svg/external-link.svg";
-import placeholder from "assets/images/png/placeholder.png";
-import ProgressiveImage from "react-progressive-image";
-import WarrantyDrawer from "components/WarrantyDrawer";
-import ReferralDrawer from "components/ReferralDrawer";
-import BottomDrawer from "components/BottomDrawer";
-import CustomDrawer from "components/CustomDrawer";
-import AuthDrawer from "components/AuthDrawer";
-import IconButton from "components/IconButton";
-import LinkModule from "components/LinkModule";
-import PageHeader from "components/PageHeader";
-import ShopDrawer from "components/ShopDrawer";
-import Wrapper from "components/Wrapper";
-import logEvent from "utils/eventLogger";
-import Image from "components/Image";
-import Text from "components/Text";
-import { useAPI } from "utils/api";
-import LoadingIndicator from "components/LoadingIndicator";
-import { showToast } from "components/Toast/Toast";
+import { useAPI } from 'utils/api';
+import { useParams } from 'react-router';
+import { Redirect } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { showToast } from 'components/Toast/Toast';
+import { useGlobal } from '../../context/global/GlobalContext';
+import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
+import externalLink from 'assets/icons/svg/external-link.svg';
+import placeholder from 'assets/images/png/placeholder.png';
+import LoadingIndicator from 'components/LoadingIndicator';
+import AnimatedWrapper from 'components/AnimatedWrapper';
+import ProgressiveImage from 'react-progressive-image';
+import WarrantyDrawer from 'components/WarrantyDrawer';
+import ReferralDrawer from 'components/ReferralDrawer';
+import BottomDrawer from 'components/BottomDrawer';
+import CustomDrawer from 'components/CustomDrawer';
+import AuthDrawer from 'components/AuthDrawer';
+import IconButton from 'components/IconButton';
+import LinkModule from 'components/LinkModule';
+import PageHeader from 'components/PageHeader';
+import ShopDrawer from 'components/ShopDrawer';
+import Wrapper from 'components/Wrapper';
+import logEvent from 'utils/eventLogger';
+import Image from 'components/Image';
+import Text from 'components/Text';
 
 type UrlParam = {
   id: string;
@@ -48,23 +50,26 @@ const ProductDetails: React.FC = () => {
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
+    pageTransition,
+    setPageTransition,
     personalDetails,
     getPersonalDetails,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
+  const { t } = useTranslation('translation', { keyPrefix: 'productDetails' });
 
   const onSuccess = useCallback(() => {
     getPersonalDetails()
   }, [getPersonalDetails]);
 
   const onError = (error: any) => {
-    showToast({ message: error.message, type: "error" })
+    showToast({ message: error.message, type: 'error' })
   }
 
   const [updateUser, addToLoading] = useAPI<any>({
-    endpoint: "auth/update",
-    method: "PUT",
+    endpoint: 'auth/update',
+    method: 'PUT',
     onSuccess,
     onError
   })
@@ -129,8 +134,8 @@ const ProductDetails: React.FC = () => {
             setShowAuthPage(module?.locked);
             changeDrawerPage(x);
             logEvent({
-              eventType: "EVENT_MODULE",
-              event: "MODULE_CLICKED",
+              eventType: 'EVENT_MODULE',
+              event: 'MODULE_CLICKED',
               data: {
                 details: {
                   moduleId: module.id,
@@ -148,13 +153,13 @@ const ProductDetails: React.FC = () => {
               pageTitle: details?.modules[x].title,
             }
             : null,
-          icon: details?.modules[x].type === "LINK_MODULE" ?
-            <Image margin="0 0 0 0.25rem" src={externalLink} alt="external-link" /> : null,
+          icon: details?.modules[x].type === 'LINK_MODULE' ?
+            <Image margin='0 0 0 0.25rem' src={externalLink} alt='external-link' /> : null,
         };
         buttons.push(buttonObject);
       }
 
-      let title = "Add to collection";
+      let title = t('addToCollection');
 
       const productCollection = personalDetails?.profile?.productCollection || [];
 
@@ -163,7 +168,7 @@ const ProductDetails: React.FC = () => {
       );
 
       if (existInCollection) {
-        title = "Remove from collection"
+        title = t('removeFromCollection');
       }
 
       let onClick = () => {
@@ -202,18 +207,18 @@ const ProductDetails: React.FC = () => {
 
         if (!discountedPrice) {
           return (
-            <Text fontSize="1rem" fontWeight="600">
+            <Text fontSize='1rem' fontWeight='600'>
               <span>{`$${price}`}</span>
             </Text>
           );
         };
 
         return (
-          <Wrapper justifyContent="flex-end" gap="0.5rem">
-            <Text textDecoration="line-through" fontSize="0.8rem" color="grey">
+          <Wrapper justifyContent='flex-end' gap='0.5rem'>
+            <Text textDecoration='line-through' fontSize='0.8rem' color='grey'>
               <span>{`$${price}`}</span>
             </Text>
-            <Text fontSize="1rem" fontWeight="600">
+            <Text fontSize='1rem' fontWeight='600'>
               <span>{`$${discountedPrice}`}</span>
             </Text>
           </Wrapper>
@@ -225,13 +230,13 @@ const ProductDetails: React.FC = () => {
         if (registeredTo && tagType == 'Unit') {
           return (
             <Wrapper
-              direction="column"
-              alignItems="flex-end"
+              direction='column'
+              alignItems='flex-end'
             >
-              <Text height="20px" fontSize="0.8rem">
+              <Text height='20px' fontSize='0.8rem'>
                 <span>Registered To</span>
               </Text>
-              <Text fontSize="0.8rem" fontWeight="600">
+              <Text fontSize='0.8rem' fontWeight='600'>
                 <span>{registeredTo}</span>
               </Text>
             </Wrapper>
@@ -241,7 +246,7 @@ const ProductDetails: React.FC = () => {
         if (!period && !duration) return null;
 
         return (
-          <Text fontSize="0.7rem">
+          <Text fontSize='0.7rem'>
             <span>{`${period} ${duration?.label}`} warranty</span>
           </Text>
         )
@@ -346,7 +351,7 @@ const ProductDetails: React.FC = () => {
   if (addToLoading) return <LoadingIndicator />
 
   return (
-    <>
+    <AnimatedWrapper direction={pageTransition}>
       {details?.product?.image && (
         <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
           {(src: string, loading: boolean) => (
@@ -391,7 +396,7 @@ const ProductDetails: React.FC = () => {
       >
         {renderDrawerPage()}
       </BottomDrawer>
-    </>
+    </AnimatedWrapper>
   );
 };
 

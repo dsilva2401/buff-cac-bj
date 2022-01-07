@@ -6,7 +6,7 @@ export type EventType = {
 
 const logEvent = (data: EventType) => {
   data = Object.assign(data, { userInfo: window.navigator.userAgent });
-  return console.log("LOG EVENT: ", data);
+  return console.log('LOG EVENT: ', data);
 };
 
 export default logEvent;

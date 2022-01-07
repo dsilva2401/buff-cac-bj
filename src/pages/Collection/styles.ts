@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { theme } from "styles/theme";
+import styled from 'styled-components';
+import { theme } from 'styles/theme';
 
 type ProductCardType = {
   registered: boolean;
@@ -16,9 +16,9 @@ export const ProductCard = styled.button<ProductCardType>`
     height: 100%;
   }
   &::after {
-    content: "Registered";
+    content: 'Registered';
     position: absolute;
-    display: ${(props) => (props.registered ? "block" : "none")};
+    display: ${(props) => (props.registered ? 'block' : 'none')};
     bottom: 0;
     left: 0;
     padding: 0.4rem 0.6rem;
