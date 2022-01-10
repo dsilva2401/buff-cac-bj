@@ -28,15 +28,17 @@ import LinkModule from 'components/LinkModule';
 import PageHeader from 'components/PageHeader';
 import ShopDrawer from 'components/ShopDrawer';
 import Wrapper from 'components/Wrapper';
-import logEvent from 'utils/eventLogger';
 import Image from 'components/Image';
 import Text from 'components/Text';
+import useLogEvent from 'hooks/useLogEvent';
 
 type UrlParam = {
   id: string;
 };
 
 const ProductDetails: React.FC = () => {
+  const logEvent = useLogEvent();
+
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
@@ -134,8 +136,8 @@ const ProductDetails: React.FC = () => {
             setShowAuthPage(module?.locked);
             changeDrawerPage(x);
             logEvent({
-              eventType: 'EVENT_MODULE',
-              event: 'MODULE_CLICKED',
+              type: 'EVENT_MODULE',
+              name: 'MODULE_CLICKED',
               data: {
                 details: {
                   moduleId: module.id,

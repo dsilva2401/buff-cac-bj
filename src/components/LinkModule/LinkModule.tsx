@@ -1,5 +1,5 @@
+import useLogEvent from "hooks/useLogEvent";
 import React, { useEffect } from "react";
-import logEvent from "utils/eventLogger";
 
 type LinkModuleProps = {
   closePage(): void;
@@ -7,11 +7,13 @@ type LinkModuleProps = {
 };
 
 const LinkModule: React.FC<LinkModuleProps> = ({ closePage, moduleData }) => {
+  const logEvent = useLogEvent();
+
   useEffect(() => {
     window.open(moduleData?.link, "_blank");
     logEvent({
-      eventType: "EVENT_MODULE",
-      event: "LINK_CLICKED",
+      type: "EVENT_MODULE",
+      name: "LINK_CLICKED",
       data: moduleData,
     });
     closePage();

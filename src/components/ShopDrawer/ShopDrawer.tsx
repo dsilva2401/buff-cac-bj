@@ -11,12 +11,12 @@ import QuantityController from 'components/QuantityController';
 import AnimatedWrapper from 'components/AnimatedWrapper';
 import SuccessDrawer from 'components/SuccessDrawer';
 import SelectInput from 'components/SelectInput';
-import logEvent from 'utils/eventLogger';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import Text from 'components/Text';
 import hash from 'object-hash';
+import useLogEvent from 'hooks/useLogEvent';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -32,6 +32,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     isProductLevel,
     discountCode,
   } = data;
+
+  const logEvent = useLogEvent();
 
   // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
@@ -101,8 +103,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       selectedQuantity
     );
     logEvent({
-      eventType: 'EVENT_MODULE',
-      event: 'SHOPPING_CHECK_OUT',
+      type: 'EVENT_MODULE',
+      name: 'SHOPPING_CHECK_OUT',
       data: {
         details: {
           productId: chosenOption.id,
