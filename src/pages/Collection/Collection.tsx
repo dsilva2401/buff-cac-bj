@@ -18,12 +18,12 @@ import AnimatedWrapper from 'components/AnimatedWrapper';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import ProductImage from './ProductImage';
-import logEvent from 'utils/eventLogger';
 import Wrapper from 'components/Wrapper';
 import QrReader from 'react-qr-reader';
 import Button from 'components/Button';
 import Grid from 'components/Grid';
 import Text from 'components/Text';
+import useLogEvent from 'hooks/useLogEvent';
 
 type BrandCollectionType = {
   brand: string;
@@ -31,6 +31,7 @@ type BrandCollectionType = {
 };
 
 const Collection: React.FC = () => {
+  const logEvent = useLogEvent();
   const [sortedCollection, setSortedCollection] = useState<
     BrandCollectionType[]
   >([]);
@@ -61,8 +62,8 @@ const Collection: React.FC = () => {
           type: 'success',
         });
         logEvent({
-          eventType: 'EVENT_SCAN',
-          event: 'SCAN_TAG',
+          type: 'EVENT_SCAN',
+          name: 'SCAN_TAG',
           data: scanResult,
         });
       } else if (!validateUrl(scanResult.toString())) {
@@ -137,8 +138,8 @@ const Collection: React.FC = () => {
                   setPageTransition('LEFT');
                   history.push(RoutesHashMap.ProductDetails.path(node.tag.slug));
                   logEvent({
-                    eventType: 'EVENT_COLLECTION',
-                    event: 'PRODUCT_CLICKED',
+                    type: 'EVENT_COLLECTION',
+                    name: 'PRODUCT_CLICKED',
                     data: node.product,
                   });
                 }}
