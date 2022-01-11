@@ -8,14 +8,7 @@ export interface AnimatedWrapperProps {
 };
 
 const AnimatedWrapper = (props: AnimatedWrapperProps) => {
-  if (props.direction === 'LEFT' || props.direction === 'RIGHT') {
-    return (
-      props.direction === 'LEFT' ?
-        <LeftSlider>{props.children}</LeftSlider>
-        :
-        <RightSlider>{props.children}</RightSlider>
-    );
-  } else return <>{props.children}</>;
+  return <>{props.children}</>;
 };
 
 export default AnimatedWrapper;
