@@ -3,7 +3,6 @@ import { RoutesHashMap } from 'routes';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { useGlobal } from '../../context/global/GlobalContext';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import brijLogo from 'assets/logos/svg/brij-colored.svg';
 import PageFooter from 'components/PageFooter';
 import PageHeader from 'components/PageHeader';
@@ -19,9 +18,7 @@ const SignUp: React.FC = () => {
   const {
     signInRedirect,
     setSignInRedirect,
-    setIsMenuOpen,
-    pageTransition,
-    setPageTransition,
+    setIsMenuOpen
   } = useGlobal();
 
   const redirectUser = useCallback((isNewEmailUser: boolean) => {
@@ -44,25 +41,23 @@ const SignUp: React.FC = () => {
   );
 
   return (
-    <AnimatedWrapper direction={pageTransition}>
-      <Wrapper
-        width="100%"
-        height="100%"
-        direction="column"
-        justifyContent="space-between"
-        alignItems="center"
-        overflow='auto'
-      >
-        <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
-        <SignUpForm onSignup={redirectUser} />
-        <PageFooter>
-          <p>{t("existingUser")}</p>
-          <Link to={RoutesHashMap.Login.path} onClick={() => setPageTransition('RIGHT')}>
-            {t("signInLink")}
-          </Link>
-        </PageFooter>
-      </Wrapper>
-    </AnimatedWrapper>
+    <Wrapper
+      width="100%"
+      height="100%"
+      direction="column"
+      justifyContent="space-between"
+      alignItems="center"
+      overflow='auto'
+    >
+      <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
+      <SignUpForm onSignup={redirectUser} />
+      <PageFooter>
+        <p>{t("existingUser")}</p>
+        <Link to={RoutesHashMap.Login.path}>
+          {t("signInLink")}
+        </Link>
+      </PageFooter>
+    </Wrapper>
   );
 };
 
