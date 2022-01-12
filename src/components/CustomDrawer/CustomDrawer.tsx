@@ -1,7 +1,6 @@
 import React from 'react';
 import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import { CustomModuleType } from 'types/ProductDetailsType';
 
 type CustomDrawerProps = {
@@ -25,15 +24,13 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
     >
       <h1>{drawerTitle}</h1>
     </Text>
-    <AnimatedWrapper direction='LEFT'>
-      <Wrapper
-        width='100%'
-        gap='0.75rem'
-        direction='column'
-        padding='0.5rem 1rem'
-        dangerouslySetInnerHTML={{ __html: drawerData.content }}
-      />
-    </AnimatedWrapper>
+    <Wrapper
+      width='100%'
+      gap='0.75rem'
+      direction='column'
+      padding='0.5rem 1rem'
+      dangerouslySetInnerHTML={{ __html: drawerData.content }}
+    />
   </Wrapper>
 );
 

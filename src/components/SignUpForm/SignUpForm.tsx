@@ -131,6 +131,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         ) : (
           <Button
             variant='dark'
+            disabled={usingMagicLink ? !email : !email || !password}
             onClick={() =>
               usingMagicLink ? handleMagicLink() : signUpWithEmailAndPassword()
             }
