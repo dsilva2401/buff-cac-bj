@@ -13,7 +13,8 @@ export const resources = {
         "auth/wrong-password": "Invalid email or password",
         "auth/internal-error": "Server error occured",
         "auth/popup-closed-by-user": "Please complete the signin process",
-        "auth/invalid-credential-or-provider-id": "Invalid credentials"
+        "auth/invalid-credential-or-provider-id": "Invalid credentials",
+        "auth/unauthorized-domain": "You are accessing the website from a non secure domain."
       },
       magicLink: {
         linkSentToastMessage: "A magic link is sent to your email",

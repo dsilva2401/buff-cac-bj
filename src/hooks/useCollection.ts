@@ -1,10 +1,9 @@
-import { User } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useAPI } from 'utils/api';
 
 function useCollection(
-  user: User | null = null
+  token: string | null = null
 ): [ProductDetailsType[], () => Promise<any>] {
   const [collectionDetails, setCollectionDetails] = useState<
     ProductDetailsType[]
@@ -27,14 +26,14 @@ function useCollection(
       onSuccess,
       onError,
     },
-    user
+    token
   );
 
   useEffect(() => {
-    if (user) {
+    if (token) {
       getCollection();
     }
-  }, [user, getCollection]);
+  }, [token, getCollection]);
 
   return [collectionDetails, getCollection];
 }

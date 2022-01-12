@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useGlobal } from 'context/global/GlobalContext';
-import { Link } from 'react-router-dom';
-import { RoutesHashMap } from 'routes';
 import useFirebaseError from 'hooks/useFirebaseError';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
@@ -16,10 +14,12 @@ import Text from 'components/Text';
 
 interface LoginFormProps {
   onLogin?: () => void;
+  onForgotPasswordClick?: () => void;
 };
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  onLogin = () => { }
+  onLogin = () => { },
+  onForgotPasswordClick = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const getErrorMessage = useFirebaseError();
@@ -122,13 +122,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
           >
             <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
           </Text>
-          <Text fontSize='0.7rem' textDecoration='unset'>
-            <Link
-              to={RoutesHashMap.ForgotPassword.path}
-              onClick={() => setPageTransition('LEFT')}
-            >
+          <Text fontSize='0.7rem' textDecoration='unset' onClick={() => onForgotPasswordClick()}>
+            <span>
               {t('forgotPassword')}
-            </Link>
+            </span>
           </Text>
         </Wrapper>
       </Wrapper>

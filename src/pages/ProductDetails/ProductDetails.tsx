@@ -56,6 +56,7 @@ const ProductDetails: React.FC = () => {
     setPageTransition,
     personalDetails,
     getPersonalDetails,
+    user
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -161,43 +162,61 @@ const ProductDetails: React.FC = () => {
         buttons.push(buttonObject);
       }
 
-      let title = t('addToCollection');
+      const { product } = details || {}
 
-      const productCollection = personalDetails?.profile?.productCollection || [];
+      let showAddToCollectionButton = true;
 
-      const existInCollection = productCollection.find(
-        (productTag: string) => details?.tag?.slug === productTag
-      );
-
-      if (existInCollection) {
-        title = t('removeFromCollection');
+      if (!user && showAddToCollectionButton) {
+        showAddToCollectionButton = false;
+      }
+    
+      if (product.registeredToCurrentUser && showAddToCollectionButton) {
+        showAddToCollectionButton = false;
+      }
+    
+      if (product.registered && product.tagType === "Unit" && showAddToCollectionButton) {
+        showAddToCollectionButton = false;
       }
 
-      let onClick = () => {
+      if (showAddToCollectionButton) {
+        let title = t('addToCollection');
+
+        const productCollection = personalDetails?.profile?.productCollection || [];
+
+        const existInCollection = productCollection.find(
+          (productTag: string) => details?.tag?.slug === productTag
+        );
+
         if (existInCollection) {
-          updateUser({
-            productCollection: [...productCollection.filter(productTag => productTag !== id)]
-          })
-        } else {
-          updateUser({
-            productCollection: [...productCollection, id]
-          })
+          title = t('removeFromCollection');
         }
-      }
 
-      buttons.push({
-        title,
-        onClick: onClick,
-        isHighlight: false,
-        locked: false,
-        pageState: null,
-        icon: null,
-      })
+        let onClick = () => {
+          if (existInCollection) {
+            updateUser({
+              productCollection: [...productCollection.filter(productTag => productTag !== id)]
+            })
+          } else {
+            updateUser({
+              productCollection: [...productCollection, id]
+            })
+          }
+        }
+
+        buttons.push({
+          title,
+          onClick: onClick,
+          isHighlight: false,
+          locked: false,
+          pageState: null,
+          icon: null,
+        })
+      }
     }
     return buttons;
-  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails]);
+  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails, user]);
 
-  const leadModule: any = details?.modules[0] || {};
+  const leadModule: any = details?.leadModule || {};
 
   const leadInformation = useMemo(() => {
     switch (leadModule.type) {
@@ -244,7 +263,8 @@ const ProductDetails: React.FC = () => {
             </Wrapper>
           );
         };
-        const { period, duration } = leadModule?.moduleInfo || {}
+
+        const { period, duration } = details?.warrantyInformation || {}
         if (!period && !duration) return null;
 
         return (
@@ -255,7 +275,7 @@ const ProductDetails: React.FC = () => {
       default:
         return null;
     }
-  }, [leadModule]);
+  }, [leadModule, details]);
 
   const renderDrawerPage = useCallback(() => {
     if (details) {

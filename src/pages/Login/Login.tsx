@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { RoutesHashMap } from 'routes';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGlobal } from 'context/global/GlobalContext';
 import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
@@ -14,6 +14,7 @@ import Image from 'components/Image';
 
 const Login: React.FC = () => {
   const { user, setIsMenuOpen } = useGlobal();
+  const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
   const logo = useMemo(
@@ -42,7 +43,9 @@ const Login: React.FC = () => {
       overflow='auto'
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
-      <LoginForm />
+      <LoginForm onForgotPasswordClick={() => {
+        history.push(RoutesHashMap.ForgotPassword.path)
+      }} />
       <PageFooter>
         <p>{t('newToBrij')}</p>
         <Link to={RoutesHashMap.Signup.path}>
