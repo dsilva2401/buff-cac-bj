@@ -20,7 +20,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [slug, setSlug] = useState<string | null>(null);
 
   const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
-  const [productDetails, reFetchProduct] = useProductDetails(slug, user);
+  const [productDetails, reFetchProduct, productLoading] = useProductDetails(slug, user);
   const [collectionDetails, getCollection] = useCollection(user);
 
   const onActivateWarrantySuccess = useCallback(() => {
@@ -73,7 +73,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPageTransition,
         user,
         productDetails,
-        loading,
+        loading: loading || productLoading,
         error,
         activateWarranty,
         slug,

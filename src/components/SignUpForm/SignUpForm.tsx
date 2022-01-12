@@ -62,7 +62,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       })
       .finally(() => {
         setLoading(false);
-        setPageTransition('LEFT');
       })
   };
 

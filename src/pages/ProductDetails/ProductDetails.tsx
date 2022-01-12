@@ -56,6 +56,7 @@ const ProductDetails: React.FC = () => {
     setPageTransition,
     personalDetails,
     getPersonalDetails,
+    user
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -161,41 +162,43 @@ const ProductDetails: React.FC = () => {
         buttons.push(buttonObject);
       }
 
-      let title = t('addToCollection');
+      if (user) {
+        let title = t('addToCollection');
 
-      const productCollection = personalDetails?.profile?.productCollection || [];
+        const productCollection = personalDetails?.profile?.productCollection || [];
 
-      const existInCollection = productCollection.find(
-        (productTag: string) => details?.tag?.slug === productTag
-      );
+        const existInCollection = productCollection.find(
+          (productTag: string) => details?.tag?.slug === productTag
+        );
 
-      if (existInCollection) {
-        title = t('removeFromCollection');
-      }
-
-      let onClick = () => {
         if (existInCollection) {
-          updateUser({
-            productCollection: [...productCollection.filter(productTag => productTag !== id)]
-          })
-        } else {
-          updateUser({
-            productCollection: [...productCollection, id]
-          })
+          title = t('removeFromCollection');
         }
-      }
 
-      buttons.push({
-        title,
-        onClick: onClick,
-        isHighlight: false,
-        locked: false,
-        pageState: null,
-        icon: null,
-      })
+        let onClick = () => {
+          if (existInCollection) {
+            updateUser({
+              productCollection: [...productCollection.filter(productTag => productTag !== id)]
+            })
+          } else {
+            updateUser({
+              productCollection: [...productCollection, id]
+            })
+          }
+        }
+
+        buttons.push({
+          title,
+          onClick: onClick,
+          isHighlight: false,
+          locked: false,
+          pageState: null,
+          icon: null,
+        })
+      }
     }
     return buttons;
-  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails]);
+  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails, user]);
 
   const leadModule: any = details?.modules[0] || {};
 

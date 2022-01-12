@@ -5,7 +5,8 @@ import { useAPI } from "utils/api";
 
 function useProductDetails(slug: string | null, user: User | null = null): [
     ProductDetailsType | null,
-    () => Promise<any>
+    () => Promise<any>,
+    boolean
 ] {
     const [productDetails, setProductDetails] = useState<ProductDetailsType | null>(null);
 
@@ -18,7 +19,7 @@ function useProductDetails(slug: string | null, user: User | null = null): [
         console.log('ERROR MSG: ', error.message);
     }, [])
 
-    const [getProduct] = useAPI({
+    const [getProduct, loading] = useAPI({
         method: 'GET',
         endpoint: `products/${slug}`,
         onSuccess,
@@ -31,7 +32,7 @@ function useProductDetails(slug: string | null, user: User | null = null): [
         }
     }, [user, slug, getProduct])
 
-    return [productDetails, getProduct];
+    return [productDetails, getProduct, loading];
 }
 
 export default useProductDetails;
