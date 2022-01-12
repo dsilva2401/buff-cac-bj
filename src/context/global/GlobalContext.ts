@@ -39,6 +39,7 @@ export type GlobalContextProps = {
   getCollection: () => void;
   authFetched: Boolean;
   getPersonalDetails: () => void;
+  token: string | null;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -62,7 +63,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setUser: () => { },
   getCollection: () => { },
   authFetched: false,
-  getPersonalDetails: () => { }
+  getPersonalDetails: () => { },
+  token: null
 });
 
 export const useGlobal = () => useContext(GlobalContext);

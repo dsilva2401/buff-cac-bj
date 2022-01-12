@@ -6,22 +6,69 @@ import { useAPI } from 'utils/api';
 import useCollection from '../../hooks/useCollection';
 import { GlobalContext, PageStateType, TransitionType } from './GlobalContext';
 
+const useUser = () => {
+  const [authFetched, setAuthFetched] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
+
+  useEffect(() => {
+    const setUserToken = async () => {
+      if (personalDetails) {
+        const tokenExtracted = await user?.getIdToken() || null;
+        setToken(tokenExtracted);
+      }
+    }
+
+    setUserToken()
+  }, [personalDetails, user, setToken]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+
+      setAuthFetched(true);
+    });
+  }, [setAuthFetched, setUser]);
+
+  return {
+    user,
+    setUser,
+    personalDetails,
+    getPersonalDetails,
+    authFetched,
+    token
+  }
+}
+
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [signInRedirect, setSignInRedirect] = useState<string>(
     localStorage.getItem('signInRedirect') || ''
   );
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [pageTransition, setPageTransition] = useState<TransitionType>('NONE');
-  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
 
-  const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
-  const [productDetails, reFetchProduct] = useProductDetails(slug, user);
-  const [collectionDetails, getCollection] = useCollection(user);
+  const {
+    user,
+    personalDetails,
+    getPersonalDetails,
+    setUser,
+    authFetched,
+    token
+  } = useUser();
+
+  const [productDetails, reFetchProduct, productLoading] = useProductDetails(slug, token);
+  const [collectionDetails, getCollection] = useCollection(token);
 
   const onActivateWarrantySuccess = useCallback(() => {
     reFetchProduct();
@@ -38,21 +85,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
       onSuccess: onActivateWarrantySuccess,
       onError: onActivateWarrantyError,
     },
-    user
+    token
   );
-
-  useEffect(() => {
-    const auth = getAuth();
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-
-      setAuthFetched(true);
-    });
-  }, [setAuthFetched, setUser]);
 
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
@@ -73,7 +107,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPageTransition,
         user,
         productDetails,
-        loading,
+        loading: loading || productLoading,
         error,
         activateWarranty,
         slug,
@@ -83,7 +117,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         collectionDetails,
         getCollection,
         authFetched,
-        getPersonalDetails
+        getPersonalDetails,
+        token
       }}
     >
       {children}

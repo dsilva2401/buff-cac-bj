@@ -1,3 +1,4 @@
+import ForgotPasswordForm from 'components/ForgotPasswordForm';
 import LoginForm from 'components/LoginForm';
 import PageFooter from 'components/PageFooter';
 import SignUpForm from 'components/SignUpForm';
@@ -7,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 
 enum AuthScreen {
   login = "login",
-  signup = "signup"
+  signup = "signup",
+  forgotPasssword = "forgotPasssword"
 }
 
 interface AuthDrawerProps {
@@ -33,12 +35,14 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
     switch (authScreen) {
       case AuthScreen.login:
         return (
-          <LoginForm onLogin={onAuthComplete} />
+          <LoginForm onLogin={onAuthComplete} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
         )
       case AuthScreen.signup:
         return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onAuthComplete} />
+      case AuthScreen.forgotPasssword:
+        return <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />  
       default:
-        return <LoginForm onLogin={onAuthComplete} />
+        return <LoginForm onLogin={onAuthComplete} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
     }
   }, [authScreen])
 
@@ -57,6 +61,11 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         onActionClick = () => setAuthScreen(AuthScreen.login);
         descriptionText = signUpTranslation('existingUser');
         actionText = signUpTranslation('signInLink');
+        break;
+      case AuthScreen.forgotPasssword:
+        onActionClick = () => {};
+        descriptionText = '';
+        actionText = '';
         break;
       default:
         onActionClick = () => setAuthScreen(AuthScreen.signup);
