@@ -13,7 +13,6 @@ export default function App() {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
 
-
   return (
     <Container>
       <GlobalStyle />

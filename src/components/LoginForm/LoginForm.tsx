@@ -135,6 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         ) : (
           <Button
             variant='dark'
+            disabled={usingMagicLink ? !username : !username || !password}
             onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
           >
             {usingMagicLink ? t('magicLinkButton') : t('signInButton')}

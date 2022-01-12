@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ReferralModuleType } from 'types/ProductDetailsType';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import qrcode from 'assets/images/png/qrcode.png';
+import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import Input from 'components/Input';
 import Text from 'components/Text';
-import useLogEvent from 'hooks/useLogEvent';
 
 type ReferralDrawerProps = {
   drawerTitle: string;
@@ -43,7 +42,6 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
   };
 
   return (
-
     <Wrapper
       direction='column'
       alignItems='flex-start'
@@ -56,81 +54,79 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
       >
         <h1>{drawerTitle}</h1>
       </Text>
-      <AnimatedWrapper direction='LEFT'>
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        padding='0 0.25rem'
+        justifyContent='flex-start'
+        alignItems='center'
+      >
         <Wrapper
           width='100%'
-          height='100%'
+          gap='0.75rem'
           direction='column'
-          padding='0 0.25rem'
-          justifyContent='flex-start'
+          padding='0 0.75rem'
+          dangerouslySetInnerHTML={{ __html: referralData?.details }}
+        />
+        <Input value={referralData?.url} disabled margin='0.75rem 0' />
+        <Wrapper
+          width='100%'
+          direction='row'
+          justifyContent='space-between'
           alignItems='center'
+          gap='0.625rem'
         >
-          <Wrapper
-            width='100%'
-            gap='0.75rem'
-            direction='column'
-            padding='0 0.75rem'
-            dangerouslySetInnerHTML={{ __html: referralData?.details }}
-          />
-          <Input value={referralData?.url} disabled margin='0.75rem 0' />
-          <Wrapper
-            width='100%'
-            direction='row'
-            justifyContent='space-between'
-            alignItems='center'
-            gap='0.625rem'
+          <CopyToClipboard
+            text={referralData?.url}
+            onCopy={() => {
+              showToast({ message: t('copyLinkToastMessage'), type: 'success' });
+              logEvent({
+                type: 'EVENT_MODULE',
+                name: 'REFERRAL_COPIED',
+                data: referralData,
+              });
+            }}
           >
-            <CopyToClipboard
-              text={referralData?.url}
-              onCopy={() => {
-                showToast({ message: t('copyLinkToastMessage'), type: 'success' });
-                logEvent({
-                  type: 'EVENT_MODULE',
-                  name: 'REFERRAL_COPIED',
-                  data: referralData,
-                });
-              }}
-            >
-              <Button variant='light'>{t('copyLinkButton')}</Button>
-            </CopyToClipboard>
-            <Button
-              variant='light'
-              id='shareButton'
-              onClick={() => {
-                handleShare();
-                logEvent({
-                  type: 'EVENT_MODULE',
-                  name: 'REFERRAL_SHARED',
-                  data: referralData,
-                });
-              }}
-            >
-              {t('shareLinkButton')}
-            </Button>
-          </Wrapper>
-          <Text fontSize='1.125rem' color='#98A3AA' margin='0.75rem 0'>
-            <p>or</p>
-          </Text>
-          <Wrapper
-            width='100%'
-            responsiveImg
-
-            alignItems='center'
-            justifyContent='space-between'
-            style={{ background: '#F7F7F7', borderRadius: '12px' }}
+            <Button variant='light'>{t('copyLinkButton')}</Button>
+          </CopyToClipboard>
+          <Button
+            variant='light'
+            id='shareButton'
+            onClick={() => {
+              handleShare();
+              logEvent({
+                type: 'EVENT_MODULE',
+                name: 'REFERRAL_SHARED',
+                data: referralData,
+              });
+            }}
           >
-            <Text
-              fontSize='1rem'
-              fontWeight='600'
-              color='#414149'
-              padding='0 0.25rem 0 1rem'
-            >
-              <p>{t('helpText')}</p>
-            </Text>
-            <Image src={qrcode} alt='qr-code' maxWidth='45%' margin='12px' />
-          </Wrapper>
+            {t('shareLinkButton')}
+          </Button>
         </Wrapper>
-      </AnimatedWrapper>
+        <Text fontSize='1.125rem' color='#98A3AA' margin='0.75rem 0'>
+          <p>or</p>
+        </Text>
+        <Wrapper
+          width='100%'
+          responsiveImg
+
+          alignItems='center'
+          justifyContent='space-between'
+          style={{ background: '#F7F7F7', borderRadius: '12px' }}
+        >
+          <Text
+            fontSize='1rem'
+            fontWeight='600'
+            color='#414149'
+            padding='0 0.25rem 0 1rem'
+          >
+            <p>{t('helpText')}</p>
+          </Text>
+          <Image src={qrcode} alt='qr-code' maxWidth='45%' margin='12px' />
+        </Wrapper>
+      </Wrapper>
     </Wrapper>
   );
 };

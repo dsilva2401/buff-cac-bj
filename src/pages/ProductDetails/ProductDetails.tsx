@@ -16,7 +16,6 @@ import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import externalLink from 'assets/icons/svg/external-link.svg';
 import placeholder from 'assets/images/png/placeholder.png';
 import LoadingIndicator from 'components/LoadingIndicator';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import ProgressiveImage from 'react-progressive-image';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
@@ -27,10 +26,10 @@ import IconButton from 'components/IconButton';
 import LinkModule from 'components/LinkModule';
 import PageHeader from 'components/PageHeader';
 import ShopDrawer from 'components/ShopDrawer';
+import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
 import Text from 'components/Text';
-import useLogEvent from 'hooks/useLogEvent';
 
 type UrlParam = {
   id: string;
@@ -52,8 +51,6 @@ const ProductDetails: React.FC = () => {
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
-    pageTransition,
-    setPageTransition,
     personalDetails,
     getPersonalDetails,
     user
@@ -373,7 +370,7 @@ const ProductDetails: React.FC = () => {
   if (addToLoading) return <LoadingIndicator />
 
   return (
-    <AnimatedWrapper direction={pageTransition}>
+    <>
       {details?.product?.image && (
         <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
           {(src: string, loading: boolean) => (
@@ -418,7 +415,7 @@ const ProductDetails: React.FC = () => {
       >
         {renderDrawerPage()}
       </BottomDrawer>
-    </AnimatedWrapper>
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
 import emailIcon from 'assets/icons/svg/social_email.svg';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -207,29 +206,27 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 (isChildOpen
                   ? children
                   : (
-                    <AnimatedWrapper direction={transition}>
-                      <Wrapper width='100%' direction='column' gap='1rem'>
-                        {buttons?.map((button) =>
-                          <Button
-                            key={button.title}
-                            variant={button.isHighlight ? 'dark' : 'light'}
-                            onClick={() => {
-                              button.onClick();
-                              if (button.pageState !== null)
-                                setPageState(button.pageState);
-                            }}
-                          >
-                            {button.title}{button.icon}
-                            {button.locked && (
-                              <LockBlack
-                                fill={button.isHighlight ? theme.secondary : theme.primary}
-                                width='20px'
-                              />
-                            )}
-                          </Button>
-                        )}
-                      </Wrapper>
-                    </AnimatedWrapper>
+                    <Wrapper width='100%' direction='column' gap='1rem'>
+                      {buttons?.map((button) =>
+                        <Button
+                          key={button.title}
+                          variant={button.isHighlight ? 'dark' : 'light'}
+                          onClick={() => {
+                            button.onClick();
+                            if (button.pageState !== null)
+                              setPageState(button.pageState);
+                          }}
+                        >
+                          {button.title}{button.icon}
+                          {button.locked && (
+                            <LockBlack
+                              fill={button.isHighlight ? theme.secondary : theme.primary}
+                              width='20px'
+                            />
+                          )}
+                        </Button>
+                      )}
+                    </Wrapper>
                   ))}
             </DrawerBody>
             {!isChildOpen && (
