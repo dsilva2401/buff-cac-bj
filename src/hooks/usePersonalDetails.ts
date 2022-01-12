@@ -5,6 +5,7 @@ import { useAPI } from "utils/api";
 
 function usePersonalDetails(user: User | null): [UserStruct | null, () => void] {
     const [personalDetails, setpersonalDetails] = useState<UserStruct | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
     const onSuccess = useCallback((userDetails) => {
         setpersonalDetails(userDetails);
@@ -20,14 +21,25 @@ function usePersonalDetails(user: User | null): [UserStruct | null, () => void] 
         endpoint: 'auth',
         onSuccess,
         onError
-    }, user);
+    }, token);
 
     useEffect(() => {
-        if (user) {
+        if (user && !token) {
+            const setUserToken = async () => {
+                const tokenExtracted = await user?.getIdToken() || null;
+                setToken(tokenExtracted);
+            }
+        
+            setUserToken()
+        }
+    }, [user, token]);
+
+    useEffect(() => {
+        if (user && token) {
             const { email, phoneNumber, displayName } = user;
             getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
         }
-    }, [user, getUser])
+    }, [user, getUser, token])
 
     return [personalDetails, getUser];
 }

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ProductDetailsType } from "types/ProductDetailsType";
 import { useAPI } from "utils/api";
 
-function useProductDetails(slug: string | null, user: User | null = null): [
+function useProductDetails(slug: string | null, token: string | null = null): [
     ProductDetailsType | null,
     () => Promise<any>,
     boolean
@@ -11,7 +11,23 @@ function useProductDetails(slug: string | null, user: User | null = null): [
     const [productDetails, setProductDetails] = useState<ProductDetailsType | null>(null);
 
     const onSuccess = useCallback((productDetails) => {
-        setProductDetails(productDetails);
+        const { product, modules } = productDetails;
+
+        // if the product is already registered to some user don't show activate warranty
+        const leadModule = modules[0];
+        let moduleCopy = [...modules];
+
+        if (
+            !product.registeredToCurrentUser
+            && product.registered
+            && product.tagType === 'Unit'
+        ) {
+            moduleCopy = moduleCopy.filter(
+                module => module.type !== 'WARRANTY_MODULE'
+            )
+        }
+
+        setProductDetails({...productDetails, modules: [...moduleCopy], leadModule});
     }, [])
     
     const onError = useCallback((error) => {
@@ -24,13 +40,13 @@ function useProductDetails(slug: string | null, user: User | null = null): [
         endpoint: `products/${slug}`,
         onSuccess,
         onError
-    }, user)
+    }, token)
 
     useEffect(() => {
         if (slug) {
             getProduct()
         }
-    }, [user, slug, getProduct])
+    }, [token, slug, getProduct])
 
     return [productDetails, getProduct, loading];
 }

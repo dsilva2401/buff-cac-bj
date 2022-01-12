@@ -139,6 +139,15 @@ export type ProductDetailsType = {
   tag: {
     slug: string;
   };
+  warrantyInformation: {
+    period: number;
+
+    // duration
+    duration: {
+      label: string;
+      value: string;
+    };
+  };
   // Find this data in  Users => profile
   brand: {
     id: string;
@@ -178,4 +187,6 @@ export type ProductDetailsType = {
   // get resulting info. Also sort order indicates the order in which it is shown
   // leadModule = true is the first module that should be shown
   modules: ModuleInfoType[];
+
+  leadModule?: ModuleInfoType
 };
