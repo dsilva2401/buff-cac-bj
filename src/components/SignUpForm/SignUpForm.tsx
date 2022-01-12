@@ -89,7 +89,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       alignItems='center'
       padding='2rem 1rem'
       gap='1.2rem'
-      margin='2rem 0'
     >
       <SocialLogin
         setLoading={setLoading}

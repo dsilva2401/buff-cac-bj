@@ -1,14 +1,13 @@
-import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
-import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
-import Button from "components/Button";
-
+import { useCallback } from "react";
+import { ProviderName } from "types/Auth";
+import { useTranslation } from "react-i18next";
 import { showToast } from "components/Toast/Toast";
-import Wrapper from "components/Wrapper";
+import { ReactComponent as GoogleLogo } from "assets/logos/svg/google.svg";
+import { ReactComponent as FacebookLogo } from "assets/logos/svg/facebook.svg";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import useFirebaseError from "hooks/useFirebaseError";
-import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { ProviderName } from "types/Auth";
+import Button from "components/Button";
+import Wrapper from "components/Wrapper";
 
 interface SocialLoginProps {
   setLoading: (loading: boolean) => void,
@@ -58,6 +57,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       justifyContent="center"
       alignItems="center"
       gap="1rem"
+      margin='2rem 0 0 0'
     >
       <Button
         variant="light"

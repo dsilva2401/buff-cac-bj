@@ -37,7 +37,7 @@ export const RoutesHashMap: RoutesType = {
     protected: true
   },
   ProductDetails: {
-    path: (id: string = ":id") =>  `/c/${id}`,
+    path: (id: string = ":id") => `/c/${id}`,
     component: ProductDetails
   },
   MagicLink: {
@@ -57,8 +57,8 @@ export default function Routes() {
               const routeObject = RoutesHashMap[routeKey];
               const path = (
                 typeof RoutesHashMap[routeKey].path === 'function'
-                ? RoutesHashMap[routeKey].path()
-                : RoutesHashMap[routeKey].path
+                  ? RoutesHashMap[routeKey].path()
+                  : RoutesHashMap[routeKey].path
               )
 
               if (routeObject.protected) {
