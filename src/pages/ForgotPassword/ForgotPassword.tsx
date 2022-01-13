@@ -1,25 +1,27 @@
 import React, { useCallback } from 'react';
-import { useGlobal } from 'context/global/GlobalContext';
 import { useHistory } from 'react-router';
-import { RoutesHashMap } from 'routes';
-import AnimatedWrapper from 'components/AnimatedWrapper';
+import Wrapper from 'components/Wrapper';
 import ForgotPasswordForm from 'components/ForgotPasswordForm';
 
 const ForgotPassword: React.FC = () => {
-  const { pageTransition, setPageTransition } = useGlobal();
   const history = useHistory();
 
   const goBack = useCallback(() => {
-    history.push(RoutesHashMap.Login.path)
-    setPageTransition('LEFT');
-  }, [history, setPageTransition])
+    history.goBack();
+  }, [history])
 
   return (
-    <AnimatedWrapper direction={pageTransition}>
-      <ForgotPasswordForm
-        goBack={goBack}
-      />
-    </AnimatedWrapper>
+    <Wrapper
+      width='100%'
+      height='100%'
+      direction='column'
+      justifyContent='space-between'
+      alignItems='center'
+      position='relative'
+      overflow='auto'
+    >
+      <ForgotPasswordForm goBack={goBack} />
+    </Wrapper>
   );
 };
 

@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { RoutesHashMap } from 'routes';
-import { Link, useHistory } from 'react-router-dom';
+// import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
 import { useGlobal } from 'context/global/GlobalContext';
+import { Link, useHistory } from 'react-router-dom';
 import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
 import brijLogo from 'assets/logos/svg/brij-colored.svg';
 import PageFooter from 'components/PageFooter';
@@ -13,9 +14,9 @@ import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
 
 const Login: React.FC = () => {
+  const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const { user, setIsMenuOpen } = useGlobal();
   const history = useHistory();
-  const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
   const logo = useMemo(
     () => <Image width='auto' src={brijLogo} alt='Brij logo' />,
@@ -40,12 +41,11 @@ const Login: React.FC = () => {
       direction='column'
       justifyContent='space-between'
       alignItems='center'
+      position='relative'
       overflow='auto'
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
-      <LoginForm onForgotPasswordClick={() => {
-        history.push(RoutesHashMap.ForgotPassword.path)
-      }} />
+      <LoginForm onForgotPasswordClick={() => history.push(RoutesHashMap.ForgotPassword.path)} />
       <PageFooter>
         <p>{t('newToBrij')}</p>
         <Link to={RoutesHashMap.Signup.path}>

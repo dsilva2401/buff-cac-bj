@@ -9,8 +9,6 @@ export type PageStateType = {
   pageTitle: string;
 } | null;
 
-export type TransitionType = 'LEFT' | 'RIGHT' | 'NONE';
-
 export type GlobalContextProps = {
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,8 +16,6 @@ export type GlobalContextProps = {
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
   pageState: PageStateType | null;
   setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
-  pageTransition: TransitionType;
-  setPageTransition: React.Dispatch<React.SetStateAction<TransitionType>>;
   user: User | null;
   personalDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
@@ -49,8 +45,6 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setSignInRedirect: () => { },
   pageState: null,
   setPageState: () => { },
-  pageTransition: 'NONE',
-  setPageTransition: () => { },
   user: null,
   personalDetails: null,
   productDetails: null,

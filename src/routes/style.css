@@ -1,4 +1,64 @@
+.slide {
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  transition: transform 0.5s ease-in-out;
+}
 
+.slide-enter {
+  transform: translateX(100%);
+  transition: 0.5s ease-in;
+}
+
+.slide-enter.slide-enter-active {
+  transform: translateX(0);
+  transition: 0.5s ease-in;
+}
+
+.slide-exit {
+  transform: translateX(0);
+  transition: 0.5s ease-in;
+}
+
+.slide-exit.slide-exit-active {
+  transform: translateX(100%);
+  transition: 0.5s ease-in;
+}
+
+
+
+.inverseslide {
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  transition: transform 0.5s ease-in-out;
+}
+
+.inverseslide-enter {
+  transform: translateX(-100%);
+  transition: 0.5s ease-in;
+}
+.inverseslide-enter.inverseslide-enter-active {
+  transform: translateX(0);
+  transition: 0.5s ease-in;
+}
+
+.inverseslide-exit {
+  transform: translateX(0);
+  transition: 0.5s ease-in;
+}
+.inverseslide-exit.inverseslide-exit-active {
+  transform: translateX(-100%);
+  transition: 0.5s ease-in;
+}
+
+/* 
 .page {
   height: 100vh;
   padding: calc(15% + 1.5em) 5% 5%;
@@ -36,4 +96,4 @@
 
 .page h1 {
   margin-top: 0;
-}
+} */

@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useGlobal } from 'context/global/GlobalContext';
 import useFirebaseError from 'hooks/useFirebaseError';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
@@ -23,7 +22,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const getErrorMessage = useFirebaseError();
-  const { setPageTransition } = useGlobal();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
@@ -56,7 +54,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     signInWithEmailAndPassword(auth, username, password)
       .then(() => {
         onLogin();
-        setPageTransition('LEFT');
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {

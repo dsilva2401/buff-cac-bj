@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
-import { PageStateType, TransitionType } from 'context/global/GlobalContext';
+import { PageStateType } from 'context/global/GlobalContext';
 import { ReactComponent as LockBlack } from 'assets/icons/svg/lock-filled.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import phoneCallIcon from 'assets/icons/svg/social_phone-call.svg';
@@ -9,7 +9,6 @@ import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
 import emailIcon from 'assets/icons/svg/social_email.svg';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -66,21 +65,19 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   disableModalDismiss
 }) => {
   const { setPageState } = useGlobal();
-  const topHeight = -window.innerHeight * 0.85;
-  const bottomHeight = -window.innerHeight * 0.3;
+  const topHeight = -window.innerHeight * 0.2;
+  const bottomHeight = -window.innerHeight * 0.01;
 
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [transition, setTransition] = useState<TransitionType>('NONE');
 
   useEffect(() => {
     if (position.y === topHeight) {
       setIsDrawerOpen(true);
     } else if (position.y === bottomHeight) {
       setIsDrawerOpen(false);
-      setTransition('NONE');
       closeChild();
     }
   }, [
@@ -155,7 +152,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   onClick={() => {
                     if (isChildOpen) {
                       closeChild();
-                      setTransition('RIGHT');
                     } else {
                       setPageState(null);
                       setPosition({ ...position, y: bottomHeight });
@@ -207,29 +203,27 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 (isChildOpen
                   ? children
                   : (
-                    <AnimatedWrapper direction={transition}>
-                      <Wrapper width='100%' direction='column' gap='1rem'>
-                        {buttons?.map((button) =>
-                          <Button
-                            key={button.title}
-                            variant={button.isHighlight ? 'dark' : 'light'}
-                            onClick={() => {
-                              button.onClick();
-                              if (button.pageState !== null)
-                                setPageState(button.pageState);
-                            }}
-                          >
-                            {button.title}{button.icon}
-                            {button.locked && (
-                              <LockBlack
-                                fill={button.isHighlight ? theme.secondary : theme.primary}
-                                width='20px'
-                              />
-                            )}
-                          </Button>
-                        )}
-                      </Wrapper>
-                    </AnimatedWrapper>
+                    <Wrapper width='100%' direction='column' gap='1rem'>
+                      {buttons?.map((button) =>
+                        <Button
+                          key={button.title}
+                          variant={button.isHighlight ? 'dark' : 'light'}
+                          onClick={() => {
+                            button.onClick();
+                            if (button.pageState !== null)
+                              setPageState(button.pageState);
+                          }}
+                        >
+                          {button.title}{button.icon}
+                          {button.locked && (
+                            <LockBlack
+                              fill={button.isHighlight ? theme.secondary : theme.primary}
+                              width='20px'
+                            />
+                          )}
+                        </Button>
+                      )}
+                    </Wrapper>
                   ))}
             </DrawerBody>
             {!isChildOpen && (
