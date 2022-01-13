@@ -114,6 +114,6 @@ export default function Routes() {
           </Route>
         </Switch>
       </CSSTransition>
-    </TransitionGroup>
+    </TransitionGroup >
   );
 };

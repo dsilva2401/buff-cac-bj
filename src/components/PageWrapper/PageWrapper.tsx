@@ -9,8 +9,10 @@ const PageWrapper = styled(Wrapper)`
   width: 100%;
   height: 100%;
   @media (min-width: 1024px) {
-    position: relative;
     max-width: 375px;
+    margin-top: 1rem;
+    height: calc(100% - 2rem);
+    left: calc(50% - 187.5px);
   }
 `;
 
