@@ -3,6 +3,7 @@ import { ReactComponent as Info } from 'assets/icons/svg/info-outline.svg';
 import { WarrantyModuleType } from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
+import { Animated } from 'react-animated-css';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SuccessDrawer from 'components/SuccessDrawer';
 import DetailsModal from './DetailsModal';
@@ -105,12 +106,10 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         >
           <h1>{drawerTitle}</h1>
         </Text>
-        <Wrapper
-          width='100%'
-          height='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
+        <Animated
+          animationIn="slideInRight"
+          animationOut="slideOutLeft"
+          isVisible={true}
         >
           <Wrapper
             width='100%'
@@ -208,7 +207,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
               )}
             </Wrapper>
           </Wrapper>
-        </Wrapper>
+        </Animated>
       </Wrapper>
     </>
   );

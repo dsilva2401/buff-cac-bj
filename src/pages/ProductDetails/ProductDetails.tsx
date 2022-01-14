@@ -166,11 +166,11 @@ const ProductDetails: React.FC = () => {
       if (!user && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }
-    
+
       if (product.registeredToCurrentUser && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }
-    
+
       if (product.registered && product.tagType === "Unit" && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }
@@ -370,7 +370,7 @@ const ProductDetails: React.FC = () => {
   if (addToLoading) return <LoadingIndicator />
 
   return (
-    <>
+    <Wrapper position='relative' direction='column' width='100%' height='100%'>
       {details?.product?.image && (
         <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
           {(src: string, loading: boolean) => (
@@ -415,7 +415,7 @@ const ProductDetails: React.FC = () => {
       >
         {renderDrawerPage()}
       </BottomDrawer>
-    </>
+    </Wrapper>
   );
 };
 

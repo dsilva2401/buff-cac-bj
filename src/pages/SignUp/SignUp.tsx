@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { RoutesHashMap } from 'routes';
+// import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { useGlobal } from '../../context/global/GlobalContext';
@@ -12,14 +13,10 @@ import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
 
 const SignUp: React.FC = () => {
+  const { signInRedirect, setSignInRedirect, setIsMenuOpen } = useGlobal();
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
   const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
   const history = useHistory();
-  const {
-    signInRedirect,
-    setSignInRedirect,
-    setIsMenuOpen
-  } = useGlobal();
 
   const redirectUser = useCallback((isNewEmailUser: boolean) => {
     let link = signInRedirect || RoutesHashMap.Collection.path;
@@ -47,6 +44,7 @@ const SignUp: React.FC = () => {
       direction="column"
       justifyContent="space-between"
       alignItems="center"
+      position='relative'
       overflow='auto'
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />

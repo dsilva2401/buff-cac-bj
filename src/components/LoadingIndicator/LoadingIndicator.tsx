@@ -1,16 +1,17 @@
-import Wrapper from "components/Wrapper";
-import { ReactComponent as LoadingAnimation } from "assets/icons/svg/loading.svg";
+import Wrapper from 'components/Wrapper';
+import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
 
 const LoadingIndicator = () => {
   return (
     <Wrapper
-      width="100%"
-      height="100%"
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
+      width='100%'
+      height='100%'
+      direction='column'
+      justifyContent='center'
+      position='relative'
+      alignItems='center'
     >
-      <LoadingAnimation width="100%" height="60px" />
+      <LoadingAnimation width='100%' height='60px' />
     </Wrapper>
   );
 };

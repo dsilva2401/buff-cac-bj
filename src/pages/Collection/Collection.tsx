@@ -151,6 +151,7 @@ const Collection: React.FC = () => {
       height='100%'
       direction='column'
       justifyContent='flex-start'
+      position='relative'
       overflow='auto'
     >
       <PageHeader title={t('collectionPageTitle')} actionButton={menuButton} />
@@ -180,6 +181,7 @@ const Collection: React.FC = () => {
             />
           </Wrapper>
         ) : (
+
           <Wrapper
             width='100%'
             height='100%'

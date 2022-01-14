@@ -31,6 +31,7 @@ const FourZeroFour: React.FC = () => {
       height='100%'
       direction='column'
       justifyContent='flex-start'
+      position='relative'
       alignItems='center'
       overflow='auto'
     >

@@ -1,7 +1,7 @@
-import IconButton from "components/IconButton";
-import Wrapper from "components/Wrapper";
-import React from "react";
-import Header from "./styles";
+import IconButton from 'components/IconButton';
+import Wrapper from 'components/Wrapper';
+import Header from './styles';
+import React from 'react';
 
 type PageHeaderProps = {
   title?: string;
@@ -22,23 +22,23 @@ export default function PageHeader({
 }: PageHeaderProps) {
   return (
     <Header transparent={transparent} border={border}>
-      <Wrapper width="33%" justifyContent="flex-start" alignItems="center">
+      <Wrapper width='33%' justifyContent='flex-start' alignItems='center'>
         {logo ? (
           logo
         ) : goBack ? (
           <IconButton
-            variant="light"
-            iconName="chevron-left"
+            variant='light'
+            iconName='chevron-left'
             onClick={() => goBack()}
           />
         ) : (
           <></>
         )}
       </Wrapper>
-      <Wrapper width="33%" justifyContent="center" alignItems="center">
+      <Wrapper width='33%' justifyContent='center' alignItems='center'>
         {title ? <h1>{title}</h1> : <></>}
       </Wrapper>
-      <Wrapper width="33%" justifyContent="flex-end" alignItems="center">
+      <Wrapper width='33%' justifyContent='flex-end' alignItems='center'>
         {actionButton ? actionButton : <></>}
       </Wrapper>
     </Header>
