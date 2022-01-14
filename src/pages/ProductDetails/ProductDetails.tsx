@@ -53,7 +53,8 @@ const ProductDetails: React.FC = () => {
     setSlug,
     personalDetails,
     getPersonalDetails,
-    user
+    user,
+    previewEvent
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -85,6 +86,14 @@ const ProductDetails: React.FC = () => {
       setPageTitle(details?.product?.name);
     }
   }, [isDrawerPageOpen, details, currentPage, pageState]);
+
+  useEffect(() => {
+    const event = previewEvent;
+    if (event && event.type === 'changeDrawerPage') {
+      debugger;
+      changeDrawerPage(event.data);
+    }
+  }, [previewEvent]);
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(null);
@@ -166,11 +175,11 @@ const ProductDetails: React.FC = () => {
       if (!user && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }
-    
+
       if (product.registeredToCurrentUser && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }
-    
+
       if (product.registered && product.tagType === "Unit" && showAddToCollectionButton) {
         showAddToCollectionButton = false;
       }

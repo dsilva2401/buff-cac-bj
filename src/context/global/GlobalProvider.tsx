@@ -57,6 +57,9 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [appZoom, setAppZoom] = useState(1);
+  const [previewEvent, setPreviewEvent] = useState({});
 
   const {
     user,
@@ -67,7 +70,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     token
   } = useUser();
 
-  const [productDetails, reFetchProduct, productLoading] = useProductDetails(slug, token);
+  const [productDetails, reFetchProduct, productLoading] = useProductDetails(slug, token, previewEvent);
   const [collectionDetails, getCollection] = useCollection(token);
 
   const onActivateWarrantySuccess = useCallback(() => {
@@ -89,6 +92,18 @@ export const GlobalProvider: React.FC = ({ children }) => {
   );
 
   useEffect(() => {
+    if(window) {
+      window.addEventListener("message", (event) => {
+        setPreviewEvent({...event.data})
+        if(event && event.data && event.data.type === 'enablePreview'){
+          setIsPreviewMode(true);
+          setAppZoom(event.data.zoom);
+        }
+      }, false);
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
     // upon unmount clear storage
     return () => localStorage.setItem('signInRedirect', '');
@@ -97,6 +112,12 @@ export const GlobalProvider: React.FC = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
+        previewEvent,
+        setPreviewEvent,
+        isPreviewMode,
+        setIsPreviewMode,
+        appZoom,
+        setAppZoom,
         isMenuOpen,
         setIsMenuOpen,
         signInRedirect,

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ProductDetailsType } from "types/ProductDetailsType";
 import { useAPI } from "utils/api";
 
-function useProductDetails(slug: string | null, token: string | null = null): [
+function useProductDetails(slug: string | null, token: string | null = null, previewEvent: any): [
     ProductDetailsType | null,
     () => Promise<any>,
     boolean
@@ -29,7 +29,7 @@ function useProductDetails(slug: string | null, token: string | null = null): [
 
         setProductDetails({...productDetails, modules: [...moduleCopy], leadModule});
     }, [])
-    
+
     const onError = useCallback((error) => {
         console.log('ERROR CODE: ', error.code);
         console.log('ERROR MSG: ', error.message);
@@ -47,6 +47,12 @@ function useProductDetails(slug: string | null, token: string | null = null): [
             getProduct()
         }
     }, [token, slug, getProduct])
+
+    useEffect(() => {
+      if(previewEvent && previewEvent.type === 'product'){
+        onSuccess(previewEvent.productDetails)
+      }
+    }, [previewEvent]);
 
     return [productDetails, getProduct, loading];
 }

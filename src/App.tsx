@@ -6,6 +6,7 @@ import SideMenu from 'components/SideMenu/SideMenu';
 import GlobalStyle from 'styles/global';
 import Toast from 'components/Toast';
 import Routes from './routes';
+import { useGlobal } from "./context/global/GlobalContext";
 
 export default function App() {
   useLayoutEffect(() => {
@@ -13,8 +14,9 @@ export default function App() {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
 
+  const { appZoom } = useGlobal();
   return (
-    <Container>
+    <Container style={{zoom: appZoom}}>
       <GlobalStyle />
       <AppFrame>
         <BrowserRouter basename={process.env.PUBLIC_URL}>

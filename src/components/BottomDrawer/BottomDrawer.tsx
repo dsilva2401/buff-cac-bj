@@ -74,6 +74,14 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [transition, setTransition] = useState<TransitionType>('NONE');
 
+  useEffect(()=>{
+    if(isChildOpen){
+      setPosition({ ...position, y: topHeight });
+    } else {
+      setPosition({ ...position, y: bottomHeight });
+    }
+  }, [isChildOpen]);
+
   useEffect(() => {
     if (position.y === topHeight) {
       setIsDrawerOpen(true);

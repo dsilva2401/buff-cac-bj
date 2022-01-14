@@ -17,6 +17,7 @@ export const Drawer = styled.div<DrawerProps>`
   align-items: center;
   background-color: #fff;
   border: 1px solid #e7eaeb;
+  border-width: 1px 0px 0px 0px;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
   position: relative;
