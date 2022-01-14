@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
+import { useGlobal } from 'context/global/GlobalContext';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -21,6 +22,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   onPersonalDetailshow = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
+  const { setPageTransition } = useGlobal();
   const auth = getAuth();
 
   const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
