@@ -38,7 +38,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         dangerouslySetInnerHTML={{ __html: drawerData.content }}
       />
     </Animated>
-  </Wrapper>
+  </Wrapper >
 );
 
 export default CustomDrawer;

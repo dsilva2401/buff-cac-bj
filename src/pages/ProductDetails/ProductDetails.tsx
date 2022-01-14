@@ -26,10 +26,10 @@ import IconButton from 'components/IconButton';
 import LinkModule from 'components/LinkModule';
 import PageHeader from 'components/PageHeader';
 import ShopDrawer from 'components/ShopDrawer';
+import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
 import Text from 'components/Text';
-import useLogEvent from 'hooks/useLogEvent';
 
 type UrlParam = {
   id: string;

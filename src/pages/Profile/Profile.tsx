@@ -8,8 +8,8 @@ import { getNameInitials } from 'utils/getInitials';
 import { useGlobal } from 'context/global/GlobalContext';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PageHeader from 'components/PageHeader';
-import Wrapper from 'components/Wrapper';
 import InputMask from 'react-input-mask';
+import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Avatar from 'components/Avatar';
 import Input from 'components/Input';
@@ -74,9 +74,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
     >
       <PageHeader
         title={t('pageHeaderTitle')}
-        goBack={() => {
-          history.goBack();
-        }}
+        goBack={() => history.goBack()}
       />
       <Wrapper
         width='100%'

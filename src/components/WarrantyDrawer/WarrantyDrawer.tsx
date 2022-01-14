@@ -113,106 +113,98 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         >
           <Wrapper
             width='100%'
-            height='100%'
+            gap='0.75rem'
             direction='column'
-            justifyContent='flex-start'
-            alignItems='center'
+            padding='0 1rem'
+            dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
+          />
+          <Wrapper
+            width='100%'
+            direction='column'
+            padding='1rem'
+            gap='0.3rem'
+            margin='0.5rem'
           >
-            <Wrapper
-              width='100%'
-              gap='0.75rem'
-              direction='column'
-              padding='0 1rem'
-              dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
-            />
+            <Text fontSize='0.8rem' color='#98A3AA'>
+              <p>{t('details')}</p>
+            </Text>
             <Wrapper
               width='100%'
               direction='column'
-              padding='1rem'
-              gap='0.3rem'
-              margin='0.5rem'
+              gap='0.5rem'
+              padding='0 0 1.5rem'
             >
-              <Text fontSize='0.8rem' color='#98A3AA'>
-                <p>{t('details')}</p>
-              </Text>
-              <Wrapper
-                width='100%'
-                direction='column'
-                gap='0.5rem'
-                padding='0 0 1.5rem'
-              >
-                <Wrapper width='100%' alignItems='center'>
-                  <Wrapper width='45%' alignItems='center'>
-                    <Text fontSize='0.8rem' color='#1b1b1b'>
-                      <p>{t('duration')}</p>
-                    </Text>
-                  </Wrapper>
-                  <Wrapper width='45%' alignItems='center'>
-                    <Text fontSize='0.8rem' color='#1b1b1b' fontWeight='700'>
-                      <p>
-                        {warrantyData?.period} {warrantyData?.duration?.label}
-                      </p>
-                    </Text>
-                  </Wrapper>
-                  <Wrapper width='10%' alignItems='center'>
-                    <Info />
-                  </Wrapper>
+              <Wrapper width='100%' alignItems='center'>
+                <Wrapper width='45%' alignItems='center'>
+                  <Text fontSize='0.8rem' color='#1b1b1b'>
+                    <p>{t('duration')}</p>
+                  </Text>
                 </Wrapper>
-                <Wrapper width='100%'>
-                  <Wrapper width='45%' alignItems='center'>
-                    <Text fontSize='0.8rem' color='#1b1b1b'>
-                      <p>{t('status')}</p>
-                    </Text>
-                  </Wrapper>
-                  <Wrapper width='45%' alignItems='center'>
-                    <Text fontSize='0.8rem' color='#1b1b1b' fontWeight='700'>
-                      <p>
-                        {warrantyData?.activated
-                          ? 'Activated'
-                          : 'Not Activated'}
-                      </p>
-                    </Text>
-                  </Wrapper>
-                  <Wrapper width='10%' alignItems='center'></Wrapper>
+                <Wrapper width='45%' alignItems='center'>
+                  <Text fontSize='0.8rem' color='#1b1b1b' fontWeight='700'>
+                    <p>
+                      {warrantyData?.period} {warrantyData?.duration?.label}
+                    </p>
+                  </Text>
                 </Wrapper>
-                {warrantyData?.activated && (
-                  <>
-                    <Wrapper width='100%'>
-                      <Wrapper width='45%' alignItems='center'>
-                        <Text fontSize='0.8rem' color='#1b1b1b'>
-                          <p>{t('purchaseDate')}</p>
-                        </Text>
-                      </Wrapper>
-                      <Wrapper width='45%' alignItems='center'>
-                        <Text
-                          fontSize='0.8rem'
-                          color='#1b1b1b'
-                          fontWeight='700'
-                        >
-                          <p>{warrantyData?.purchaseDate?.substr(0, 10)}</p>
-                        </Text>
-                      </Wrapper>
-                      <Wrapper width='10%' alignItems='center'></Wrapper>
-                    </Wrapper>
-                    <Wrapper width='100%'>
-                      <Wrapper width='45%' alignItems='center'>
-                        <Text fontSize='0.8rem' color='#1b1b1b'>
-                          <p>{t('expires')}</p>
-                        </Text>
-                      </Wrapper>
-                      <Wrapper width='45%' alignItems='center'>
-                        <Text
-                          fontSize='0.8rem'
-                          color='#1b1b1b'
-                          fontWeight='700'
-                        >
-                          <p>{warrantyData?.expirationDate?.substr(0, 10)}</p>
-                        </Text>
-                      </Wrapper>
-                    </Wrapper>
-                  </>
-                )}
+                <Wrapper width='10%' alignItems='center'>
+                  <Info />
+                </Wrapper>
               </Wrapper>
+              <Wrapper width='100%'>
+                <Wrapper width='45%' alignItems='center'>
+                  <Text fontSize='0.8rem' color='#1b1b1b'>
+                    <p>{t('status')}</p>
+                  </Text>
+                </Wrapper>
+                <Wrapper width='45%' alignItems='center'>
+                  <Text fontSize='0.8rem' color='#1b1b1b' fontWeight='700'>
+                    <p>
+                      {warrantyData?.activated
+                        ? 'Activated'
+                        : 'Not Activated'}
+                    </p>
+                  </Text>
+                </Wrapper>
+                <Wrapper width='10%' alignItems='center'></Wrapper>
+              </Wrapper>
+              {warrantyData?.activated && (
+                <>
+                  <Wrapper width='100%'>
+                    <Wrapper width='45%' alignItems='center'>
+                      <Text fontSize='0.8rem' color='#1b1b1b'>
+                        <p>{t('purchaseDate')}</p>
+                      </Text>
+                    </Wrapper>
+                    <Wrapper width='45%' alignItems='center'>
+                      <Text
+                        fontSize='0.8rem'
+                        color='#1b1b1b'
+                        fontWeight='700'
+                      >
+                        <p>{warrantyData?.purchaseDate?.substr(0, 10)}</p>
+                      </Text>
+                    </Wrapper>
+                    <Wrapper width='10%' alignItems='center'></Wrapper>
+                  </Wrapper>
+                  <Wrapper width='100%'>
+                    <Wrapper width='45%' alignItems='center'>
+                      <Text fontSize='0.8rem' color='#1b1b1b'>
+                        <p>{t('expires')}</p>
+                      </Text>
+                    </Wrapper>
+                    <Wrapper width='45%' alignItems='center'>
+                      <Text
+                        fontSize='0.8rem'
+                        color='#1b1b1b'
+                        fontWeight='700'
+                      >
+                        <p>{warrantyData?.expirationDate?.substr(0, 10)}</p>
+                      </Text>
+                    </Wrapper>
+                  </Wrapper>
+                </>
+              )}
             </Wrapper>
           </Wrapper>
         </Animated>
