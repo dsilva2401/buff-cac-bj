@@ -21,7 +21,7 @@ export const Drawer = styled.div<DrawerProps>`
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
   position: absolute;
-  bottom: ${(props) => (props.isOpen ? '-150px' : '-80px')};
+  bottom: ${(props) => (props.isOpen ? '-156px' : '-80px')};
   left: 0;
   z-index: 3;
   transition: ${(props) => (props.isControlled ? "transform 0.3s" : "none")};
