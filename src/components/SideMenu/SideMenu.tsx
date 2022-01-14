@@ -29,8 +29,8 @@ function usePrevious<T>(value: T) {
 
 const SideMenu: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
+  const { isMenuOpen, setIsMenuOpen, setPageTransition } = useGlobal();
   const { productDetails: details, user } = useGlobal();
-  const { isMenuOpen, setIsMenuOpen } = useGlobal();
   const previousUser = usePrevious(user);
   const location = useLocation();
   const history = useHistory();
@@ -55,6 +55,7 @@ const SideMenu: React.FC = () => {
   }, [previousUser, user]);
 
   const handleLogoutButtonClicked = useCallback(() => {
+    setPageTransition('RIGHT');
     if (error !== '') setError('');
     setLoading(true);
     signOut(auth)
@@ -84,10 +85,7 @@ const SideMenu: React.FC = () => {
           </span>
           <nav>
             {signedIn ? (
-              <Link
-                to={RoutesHashMap.Profile.path}
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to={RoutesHashMap.Profile.path} onClick={() => setIsMenuOpen(false)}>
                 {t('myProfile')}
                 <Profile />
               </Link>
@@ -95,7 +93,10 @@ const SideMenu: React.FC = () => {
             {signedIn && location.pathname !== RoutesHashMap.Collection.path ? (
               <Link
                 to={RoutesHashMap.Collection.path}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setPageTransition('RIGHT');
+                }}
               >
                 {t('myCollection')}
                 <Collection />
@@ -120,7 +121,11 @@ const SideMenu: React.FC = () => {
             ) : (
               <Link
                 to={RoutesHashMap.Login.path}
-                onClick={() => setIsMenuOpen(false)}>
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setPageTransition('RIGHT');
+                }}
+              >
                 {t('signIn')}
                 <Logout />
               </Link>

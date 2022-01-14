@@ -69,7 +69,6 @@ const Profile: React.FC<PersonalDetailsProps> = ({
       height='100%'
       direction='column'
       justifyContent='space-between'
-      position='relative'
       overflow='auto'
     >
       <PageHeader
