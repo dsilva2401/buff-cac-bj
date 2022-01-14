@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ReferralModuleType } from 'types/ProductDetailsType';
-import qrcode from 'assets/images/png/qrcode.png';
 import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -124,7 +123,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
           >
             <p>{t('helpText')}</p>
           </Text>
-          <Image src={qrcode} alt='qr-code' maxWidth='45%' margin='12px' />
+          <Image src={referralData?.qrcode} alt='qr-code' maxWidth='45%' margin='12px' />
         </Wrapper>
       </Wrapper>
     </Wrapper>
