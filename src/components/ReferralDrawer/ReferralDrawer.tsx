@@ -1,16 +1,16 @@
 import React from 'react';
+import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ReferralModuleType } from 'types/ProductDetailsType';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import qrcode from 'assets/images/png/qrcode.png';
+import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import Input from 'components/Input';
 import Text from 'components/Text';
-import useLogEvent from 'hooks/useLogEvent';
 
 type ReferralDrawerProps = {
   drawerTitle: string;
@@ -56,7 +56,11 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
       >
         <h1>{drawerTitle}</h1>
       </Text>
-      <AnimatedWrapper direction='LEFT'>
+      <Animated
+        animationIn="slideInRight"
+        animationOut="slideOutLeft"
+        isVisible={true}
+      >
         <Wrapper
           width='100%'
           height='100%'
@@ -130,7 +134,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
             <Image src={qrcode} alt='qr-code' maxWidth='45%' margin='12px' />
           </Wrapper>
         </Wrapper>
-      </AnimatedWrapper>
+      </Animated>
     </Wrapper>
   );
 };

@@ -23,6 +23,7 @@ import {
   DrawerIconLink,
 } from './styles';
 import { theme } from 'styles/theme';
+import { Animated } from 'react-animated-css';
 
 export type ButtonType = {
   title: any | undefined;
@@ -66,7 +67,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 }) => {
   const { setPageState } = useGlobal();
   const topHeight = -window.innerHeight * 0.2;
-  const bottomHeight = -window.innerHeight * 0.01;
+  const bottomHeight = -window.innerHeight * 0.1;
+
+  // const topHeight = -window.innerHeight * 0.85;
+  // const bottomHeight = -window.innerHeight * 0.01;
 
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
@@ -124,7 +128,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         cancel='a, button, #not-draggable'
         disabled={disableModalDismiss}
       >
-        <Drawer isControlled={isControlled}>
+        <Drawer isControlled={isControlled} isOpen={isDrawerOpen}>
           <Wrapper
             width='100%'
             height='100%'
@@ -200,10 +204,20 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 </>
               )}
               {isDrawerOpen &&
-                (isChildOpen
-                  ? children
-                  : (
-                    <Wrapper width='100%' direction='column' gap='1rem'>
+                <>
+                  <Animated
+                    animationIn="slideInLeft"
+                    animationOut="slideOutLeft"
+                    animateOnMount={false}
+                    isVisible={!isChildOpen}
+                    style={{ width: '100%', marginTop: isChildOpen ? '64px' : '0' }}
+                  >
+                    <Wrapper
+                      width={isChildOpen ? '90%' : '100%'}
+                      style={{ transition: '0.5s ease' }}
+                      direction='column'
+                      gap='1rem'
+                    >
                       {buttons?.map((button) =>
                         <Button
                           key={button.title}
@@ -224,9 +238,26 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         </Button>
                       )}
                     </Wrapper>
-                  ))}
+                  </Animated>
+                  <Wrapper width='100%' position='fixed' top='0' left='0' padding='0 1rem'>
+                    <Animated
+                      animationIn="slideInRight"
+                      animationOut="slideOutRight"
+                      isVisible={true}
+                    >
+                      {children}
+                    </Animated>
+                  </Wrapper>
+                </>
+              }
             </DrawerBody>
-            {!isChildOpen && (
+            <Animated
+              animationIn="slideInLeft"
+              animationOut="slideOutLeft"
+              animateOnMount={false}
+              isVisible={!isChildOpen}
+              style={{ width: '100%', marginTop: isChildOpen ? '64px' : '0' }}
+            >
               <DrawerFooter>
                 {socials?.phone && (
                   <DrawerIconLink href={`tel:+${socials.phone}`}>
@@ -266,7 +297,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </DrawerIconLink>
                 )}
               </DrawerFooter>
-            )}
+            </Animated>
+
           </Wrapper>
         </Drawer>
       </Draggable>

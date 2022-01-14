@@ -14,7 +14,6 @@ import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
 import LoadingIndicator from 'components/LoadingIndicator';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import useLogEvent from 'hooks/useLogEvent';
@@ -160,29 +159,27 @@ const Collection: React.FC = () => {
         <LoadingIndicator />
       ) : sortedCollection?.length > 0 ? (
         scanMode ? (
-          <AnimatedWrapper direction='LEFT'>
-            <Wrapper
-              direction='column'
-              width='100%'
-              alignSelf='flex-start'
-              justifyContent='center'
-              padding='0 1.25rem'
-              margin='3rem 0'
-            >
-              <QrReader
-                delay={500}
-                onError={() =>
-                  showToast({ message: t('scanErrorMessage'), type: 'error' })
-                }
-                onScan={(data) => {
-                  if (data) {
-                    toggleScanMode(false);
-                    setScanResult(data);
-                  };
-                }}
-              />
-            </Wrapper>
-          </AnimatedWrapper>
+          <Wrapper
+            direction='column'
+            width='100%'
+            alignSelf='flex-start'
+            justifyContent='center'
+            padding='0 1.25rem'
+            margin='3rem 0'
+          >
+            <QrReader
+              delay={500}
+              onError={() =>
+                showToast({ message: t('scanErrorMessage'), type: 'error' })
+              }
+              onScan={(data) => {
+                if (data) {
+                  toggleScanMode(false);
+                  setScanResult(data);
+                };
+              }}
+            />
+          </Wrapper>
         ) : (
 
           <Wrapper

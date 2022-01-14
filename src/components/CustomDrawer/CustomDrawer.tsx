@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
-import AnimatedWrapper from 'components/AnimatedWrapper';
+import { Animated } from 'react-animated-css';
 import { CustomModuleType } from 'types/ProductDetailsType';
 
 type CustomDrawerProps = {
@@ -25,7 +25,11 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
     >
       <h1>{drawerTitle}</h1>
     </Text>
-    <AnimatedWrapper direction='LEFT'>
+    <Animated
+      animationIn="slideInRight"
+      animationOut="slideOutLeft"
+      isVisible={true}
+    >
       <Wrapper
         width='100%'
         gap='0.75rem'
@@ -33,7 +37,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         padding='0.5rem 1rem'
         dangerouslySetInnerHTML={{ __html: drawerData.content }}
       />
-    </AnimatedWrapper>
+    </Animated>
   </Wrapper>
 );
 

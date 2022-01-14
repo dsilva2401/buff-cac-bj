@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 type DrawerProps = {
   isControlled: boolean;
+  isOpen: boolean;
 };
 
 type DrawerHeaderProps = {
@@ -10,38 +11,20 @@ type DrawerHeaderProps = {
 
 export const Drawer = styled.div<DrawerProps>`
   width: 100%;
-  height: 85%;
+  height: ${(props => props.isOpen ? '80vh' : '280px')};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #fff;
+  background-color: #FFFFFF;
   border: 1px solid #e7eaeb;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
-  position: relative;
+  position: absolute;
+  bottom: ${(props) => (props.isOpen ? '-150px' : '-80px')};
+  left: 0;
   z-index: 3;
   transition: ${(props) => (props.isControlled ? "transform 0.3s" : "none")};
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0.5rem;
-    height: 3px;
-    width: 45px;
-    background-color: #e7eaeb;
-    border-radius: 8px;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    left: 0;
-    bottom: -100%;
-  }
 `;
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
@@ -53,7 +36,7 @@ export const DrawerHeader = styled.div<DrawerHeaderProps>`
   position: ${(props) => (props.isChildOpen ? "absolute" : "relative")};
   ${(props) => {
     if (props.isChildOpen) {
-      return `top: 0; right: 0;`;
+      return `top: 0; right: 0; z-index: 10;`;
     }
   }}
 `;

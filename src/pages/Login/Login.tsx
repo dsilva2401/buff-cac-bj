@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { RoutesHashMap } from 'routes';
-// import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
 import { useGlobal } from 'context/global/GlobalContext';
 import { Link, useHistory } from 'react-router-dom';

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Wrapper from "components/Wrapper";
 
 const PageWrapper = styled(Wrapper)`
-  position: fixed;
+  position: absolute;
   direction: column;
   top: 0;
   left: 0;
@@ -10,8 +10,6 @@ const PageWrapper = styled(Wrapper)`
   height: 100%;
   @media (min-width: 1024px) {
     max-width: 375px;
-    margin-top: 1rem;
-    height: calc(100% - 2rem);
     left: calc(50% - 187.5px);
   }
 `;

@@ -16,6 +16,7 @@ const DrawerMask = styled.button<DrawerMaskProps>`
   z-index: ${(props) =>
     props.isDrawerOpen ? (props.zIndex ? props.zIndex : 2) : -1};
   transition: all 0.3s ease;
+  pointer-events: none;
 `;
 
 export default DrawerMask;

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Animated } from 'react-animated-css';
 import { theme } from 'styles/theme';
 import {
   ShoppingModuleType,
@@ -8,7 +9,6 @@ import {
 import '../../../node_modules/slick-carousel/slick/slick.css';
 import '../../../node_modules/slick-carousel/slick/slick-theme.css';
 import QuantityController from 'components/QuantityController';
-import AnimatedWrapper from 'components/AnimatedWrapper';
 import SuccessDrawer from 'components/SuccessDrawer';
 import SelectInput from 'components/SelectInput';
 import Wrapper from 'components/Wrapper';
@@ -141,28 +141,32 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         description={''}
         close={closeSuccess}
       />
-      <AnimatedWrapper direction='LEFT'>
-        <Wrapper
-          width='100%'
-          height='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          overflow='auto'
-          before={{
-            content: data.isDiscountAvailable
-              ? `You are saving ${data.discountPercentage!}% with Brij`
-              : '',
-            width: 'auto',
-            height: 'auto',
-            padding: '0.4rem 1.5rem',
-            position: 'absolute',
-            color: '#fff',
-            top: '-1px',
-            background: theme.primary,
-            fontSize: '0.8rem',
-            borderRadius: '0 0 15px 15px',
-          }}
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='flex-start'
+        alignItems='center'
+        overflow='auto'
+        before={{
+          content: data.isDiscountAvailable
+            ? `You are saving ${data.discountPercentage!}% with Brij`
+            : '',
+          width: 'auto',
+          height: 'auto',
+          padding: '0.4rem 1.5rem',
+          position: 'absolute',
+          color: '#fff',
+          top: '-1px',
+          background: theme.primary,
+          fontSize: '0.8rem',
+          borderRadius: '0 0 15px 15px',
+        }}
+      >
+        <Animated
+          animationIn="slideInRight"
+          animationOut="slideOutLeft"
+          isVisible={true}
         >
           <Wrapper
             width='100%'
@@ -304,8 +308,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               </Text>
             )}
           </Wrapper>
-        </Wrapper>
-      </AnimatedWrapper>
+        </Animated>
+      </Wrapper>
     </>
   );
 };
