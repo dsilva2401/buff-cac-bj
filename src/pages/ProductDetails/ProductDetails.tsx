@@ -58,7 +58,7 @@ const ProductDetails: React.FC = () => {
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
-  const { t } = useTranslation('translation', { keyPrefix: 'productDetails' });
+  const { t } = useTranslation('translation', {keyPrefix: 'productDetails'});
 
   const onSuccess = useCallback(() => {
     getPersonalDetails()
@@ -90,8 +90,9 @@ const ProductDetails: React.FC = () => {
   useEffect(() => {
     const event = previewEvent;
     if (event && event.type === 'changeDrawerPage') {
-      debugger;
       changeDrawerPage(event.data);
+    } else if (event && event.type === 'closeDrawerPage') {
+      closeDrawerPage()
     }
   }, [previewEvent]);
 

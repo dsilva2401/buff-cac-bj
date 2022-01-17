@@ -64,9 +64,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   leadInformation,
   disableModalDismiss
 }) => {
-  const { setPageState } = useGlobal();
-  const topHeight = -window.innerHeight * 0.85;
-  const bottomHeight = -window.innerHeight * 0.3;
+  const { setPageState, appZoom } = useGlobal();
+  const topHeight = -window.innerHeight * (0.85 / appZoom);
+  const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
 
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
@@ -80,7 +80,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     } else {
       setPosition({ ...position, y: bottomHeight });
     }
-  }, [isChildOpen]);
+
+  }, [isChildOpen, appZoom]);
+
 
   useEffect(() => {
     if (position.y === topHeight) {
