@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { InputWrapper, InputPlaceholder } from "./styles";
+import React, { useEffect, useState } from 'react';
+import { InputWrapper, InputPlaceholder } from './styles';
 
 type EditInputProps = {
   placeholder: string;
@@ -26,9 +26,9 @@ const SearchInput: React.FC<EditInputProps> = ({
     <InputWrapper isFocused={isFocused}>
       <InputPlaceholder isFocused={isFocused}>{placeholder}</InputPlaceholder>
       <input
-        type="text"
+        type='text'
         value={value}
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => !value && setIsFocused(false)}
         onChange={({ target: { value } }) => onChange(value)}

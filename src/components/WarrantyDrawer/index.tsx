@@ -1,1 +1,1 @@
-export { default } from "./WarrantyDrawer";
+export { default } from './WarrantyDrawer';

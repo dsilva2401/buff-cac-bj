@@ -1,10 +1,10 @@
-import { getAuth, User } from 'firebase/auth';
-import usePersonalDetails from 'hooks/usePersonalDetails';
-import useProductDetails from 'hooks/useProductDetails';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAPI } from 'utils/api';
+import { getAuth, User } from 'firebase/auth';
+import { GlobalContext, PageStateType } from './GlobalContext';
+import usePersonalDetails from 'hooks/usePersonalDetails';
+import useProductDetails from 'hooks/useProductDetails';
 import useCollection from '../../hooks/useCollection';
-import { GlobalContext, PageStateType, TransitionType } from './GlobalContext';
 
 const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
@@ -52,8 +52,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [signInRedirect, setSignInRedirect] = useState<string>(
     localStorage.getItem('signInRedirect') || ''
   );
+  const [retractDrawer, setRetractDrawer] = useState<boolean>(false);
   const [pageState, setPageState] = useState<PageStateType | null>(null);
-  const [pageTransition, setPageTransition] = useState<TransitionType>('NONE');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
@@ -92,10 +92,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
   );
 
   useEffect(() => {
-    if(window) {
+    if (window) {
       window.addEventListener("message", (event) => {
-        setPreviewEvent({...event.data})
-        if(event && event.data && event.data.type === 'enablePreview'){
+        setPreviewEvent({ ...event.data })
+        if (event && event.data && event.data.type === 'enablePreview') {
           setIsPreviewMode(true);
           setAppZoom(event.data.zoom);
         }
@@ -124,8 +124,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setSignInRedirect,
         pageState,
         setPageState,
-        pageTransition,
-        setPageTransition,
         user,
         productDetails,
         loading: loading || productLoading,
@@ -139,7 +137,9 @@ export const GlobalProvider: React.FC = ({ children }) => {
         getCollection,
         authFetched,
         getPersonalDetails,
-        token
+        token,
+        retractDrawer,
+        setRetractDrawer,
       }}
     >
       {children}

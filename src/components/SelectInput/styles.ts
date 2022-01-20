@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   MenuItem,
   InputLabel,
   FormControl,
   Select as SelectMaterial,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 export const Label = styled(InputLabel)`
   color: #98a3aa;
@@ -14,7 +14,7 @@ export const Label = styled(InputLabel)`
     left: 0;
     position: absolute;
     transform: translate(1.875rem, 2.375rem) scale(1);
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 1rem;
   }
   &.MuiInputLabel-shrink {

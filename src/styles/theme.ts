@@ -18,20 +18,20 @@ export type ThemeType = {
 };
 
 export const theme: ThemeType = {
-  primary: "#4B6EFA",
-  secondary: "#FFFFFF",
-  background: "#FEF",
+  primary: '#4B6EFA',
+  secondary: '#FFFFFF',
+  background: '#FEF',
   button: {
-    primary: "#4B6EFA",
-    secondary: "#FFFFFF",
-    disabled: "rgba(0, 0, 0, 0.3)",
-    warning: "#FD6157",
-    border: "#A5B7FD",
+    primary: '#4B6EFA',
+    secondary: '#FFFFFF',
+    disabled: 'rgba(0, 0, 0, 0.3)',
+    warning: '#FD6157',
+    border: '#A5B7FD',
   },
   toast: {
-    info: "#4B6EFA",
-    success: "#25AE88",
-    error: "#FD6157",
-    warn: "#FE931E",
+    info: '#4B6EFA',
+    success: '#25AE88',
+    error: '#FD6157',
+    warn: '#FE931E',
   }
 };

@@ -1,49 +1,49 @@
 export interface EmailType {
-    email: string,
-    verified: boolean
-}
+  email: string,
+  verified: boolean
+};
 
 export interface Warranty {
-    warrantyId: string,
-    activated: boolean;
-    purchaseDate?: string;
-    expirationDate?: string;
-}
+  warrantyId: string,
+  activated: boolean;
+  purchaseDate?: string;
+  expirationDate?: string;
+};
 export interface UserProfile {
-    firstName?: string;
-    lastName?: string;
-    phoneNumber?: string;
-    role: string;
-    warranties?: Warranty[];
-    productCollection?: string[]
-}
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  role: string;
+  warranties?: Warranty[];
+  productCollection?: string[]
+};
 
 export interface UserSigninBody {
-    email: string,
-    firstName?: string,
-    lastName?: string,
-    phoneNumber?: string
-    tag?: string
-}
+  email: string,
+  firstName?: string,
+  lastName?: string,
+  phoneNumber?: string
+  tag?: string
+};
 
 export interface UserUpdateBody {
-    firstName?: string,
-    lastName?: string,
-    phoneNumber?: string
-}
+  firstName?: string,
+  lastName?: string,
+  phoneNumber?: string
+};
 
 export interface UserStruct {
-    _id: string,
-    services: null | any,
-    username: string,
-    emails: EmailType[],
-    profile: UserProfile
-}
+  _id: string,
+  services: null | any,
+  username: string,
+  emails: EmailType[],
+  profile: UserProfile
+};
 
 export interface UserCreatePayload {
-    email: string | null,
-    phoneNumber: string | null,
-    firstName: string | null,
-    lastName: string | null,
-    tag?: string
-}
+  email: string | null,
+  phoneNumber: string | null,
+  firstName: string | null,
+  lastName: string | null,
+  tag?: string
+};

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type ModalProps = {
   isOpen: boolean;
@@ -20,10 +20,10 @@ export const Modal = styled.div<ModalProps>`
   background-color: #fff;
   z-index: 4;
   transition: transform 0.3s ease;
-  transform: ${(props) => (props.isOpen ? "translateY(-1001px)" : "none")};
+  transform: ${(props) => (props.isOpen ? 'translateY(-1001px)' : 'none')};
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 100%;

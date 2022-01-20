@@ -40,6 +40,7 @@ const Login: React.FC = () => {
       direction='column'
       justifyContent='space-between'
       alignItems='center'
+      position='relative'
       overflow='auto'
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />

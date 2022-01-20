@@ -1,13 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react';
+import { isBrowser } from 'react-device-detect';
+import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
-import { PageStateType, TransitionType } from 'context/global/GlobalContext';
-import { ReactComponent as LockBlack } from 'assets/icons/svg/lock-filled.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import phoneCallIcon from 'assets/icons/svg/social_phone-call.svg';
 import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
+import LoadingIndicator from 'components/LoadingIndicator';
 import emailIcon from 'assets/icons/svg/social_email.svg';
 import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
@@ -22,7 +23,6 @@ import {
   DrawerHeader,
   DrawerIconLink,
 } from './styles';
-import { theme } from 'styles/theme';
 
 export type ButtonType = {
   title: any | undefined;
@@ -50,8 +50,9 @@ type BottomDrawerProps = {
   closeChild: () => void;
   buttons: ButtonType[] | null;
   socials: SocialsType;
+  loadingState?: boolean;
   leadInformation?: React.ReactNode;
-  disableModalDismiss?: boolean
+  disableModalDismiss?: boolean;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -61,35 +62,36 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   closeChild,
   buttons,
   socials,
+  loadingState,
   leadInformation,
   disableModalDismiss
 }) => {
-  const { setPageState, appZoom } = useGlobal();
-  const topHeight = -window.innerHeight * (0.85 / appZoom);
-  const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
+  const { setPageState, retractDrawer, setRetractDrawer, appZoom } = useGlobal();
+
+  const topHeight = 0;
+  let bottomHeight: number;
+  if (isBrowser) {
+    if (window.innerHeight < 700)
+      bottomHeight = (window.innerHeight - 340) / appZoom;
+    else if (window.innerHeight > 1000)
+      bottomHeight = (window.innerHeight - 420) / appZoom;
+    else
+      bottomHeight = (window.innerHeight - 380) / appZoom;
+  } else bottomHeight = (window.innerHeight - 320) / appZoom;
+
+  // const topHeight = -window.innerHeight * (0.85 / appZoom);
+  // const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
 
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [transition, setTransition] = useState<TransitionType>('NONE');
-
-  useEffect(()=>{
-    if(isChildOpen){
-      setPosition({ ...position, y: topHeight });
-    } else {
-      setPosition({ ...position, y: bottomHeight });
-    }
-
-  }, [isChildOpen, appZoom]);
-
 
   useEffect(() => {
     if (position.y === topHeight) {
       setIsDrawerOpen(true);
     } else if (position.y === bottomHeight) {
       setIsDrawerOpen(false);
-      setTransition('NONE');
       closeChild();
     }
   }, [
@@ -99,6 +101,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     closeChild,
     setIsDrawerOpen,
     setPageState,
+    isChildOpen,
+    appZoom
   ]);
 
   const handleStart = () => {
@@ -154,9 +158,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <Text fontSize='1rem' fontWeight='600'>
                     <h1>{title}</h1>
                   </Text>
-                  {
-                    isDrawerOpen ? null : leadInformation
-                  }
+                  {isDrawerOpen ? null : leadInformation}
                 </Wrapper>
               )}
               {isDrawerOpen && !disableModalDismiss && (
@@ -164,7 +166,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   onClick={() => {
                     if (isChildOpen) {
                       closeChild();
-                      setTransition('RIGHT');
+                      if (retractDrawer) {
+                        setPosition({ ...position, y: bottomHeight });
+                        setIsDrawerOpen(false);
+                      }
                     } else {
                       setPageState(null);
                       setPosition({ ...position, y: bottomHeight });
@@ -186,19 +191,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           key={button.title}
                           variant='dark'
                           onClick={() => {
-                            setPosition({ ...position, y: topHeight });
+                            if (button.icon === null) {
+                              setPosition({ ...position, y: topHeight });
+                              setRetractDrawer(true);
+                            }
                             button.onClick();
                             if (button.pageState !== null)
                               setPageState(button.pageState);
                           }}
                         >
                           {button.title}{button.icon}
-                          {button.locked && (
-                            <LockBlack
-                              fill={button.isHighlight ? theme.secondary : theme.primary}
-                              width='20px'
-                            />
-                          )}
                         </Button>
                       );
                     }
@@ -206,7 +208,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   })}
                   <Button
                     variant='light'
-                    onClick={() => setPosition({ ...position, y: topHeight })}
+                    onClick={() => {
+                      setPosition({ ...position, y: topHeight });
+                      setRetractDrawer(false);
+                    }}
                   >
                     More
                   </Button>
@@ -216,27 +221,28 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 (isChildOpen
                   ? children
                   : (
-                    <Wrapper width='100%' direction='column' gap='1rem'>
-                      {buttons?.map((button) =>
-                        <Button
-                          key={button.title}
-                          variant={button.isHighlight ? 'dark' : 'light'}
-                          onClick={() => {
-                            button.onClick();
-                            if (button.pageState !== null)
-                              setPageState(button.pageState);
-                          }}
-                        >
-                          {button.title}{button.icon}
-                          {button.locked && (
-                            <LockBlack
-                              fill={button.isHighlight ? theme.secondary : theme.primary}
-                              width='20px'
-                            />
-                          )}
-                        </Button>
-                      )}
-                    </Wrapper>
+                    loadingState ? (
+                      <Wrapper width='100%' height='100%' direction='column' alignItems='center' justifyContent='center'>
+                        <LoadingIndicator />
+                      </Wrapper>
+                    ) : (
+                      <Wrapper width='100%' direction='column' gap='1rem'>
+                        {buttons?.map((button) =>
+                          <Button
+                            key={button.title}
+                            variant={button.isHighlight ? 'dark' : 'light'}
+                            onClick={() => {
+                              button.onClick();
+                              setRetractDrawer(false);
+                              if (button.pageState !== null)
+                                setPageState(button.pageState);
+                            }}
+                          >
+                            {button.title}{button.icon}
+                          </Button>
+                        )}
+                      </Wrapper>
+                    )
                   ))}
             </DrawerBody>
             {!isChildOpen && (

@@ -1,5 +1,5 @@
-import { theme } from "styles/theme";
-import styled from "styled-components";
+import { theme } from 'styles/theme';
+import styled from 'styled-components';
 
 export const NumberInput = styled.input`
   width: 70px;
@@ -14,7 +14,7 @@ export const NumberInput = styled.input`
     margin: 0;
   }
 
-  &[type="number"] {
+  &[type='number'] {
     -moz-appearance: textfield;
     text-align: center;
     font-size: 1rem;
@@ -34,13 +34,13 @@ export const ControllerButton = styled.button<ControllerButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${(props) => (props.disabled ? "#e7eaeb" : theme.primary)};
-  background-color: ${(props) => (props.disabled ? "#e7eaeb" : theme.primary)};
+  border: 1px solid ${(props) => (props.disabled ? '#e7eaeb' : theme.primary)};
+  background-color: ${(props) => (props.disabled ? '#e7eaeb' : theme.primary)};
   transition: all 0.3s ease;
 
   svg {
     path {
-      fill: ${(props) => (props.disabled ? "#b1b1b1" : "#fff")};
+      fill: ${(props) => (props.disabled ? '#b1b1b1' : '#fff')};
       transition: fill 0.3s ease;
     }
   }

@@ -13,9 +13,9 @@ import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
+import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
 import externalLink from 'assets/icons/svg/external-link.svg';
 import placeholder from 'assets/images/png/placeholder.png';
-import LoadingIndicator from 'components/LoadingIndicator';
 import ProgressiveImage from 'react-progressive-image';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
@@ -23,7 +23,6 @@ import BottomDrawer from 'components/BottomDrawer';
 import CustomDrawer from 'components/CustomDrawer';
 import AuthDrawer from 'components/AuthDrawer';
 import IconButton from 'components/IconButton';
-import LinkModule from 'components/LinkModule';
 import PageHeader from 'components/PageHeader';
 import ShopDrawer from 'components/ShopDrawer';
 import useLogEvent from 'hooks/useLogEvent';
@@ -58,7 +57,7 @@ const ProductDetails: React.FC = () => {
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
-  const { t } = useTranslation('translation', {keyPrefix: 'productDetails'});
+  const { t } = useTranslation('translation', { keyPrefix: 'productDetails' });
 
   const onSuccess = useCallback(() => {
     getPersonalDetails()
@@ -142,7 +141,10 @@ const ProductDetails: React.FC = () => {
           onClick: () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
-            changeDrawerPage(x);
+            if (details?.modules[x]?.type === 'LINK_MODULE') {
+              let moduleData = module?.moduleInfo as LinkModuleType
+              window.open(moduleData?.link, "_blank");
+            } else changeDrawerPage(x);
             logEvent({
               type: 'EVENT_MODULE',
               name: 'MODULE_CLICKED',
@@ -164,7 +166,13 @@ const ProductDetails: React.FC = () => {
             }
             : null,
           icon: details?.modules[x].type === 'LINK_MODULE' ?
-            <Image margin='0 0 0 0.25rem' src={externalLink} alt='external-link' /> : null,
+            <Image
+              src={x === 0 ? externalLinkWhite : externalLink}
+              margin='0 0 0 0.5rem'
+              alt='external-link'
+            />
+            :
+            null,
         };
         buttons.push(buttonObject);
       }
@@ -209,7 +217,6 @@ const ProductDetails: React.FC = () => {
             })
           }
         }
-
         buttons.push({
           title,
           onClick: onClick,
@@ -324,15 +331,6 @@ const ProductDetails: React.FC = () => {
               warrantyId={module?.id}
             />
           );
-        case 'LINK_MODULE':
-          return (
-            <LinkModule
-              closePage={closeDrawerPage}
-              moduleData={
-                module?.moduleInfo as LinkModuleType
-              }
-            />
-          );
         case 'REFERRAL_MODULE':
           return (
             <ReferralDrawer
@@ -377,8 +375,6 @@ const ProductDetails: React.FC = () => {
 
   if (error) return <Redirect to='/404' />;
 
-  if (addToLoading) return <LoadingIndicator />
-
   return (
     <>
       {details?.product?.image && (
@@ -417,6 +413,7 @@ const ProductDetails: React.FC = () => {
       <BottomDrawer
         title={pageTitle}
         buttons={buttonsArray}
+        loadingState={addToLoading}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
         closeChild={closeDrawerPage}

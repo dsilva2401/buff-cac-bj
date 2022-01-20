@@ -1,8 +1,10 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { ReactComponent as Info } from 'assets/icons/svg/info-outline.svg';
 import { WarrantyModuleType } from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
+import { Animated } from 'react-animated-css';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SuccessDrawer from 'components/SuccessDrawer';
 import DetailsModal from './DetailsModal';
@@ -25,7 +27,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   const [successDrawer, setSuccessDrawer] = useState<boolean>(!warrantyData?.activated);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
 
-  const { loading, activateWarranty, slug } = useGlobal();
+  const { loading, activateWarranty, slug, retractDrawer } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
@@ -105,12 +107,13 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         >
           <h1>{drawerTitle}</h1>
         </Text>
-        <Wrapper
-          width='100%'
-          height='100%'
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
+        <Animated
+          animationIn='slideInRight'
+          animationOut='slideOutLeft'
+          animationInDuration={300}
+          animationOutDuration={300}
+          animationInDelay={retractDrawer ? 200 : 0}
+          isVisible={true}
         >
           <Wrapper
             width='100%'
@@ -208,7 +211,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
               )}
             </Wrapper>
           </Wrapper>
-        </Wrapper>
+        </Animated>
       </Wrapper>
     </>
   );

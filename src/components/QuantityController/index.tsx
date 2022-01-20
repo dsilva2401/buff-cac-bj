@@ -1,1 +1,1 @@
-export { default } from "./QuantityController";
+export { default } from './QuantityController';

@@ -1,1 +1,1 @@
-export { default } from "./EditInput";
+export { default } from './EditInput';

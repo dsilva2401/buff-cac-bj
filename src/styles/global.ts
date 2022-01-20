@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
     *,
@@ -8,7 +8,7 @@ export default createGlobalStyle`
       margin: 0;
       padding: 0;
       border: none;
-      font-family: "Poppins", sans-serif;
+      font-family: 'Poppins', sans-serif;
       color: #1B1B1B;
       outline: none;
     }
@@ -24,6 +24,16 @@ export default createGlobalStyle`
         height: 100%;
         position: relative;
       }
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    ::-webkit-scrollbar {
+      display:none;
     }
 
     #root {

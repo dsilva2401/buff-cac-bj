@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type DrawerProps = {
   isControlled: boolean;
@@ -10,39 +10,20 @@ type DrawerHeaderProps = {
 
 export const Drawer = styled.div<DrawerProps>`
   width: 100%;
-  height: 85%;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #fff;
+  background-color: #FFFFFF;
   border: 1px solid #e7eaeb;
-  border-width: 1px 0px 0px 0px;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   z-index: 3;
-  transition: ${(props) => (props.isControlled ? "transform 0.3s" : "none")};
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0.5rem;
-    height: 3px;
-    width: 45px;
-    background-color: #e7eaeb;
-    border-radius: 8px;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    left: 0;
-    bottom: -100%;
-  }
+  transition: ${(props) => (props.isControlled ? 'transform 0.3s' : 'none')};
 `;
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
@@ -50,11 +31,11 @@ export const DrawerHeader = styled.div<DrawerHeaderProps>`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  width: ${(props) => (props.isChildOpen ? "max-content" : "100%")};
-  position: ${(props) => (props.isChildOpen ? "absolute" : "relative")};
+  width: ${(props) => (props.isChildOpen ? 'max-content' : '100%')};
+  position: ${(props) => (props.isChildOpen ? 'absolute' : 'relative')};
   ${(props) => {
     if (props.isChildOpen) {
-      return `top: 0; right: 0;`;
+      return `top: 0; right: 0; z-index: 10;`;
     }
   }}
 `;
@@ -77,7 +58,7 @@ export const DrawerFooter = styled.div`
   padding: 1.5rem 2rem;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   gap: 1rem;
 `;

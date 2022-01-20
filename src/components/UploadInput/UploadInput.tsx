@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { ReactComponent as Upload } from "assets/icons/svg/upload.svg";
-import { ReactComponent as Remove } from "assets/icons/svg/remove.svg";
-import { InputPlaceholder, InputWrapper } from "./styles";
+import React, { useState } from 'react';
+import { InputPlaceholder, InputWrapper } from './styles';
+import { ReactComponent as Upload } from 'assets/icons/svg/upload.svg';
+import { ReactComponent as Remove } from 'assets/icons/svg/remove.svg';
 
 type UploadInputProps = {
   selectedFile: File | undefined;
@@ -22,23 +22,23 @@ const UploadInput: React.FC<UploadInputProps> = ({
       onBlur={() => setIsFocused(false)}
     >
       <input
-        type="file"
-        name="file"
-        id="file"
+        type='file'
+        name='file'
+        id='file'
         onChange={({ target: { files } }) => changeFile(files)}
       />
       <label
-        htmlFor="file"
+        htmlFor='file'
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {selectedFile ? selectedFile.name : ""}
+        {selectedFile ? selectedFile.name : ''}
       </label>
       <InputPlaceholder
         isFocused={isFocused}
         isFileSelected={selectedFile ? true : false}
       >
-        {selectedFile ? "Dated Receipt" : "Upload dated receipt..."}
+        {selectedFile ? 'Dated Receipt' : 'Upload dated receipt...'}
       </InputPlaceholder>
 
       {selectedFile ? <Remove onClick={() => changeFile(null)} /> : <Upload />}

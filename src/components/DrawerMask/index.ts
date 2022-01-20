@@ -1,1 +1,1 @@
-export { default } from "./DrawerMask";
+export { default } from './DrawerMask';

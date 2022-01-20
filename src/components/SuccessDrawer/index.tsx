@@ -1,1 +1,1 @@
-export { default } from "./SuccessDrawer";
+export { default } from './SuccessDrawer';

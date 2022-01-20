@@ -1,6 +1,6 @@
-import { showToast } from "components/Toast/Toast";
-import { useCallback } from "react";
-import { useAPI } from "utils/api"
+import { useCallback } from 'react';
+import { useAPI } from 'utils/api'
+import { showToast } from 'components/Toast/Toast';
 
 interface EventPayload {
   name: string,

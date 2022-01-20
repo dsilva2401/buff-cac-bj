@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { useAPI } from 'utils/api';
 import Input from 'components/Input';
@@ -22,7 +21,6 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   onPersonalDetailsUpdate = () => { }
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
-  const { pageTransition } = useGlobal();
 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');

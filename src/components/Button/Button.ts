@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { theme } from "styles/theme";
+import styled from 'styled-components';
+import { theme } from 'styles/theme';
 
 type ButtonProps = {
-  variant: "light" | "dark";
+  variant: 'light' | 'dark';
   warning?: boolean;
   squared?: boolean;
   width?: string;
@@ -18,20 +18,20 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: ${(props) => props.width ? props.width : "100%"};
-  border-radius: ${(props) => props.squared ? "0.5rem" : "5rem"};
+  width: ${(props) => props.width ? props.width : '100%'};
+  border-radius: ${(props) => props.squared ? '0.5rem' : '5rem'};
   border: ${(props) =>
-    props.variant === "light" ? `1px solid ${theme.button.border}` : "none"};
+    props.variant === 'light' ? `1px solid ${theme.button.border}` : 'none'};
   background-color: ${(props) =>
-    props.variant === "dark" ? (props.warning ? theme.button.warning : theme.button.primary) : theme.button.secondary};
+    props.variant === 'dark' ? (props.warning ? theme.button.warning : theme.button.primary) : theme.button.secondary};
   box-shadow: ${(props) =>
-    props.variant === "dark" ? "" : "0px 1px 4px rgba(0, 0, 0, 0.12)"};
+    props.variant === 'dark' ? '' : '0px 1px 4px rgba(0, 0, 0, 0.12)'};
   color: ${(props) =>
-    props.variant === "dark" ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
+    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
 
   a {
     color: ${(props) =>
-    props.variant === "dark" ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
+    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
     text-decoration: none;
   }
 
@@ -43,13 +43,13 @@ const Button = styled.button<ButtonProps>`
 
   &:active {
     box-shadow: ${(props) =>
-    props.variant === "dark" ? "" : "-1px -1px 4px rgba(0, 0, 0, 0.12)"};
+    props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
   }
 
   &:disabled {
-    background-color: ${(props) => (props.variant === "dark" ? "#ccc" : theme.button.secondary)};
+    background-color: ${(props) => (props.variant === 'dark' ? '#ccc' : theme.button.secondary)};
     color: ${(props) =>
-    props.variant === "dark" ? theme.button.secondary : theme.button.disabled};
+    props.variant === 'dark' ? theme.button.secondary : theme.button.disabled};
   }
 `;
 

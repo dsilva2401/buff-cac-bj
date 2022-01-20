@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Avatar = styled.div`
   width: 6.75rem;

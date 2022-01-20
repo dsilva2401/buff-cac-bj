@@ -7,9 +7,9 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 enum AuthScreen {
-  login = "login",
-  signup = "signup",
-  forgotPasssword = "forgotPasssword"
+  login = 'login',
+  signup = 'signup',
+  forgotPasssword = 'forgotPasssword'
 }
 
 interface AuthDrawerProps {
@@ -21,7 +21,7 @@ interface AuthDrawerProps {
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailshow = () => {},
+  onPersonalDetailshow = () => { },
   showFooter,
   html
 }) => {
@@ -40,15 +40,15 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       case AuthScreen.signup:
         return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onAuthComplete} />
       case AuthScreen.forgotPasssword:
-        return <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />  
+        return <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />
       default:
         return <LoginForm onLogin={onAuthComplete} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
     }
   }, [authScreen])
 
   const footerToRender = useMemo(() => {
-    let onActionClick: any = () => {};
-    let descriptionText: string = ''; 
+    let onActionClick: any = () => { };
+    let descriptionText: string = '';
     let actionText: string = '';
 
     switch (authScreen) {
@@ -63,7 +63,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         actionText = signUpTranslation('signInLink');
         break;
       case AuthScreen.forgotPasssword:
-        onActionClick = () => {};
+        onActionClick = () => { };
         descriptionText = '';
         actionText = '';
         break;
@@ -83,22 +83,22 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
 
   return (
     <Wrapper
-      width="100%"
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="center"
-      gap="1.2rem"
-      overflow="auto"
-      margin="2rem 0"
+      width='100%'
+      direction='column'
+      justifyContent='flex-start'
+      alignItems='center'
+      gap='1.2rem'
+      overflow='auto'
+      margin='2rem 0'
     >
       {
         html ? (
           <Wrapper
-            width="100%"
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="1rem"
+            width='100%'
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
+            gap='1rem'
             dangerouslySetInnerHTML={{ __html: html }}
           />
         ) : null

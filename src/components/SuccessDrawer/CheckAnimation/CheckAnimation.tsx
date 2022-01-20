@@ -1,6 +1,6 @@
-import React from "react";
-import Lottie from "react-lottie";
-import animationData from "assets/lottie-animations/check-animation.json";
+import React from 'react';
+import Lottie from 'react-lottie';
+import animationData from 'assets/lottie-animations/check-animation.json';
 
 type CheckAnimationProps = {
   isDrawerOpen: boolean;
@@ -12,7 +12,7 @@ const CheckAnimation: React.FC<CheckAnimationProps> = ({ isDrawerOpen }) => {
     autoplay: isDrawerOpen,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
+      preserveAspectRatio: 'xMidYMid slice',
     },
   };
 

@@ -1,8 +1,8 @@
-import { ReactComponent as Minus } from 'assets/icons/svg/minus.svg';
-import { ReactComponent as Plus } from 'assets/icons/svg/plus.svg';
-import Wrapper from 'components/Wrapper';
 import React from 'react';
+import Wrapper from 'components/Wrapper';
 import { ControllerButton, NumberInput } from './styles';
+import { ReactComponent as Plus } from 'assets/icons/svg/plus.svg';
+import { ReactComponent as Minus } from 'assets/icons/svg/minus.svg';
 
 type QuantityControllerProps = {
   value: string;

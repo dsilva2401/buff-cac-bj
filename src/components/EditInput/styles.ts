@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type InputProps = {
   isFocused: boolean;
@@ -31,8 +31,8 @@ export const InputPlaceholder = styled.span<InputProps>`
   color: #98a3aa;
   transition: all 0.3s ease;
   z-index: 1;
-  font-size: ${(props) => (props.isFocused ? "0.7rem" : "0.9rem")};
-  background-color: ${(props) => (props.isFocused ? "#fff" : "transparent")};
+  font-size: ${(props) => (props.isFocused ? '0.7rem' : '0.9rem')};
+  background-color: ${(props) => (props.isFocused ? '#fff' : 'transparent')};
   transform: ${(props) =>
-    props.isFocused ? "scale(0.8) translate(-10px, -30px)" : "unset"};
+    props.isFocused ? 'scale(0.8) translate(-10px, -30px)' : 'unset'};
 `;

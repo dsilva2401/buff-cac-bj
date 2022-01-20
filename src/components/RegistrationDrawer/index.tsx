@@ -1,1 +1,1 @@
-export { default } from "./RegistrationDrawer";
+export { default } from './RegistrationDrawer';

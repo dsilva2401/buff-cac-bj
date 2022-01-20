@@ -1,5 +1,4 @@
 import { useGlobal } from 'context/global/GlobalContext';
-import { User } from 'firebase/auth';
 import { useCallback, useState } from 'react';
 
 interface APIpayload {
@@ -40,15 +39,13 @@ export function useAPI<T>(
 
       if (shouldUseToken) {
         token = tokenToUse;
-      }
-
+      };
       if (token) {
         headers.Authorization = `Bearer ${token}`;
-      }
+      };
 
       try {
         setLoading(true);
-
         const res = await fetch(`${API_URL}/${endpoint}`, {
           method,
           headers,
@@ -70,4 +67,4 @@ export function useAPI<T>(
   );
 
   return [apiCall, loading];
-}
+};

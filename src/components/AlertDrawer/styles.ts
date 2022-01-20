@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type DrawerProps = {
   isDrawerOpen: boolean;
@@ -7,7 +7,7 @@ type DrawerProps = {
 
 export const Drawer = styled.div<DrawerProps>`
   width: 100%;
-  height: ${(props) => (props.isDrawerOpen ? "390px" : 0)};
+  height: ${(props) => (props.isDrawerOpen ? '390px' : 0)};
   position: absolute;
   bottom: 0;
   left: 0;
@@ -17,6 +17,6 @@ export const Drawer = styled.div<DrawerProps>`
   transition: all 0.3s ease;
 
   div {
-    display: ${(props) => (props.isDrawerOpen ? "flex" : "none")};
+    display: ${(props) => (props.isDrawerOpen ? 'flex' : 'none')};
   }
 `;

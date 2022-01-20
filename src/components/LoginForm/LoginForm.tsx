@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react';
+import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { showToast } from 'components/Toast/Toast';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useGlobal } from 'context/global/GlobalContext';
-import useFirebaseError from 'hooks/useFirebaseError';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
+import useFirebaseError from 'hooks/useFirebaseError';
 import SocialLogin from 'components/SocialLogin';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -23,7 +25,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const getErrorMessage = useFirebaseError();
-  const { setPageTransition } = useGlobal();
+  const { retractDrawer } = useGlobal();
+  const location = useLocation();
   const auth = getAuth();
 
   const [username, setUsername] = useState<string>('');
@@ -56,7 +59,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     signInWithEmailAndPassword(auth, username, password)
       .then(() => {
         onLogin();
-        setPageTransition('LEFT');
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {
@@ -77,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         onChange={handlePasswordChanged}
       />
     ) : null
-  )
+  );
 
   return (
     <Wrapper
@@ -86,72 +88,90 @@ const LoginForm: React.FC<LoginFormProps> = ({
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
-      padding='2rem 1rem'
-      gap='1.2rem'
+      overflow='hidden'
     >
-      <SocialLogin
-        setLoading={setLoading}
-        onSuccess={onLogin}
-      />
-      <Wrapper justifyContent='center' alignItems='center'>
-        <Text fontSize='1.2rem' color='#98A3AA'>
-          <p>or</p>
-        </Text>
-      </Wrapper>
-
-      <Wrapper
-        direction='column'
-        width='100%'
-        justifyContent='center'
-        alignItems='center'
+      <Animated
+        animationIn='slideInRight'
+        animationOut='slideOutLeft'
+        animationInDuration={location.pathname === '/' ? 0 : 300}
+        animationOutDuration={location.pathname === '/' ? 0 : 300}
+        animationInDelay={location.pathname !== '/' && retractDrawer ? 200 : 0}
+        animateOnMount
+        isVisible={true}
+        style={{ width: '100%' }}
       >
-        <Input
-          type='text'
-          value={username}
-          placeholder={t('emailInput')}
-          onChange={handleUsernameChanged}
-          autoCapitalize='none'
-          margin='0 0 1rem'
-        />
-        {passwordInput}
-        <Wrapper width='100%' justifyContent='space-between' padding='0 1rem'>
-          <Text
-            fontSize='0.7rem'
-            textDecoration='unset'
-            onClick={() => setUsingMagicLink(!usingMagicLink)}
+        <Wrapper
+          direction='column'
+          justifyContent='flex-start'
+          alignItems='center'
+          padding='2rem 1rem'
+          overflow='hidden'
+          gap='1.2rem'
+        >
+          <SocialLogin
+            setLoading={setLoading}
+            onSuccess={onLogin}
+          />
+          <Wrapper justifyContent='center' alignItems='center'>
+            <Text fontSize='1.2rem' color='#98A3AA'>
+              <p>or</p>
+            </Text>
+          </Wrapper>
+          <Wrapper
+            direction='column'
+            width='100%'
+            justifyContent='center'
+            alignItems='center'
           >
-            <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
-          </Text>
-          <Text fontSize='0.7rem' textDecoration='unset' onClick={() => onForgotPasswordClick()}>
-            <span>
-              {t('forgotPassword')}
-            </span>
-          </Text>
+            <Input
+              type='text'
+              value={username}
+              placeholder={t('emailInput')}
+              onChange={handleUsernameChanged}
+              autoCapitalize='none'
+              margin='0 0 1rem'
+            />
+            {passwordInput}
+            <Wrapper width='100%' justifyContent='space-between' padding='0 1rem'>
+              <Text
+                fontSize='0.7rem'
+                textDecoration='unset'
+                onClick={() => setUsingMagicLink(!usingMagicLink)}
+              >
+                <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
+              </Text>
+              <Text fontSize='0.7rem' textDecoration='unset' onClick={() => onForgotPasswordClick()}>
+                <span>
+                  {t('forgotPassword')}
+                </span>
+              </Text>
+            </Wrapper>
+          </Wrapper>
+          <Wrapper width='100%' justifyContent='center' alignItems='center'>
+            {loading || magicLinkLoading ? (
+              <LoadingIndicator />
+            ) : (
+              <Button
+                variant='dark'
+                disabled={usingMagicLink ? !username : !username || !password}
+                onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
+              >
+                {usingMagicLink ? t('magicLinkButton') : t('signInButton')}
+              </Button>
+            )}
+          </Wrapper>
+          <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+            <Text fontSize='0.7rem' textDecoration='unset'>
+              <span>{magicLinkError}</span>
+            </Text>
+          </Wrapper>
+          <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+            <Text fontSize='0.7rem' textDecoration='unset'>
+              <span>{success}</span>
+            </Text>
+          </Wrapper>
         </Wrapper>
-      </Wrapper>
-      <Wrapper width='100%' justifyContent='center' alignItems='center'>
-        {loading || magicLinkLoading ? (
-          <LoadingIndicator />
-        ) : (
-          <Button
-            variant='dark'
-            disabled={usingMagicLink ? !username : !username || !password}
-            onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
-          >
-            {usingMagicLink ? t('magicLinkButton') : t('signInButton')}
-          </Button>
-        )}
-      </Wrapper>
-      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
-        <Text fontSize='0.7rem' textDecoration='unset'>
-          <span>{magicLinkError}</span>
-        </Text>
-      </Wrapper>
-      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
-        <Text fontSize='0.7rem' textDecoration='unset'>
-          <span>{success}</span>
-        </Text>
-      </Wrapper>
+      </Animated>
     </Wrapper>
   );
 };

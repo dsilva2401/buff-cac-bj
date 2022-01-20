@@ -1,25 +1,25 @@
-import React from "react";
-import { theme } from "styles/theme";
-import { toast, Slide } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ReactComponent as SuccessIcon } from "assets/icons/svg/toast-success.svg";
-import { ReactComponent as CautionIcon } from "assets/icons/svg/toast-caution.svg";
-import { ReactComponent as ErrorIcon } from "assets/icons/svg/toast-error.svg";
-import { ReactComponent as InfoIcon } from "assets/icons/svg/toast-info.svg";
+import React from 'react';
+import { theme } from 'styles/theme';
+import { toast, Slide } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ReactComponent as SuccessIcon } from 'assets/icons/svg/toast-success.svg';
+import { ReactComponent as CautionIcon } from 'assets/icons/svg/toast-caution.svg';
+import { ReactComponent as ErrorIcon } from 'assets/icons/svg/toast-error.svg';
+import { ReactComponent as InfoIcon } from 'assets/icons/svg/toast-info.svg';
 
 type ToastProps = {
   message: string;
-  type: "info" | "success" | "error" | "warn";
+  type: 'info' | 'success' | 'error' | 'warn';
 };
 
 const toastBodyStyle = {
-  height: "70px",
+  height: '70px',
 };
 
 export const showToast = (props: ToastProps) => {
   switch (props.type) {
-    case "info":
+    case 'info':
       return toast.info(props.message, {
         progressStyle: {
           backgroundColor: theme.toast.info,
@@ -27,7 +27,7 @@ export const showToast = (props: ToastProps) => {
         bodyStyle: toastBodyStyle,
         icon: <InfoIcon />,
       });
-    case "success":
+    case 'success':
       return toast.success(props.message, {
         progressStyle: {
           backgroundColor: theme.toast.success,
@@ -35,7 +35,7 @@ export const showToast = (props: ToastProps) => {
         bodyStyle: toastBodyStyle,
         icon: <SuccessIcon />,
       });
-    case "error":
+    case 'error':
       return toast.error(props.message, {
         progressStyle: {
           backgroundColor: theme.toast.error,
@@ -43,7 +43,7 @@ export const showToast = (props: ToastProps) => {
         bodyStyle: toastBodyStyle,
         icon: <ErrorIcon />,
       });
-    case "warn":
+    case 'warn':
       return toast.warn(props.message, {
         progressStyle: {
           backgroundColor: theme.toast.warn,
@@ -57,7 +57,7 @@ export const showToast = (props: ToastProps) => {
 export const Toast: React.FC = () => (
   <ToastContainer
     transition={Slide}
-    position="top-center"
+    position='top-center'
     closeButton={false}
     hideProgressBar
     autoClose={1500}

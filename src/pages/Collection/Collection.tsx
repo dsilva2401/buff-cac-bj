@@ -45,7 +45,7 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     const validateUrl = (url: string) => {
-      const regex = new RegExp('https:\/\/v2\.brij\.it\/r\/product\/[A-Z]{4}')
+      const regex = new RegExp('https:\/\/v2\.brij\.it\/r\/c\/[A-Z]{4}')
       return regex.test(url);
     };
     if (scanResult) {
@@ -151,6 +151,7 @@ const Collection: React.FC = () => {
       height='100%'
       direction='column'
       justifyContent='flex-start'
+      position='relative'
       overflow='auto'
     >
       <PageHeader title={t('collectionPageTitle')} actionButton={menuButton} />

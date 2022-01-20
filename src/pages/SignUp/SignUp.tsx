@@ -13,7 +13,7 @@ import Image from 'components/Image';
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
-  const logo = <Image width="auto" src={brijLogo} alt="brij-logo" />;
+  const logo = <Image width='auto' src={brijLogo} alt='brij-logo' />;
   const history = useHistory();
   const {
     signInRedirect,
@@ -33,8 +33,8 @@ const SignUp: React.FC = () => {
 
   const menuButton = useMemo(
     () => (
-      <Wrapper width="100%" justifyContent="flex-end">
-        <IconButton variant="dark" iconName="menu" onClick={() => setIsMenuOpen(true)} />
+      <Wrapper width='100%' justifyContent='flex-end'>
+        <IconButton variant='dark' iconName='menu' onClick={() => setIsMenuOpen(true)} />
       </Wrapper>
     ),
     [setIsMenuOpen]
@@ -42,19 +42,20 @@ const SignUp: React.FC = () => {
 
   return (
     <Wrapper
-      width="100%"
-      height="100%"
-      direction="column"
-      justifyContent="space-between"
-      alignItems="center"
+      width='100%'
+      height='100%'
+      direction='column'
+      justifyContent='space-between'
+      alignItems='center'
+      position='relative'
       overflow='auto'
     >
       <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
       <SignUpForm onSignup={redirectUser} />
       <PageFooter>
-        <p>{t("existingUser")}</p>
+        <p>{t('existingUser')}</p>
         <Link to={RoutesHashMap.Login.path}>
-          {t("signInLink")}
+          {t('signInLink')}
         </Link>
       </PageFooter>
     </Wrapper>
