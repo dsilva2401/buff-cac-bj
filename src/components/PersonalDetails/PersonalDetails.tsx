@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import InputMask from 'react-input-mask';
 import Wrapper from 'components/Wrapper';
 import LoadingIndicator from 'components/LoadingIndicator';
+import { showToast } from 'components/Toast/Toast';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -40,6 +41,20 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       }
     }
   );
+
+  const validateUserInformation = useCallback((details: UserUpdatePayload) => {
+    if (!details.firstName) {
+      showToast({ message: "First name is required", type: "error" });
+      return
+    }
+
+    if (!details.lastName) {
+      showToast({ message: "Last name is required", type: "error" });
+      return
+    }
+
+    updateUser(details);
+  }, [updateUser]);
 
   return (
     <Wrapper
@@ -95,7 +110,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           <Button
             variant='dark'
             onClick={() =>
-              updateUser({
+              validateUserInformation({
                 firstName,
                 lastName,
                 phoneNumber,
