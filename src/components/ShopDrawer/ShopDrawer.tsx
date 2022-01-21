@@ -9,8 +9,8 @@ import {
 } from '../../types/ProductDetailsType';
 import '../../../node_modules/slick-carousel/slick/slick.css';
 import '../../../node_modules/slick-carousel/slick/slick-theme.css';
-import placeholder from 'assets/images/png/shop-module-placeholder.png';
 import QuantityController from 'components/QuantityController';
+import placeholder from 'assets/images/png/placeholder.png';
 import ProgressiveImage from 'react-progressive-image';
 import SuccessDrawer from 'components/SuccessDrawer';
 import SelectInput from 'components/SelectInput';
@@ -153,6 +153,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         animationOutDuration={300}
         animationInDelay={retractDrawer ? 200 : 0}
         isVisible={true}
+        style={{ width: '100%' }}
       >
         <Wrapper
           width='100%'
@@ -180,19 +181,20 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             width='100%'
             justifyContent='space-between'
             alignItems='center'
+            margin='3rem 0 0 0'
             gap='0.5rem'
-            margin='4rem 0 0 0'
           >
-            <Wrapper width='45%' responsiveImg>
+            <Wrapper width='40%' height='200px' responsiveImg>
               <ProgressiveImage src={chosenOption.image} placeholder={placeholder}>
                 {(src: string, loading: boolean) => (
                   <Image
                     rounded
                     src={src}
                     width='100%'
+                    height='100%'
                     top={0}
                     left={0}
-                    objectFit='cover'
+                    objectFit='contain'
                     transition='0.3s'
                     alt='product-image'
                     opacity={loading ? 0.5 : 1}
@@ -201,7 +203,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               </ProgressiveImage>
             </Wrapper>
             <Wrapper
-              width='50%'
+              width='55%'
               height='100%'
               direction='column'
               justifyContent='center'
@@ -308,7 +310,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             direction='column'
             justifyContent='flex-start'
             alignItems='center'
-            margin='1.5rem 0 0'
           >
             {isValidCombo ? (
               <Button

@@ -55,6 +55,7 @@ type WrapperProps = {
   before?: PseudoElement;
   after?: PseudoElement;
   responsiveImg?: boolean;
+  transition?: string;
 };
 
 const Wrapper = styled.div<WrapperProps>`
@@ -80,6 +81,7 @@ const Wrapper = styled.div<WrapperProps>`
   align-content: ${(props) =>
     props.alignContent ? props.alignContent : 'unset'};
   overflow: ${(props) => (props.overflow ? props.overflow : 'unset')};
+  transition: ${(props) => (props.transition ? props.transition : 'unset')};
 
   &::before {
     content: ${(props) =>

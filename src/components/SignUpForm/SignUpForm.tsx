@@ -68,17 +68,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       })
   };
 
-  const passwordInput = !usingMagicLink ? (
-    <Input
-      type='password'
-      value={password}
-      margin='0 0 1rem'
-      autoCapitalize='none'
-      placeholder={t('passwordInput')}
-      onChange={({ target: { value } }) => setPassword(value)}
-    />
-  ) : null;
-
   if (showPersonalDetailsForm) {
     return <PersonalDetails onPersonalDetailsUpdate={onSignup} />
   }
@@ -132,7 +121,21 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
               autoCapitalize='none'
               margin='0 0 1rem'
             />
-            {passwordInput}
+            <Wrapper
+              width='100%'
+              overflow='hidden'
+              transition='0.2s'
+              height={!usingMagicLink ? '66px' : '0px'}
+            >
+              <Input
+                type='password'
+                value={password}
+                margin='0 0 1rem'
+                autoCapitalize='none'
+                placeholder={t('passwordInput')}
+                onChange={({ target: { value } }) => setPassword(value)}
+              />
+            </Wrapper>
             <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
               <Text
                 fontSize='0.7rem'

@@ -68,19 +68,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
       .finally(() => setLoading(false))
   };
 
-  const passwordInput = (
-    !usingMagicLink ? (
-      <Input
-        type='password'
-        value={password}
-        margin='0 0 1rem'
-        autoCapitalize='none'
-        placeholder={t('passwordInput')}
-        onChange={handlePasswordChanged}
-      />
-    ) : null
-  );
-
   return (
     <Wrapper
       width='100%'
@@ -107,6 +94,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           padding='2rem 1rem'
           overflow='hidden'
           gap='1.2rem'
+          height='auto'
         >
           <SocialLogin
             setLoading={setLoading}
@@ -131,7 +119,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
               autoCapitalize='none'
               margin='0 0 1rem'
             />
-            {passwordInput}
+            <Wrapper
+              width='100%'
+              overflow='hidden'
+              transition='0.2s'
+              height={!usingMagicLink ? '66px' : '0px'}
+            >
+              <Input
+                type='password'
+                value={password}
+                margin='0 0 1rem'
+                autoCapitalize='none'
+                placeholder={t('passwordInput')}
+                onChange={handlePasswordChanged}
+              />
+            </Wrapper>
             <Wrapper width='100%' justifyContent='space-between' padding='0 1rem'>
               <Text
                 fontSize='0.7rem'

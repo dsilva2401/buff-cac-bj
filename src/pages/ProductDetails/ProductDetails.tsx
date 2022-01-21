@@ -384,13 +384,12 @@ const ProductDetails: React.FC = () => {
               src={src}
               alt={details?.product?.name}
               position='absolute'
-              height='100%'
-              width='100%'
-              top={0}
-              left={0}
+              width='100vw'
+              margin='auto'
               objectFit='cover'
               transition='0.3s'
               opacity={loading ? 0.5 : 1}
+              style={{ minHeight: '85vh' }}
             />
           )}
         </ProgressiveImage>

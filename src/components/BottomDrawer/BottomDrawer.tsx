@@ -181,7 +181,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 </DrawerClose>
               )}
             </DrawerHeader>
-            <DrawerBody id='not-draggable'>
+            <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               {!isDrawerOpen && (
                 <>
                   {buttons?.map((button) => {
