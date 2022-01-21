@@ -1,9 +1,10 @@
 import ForgotPasswordForm from 'components/ForgotPasswordForm';
+import LoadingIndicator from 'components/LoadingIndicator';
 import LoginForm from 'components/LoginForm';
 import PageFooter from 'components/PageFooter';
 import SignUpForm from 'components/SignUpForm';
 import Wrapper from 'components/Wrapper';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 enum AuthScreen {
@@ -26,23 +27,28 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   html
 }) => {
   const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
-  const [] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { t: signInTranslation } = useTranslation('translation', { keyPrefix: 'signIn' });
   const { t: signUpTranslation } = useTranslation('translation', { keyPrefix: 'signUp' });
+
+  const onSuccess = useCallback(() => {
+    onAuthComplete();
+    setLoading(true);
+  }, [onAuthComplete, setLoading]);
 
   const authScreenToRender = useMemo(() => {
     switch (authScreen) {
       case AuthScreen.login:
         return (
-          <LoginForm onLogin={onAuthComplete} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
+          <LoginForm onLogin={onSuccess} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
         )
       case AuthScreen.signup:
-        return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onAuthComplete} />
+        return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onSuccess} />
       case AuthScreen.forgotPasssword:
         return <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />
       default:
-        return <LoginForm onLogin={onAuthComplete} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
+        return <LoginForm onLogin={onSuccess} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
     }
   }, [authScreen])
 
@@ -80,6 +86,10 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       </PageFooter>
     )
   }, [authScreen, signInTranslation, signUpTranslation])
+
+  if (loading) {
+    return <LoadingIndicator />
+  }
 
   return (
     <Wrapper

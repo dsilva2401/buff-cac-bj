@@ -139,6 +139,11 @@ export type ProductDetailsType = {
   tag: {
     slug: string;
   };
+
+  registration: {
+    registrationText: string;
+  };
+
   warrantyInformation: {
     period: number;
 

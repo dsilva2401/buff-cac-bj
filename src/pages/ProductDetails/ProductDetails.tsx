@@ -299,7 +299,7 @@ const ProductDetails: React.FC = () => {
       if (showAuthPage || module?.locked) {
         return (
           <AuthDrawer
-            html={details?.brand?.registrationDetails}
+            html={details?.registration?.registrationText}
             onPersonalDetailshow={() => setDisableModalDismiss(true)}
             showFooter={!disableModalDismiss}
             onAuthComplete={() => {
@@ -412,7 +412,7 @@ const ProductDetails: React.FC = () => {
       <BottomDrawer
         title={pageTitle}
         buttons={buttonsArray}
-        loadingState={addToLoading}
+        loadingState={addToLoading || loading}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
         closeChild={closeDrawerPage}

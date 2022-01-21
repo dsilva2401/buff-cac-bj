@@ -46,7 +46,7 @@ export function useAPI<T>(
 
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/${endpoint}`, {
+        const res = await fetch(`${API_URL}/app_api/${endpoint}`, {
           method,
           headers,
           body: JSON.stringify(data),
