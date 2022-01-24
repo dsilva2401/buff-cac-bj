@@ -16,7 +16,7 @@ export const Drawer = styled.div<DrawerProps>`
   justify-content: flex-start;
   align-items: center;
   background-color: #FFFFFF;
-  border: 1px solid #e7eaeb;
+  border: 1px 0 0 0 solid #e7eaeb;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
   position: absolute;

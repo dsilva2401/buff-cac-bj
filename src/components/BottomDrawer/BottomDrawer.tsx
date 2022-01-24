@@ -72,12 +72,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   let bottomHeight: number;
   if (isBrowser) {
     if (window.innerHeight < 700)
-      bottomHeight = (window.innerHeight - 340) / appZoom;
+      bottomHeight = (window.innerHeight - 340 / appZoom);
     else if (window.innerHeight > 1000)
-      bottomHeight = (window.innerHeight - 420) / appZoom;
+      bottomHeight = (window.innerHeight - 420 / appZoom);
     else
-      bottomHeight = (window.innerHeight - 380) / appZoom;
-  } else bottomHeight = (window.innerHeight - 320) / appZoom;
+      bottomHeight = (window.innerHeight - 380 / appZoom);
+  } else bottomHeight = (window.innerHeight - 320 / appZoom);
 
   // const topHeight = -window.innerHeight * (0.85 / appZoom);
   // const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
