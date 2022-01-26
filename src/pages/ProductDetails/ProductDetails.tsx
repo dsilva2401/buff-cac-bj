@@ -249,7 +249,7 @@ const ProductDetails: React.FC = () => {
         };
 
         return (
-          <Wrapper justifyContent='flex-end' gap='0.5rem'>
+          <Wrapper direction='column' alignItems='flex-end'>
             <Text textDecoration='line-through' fontSize='0.8rem' color='grey'>
               <span>{`$${price}`}</span>
             </Text>
@@ -282,9 +282,17 @@ const ProductDetails: React.FC = () => {
         if (!period && !duration) return null;
 
         return (
-          <Text fontSize='0.7rem'>
-            <span>{`${period} ${duration?.label}`} warranty</span>
-          </Text>
+          <Wrapper
+            direction='column'
+            alignItems='flex-end'
+          >
+            <Text height='20px' fontSize='0.7rem'>
+              <span>Warranty</span>
+            </Text>
+            <Text fontSize='0.7rem' fontWeight='600'>
+              <span>{`${period} ${duration?.label}`}</span>
+            </Text>
+          </Wrapper>
         )
       default:
         return null;
