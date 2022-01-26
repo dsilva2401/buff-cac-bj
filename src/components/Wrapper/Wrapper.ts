@@ -52,6 +52,8 @@ type WrapperProps = {
   | 'space-evenly'
   | 'stretch';
   overflow?: string;
+  borderRadius?: string;
+  background?: string;
   before?: PseudoElement;
   after?: PseudoElement;
   responsiveImg?: boolean;
@@ -81,6 +83,8 @@ const Wrapper = styled.div<WrapperProps>`
   align-content: ${(props) =>
     props.alignContent ? props.alignContent : 'unset'};
   overflow: ${(props) => (props.overflow ? props.overflow : 'unset')};
+  background: ${(props) => (props.background ? props.background : 'unset')};
+  border-radius: ${(props) => (props.borderRadius ? props.borderRadius : 'unset')};
   transition: ${(props) => (props.transition ? props.transition : 'unset')};
 
   &::before {

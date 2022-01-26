@@ -45,7 +45,7 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     const validateUrl = (url: string) => {
-      const regex = new RegExp('https:\/\/v2\.brij\.it\/r\/c\/[A-Z]{4}')
+      const regex = new RegExp('^https://v2\.brij\.it/r/product/[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$');
       return regex.test(url);
     };
     if (scanResult) {
@@ -73,7 +73,7 @@ const Collection: React.FC = () => {
       };
       setScanResult('');
     };
-  }, [scanResult]);
+  }, [scanResult, logEvent, t]);
 
   useEffect(() => {
     const fetchCollection = async () => {
@@ -142,7 +142,7 @@ const Collection: React.FC = () => {
         </Grid>
       );
     },
-    [sortedCollection, history]
+    [history, logEvent]
   );
 
   return (

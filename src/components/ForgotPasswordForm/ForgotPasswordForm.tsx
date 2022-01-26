@@ -4,7 +4,6 @@ import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Animated } from 'react-animated-css';
-import { useHistory } from 'react-router';
 import PageHeader from 'components/PageHeader';
 import useFirebaseError from 'hooks/useFirebaseError';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -21,7 +20,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ goBack }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'forgotPassword' });
   const getErrorMessage = useFirebaseError();
   const location = useLocation();
-  const history = useHistory();
   const auth = getAuth();
 
   const [emailInput, setEmailInput] = useState<string>('');
@@ -38,7 +36,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ goBack }) => {
     } finally {
       setLoading(false);
     }
-  }, [emailInput, auth, history, getErrorMessage, goBack]);
+  }, [emailInput, auth, getErrorMessage, goBack]);
 
   return (
     <Wrapper width='100%' height='100%' direction='column' overflow='hidden'>

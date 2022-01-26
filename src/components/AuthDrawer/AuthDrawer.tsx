@@ -1,11 +1,12 @@
-import ForgotPasswordForm from 'components/ForgotPasswordForm';
-import LoadingIndicator from 'components/LoadingIndicator';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Wrapper from 'components/Wrapper';
 import LoginForm from 'components/LoginForm';
 import PageFooter from 'components/PageFooter';
 import SignUpForm from 'components/SignUpForm';
-import Wrapper from 'components/Wrapper';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import HtmlWrapper from 'components/HtmlWrapper';
+import ForgotPasswordForm from 'components/ForgotPasswordForm';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 enum AuthScreen {
   login = 'login',
@@ -50,7 +51,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       default:
         return <LoginForm onLogin={onSuccess} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
     }
-  }, [authScreen])
+  }, [authScreen, onPersonalDetailshow, onSuccess])
 
   const footerToRender = useMemo(() => {
     let onActionClick: any = () => { };
@@ -103,7 +104,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
     >
       {
         html ? (
-          <Wrapper
+          <HtmlWrapper
             width='100%'
             direction='column'
             justifyContent='center'

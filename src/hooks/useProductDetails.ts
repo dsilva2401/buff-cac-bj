@@ -49,7 +49,7 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
     if (previewEvent && previewEvent.type === 'product') {
       onSuccess(previewEvent.productDetails);
     }
-  }, [previewEvent]);
+  }, [previewEvent, onSuccess]);
 
   return [productDetails, getProduct, loading];
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
+import HtmlWrapper from 'components/HtmlWrapper';
 import { Animated } from 'react-animated-css';
 import { useGlobal } from 'context/global/GlobalContext';
 import { CustomModuleType } from 'types/ProductDetailsType';
@@ -18,14 +19,16 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
 
   return (
     <Wrapper
+      width='100%'
       direction='column'
+      padding='0 0.8rem 2rem'
       alignItems='flex-start'
       justifyContent='flex-start'
     >
       <Text
         fontSize='1rem'
         fontWeight='600'
-        margin='1.25rem 3rem 1.25rem 1rem'
+        margin='1.25rem 3rem 1.25rem 0rem'
       >
         <h1>{drawerTitle}</h1>
       </Text>
@@ -37,11 +40,10 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
         animationInDelay={retractDrawer ? 200 : 0}
         isVisible={true}
       >
-        <Wrapper
+        <HtmlWrapper
           width='100%'
           gap='0.75rem'
           direction='column'
-          padding='0.5rem 1rem'
           dangerouslySetInnerHTML={{ __html: drawerData.content }}
         />
       </Animated>

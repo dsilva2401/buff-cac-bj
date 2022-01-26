@@ -42,7 +42,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   const onSuccess = useCallback(() => {
     showToast({ message: t('updateToastMessage'), type: 'success' })
     onPersonalDetailsUpdate();
-  }, [])
+  }, [onPersonalDetailsUpdate, t])
 
   const [updateUser, loading] = useAPI<UserUpdatePayload>(
     {

@@ -52,7 +52,7 @@ const SideMenu: React.FC = () => {
     if (previousUser && !user) {
       history.push(RoutesHashMap.Login.path);
     };
-  }, [previousUser, user]);
+  }, [previousUser, user, history]);
 
   const handleLogoutButtonClicked = useCallback(() => {
     if (error !== '') setError('');

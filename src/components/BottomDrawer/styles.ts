@@ -86,3 +86,16 @@ export const DrawerClose = styled.button`
     fill: #414149;
   }
 `;
+
+export const DragBar = styled.div`
+  position: absolute;
+  width: 45px;
+  height: 3px;
+  top: 8px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 7px;
+  background: #CBD1D4;
+`;

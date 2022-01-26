@@ -48,7 +48,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         showToast({ message: getFirebaseError(error.code), type: 'error' });
       })
       .finally(() => setLoading(false))
-  }, [auth, t, onSuccess]);
+  }, [auth, t, onSuccess, getFirebaseError, setLoading]);
 
   return (
     <Wrapper

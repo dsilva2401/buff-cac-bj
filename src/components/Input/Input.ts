@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 type InputProps = {
   margin?: string;
+  pointerEvents?: string;
 };
 
 const Input = styled.input<InputProps>`
@@ -10,6 +11,7 @@ const Input = styled.input<InputProps>`
   border-radius: 5rem;
   padding: 1rem 1.5rem;
   background-color: #f4f4f4;
+  pointer-events: ${(props) => (props.pointerEvents ? props.pointerEvents : 'unset')};
 
   &::placeholder {
     color: #98a3aa;
