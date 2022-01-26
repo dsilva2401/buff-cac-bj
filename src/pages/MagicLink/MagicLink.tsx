@@ -44,7 +44,7 @@ const MagicLink = () => {
       setSignInRedirect('');
       history.push(link);
     }
-  }, [user, history, isNewUser, signInRedirect])
+  }, [user, history, isNewUser, signInRedirect, setSignInRedirect])
 
   useEffect(() => {
     if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -56,7 +56,7 @@ const MagicLink = () => {
           console.log(error);
         });
     }
-  }, [auth, email]);
+  }, [auth, email, setUser]);
 
   if (showPersonalDetailsForm) {
     return <

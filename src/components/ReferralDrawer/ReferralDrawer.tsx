@@ -7,6 +7,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ReferralModuleType } from 'types/ProductDetailsType';
 import placeholder from 'assets/images/png/qr-placeholder.png';
 import ProgressiveImage from 'react-progressive-image';
+import HtmlWrapper from 'components/HtmlWrapper';
 import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -67,20 +68,23 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
           animationInDelay={retractDrawer ? 200 : 0}
           isVisible={true}
         >
-          <Wrapper
+          <HtmlWrapper
             width='100%'
             gap='0.75rem'
             direction='column'
             dangerouslySetInnerHTML={{ __html: referralData?.details }}
           />
-          <Input value={referralData?.url} disabled margin='0.75rem 0' />
+          <Input
+            margin='0.75rem 0'
+            pointerEvents='none'
+            value={referralData?.url}
+          />
           <Wrapper
             width='100%'
             direction='row'
             justifyContent='space-between'
             alignItems='center'
             gap='0.625rem'
-            padding='0 0.75rem'
           >
             <CopyToClipboard
               text={referralData?.url}
@@ -115,10 +119,10 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
           </Text>
           <Wrapper
             width='100%'
-            responsiveImg
             alignItems='center'
             justifyContent='space-between'
-            style={{ background: '#F7F7F7', borderRadius: '12px' }}
+            borderRadius='0.75rem'
+            background='#F7F7F7'
           >
             <Text
               fontSize='1rem'
@@ -128,20 +132,29 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
             >
               <p>{t('helpText')}</p>
             </Text>
-            <ProgressiveImage src={referralData?.qrcode} placeholder={placeholder}>
-              {(src: string, loading: boolean) => (
-                <Image
-                  src={src}
-                  rounded
-                  alt='qr-code'
-                  maxWidth='45%'
-                  margin='0.75rem'
-                  objectFit='cover'
-                  transition='0.3s'
-                  opacity={loading ? 0.5 : 1}
-                />
-              )}
-            </ProgressiveImage>
+            <Wrapper
+              margin='0.75rem'
+              padding='0.5rem'
+              maxWidth='45%'
+              alignItems='center'
+              justifyContent='center'
+              background='#FFFFFF'
+              borderRadius='0.75rem'
+            >
+              <ProgressiveImage src={referralData?.qrcode} placeholder={placeholder}>
+                {(src: string, loading: boolean) => (
+                  <Image
+                    src={src}
+                    alt='qr-code'
+                    width='100%'
+                    margin='0.5rem 0 0 0'
+                    objectFit='cover'
+                    transition='0.3s'
+                    opacity={loading ? 0.5 : 1}
+                  />
+                )}
+              </ProgressiveImage>
+            </Wrapper>
           </Wrapper>
         </Animated>
       </Wrapper>

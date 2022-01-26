@@ -67,6 +67,27 @@ const ProductDetails: React.FC = () => {
     showToast({ message: error.message, type: 'error' })
   }
 
+  const closeDrawerPage = useCallback(() => {
+    setCurrentPage(null);
+    setIsDrawerPageOpen(false);
+  }, []);
+
+  const changeDrawerPage = useCallback(
+    (index) => {
+      setCurrentPage(index);
+      if (currentPage) {
+        const moduleType = details?.modules[currentPage]?.type
+        setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
+        if (moduleType !== 'LINK_MODULE')
+          setPageTitle(details?.modules[index].title);
+      } else {
+        setIsDrawerPageOpen(true);
+        setPageTitle(details?.modules[index].title);
+      }
+    },
+    [details, currentPage]
+  );
+
   const [updateUser, addToLoading] = useAPI<any>({
     endpoint: 'auth/update',
     method: 'PUT',
@@ -93,28 +114,7 @@ const ProductDetails: React.FC = () => {
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage()
     }
-  }, [previewEvent]);
-
-  const closeDrawerPage = useCallback(() => {
-    setCurrentPage(null);
-    setIsDrawerPageOpen(false);
-  }, []);
-
-  const changeDrawerPage = useCallback(
-    (index) => {
-      setCurrentPage(index);
-      if (currentPage) {
-        const moduleType = details?.modules[currentPage]?.type
-        setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
-        if (moduleType !== 'LINK_MODULE')
-          setPageTitle(details?.modules[index].title);
-      } else {
-        setIsDrawerPageOpen(true);
-        setPageTitle(details?.modules[index].title);
-      }
-    },
-    [details, currentPage]
-  );
+  }, [previewEvent, changeDrawerPage, closeDrawerPage]);
 
   let buttonsArray = useMemo(() => {
     let buttons: ButtonType[] = [];
@@ -211,10 +211,12 @@ const ProductDetails: React.FC = () => {
             updateUser({
               productCollection: [...productCollection.filter(productTag => productTag !== id)]
             })
+            showToast({ message: t('removeFromCollectionToast'), type: 'success'});
           } else {
             updateUser({
               productCollection: [...productCollection, id]
             })
+            showToast({ message: t('addToCollectionToast'), type: 'success'});
           }
         }
         buttons.push({
@@ -228,7 +230,7 @@ const ProductDetails: React.FC = () => {
       }
     }
     return buttons;
-  }, [changeDrawerPage, id, details, currentPage, setSignInRedirect, personalDetails, user]);
+  }, [changeDrawerPage, id, details, setSignInRedirect, personalDetails, user, logEvent, t, updateUser]);
 
   const leadModule: any = details?.leadModule || {};
 
@@ -262,7 +264,7 @@ const ProductDetails: React.FC = () => {
         const { registeredTo } = leadModule?.moduleInfo || {};
         const tagType = details?.product?.tagType;
 
-        if (registeredTo && tagType == 'Unit') {
+        if (registeredTo && tagType === 'Unit') {
           return (
             <Wrapper
               direction='column'
@@ -356,7 +358,7 @@ const ProductDetails: React.FC = () => {
           return null;
       }
     }
-  }, [currentPage, closeDrawerPage, details, showAuthPage]);
+  }, [currentPage, closeDrawerPage, details, showAuthPage, disableModalDismiss]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt='brand-logo' maxWidth='110px' />,

@@ -17,6 +17,7 @@ import Image from 'components/Image';
 import Text from 'components/Text';
 import {
   Drawer,
+  DragBar,
   DrawerBody,
   DrawerClose,
   DrawerFooter,
@@ -182,6 +183,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               )}
             </DrawerHeader>
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
+              <DragBar />
               {!isDrawerOpen && (
                 <>
                   {buttons?.map((button) => {

@@ -89,6 +89,8 @@ export const resources = {
       productDetails: {
         addToCollection: "Add to collection",
         removeFromCollection: "Remove from collection",
+        addToCollectionToast: "Added to Collection",
+        removeFromCollectionToast: "Removed from Collection",
       },
       drawers: {
         registrationDrawer: {

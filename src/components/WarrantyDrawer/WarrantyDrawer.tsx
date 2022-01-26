@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SuccessDrawer from 'components/SuccessDrawer';
+import HtmlWrapper from 'components/HtmlWrapper';
 import DetailsModal from './DetailsModal';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
@@ -62,7 +63,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     if (!warrantyData?.activated) {
       checkAndActivateWarranty();
     }
-  }, [warrantyData?.activated, warrantyId, activateWarranty]);
+  }, [warrantyData?.activated, slug, warrantyId, activateWarranty]);
 
   useEffect(() => {
     if (successDrawer) {
@@ -115,7 +116,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           animationInDelay={retractDrawer ? 200 : 0}
           isVisible={true}
         >
-          <Wrapper
+          <HtmlWrapper
             width='100%'
             gap='0.75rem'
             direction='column'
