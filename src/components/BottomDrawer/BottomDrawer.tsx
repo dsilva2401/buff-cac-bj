@@ -81,7 +81,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       margin = 380;
   }
   if(isPreviewMode){
-    bottomHeight = ((window.innerHeight / appZoom) - ((window.innerHeight * 0.6) / appZoom));
+    bottomHeight = ((window.innerHeight / appZoom) - ((window.innerHeight * 0.45) / appZoom));
   } else {
     bottomHeight = (window.innerHeight - margin);
   }
@@ -155,7 +155,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         cancel='a, button, #not-draggable'
         disabled={disableModalDismiss}
       >
-        <Drawer isControlled={isControlled} style={isPreviewMode ? {height: `calc((95vh / ${appZoom}))`} : {}}>
+        <Drawer isControlled={isControlled} style={isPreviewMode ? {height: `calc((88vh / ${appZoom}))`} : {}}>
           <Wrapper
             width='100%'
             height='100%'
