@@ -69,7 +69,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       <Button
         variant='light'
         style={{ border: '0', color: '#000000' }}
-        onClick={() => handleSocialAuth(ProviderName.Google)}
+        onClick={() => handleSocialAuth(ProviderName.Facebook)}
       >
         <FacebookLogo /> {t('facebookButton')}
       </Button>

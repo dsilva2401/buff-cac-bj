@@ -67,21 +67,35 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   leadInformation,
   disableModalDismiss
 }) => {
-  const { setPageState, retractDrawer, setRetractDrawer, appZoom } = useGlobal();
+  const { setPageState, retractDrawer, setRetractDrawer, appZoom, isPreviewMode } = useGlobal();
 
   const topHeight = 0;
   let bottomHeight: number;
-  if (isBrowser) {
+  let margin = 320;
+  if (isBrowser || isPreviewMode) {
     if (window.innerHeight < 700)
-      bottomHeight = (window.innerHeight - 340 / appZoom);
+      margin = 340;
     else if (window.innerHeight > 1000)
-      bottomHeight = (window.innerHeight - 420 / appZoom);
+      margin = 420;
     else
-      bottomHeight = (window.innerHeight - 380 / appZoom);
-  } else bottomHeight = (window.innerHeight - 320 / appZoom);
+      margin = 380;
+  }
+  if(isPreviewMode){
+    bottomHeight = ((window.innerHeight / appZoom) - ((window.innerHeight * 0.6) / appZoom));
+  } else {
+    bottomHeight = (window.innerHeight - margin);
+  }
 
   // const topHeight = -window.innerHeight * (0.85 / appZoom);
   // const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
+
+  useEffect(()=>{
+    if(isChildOpen){
+      setPosition({ ...position, y: topHeight });
+    } else {
+      setPosition({ ...position, y: bottomHeight });
+    }
+  }, [isChildOpen, appZoom]);
 
   const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
@@ -141,7 +155,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         cancel='a, button, #not-draggable'
         disabled={disableModalDismiss}
       >
-        <Drawer isControlled={isControlled}>
+        <Drawer isControlled={isControlled} style={isPreviewMode ? {height: `calc((95vh / ${appZoom}))`} : {}}>
           <Wrapper
             width='100%'
             height='100%'
