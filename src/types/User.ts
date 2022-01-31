@@ -9,13 +9,20 @@ export interface Warranty {
   purchaseDate?: string;
   expirationDate?: string;
 };
+
+export interface CollectionItem {
+	brandId?: string;
+	productId?: string;
+	variantId?: string;
+	tagId: string;
+}
 export interface UserProfile {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
   role: string;
   warranties?: Warranty[];
-  productCollection?: string[]
+  productCollection?: CollectionItem[]
 };
 
 export interface UserSigninBody {

@@ -29,6 +29,7 @@ import useLogEvent from 'hooks/useLogEvent';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
 import Text from 'components/Text';
+import { CollectionItem } from 'types/User';
 
 type UrlParam = {
   id: string;
@@ -199,7 +200,7 @@ const ProductDetails: React.FC = () => {
         const productCollection = personalDetails?.profile?.productCollection || [];
 
         const existInCollection = productCollection.find(
-          (productTag: string) => details?.tag?.slug === productTag
+          (productTag: CollectionItem) => details?.tag?.slug === productTag.tagId
         );
 
         if (existInCollection) {
@@ -209,12 +210,17 @@ const ProductDetails: React.FC = () => {
         let onClick = () => {
           if (existInCollection) {
             updateUser({
-              productCollection: [...productCollection.filter(productTag => productTag !== id)]
+              productCollection: [...productCollection.filter(productTag => productTag.tagId !== id)]
             })
             showToast({ message: t('removeFromCollectionToast'), type: 'success'});
           } else {
             updateUser({
-              productCollection: [...productCollection, id]
+              productCollection: [...productCollection, {
+                tagId: id,
+                brandId: details?.brand?.id,
+                productId: details?.product?.id,
+                variantId: null
+              }]
             })
             showToast({ message: t('addToCollectionToast'), type: 'success'});
           }
@@ -233,6 +239,8 @@ const ProductDetails: React.FC = () => {
   }, [changeDrawerPage, id, details, setSignInRedirect, personalDetails, user, logEvent, t, updateUser]);
 
   const leadModule: any = details?.leadModule || {};
+
+  console.log(details, 'details');
 
   const leadInformation = useMemo(() => {
     switch (leadModule.type) {
