@@ -67,30 +67,38 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   leadInformation,
   disableModalDismiss
 }) => {
-  const { setPageState, retractDrawer, setRetractDrawer, appZoom, isPreviewMode } = useGlobal();
+  const {
+    setPageState,
+    retractDrawer,
+    setRetractDrawer,
+    appZoom,
+    isPreviewMode
+  } = useGlobal();
 
   const topHeight = 0;
   let bottomHeight: number;
-  let margin = 320;
+  let margin = 290;
   if (isBrowser || isPreviewMode) {
     if (window.innerHeight < 700)
       margin = 340;
-    else if (window.innerHeight > 1000)
-      margin = 420;
-    else
-      margin = 380;
+    else if (window.innerHeight >= 700 && window.innerHeight < 800)
+      margin = 350;
+    else if (window.innerHeight >= 800 && window.innerHeight < 900)
+      margin = 370;
+    else if (window.innerHeight >= 900 && window.innerHeight < 1000)
+      margin = 390;
+    else if (window.innerHeight >= 1000)
+      margin = window.innerHeight * 0.4;
   }
-  if(isPreviewMode){
+  
+  if (isPreviewMode) {
     bottomHeight = ((window.innerHeight / appZoom) - ((window.innerHeight * 0.45) / appZoom));
   } else {
     bottomHeight = (window.innerHeight - margin);
   }
 
-  // const topHeight = -window.innerHeight * (0.85 / appZoom);
-  // const bottomHeight = -window.innerHeight * (0.3 / appZoom) ;
-
-  useEffect(()=>{
-    if(isChildOpen){
+  useEffect(() => {
+    if (isChildOpen) {
       setPosition({ ...position, y: topHeight });
     } else {
       setPosition({ ...position, y: bottomHeight });

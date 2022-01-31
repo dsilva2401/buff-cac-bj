@@ -57,6 +57,8 @@ export function useAPI<T>(
           setLoading(false);
           onSuccess(response);
           return response;
+        } else if (res.status === 400) {
+          window.location.href = '/404';
         }
       } catch (e) {
         setLoading(false);

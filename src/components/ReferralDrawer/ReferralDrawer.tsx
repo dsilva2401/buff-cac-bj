@@ -55,11 +55,11 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
       <Text
         fontSize='1rem'
         fontWeight='600'
-        margin='1.25rem 3rem 1.25rem 1rem'
+        margin='1.25rem 3rem 1.25rem 0.75rem'
       >
         <h1>{drawerTitle}</h1>
       </Text>
-      <Wrapper width='100%' direction='column' padding='0 0.8rem'>
+      <Wrapper width='100%' direction='column'>
         <Animated
           animationIn="slideInRight"
           animationOut="slideOutLeft"

@@ -16,6 +16,21 @@ const HtmlWrapper = styled(Wrapper)`
     border-radius: 50px;
     text-decoration: none !important;
   }
+  p {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
+    padding: 0;
+    strong {
+      color: #98A3AA;
+      margin: 0;
+      padding: 0;
+    }
+  }
+  img {
+    margin: 12px 0px;
+    border-radius: 12px;
+  }
 `;
 
 export default HtmlWrapper;
