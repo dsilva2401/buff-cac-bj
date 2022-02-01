@@ -32,7 +32,7 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
   const onError = useCallback((error) => {
     console.log('ERROR CODE: ', error.code);
     console.log('ERROR MSG: ', error.message);
-  }, [])
+  }, []);
 
   const [getProduct, loading] = useAPI({
     method: 'GET',

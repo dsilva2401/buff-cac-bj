@@ -259,7 +259,7 @@ const ProductDetails: React.FC = () => {
         };
 
         return (
-          <Wrapper direction='column' alignItems='flex-end'>
+          <Wrapper justifyContent='flex-end' gap='0.5rem'>
             <Text textDecoration='line-through' fontSize='0.8rem' color='grey'>
               <span>{`$${price}`}</span>
             </Text>
@@ -292,17 +292,9 @@ const ProductDetails: React.FC = () => {
         if (!period && !duration) return null;
 
         return (
-          <Wrapper
-            direction='column'
-            alignItems='flex-end'
-          >
-            <Text height='20px' fontSize='0.7rem'>
-              <span>Warranty</span>
-            </Text>
-            <Text fontSize='0.7rem' fontWeight='600'>
-              <span>{`${period} ${duration?.label}`}</span>
-            </Text>
-          </Wrapper>
+          <Text fontSize='0.7rem'>
+            <span>{`${period} ${duration?.label}`} warranty</span>
+          </Text>
         )
       default:
         return null;
@@ -433,6 +425,7 @@ const ProductDetails: React.FC = () => {
         loadingState={addToLoading || loading}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
+        // closeChild={closeDrawerPage}
         closeChild={closeDrawerPage}
         leadInformation={leadInformation}
         disableModalDismiss={disableModalDismiss}

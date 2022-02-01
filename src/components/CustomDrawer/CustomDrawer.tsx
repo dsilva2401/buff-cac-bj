@@ -21,14 +21,13 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
     <Wrapper
       width='100%'
       direction='column'
-      padding='0 0.8rem 2rem'
       alignItems='flex-start'
       justifyContent='flex-start'
     >
       <Text
         fontSize='1rem'
         fontWeight='600'
-        margin='1.25rem 3rem 1.25rem 0rem'
+        margin='1.25rem 3rem 1.25rem 0.75rem'
       >
         <h1>{drawerTitle}</h1>
       </Text>
@@ -42,8 +41,8 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
       >
         <HtmlWrapper
           width='100%'
-          gap='0.75rem'
           direction='column'
+          padding='1rem 0.75rem'
           dangerouslySetInnerHTML={{ __html: drawerData.content }}
         />
       </Animated>
