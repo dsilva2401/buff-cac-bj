@@ -98,10 +98,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   }
 
   useEffect(() => {
-    if (isChildOpen) {
-      setPosition({ ...position, y: topHeight });
-    } else {
-      setPosition({ ...position, y: bottomHeight });
+    if (isPreviewMode) {
+      if (isChildOpen) {
+        setPosition({ ...position, y: topHeight });
+      } else {
+        setPosition({ ...position, y: bottomHeight });
+      }
     }
   }, [isChildOpen, appZoom]);
 
