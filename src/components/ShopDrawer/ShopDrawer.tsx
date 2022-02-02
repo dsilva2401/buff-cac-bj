@@ -1,25 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import placeholder from 'assets/images/png/placeholder.png';
+import Button from 'components/Button';
+import Image from 'components/Image';
+import QuantityController from 'components/QuantityController';
+import SelectInput from 'components/SelectInput';
+import SuccessDrawer from 'components/SuccessDrawer';
+import Text from 'components/Text';
+import Wrapper from 'components/Wrapper';
 import { useGlobal } from 'context/global/GlobalContext';
-import { useTranslation } from 'react-i18next';
+import useLogEvent from 'hooks/useLogEvent';
+import hash from 'object-hash';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Animated } from 'react-animated-css';
+import { useTranslation } from 'react-i18next';
+import ProgressiveImage from 'react-progressive-image';
 import { theme } from 'styles/theme';
+import '../../../node_modules/slick-carousel/slick/slick-theme.css';
+import '../../../node_modules/slick-carousel/slick/slick.css';
 import {
   ShoppingModuleType,
   VariantDetails,
 } from '../../types/ProductDetailsType';
-import '../../../node_modules/slick-carousel/slick/slick.css';
-import '../../../node_modules/slick-carousel/slick/slick-theme.css';
-import QuantityController from 'components/QuantityController';
-import placeholder from 'assets/images/png/placeholder.png';
-import ProgressiveImage from 'react-progressive-image';
-import SuccessDrawer from 'components/SuccessDrawer';
-import SelectInput from 'components/SelectInput';
-import useLogEvent from 'hooks/useLogEvent';
-import Wrapper from 'components/Wrapper';
-import Button from 'components/Button';
-import Image from 'components/Image';
-import Text from 'components/Text';
-import hash from 'object-hash';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -135,7 +135,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       setTimeout(() => {
         setSuccessDrawer(false);
       }, 3000);
-    };
+    }
   }, [successDrawer]);
 
   return (
@@ -184,8 +184,16 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             margin='3rem 0 0 0'
             gap='0.5rem'
           >
-            <Wrapper width='40%' height='200px' responsiveImg>
-              <ProgressiveImage src={chosenOption.image} placeholder={placeholder}>
+            <Wrapper
+              width='40%'
+              height='200px'
+              responsiveImg
+              borderRadius='0.75rem'
+            >
+              <ProgressiveImage
+                src={chosenOption.image}
+                placeholder={placeholder}
+              >
                 {(src: string, loading: boolean) => (
                   <Image
                     rounded
@@ -234,7 +242,18 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                         textDecoration='line-through'
                       >
                         <p>
-                          {parseInt(chosenOption.discountedPrice!).toLocaleString(
+                          {parseInt(
+                            chosenOption.discountedPrice!
+                          ).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                            maximumSignificantDigits: 3,
+                          })}
+                        </p>
+                      </Text>
+                      <Text fontSize='0.9rem' fontWeight='600'>
+                        <p>
+                          {parseInt(chosenOption.price).toLocaleString(
                             'en-US',
                             {
                               style: 'currency',
@@ -242,15 +261,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                               maximumSignificantDigits: 3,
                             }
                           )}
-                        </p>
-                      </Text>
-                      <Text fontSize='0.9rem' fontWeight='600'>
-                        <p>
-                          {parseInt(chosenOption.price).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                            maximumSignificantDigits: 3,
-                          })}
                         </p>
                       </Text>
                     </>
@@ -325,8 +335,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   {isValidCombo === null
                     ? t('checkoutHint.chooseOptions')
                     : isValidCombo === false
-                      ? t('checkoutHint.comboUnavailable')
-                      : ''}
+                    ? t('checkoutHint.comboUnavailable')
+                    : ''}
                 </p>
               </Text>
             )}
