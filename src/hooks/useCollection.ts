@@ -10,7 +10,6 @@ function useCollection(
   >([]);
 
   const onSuccess = useCallback((details) => {
-    console.log('onSuccess details: ', details);
     setCollectionDetails(details);
   }, []);
 

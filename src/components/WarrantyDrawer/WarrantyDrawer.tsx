@@ -88,8 +88,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     );
   };
 
-  console.log("HTML: ", warrantyData?.details);
-
   return (
     <>
       <DetailsModal
