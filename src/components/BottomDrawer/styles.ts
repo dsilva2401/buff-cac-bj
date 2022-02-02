@@ -15,7 +15,7 @@ export const Drawer = styled.div<DrawerProps>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: 1px 0 0 0 solid #e7eaeb;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
@@ -30,7 +30,8 @@ export const DrawerHeader = styled.div<DrawerHeaderProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
+  height: ${(props) => (props.isChildOpen ? '4rem' : '5.25rem')};
   width: ${(props) => (props.isChildOpen ? 'max-content' : '100%')};
   position: ${(props) => (props.isChildOpen ? 'absolute' : 'relative')};
   ${(props) => {
@@ -76,6 +77,8 @@ export const DrawerIconLink = styled.a`
 export const DrawerClose = styled.button`
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   background-color: #f7f7f7;
   border-radius: 50%;
   display: flex;
@@ -97,5 +100,5 @@ export const DragBar = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-radius: 7px;
-  background: #CBD1D4;
+  background: #cbd1d4;
 `;
