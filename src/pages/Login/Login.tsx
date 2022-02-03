@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { RoutesHashMap } from 'routes';
 import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +12,7 @@ import IconButton from 'components/IconButton';
 import LoginForm from 'components/LoginForm';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
+import Text from 'components/Text';
 
 const Login: React.FC = () => {
   const { user, setIsMenuOpen } = useGlobal();
@@ -34,26 +36,35 @@ const Login: React.FC = () => {
   useRedirectLoggedInUser(user);
 
   return (
-    <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='space-between'
-      alignItems='center'
-      position='relative'
-      overflow='auto'
-    >
-      <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
-      <LoginForm onForgotPasswordClick={() => {
-        history.push(RoutesHashMap.ForgotPassword.path)
-      }} />
-      <PageFooter>
-        <p>{t('newToBrij')}</p>
-        <Link to={RoutesHashMap.Signup.path}>
-          {t('signUpLink')}
-        </Link>
-      </PageFooter>
-    </Wrapper>
+    <>
+      <Helmet>
+        <title>{t('pageTitle')}</title>
+      </Helmet>
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='space-between'
+        alignItems='center'
+        position='relative'
+        overflow='auto'
+      >
+        <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
+        <LoginForm onForgotPasswordClick={() => {
+          history.push(RoutesHashMap.ForgotPassword.path)
+        }} />
+        <PageFooter>
+          <Text>
+            <p>{t('newToBrij')}</p>
+          </Text>
+          <Link to={RoutesHashMap.Signup.path} style={{ textDecoration: 'none' }}>
+            <Text color='#4B6EFA'>
+              <p>{t('signUpLink')}</p>
+            </Text>
+          </Link>
+        </PageFooter>
+      </Wrapper>
+    </>
   );
 };
 

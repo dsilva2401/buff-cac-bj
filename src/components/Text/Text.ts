@@ -12,6 +12,7 @@ type TextProps = {
   padding?: string;
   margin?: string;
   height?: string
+  cursor?: string;
 };
 
 const Text = styled.div<TextProps>`
@@ -41,6 +42,7 @@ const Text = styled.div<TextProps>`
     color: ${(props) => (props.color ? props.color : 'inherit')};
     padding: ${(props) => (props.padding ? props.padding : 'unset')};
     margin: ${(props) => (props.margin ? props.margin : 'unset')};
+    cursor: ${(props) => (props.cursor ? props.cursor : 'unset')};
   }
 `;
 

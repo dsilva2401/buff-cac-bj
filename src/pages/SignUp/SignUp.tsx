@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { RoutesHashMap } from 'routes';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
@@ -10,6 +11,7 @@ import SignUpForm from 'components/SignUpForm';
 import IconButton from 'components/IconButton';
 import Wrapper from 'components/Wrapper';
 import Image from 'components/Image';
+import Text from 'components/Text';
 
 const SignUp: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'signUp' });
@@ -41,24 +43,33 @@ const SignUp: React.FC = () => {
   );
 
   return (
-    <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='space-between'
-      alignItems='center'
-      position='relative'
-      overflow='auto'
-    >
-      <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
-      <SignUpForm onSignup={redirectUser} />
-      <PageFooter>
-        <p>{t('existingUser')}</p>
-        <Link to={RoutesHashMap.Login.path}>
-          {t('signInLink')}
-        </Link>
-      </PageFooter>
-    </Wrapper>
+    <>
+      <Helmet>
+        <title>{t('pageTitle')}</title>
+      </Helmet>
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='space-between'
+        alignItems='center'
+        position='relative'
+        overflow='auto'
+      >
+        <PageHeader border title={t('pageHeaderTitle')} logo={logo} actionButton={menuButton} />
+        <SignUpForm onSignup={redirectUser} />
+        <PageFooter>
+          <Text>
+            <p>{t('existingUser')}</p>
+          </Text>
+          <Link to={RoutesHashMap.Login.path} style={{ textDecoration: 'none' }}>
+            <Text color='#4B6EFA'>
+              <p>{t('signInLink')}</p>
+            </Text>
+          </Link>
+        </PageFooter>
+      </Wrapper>
+    </>
   );
 };
 

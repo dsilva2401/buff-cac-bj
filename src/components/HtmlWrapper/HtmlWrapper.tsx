@@ -31,6 +31,9 @@ const HtmlWrapper = styled(Wrapper)`
     margin: 12px 0px;
     border-radius: 12px;
   }
+  iframe {
+    border-radius: 12px;
+  }
 `;
 
 export default HtmlWrapper;

@@ -36,6 +36,7 @@ export const resources = {
         signOutToastMessage: "Logout Successful",
       },
       profile: {
+        pageTitle: "Profile",
         pageHeaderTitle: "Profile",
         firstNameInput: "First Name",
         lastNameInput: "Last Name",
@@ -44,6 +45,7 @@ export const resources = {
         updateToastMessage: "Profile Updated",
       },
       signUp: {
+        pageTitle: "Sign Up for Brij",
         pageHeaderTitle: "Sign Up",
         signUpButton: "Sign Up",
         magicLinkButton: "Send magic link",
@@ -56,6 +58,7 @@ export const resources = {
         useMagicLink: "Use magic link",
       },
       signIn: {
+        pageTitle: "Sign In to Brij",
         pageHeaderTitle: "Sign In",
         signInButton: "Sign In",
         magicLinkButton: "Send magic link",
@@ -69,11 +72,13 @@ export const resources = {
         useMagicLink: "Use magic link",
       },
       forgotPassword: {
+        pageTitle: "Password Reset",
         pageHeaderTitle: "Forgot Password",
         emailInput: "Enter email...",
         sendEmailLink: "Email me a Link!",
       },
       collection: {
+        pageTitle: "My Collection",
         collectionPageTitle: "My Collection",
         emptyCollectionMessage: "No Products in your collection",
         scanCodeButton: "Scan Code",
@@ -82,6 +87,7 @@ export const resources = {
         invalidScanMessage: "Not a valid Brij code",
       },
       fourZeroFour: {
+        pageTitle: "404 | Not Found",
         message: "This experience does not exist",
         learnMoreButton: "Learn about Brij",
         learnMoreLink: "https://brij.it/",
