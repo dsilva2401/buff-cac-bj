@@ -17,6 +17,8 @@ export type GlobalContextProps = {
   setAppZoom: React.Dispatch<React.SetStateAction<number>>;
   previewEvent: any;
   setPreviewEvent: React.Dispatch<React.SetStateAction<any>>;
+  previewAuthenticated: any;
+  setPreviewAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   signInRedirect: string;
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
@@ -53,6 +55,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setAppZoom: () => { },
   previewEvent: {},
   setPreviewEvent: () => { },
+  previewAuthenticated: false,
+  setPreviewAuthenticated: () => { },
   isMenuOpen: false,
   setIsMenuOpen: () => { },
   signInRedirect: '',

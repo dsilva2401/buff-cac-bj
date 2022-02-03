@@ -54,7 +54,9 @@ const ProductDetails: React.FC = () => {
     personalDetails,
     getPersonalDetails,
     user,
-    previewEvent
+    previewEvent,
+    isPreviewMode,
+    previewAuthenticated
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -312,7 +314,7 @@ const ProductDetails: React.FC = () => {
       const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
 
-      if (showAuthPage || module?.locked) {
+      if ((showAuthPage || module?.locked) && (!isPreviewMode || !previewAuthenticated)) {
         return (
           <AuthDrawer
             html={details?.registration?.registrationText}
@@ -364,7 +366,7 @@ const ProductDetails: React.FC = () => {
           return null;
       }
     }
-  }, [currentPage, closeDrawerPage, details, showAuthPage, disableModalDismiss]);
+  }, [currentPage, closeDrawerPage, details, showAuthPage, disableModalDismiss, previewAuthenticated]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt='brand-logo' maxWidth='110px' />,
