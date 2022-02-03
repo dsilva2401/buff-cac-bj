@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { theme } from 'styles/theme';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useGlobal } from 'context/global/GlobalContext';
 import Text from 'components/Text';
@@ -27,6 +28,9 @@ const FourZeroFour: React.FC = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{t('pageTitle')}</title>
+      </Helmet>
       <Wrapper
         width='100%'
         height='100%'

@@ -48,14 +48,16 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
 
   return (
     <Wrapper
+      width='100%'
       direction='column'
+      padding='0 0.75rem'
       alignItems='flex-start'
       justifyContent='flex-start'
     >
       <Text
         fontSize='1rem'
         fontWeight='600'
-        margin='1.25rem 3rem 1.25rem 0.75rem'
+        margin='1.25rem 3rem 1.25rem 0'
       >
         <h1>{drawerTitle}</h1>
       </Text>

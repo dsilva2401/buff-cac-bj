@@ -136,13 +136,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </Wrapper>
             <Wrapper width='100%' justifyContent='space-between' padding='0 1rem'>
               <Text
+                color='#4B6EFA'
+                cursor='pointer'
                 fontSize='0.7rem'
                 textDecoration='unset'
                 onClick={() => setUsingMagicLink(!usingMagicLink)}
               >
                 <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
               </Text>
-              <Text fontSize='0.7rem' textDecoration='unset' onClick={() => onForgotPasswordClick()}>
+              <Text
+                color='#4B6EFA'
+                cursor='pointer'
+                fontSize='0.7rem'
+                textDecoration='unset'
+                onClick={() => onForgotPasswordClick()}
+              >
                 <span>
                   {t('forgotPassword')}
                 </span>

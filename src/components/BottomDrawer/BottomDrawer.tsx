@@ -4,11 +4,11 @@ import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
 import phoneCallIcon from 'assets/icons/svg/social_phone-call.svg';
 import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
-import LoadingIndicator from 'components/LoadingIndicator';
 import emailIcon from 'assets/icons/svg/social_email.svg';
 import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
@@ -249,22 +249,13 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               {isDrawerOpen &&
                 (isChildOpen ? (
                   children
-                ) : loadingState ? (
-                  <Wrapper
-                    width='100%'
-                    height='100%'
-                    direction='column'
-                    alignItems='center'
-                    justifyContent='center'
-                  >
-                    <LoadingIndicator />
-                  </Wrapper>
                 ) : (
                   <Wrapper width='100%' direction='column' gap='1rem'>
                     {buttons?.map((button) => (
                       <Button
                         key={button.title}
                         variant={button.isHighlight ? 'dark' : 'light'}
+                        iconRight
                         onClick={() => {
                           button.onClick();
                           setRetractDrawer(false);

@@ -6,6 +6,7 @@ type ButtonProps = {
   warning?: boolean;
   squared?: boolean;
   width?: string;
+  iconRight?: boolean;
 };
 
 const Button = styled.button<ButtonProps>`
@@ -16,6 +17,7 @@ const Button = styled.button<ButtonProps>`
   font-size: 1rem;
   font-weight: 600;
   padding: 0.9rem 0;
+
   cursor: pointer;
   transition: all 0.3s ease;
   width: ${(props) => props.width ? props.width : '100%'};
@@ -37,8 +39,8 @@ const Button = styled.button<ButtonProps>`
 
   svg {
     position: absolute;
-    left: 1rem;
     border-radius: 50%;
+    ${(props) => props.iconRight ? `right: 1rem;` : `left: 1rem;`};
   }
 
   &:active {
