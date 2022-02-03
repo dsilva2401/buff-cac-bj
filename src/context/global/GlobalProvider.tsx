@@ -60,6 +60,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [appZoom, setAppZoom] = useState(1);
   const [previewEvent, setPreviewEvent] = useState({});
+  const [previewAuthenticated, setPreviewAuthenticated] = useState(false);
 
   const {
     user,
@@ -99,6 +100,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
           setIsPreviewMode(true);
           setAppZoom(event.data.zoom);
         }
+        if(event && event.data && event.data.type === 'setAuthState') {
+          console.log('setAuthState', event.data.data)
+          setPreviewAuthenticated(event.data.data);
+        }
       }, false);
     }
   }, []);
@@ -118,6 +123,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setIsPreviewMode,
         appZoom,
         setAppZoom,
+        previewAuthenticated,
+        setPreviewAuthenticated,
         isMenuOpen,
         setIsMenuOpen,
         signInRedirect,

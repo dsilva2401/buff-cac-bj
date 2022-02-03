@@ -19,7 +19,7 @@ export function useAPI<T>(
   currentToken: string | null = null,
   shouldUseToken: boolean = true
 ): UseAPIVars<T> {
-  const { token } = useGlobal();
+  const { token, isPreviewMode } = useGlobal();
   const { method, endpoint, onSuccess, onError } = payload;
 
   // in some cases we will call the useAPI hook inside useGlobal
@@ -57,8 +57,8 @@ export function useAPI<T>(
           setLoading(false);
           onSuccess(response);
           return response;
-        } else if (res.status === 400) {
-          window.location.href = '/404';
+        } else if (res.status === 400 && !isPreviewMode) {
+          window.location.pathname = '/404';
         }
       } catch (e) {
         setLoading(false);
