@@ -7,12 +7,14 @@ import {
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
 import { useAPI } from 'utils/api';
+import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
+import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
 import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
 import externalLink from 'assets/icons/svg/external-link.svg';
 import placeholder from 'assets/images/png/placeholder.png';
@@ -207,7 +209,7 @@ const ProductDetails: React.FC = () => {
 
         if (existInCollection) {
           title = t('removeFromCollection');
-        }
+        };
 
         let onClick = () => {
           if (existInCollection) {
@@ -233,10 +235,10 @@ const ProductDetails: React.FC = () => {
           isHighlight: false,
           locked: false,
           pageState: null,
-          icon: null,
-        })
-      }
-    }
+          icon: addToLoading ? <LoadingAnimation width={32} /> : null
+        });
+      };
+    };
     return buttons;
   }, [changeDrawerPage, id, details, setSignInRedirect, personalDetails, user, logEvent, t, updateUser]);
 
@@ -395,6 +397,11 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
+      {details && (
+        <Helmet>
+          <title>{details?.brand?.name} | {details?.product?.name}</title>
+        </Helmet>
+      )}
       {details?.product?.image && (
         <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
           {(src: string, loading: boolean) => (
@@ -433,7 +440,6 @@ const ProductDetails: React.FC = () => {
         loadingState={addToLoading || loading}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
-        // closeChild={closeDrawerPage}
         closeChild={closeDrawerPage}
         leadInformation={leadInformation}
         disableModalDismiss={disableModalDismiss}

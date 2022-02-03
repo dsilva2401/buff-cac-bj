@@ -31,7 +31,7 @@ export const DrawerHeader = styled.div<DrawerHeaderProps>`
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  height: ${(props) => (props.isChildOpen ? '4rem' : '5.25rem')};
+  height: ${(props) => (props.isChildOpen ? '4.1rem' : '5.25rem')};
   width: ${(props) => (props.isChildOpen ? 'max-content' : '100%')};
   position: ${(props) => (props.isChildOpen ? 'absolute' : 'relative')};
   ${(props) => {

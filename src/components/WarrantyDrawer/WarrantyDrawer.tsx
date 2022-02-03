@@ -97,6 +97,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         confirmWarranty={confirmWarranty}
       />
       <Wrapper
+        width='100%'
         direction='column'
         alignItems='flex-start'
         justifyContent='flex-start'
@@ -115,6 +116,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           animationOutDuration={300}
           animationInDelay={retractDrawer ? 200 : 0}
           isVisible={true}
+          style={{ width: '100%' }}
         >
           <HtmlWrapper
             width='100%'

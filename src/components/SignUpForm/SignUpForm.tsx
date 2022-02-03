@@ -138,6 +138,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             </Wrapper>
             <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
               <Text
+                color='#4B6EFA'
+                cursor='pointer'
                 fontSize='0.7rem'
                 textDecoration='unset'
                 onClick={() => setUsingMagicLink(!usingMagicLink)}

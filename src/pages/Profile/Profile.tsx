@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { theme } from 'styles/theme';
 import { useAPI } from 'utils/api';
 import { useHistory } from 'react-router-dom';
@@ -64,97 +65,102 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   }, [profile]);
 
   return (
-    <Wrapper
-      width='100%'
-      height='100%'
-      direction='column'
-      justifyContent='space-between'
-      position='relative'
-      overflow='auto'
-    >
-      <PageHeader
-        title={t('pageHeaderTitle')}
-        goBack={() => history.goBack()}
-      />
+    <>
+      <Helmet>
+        <title>{t('pageTitle')}</title>
+      </Helmet>
       <Wrapper
         width='100%'
         height='100%'
         direction='column'
         justifyContent='space-between'
-        alignItems='center'
+        position='relative'
         overflow='auto'
-        padding='2rem 1rem'
-        gap='1.2rem'
       >
-        <Wrapper width='100%' alignItems='center' direction='column' margin='2rem 0' gap='1.2rem'>
-          <Wrapper width='40%' justifyContent='center' alignItems='center' margin='0 0 1.25rem 0'>
-            <Avatar>
-              <Text color={theme.primary} fontSize='3rem'>
-                <h1>
-                  {firstName && lastName
-                    ? getNameInitials(firstName + ' ' + lastName)
-                    : user?.email?.charAt(0)?.toUpperCase()}
-                </h1>
-              </Text>
-            </Avatar>
-          </Wrapper>
+        <PageHeader
+          title={t('pageHeaderTitle')}
+          goBack={() => history.goBack()}
+        />
+        <Wrapper
+          width='100%'
+          height='100%'
+          direction='column'
+          justifyContent='space-between'
+          alignItems='center'
+          overflow='auto'
+          padding='2rem 1rem'
+          gap='1.2rem'
+        >
+          <Wrapper width='100%' alignItems='center' direction='column' margin='2rem 0' gap='1.2rem'>
+            <Wrapper width='40%' justifyContent='center' alignItems='center' margin='0 0 1.25rem 0'>
+              <Avatar>
+                <Text color={theme.primary} fontSize='3rem'>
+                  <h1>
+                    {firstName && lastName
+                      ? getNameInitials(firstName + ' ' + lastName)
+                      : user?.email?.charAt(0)?.toUpperCase()}
+                  </h1>
+                </Text>
+              </Avatar>
+            </Wrapper>
 
-          <Wrapper
-            direction='column'
-            width='100%'
-            justifyContent='center'
-            alignItems='center'
-          >
-            <Input
-              type='text'
-              value={firstName}
-              placeholder={t('firstNameInput')}
-              onChange={(e) => setFirstName(e.target.value)}
-              margin='0 0 1rem'
-            />
-            <Input
-              type='text'
-              value={lastName}
-              placeholder={t('lastNameInput')}
-              onChange={(e) => setLastName(e.target.value)}
-              margin='0 0 1rem'
-            />
-            <InputMask
-              value={phoneNumber}
-              mask='(+1) 999 999 9999'
-              onChange={(e) => setPhoneNumber(e.target.value)}
+            <Wrapper
+              direction='column'
+              width='100%'
+              justifyContent='center'
+              alignItems='center'
             >
-              {() => (
-                <Input
-                  type='tel'
-                  pattern='[+-]?\d+(?:[.,]\d+)?'
-                  placeholder={personalDetailsTranslation('phoneNumberInputPlaceholder')}
-                  margin='0 0 1rem'
-                />
-              )}
-            </InputMask>
+              <Input
+                type='text'
+                value={firstName}
+                placeholder={t('firstNameInput')}
+                onChange={(e) => setFirstName(e.target.value)}
+                margin='0 0 1rem'
+              />
+              <Input
+                type='text'
+                value={lastName}
+                placeholder={t('lastNameInput')}
+                onChange={(e) => setLastName(e.target.value)}
+                margin='0 0 1rem'
+              />
+              <InputMask
+                value={phoneNumber}
+                mask='(+1) 999 999 9999'
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              >
+                {() => (
+                  <Input
+                    type='tel'
+                    pattern='[+-]?\d+(?:[.,]\d+)?'
+                    placeholder={personalDetailsTranslation('phoneNumberInputPlaceholder')}
+                    margin='0 0 1rem'
+                  />
+                )}
+              </InputMask>
+            </Wrapper>
           </Wrapper>
-        </Wrapper>
-        <Wrapper width='100%' justifyContent='center' alignItems='center'>
-          {loading ? (
-            <LoadingIndicator />
-          ) : (
-            <Button
-              variant='dark'
-              onClick={() =>
-                updateUser({
-                  firstName,
-                  lastName,
-                  phoneNumber,
-                })
-              }
-            >
-              {t('saveChanges')}
-            </Button>
-          )}
+          <Wrapper width='100%' justifyContent='center' alignItems='center'>
+            {loading ? (
+              <LoadingIndicator />
+            ) : (
+              <Button
+                variant='dark'
+                onClick={() =>
+                  updateUser({
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                  })
+                }
+              >
+                {t('saveChanges')}
+              </Button>
+            )}
+          </Wrapper>
         </Wrapper>
       </Wrapper>
-    </Wrapper>
+    </>
   );
 };
 
