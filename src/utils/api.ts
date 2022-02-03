@@ -31,6 +31,18 @@ export function useAPI<T>(
 
   const apiCall = useCallback(
     async (data?: T) => {
+      if (
+        method === 'GET' &&
+        endpoint.includes('products') &&
+        !endpoint.includes('products/collection')
+      ) {
+        const slug = endpoint.split('/')[1];
+        if (slug === '1234') {
+          // Slug 1234 is special case of preview mode
+          // data will be sent via iframe message
+          return;
+        }
+      }
       let headers: HeadersInit = {
         'content-type': 'application/json',
       };
@@ -39,10 +51,10 @@ export function useAPI<T>(
 
       if (shouldUseToken) {
         token = tokenToUse;
-      };
+      }
       if (token) {
         headers.Authorization = `Bearer ${token}`;
-      };
+      }
 
       try {
         setLoading(true);
@@ -65,8 +77,16 @@ export function useAPI<T>(
         onError(JSON.stringify(e));
       }
     },
-    [tokenToUse, shouldUseToken, method, endpoint, onSuccess, onError]
+    [
+      tokenToUse,
+      shouldUseToken,
+      method,
+      endpoint,
+      onSuccess,
+      onError,
+      isPreviewMode,
+    ]
   );
 
   return [apiCall, loading];
-};
+}
