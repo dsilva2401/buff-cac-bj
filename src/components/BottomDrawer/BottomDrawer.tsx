@@ -176,7 +176,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             justifyContent='space-between'
             alignItems='center'
           >
-            <DrawerHeader isChildOpen={isChildOpen}>
+            <DrawerHeader isDrawerOpen={isDrawerOpen} isChildOpen={isChildOpen}>
               {!isChildOpen && (
                 <Wrapper
                   justifyContent='space-between'
@@ -189,7 +189,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   {isDrawerOpen ? null : leadInformation}
                 </Wrapper>
               )}
-              {isDrawerOpen && !disableModalDismiss && (
+            </DrawerHeader>
+            {isDrawerOpen && !disableModalDismiss && (
                 <DrawerClose
                   onClick={() => {
                     if (isChildOpen) {
@@ -208,7 +209,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <Close />
                 </DrawerClose>
               )}
-            </DrawerHeader>
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               <DragBar />
               {!isDrawerOpen && (

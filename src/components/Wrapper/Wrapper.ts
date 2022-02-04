@@ -22,6 +22,7 @@ type WrapperProps = {
   width?: string;
   maxWidth?: string;
   height?: string;
+  minHeight?: string;
   margin?: string;
   padding?: string;
   paddingTop?: string;
@@ -64,6 +65,7 @@ const Wrapper = styled.div<WrapperProps>`
   width: ${(props) => (props.width ? props.width : 'auto')};
   max-width: ${(props) => (props.maxWidth ? props.maxWidth : 'unset')};
   height: ${(props) => (props.height ? props.height : 'auto')};
+  min-height: ${(props) => (props.minHeight ? props.minHeight : 'unset')};
   margin: ${(props) => (props.margin ? props.margin : 'unset')};
   padding: ${(props) => (props.padding ? props.padding : 'unset')};
   padding-top: ${(props) => (props.paddingTop ? props.paddingTop : 'unset')};
