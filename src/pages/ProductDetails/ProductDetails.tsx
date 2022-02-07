@@ -399,7 +399,7 @@ const ProductDetails: React.FC = () => {
     <>
       {details && (
         <Helmet>
-          <title>{details?.brand?.name} | {details?.product?.name}</title>
+          <title>{details?.brand?.name} by Brij</title>
         </Helmet>
       )}
       {details?.product?.image && (

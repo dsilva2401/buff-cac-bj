@@ -63,8 +63,8 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
       </Text>
       <Wrapper width='100%' direction='column'>
         <Animated
-          animationIn="slideInRight"
-          animationOut="slideOutLeft"
+          animationIn='slideInRight'
+          animationOut='slideOutLeft'
           animationInDuration={300}
           animationOutDuration={300}
           animationInDelay={retractDrawer ? 200 : 0}

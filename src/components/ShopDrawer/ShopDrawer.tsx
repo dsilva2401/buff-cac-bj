@@ -183,33 +183,28 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             alignItems='center'
             margin='3rem 0 0 0'
             gap='0.5rem'
+            minHeight='200px'
           >
-            <Wrapper
-              width='40%'
-              height='200px'
-              responsiveImg
-              borderRadius='0.75rem'
+            <ProgressiveImage
+              src={chosenOption.image}
+              placeholder={placeholder}
             >
-              <ProgressiveImage
-                src={chosenOption.image}
-                placeholder={placeholder}
-              >
-                {(src: string, loading: boolean) => (
-                  <Image
-                    rounded
-                    src={src}
-                    width='100%'
-                    height='100%'
-                    top={0}
-                    left={0}
-                    objectFit='contain'
-                    transition='0.3s'
-                    alt='product-image'
-                    opacity={loading ? 0.5 : 1}
-                  />
-                )}
-              </ProgressiveImage>
-            </Wrapper>
+              {(src: string, loading: boolean) => (
+                <Image
+                  rounded
+                  src={src}
+                  width='100%'
+                  maxWidth='40%'
+                  height='auto'
+                  top={0}
+                  left={0}
+                  objectFit='contain'
+                  transition='0.3s'
+                  alt='product-image'
+                  opacity={loading ? 0.5 : 1}
+                />
+              )}
+            </ProgressiveImage>
             <Wrapper
               width='55%'
               height='100%'
@@ -289,7 +284,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               ) : null}
             </Wrapper>
           </Wrapper>
-
           <Wrapper
             width='100%'
             direction='column'
