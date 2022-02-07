@@ -1,4 +1,5 @@
 import { User } from 'firebase/auth';
+import { EventPayload } from 'hooks/useLogEvent';
 import React, { createContext, useContext } from 'react';
 import { UserStruct } from 'types/User';
 import { ProductDetailsType } from '../../types/ProductDetailsType';
@@ -46,23 +47,24 @@ export type GlobalContextProps = {
   token: string | null;
   retractDrawer: boolean;
   setRetractDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+  logEvent: (data?: EventPayload | undefined) => Promise<any>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
   isPreviewMode: false,
-  setIsPreviewMode: () => { },
+  setIsPreviewMode: () => {},
   appZoom: 1,
-  setAppZoom: () => { },
+  setAppZoom: () => {},
   previewEvent: {},
-  setPreviewEvent: () => { },
+  setPreviewEvent: () => {},
   previewAuthenticated: false,
-  setPreviewAuthenticated: () => { },
+  setPreviewAuthenticated: () => {},
   isMenuOpen: false,
-  setIsMenuOpen: () => { },
+  setIsMenuOpen: () => {},
   signInRedirect: '',
-  setSignInRedirect: () => { },
+  setSignInRedirect: () => {},
   pageState: null,
-  setPageState: () => { },
+  setPageState: () => {},
   user: null,
   personalDetails: null,
   productDetails: null,
@@ -71,14 +73,15 @@ export const GlobalContext = createContext<GlobalContextProps>({
   error: null,
   activateWarranty: () => new Promise((res, rej) => res()),
   slug: null,
-  setSlug: () => { },
-  setUser: () => { },
-  getCollection: () => { },
+  setSlug: () => {},
+  setUser: () => {},
+  getCollection: () => {},
   authFetched: false,
-  getPersonalDetails: () => { },
+  getPersonalDetails: () => {},
   token: null,
   retractDrawer: false,
-  setRetractDrawer: () => { },
+  setRetractDrawer: () => {},
+  logEvent: () => new Promise((res, rej) => {}),
 });
 
 export const useGlobal = () => useContext(GlobalContext);

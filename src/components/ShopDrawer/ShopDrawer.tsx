@@ -7,7 +7,6 @@ import SuccessDrawer from 'components/SuccessDrawer';
 import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
 import { useGlobal } from 'context/global/GlobalContext';
-import useLogEvent from 'hooks/useLogEvent';
 import hash from 'object-hash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Animated } from 'react-animated-css';
@@ -36,9 +35,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     discountCode,
   } = data;
 
-  const { retractDrawer } = useGlobal();
-
-  const logEvent = useLogEvent();
+  const { retractDrawer, logEvent, productDetails, user } = useGlobal();
 
   // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
@@ -116,11 +113,21 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           quantity: selectedQuantity,
         },
       },
+      brand: productDetails?.brand.id,
+      product: productDetails?.product.id,
+      user: user?.uid,
     });
     setTimeout(() => {
       window.open(`http://${link}`, '_blank');
     });
-  }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
+  }, [
+    chosenOption,
+    modifyUrlToIncludeQuantity,
+    selectedQuantity,
+    logEvent,
+    productDetails,
+    user,
+  ]);
 
   const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);

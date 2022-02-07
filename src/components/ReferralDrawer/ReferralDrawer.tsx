@@ -7,7 +7,6 @@ import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
 import { useGlobal } from 'context/global/GlobalContext';
-import useLogEvent from 'hooks/useLogEvent';
 import React from 'react';
 import { Animated } from 'react-animated-css';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -28,8 +27,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
     keyPrefix: 'drawers.referralDrawer',
   });
 
-  const { retractDrawer } = useGlobal();
-  const logEvent = useLogEvent();
+  const { retractDrawer, logEvent, productDetails, user } = useGlobal();
 
   const handleShare = async () => {
     const shareData = {
@@ -95,6 +93,9 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
                   type: 'ENGAGEMENTS',
                   name: 'REFERRAL_LINK_COPIED',
                   data: referralData,
+                  brand: productDetails?.brand.id,
+                  product: productDetails?.product.id,
+                  user: user?.uid,
                 });
               }}
             >
@@ -109,6 +110,9 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
                   type: 'ENGAGEMENTS',
                   name: 'SEND_A_REFERRAL_LINK',
                   data: referralData,
+                  brand: productDetails?.brand.id,
+                  product: productDetails?.product.id,
+                  user: user?.uid,
                 });
               }}
             >
