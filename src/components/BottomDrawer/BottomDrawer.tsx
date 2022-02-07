@@ -212,8 +212,13 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               <DragBar />
               {!isDrawerOpen && (
-                <>
-                  {buttons?.map((button) => {
+                <Wrapper
+                  gap='1rem'
+                  width='100%'
+                  direction='column'
+                  margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
+                >
+                  {buttons?.map(button => {
                     if (button.isHighlight) {
                       return (
                         <Button
@@ -233,7 +238,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         </Button>
                       );
                     }
-                    return <></>;
                   })}
                   <Button
                     variant='light'
@@ -244,7 +248,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   >
                     More
                   </Button>
-                </>
+                </Wrapper>
               )}
               {isDrawerOpen &&
                 (isChildOpen ? (

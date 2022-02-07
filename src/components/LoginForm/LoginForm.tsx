@@ -1,27 +1,27 @@
+import Button from 'components/Button';
+import Input from 'components/Input';
+import LoadingIndicator from 'components/LoadingIndicator';
+import SocialLogin from 'components/SocialLogin';
+import Text from 'components/Text';
+import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
+import { useGlobal } from 'context/global/GlobalContext';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import useFirebaseError from 'hooks/useFirebaseError';
+import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import { useCallback, useState } from 'react';
 import { Animated } from 'react-animated-css';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { showToast } from 'components/Toast/Toast';
-import { useGlobal } from 'context/global/GlobalContext';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import LoadingIndicator from 'components/LoadingIndicator';
-import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
-import useFirebaseError from 'hooks/useFirebaseError';
-import SocialLogin from 'components/SocialLogin';
-import Wrapper from 'components/Wrapper';
-import Button from 'components/Button';
-import Input from 'components/Input';
-import Text from 'components/Text';
 
 interface LoginFormProps {
   onLogin?: () => void;
   onForgotPasswordClick?: () => void;
-};
+}
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  onLogin = () => { },
-  onForgotPasswordClick = () => { }
+  onLogin = () => {},
+  onForgotPasswordClick = () => {},
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const getErrorMessage = useFirebaseError();
@@ -33,14 +33,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [usingMagicLink, setUsingMagicLink] = useState<boolean>(true);
 
   // get magic link header
   const {
     handleMagicLink,
     loading: magicLinkLoading,
     error: magicLinkError,
-    success
+    success,
   } = useMagicLinkHandler(username);
 
   const handleUsernameChanged = useCallback(
@@ -48,24 +47,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
     []
   );
 
-  const handlePasswordChanged = useCallback(
-    ({ target: { value } }) => setPassword(value),
-    []
-  );
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
-    signInWithEmailAndPassword(auth, username, password)
-      .then(() => {
+    createUserWithEmailAndPassword(auth, username, '123456')
+      .then((data) => {
         onLogin();
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {
-        showToast({ message: getErrorMessage(error.code), type: 'error' });
-        setLoading(false);
+        if (error.code === 'auth/email-already-in-use') {
+          handleMagicLink();
+        } else {
+          showToast({ message: getErrorMessage(error.code), type: 'error' });
+        }
       })
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -96,10 +93,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           gap='1.2rem'
           height='auto'
         >
-          <SocialLogin
-            setLoading={setLoading}
-            onSuccess={onLogin}
-          />
+          <SocialLogin setLoading={setLoading} onSuccess={onLogin} />
           <Wrapper justifyContent='center' alignItems='center'>
             <Text fontSize='1.2rem' color='#98A3AA'>
               <p>or</p>
@@ -119,54 +113,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
               autoCapitalize='none'
               margin='0 0 1rem'
             />
-            <Wrapper
-              width='100%'
-              overflow='hidden'
-              transition='0.2s'
-              height={!usingMagicLink ? '66px' : '0px'}
-            >
-              <Input
-                type='password'
-                value={password}
-                margin='0 0 1rem'
-                autoCapitalize='none'
-                placeholder={t('passwordInput')}
-                onChange={handlePasswordChanged}
-              />
-            </Wrapper>
-            <Wrapper width='100%' justifyContent='space-between' padding='0 1rem'>
-              <Text
-                color='#4B6EFA'
-                cursor='pointer'
-                fontSize='0.7rem'
-                textDecoration='unset'
-                onClick={() => setUsingMagicLink(!usingMagicLink)}
-              >
-                <span>{usingMagicLink ? t('usePassword') : t('useMagicLink')}</span>
-              </Text>
-              <Text
-                color='#4B6EFA'
-                cursor='pointer'
-                fontSize='0.7rem'
-                textDecoration='unset'
-                onClick={() => onForgotPasswordClick()}
-              >
-                <span>
-                  {t('forgotPassword')}
-                </span>
-              </Text>
-            </Wrapper>
           </Wrapper>
           <Wrapper width='100%' justifyContent='center' alignItems='center'>
             {loading || magicLinkLoading ? (
               <LoadingIndicator />
             ) : (
-              <Button
-                variant='dark'
-                disabled={usingMagicLink ? !username : !username || !password}
-                onClick={() => (usingMagicLink ? handleMagicLink() : handleLogin())}
-              >
-                {usingMagicLink ? t('magicLinkButton') : t('signInButton')}
+              <Button variant='dark' onClick={handleLogin}>
+                {t('signInButton')}
               </Button>
             )}
           </Wrapper>

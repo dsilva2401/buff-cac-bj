@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { getAuth, sendSignInLinkToEmail } from 'firebase/auth';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useFirebaseError from './useFirebaseError';
 
 interface MagicHandlerMap {
@@ -41,7 +41,9 @@ const useMagicLinkHandler = (
           type: 'success',
         })
       )
-      .catch((error) => showToast({ message: getErrorMessage(error.code), type: 'error' }))
+      .catch((error) =>
+        showToast({ message: getErrorMessage(error.code), type: 'error' })
+      )
       .finally(() => setLoading(false));
   }, [email, auth, isNewUser, t, getErrorMessage]);
 

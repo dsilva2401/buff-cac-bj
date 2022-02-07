@@ -1,19 +1,19 @@
-import React from 'react';
-import { Animated } from 'react-animated-css';
-import { useTranslation } from 'react-i18next';
-import { showToast } from 'components/Toast/Toast';
-import { useGlobal } from 'context/global/GlobalContext';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { ReferralModuleType } from 'types/ProductDetailsType';
 import placeholder from 'assets/images/png/qr-placeholder.png';
-import ProgressiveImage from 'react-progressive-image';
-import HtmlWrapper from 'components/HtmlWrapper';
-import useLogEvent from 'hooks/useLogEvent';
-import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
+import HtmlWrapper from 'components/HtmlWrapper';
 import Image from 'components/Image';
 import Input from 'components/Input';
 import Text from 'components/Text';
+import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
+import { useGlobal } from 'context/global/GlobalContext';
+import useLogEvent from 'hooks/useLogEvent';
+import React from 'react';
+import { Animated } from 'react-animated-css';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useTranslation } from 'react-i18next';
+import ProgressiveImage from 'react-progressive-image';
+import { ReferralModuleType } from 'types/ProductDetailsType';
 
 type ReferralDrawerProps = {
   drawerTitle: string;
@@ -54,17 +54,13 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
       alignItems='flex-start'
       justifyContent='flex-start'
     >
-      <Text
-        fontSize='1rem'
-        fontWeight='600'
-        margin='1.25rem 3rem 1.25rem 0'
-      >
+      <Text fontSize='1rem' fontWeight='600' margin='1.25rem 3rem 1.25rem 0'>
         <h1>{drawerTitle}</h1>
       </Text>
       <Wrapper width='100%' direction='column'>
         <Animated
-          animationIn="slideInRight"
-          animationOut="slideOutLeft"
+          animationIn='slideInRight'
+          animationOut='slideOutLeft'
           animationInDuration={300}
           animationOutDuration={300}
           animationInDelay={retractDrawer ? 200 : 0}
@@ -91,10 +87,13 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
             <CopyToClipboard
               text={referralData?.url}
               onCopy={() => {
-                showToast({ message: t('copyLinkToastMessage'), type: 'success' });
+                showToast({
+                  message: t('copyLinkToastMessage'),
+                  type: 'success',
+                });
                 logEvent({
-                  type: 'EVENT_MODULE',
-                  name: 'REFERRAL_COPIED',
+                  type: 'ENGAGEMENTS',
+                  name: 'REFERRAL_LINK_COPIED',
                   data: referralData,
                 });
               }}
@@ -107,8 +106,8 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               onClick={() => {
                 handleShare();
                 logEvent({
-                  type: 'EVENT_MODULE',
-                  name: 'REFERRAL_SHARED',
+                  type: 'ENGAGEMENTS',
+                  name: 'SEND_A_REFERRAL_LINK',
                   data: referralData,
                 });
               }}
@@ -116,7 +115,12 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               {t('shareLinkButton')}
             </Button>
           </Wrapper>
-          <Text fontSize='1.125rem' color='#98A3AA' margin='0.75rem 0' textAlign='center'>
+          <Text
+            fontSize='1.125rem'
+            color='#98A3AA'
+            margin='0.75rem 0'
+            textAlign='center'
+          >
             <p>or</p>
           </Text>
           <Wrapper
@@ -143,7 +147,10 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               background='#FFFFFF'
               borderRadius='0.75rem'
             >
-              <ProgressiveImage src={referralData?.qrcode} placeholder={placeholder}>
+              <ProgressiveImage
+                src={referralData?.qrcode}
+                placeholder={placeholder}
+              >
                 {(src: string, loading: boolean) => (
                   <Image
                     src={src}
