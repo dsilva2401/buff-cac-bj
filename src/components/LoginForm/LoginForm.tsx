@@ -52,6 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     if (error !== '') setError('');
     createUserWithEmailAndPassword(auth, username, '123456')
       .then((data) => {
+        console.log('data: ', data);
         onLogin();
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })

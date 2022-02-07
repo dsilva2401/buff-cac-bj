@@ -15,7 +15,6 @@ import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import Wrapper from 'components/Wrapper';
-import useLogEvent from 'hooks/useLogEvent';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -38,8 +37,6 @@ type UrlParam = {
 };
 
 const ProductDetails: React.FC = () => {
-  const logEvent = useLogEvent();
-
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
@@ -60,6 +57,7 @@ const ProductDetails: React.FC = () => {
     previewEvent,
     isPreviewMode,
     previewAuthenticated,
+    logEvent,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -160,6 +158,9 @@ const ProductDetails: React.FC = () => {
                   moduleName: module.type,
                 },
               },
+              brand: details.brand.id,
+              product: details.product.id,
+              user: user?.uid,
             });
           },
           isHighlight: x === 0,
@@ -395,6 +396,7 @@ const ProductDetails: React.FC = () => {
     showAuthPage,
     disableModalDismiss,
     previewAuthenticated,
+    isPreviewMode,
   ]);
 
   const logo = useCallback(
