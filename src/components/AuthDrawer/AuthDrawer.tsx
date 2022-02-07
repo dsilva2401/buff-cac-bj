@@ -1,17 +1,17 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import Wrapper from 'components/Wrapper';
+import ForgotPasswordForm from 'components/ForgotPasswordForm';
+import HtmlWrapper from 'components/HtmlWrapper';
+import LoadingIndicator from 'components/LoadingIndicator';
 import LoginForm from 'components/LoginForm';
 import PageFooter from 'components/PageFooter';
 import SignUpForm from 'components/SignUpForm';
-import HtmlWrapper from 'components/HtmlWrapper';
-import ForgotPasswordForm from 'components/ForgotPasswordForm';
-import LoadingIndicator from 'components/LoadingIndicator';
+import Wrapper from 'components/Wrapper';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 enum AuthScreen {
   login = 'login',
   signup = 'signup',
-  forgotPasssword = 'forgotPasssword'
+  forgotPasssword = 'forgotPasssword',
 }
 
 interface AuthDrawerProps {
@@ -23,15 +23,19 @@ interface AuthDrawerProps {
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailshow = () => { },
+  onPersonalDetailshow = () => {},
   showFooter,
-  html
+  html,
 }) => {
   const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { t: signInTranslation } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { t: signUpTranslation } = useTranslation('translation', { keyPrefix: 'signUp' });
+  const { t: signInTranslation } = useTranslation('translation', {
+    keyPrefix: 'signIn',
+  });
+  const { t: signUpTranslation } = useTranslation('translation', {
+    keyPrefix: 'signUp',
+  });
 
   const onSuccess = useCallback(() => {
     onAuthComplete();
@@ -42,19 +46,38 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
     switch (authScreen) {
       case AuthScreen.login:
         return (
-          <LoginForm onLogin={onSuccess} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
-        )
+          <LoginForm
+            onLogin={onSuccess}
+            onForgotPasswordClick={() =>
+              setAuthScreen(AuthScreen.forgotPasssword)
+            }
+          />
+        );
       case AuthScreen.signup:
-        return <SignUpForm onPersonalDetailshow={onPersonalDetailshow} onSignup={onSuccess} />
+        return (
+          <SignUpForm
+            onPersonalDetailshow={onPersonalDetailshow}
+            onSignup={onSuccess}
+          />
+        );
       case AuthScreen.forgotPasssword:
-        return <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />
+        return (
+          <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />
+        );
       default:
-        return <LoginForm onLogin={onSuccess} onForgotPasswordClick={() => setAuthScreen(AuthScreen.forgotPasssword)} />
+        return (
+          <LoginForm
+            onLogin={onSuccess}
+            onForgotPasswordClick={() =>
+              setAuthScreen(AuthScreen.forgotPasssword)
+            }
+          />
+        );
     }
-  }, [authScreen, onPersonalDetailshow, onSuccess])
+  }, [authScreen, onPersonalDetailshow, onSuccess]);
 
   const footerToRender = useMemo(() => {
-    let onActionClick: any = () => { };
+    let onActionClick: any = () => {};
     let descriptionText: string = '';
     let actionText: string = '';
 
@@ -70,7 +93,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         actionText = signUpTranslation('signInLink');
         break;
       case AuthScreen.forgotPasssword:
-        onActionClick = () => { };
+        onActionClick = () => {};
         descriptionText = '';
         actionText = '';
         break;
@@ -85,11 +108,11 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         <p>{descriptionText}</p>
         <p onClick={onActionClick}>{actionText}</p>
       </PageFooter>
-    )
-  }, [authScreen, signInTranslation, signUpTranslation])
+    );
+  }, [authScreen, signInTranslation, signUpTranslation]);
 
   if (loading) {
-    return <LoadingIndicator />
+    return <LoadingIndicator />;
   }
 
   return (
@@ -102,22 +125,20 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       overflow='auto'
       margin='2rem 0'
     >
-      {
-        html ? (
-          <HtmlWrapper
-            width='100%'
-            direction='column'
-            justifyContent='center'
-            alignItems='center'
-            gap='1rem'
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        ) : null
-      }
+      {html ? (
+        <HtmlWrapper
+          width='100%'
+          direction='column'
+          justifyContent='center'
+          alignItems='center'
+          gap='1rem'
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      ) : null}
       {authScreenToRender}
-      {showFooter ? footerToRender : null}
+      {/* {showFooter ? footerToRender : null} */}
     </Wrapper>
   );
-}
+};
 
 export default AuthDrawer;
