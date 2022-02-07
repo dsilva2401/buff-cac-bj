@@ -1,3 +1,14 @@
+import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
+import Button from 'components/Button';
+import Grid from 'components/Grid';
+import IconButton from 'components/IconButton';
+import LoadingIndicator from 'components/LoadingIndicator';
+import PageHeader from 'components/PageHeader';
+import Text from 'components/Text';
+import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
+import { GlobalContext } from 'context';
+import useLogEvent from 'hooks/useLogEvent';
 import React, {
   useCallback,
   useContext,
@@ -6,24 +17,13 @@ import React, {
   useState,
 } from 'react';
 import { Helmet } from 'react-helmet';
-import { RoutesHashMap } from 'routes';
-import { GlobalContext } from 'context';
-import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { showToast } from 'components/Toast/Toast';
+import QrReader from 'react-qr-reader';
+import { useHistory } from 'react-router';
+import { RoutesHashMap } from 'routes';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
-import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
-import LoadingIndicator from 'components/LoadingIndicator';
-import IconButton from 'components/IconButton';
-import PageHeader from 'components/PageHeader';
-import useLogEvent from 'hooks/useLogEvent';
 import ProductImage from './ProductImage';
-import Wrapper from 'components/Wrapper';
-import QrReader from 'react-qr-reader';
-import Button from 'components/Button';
-import Grid from 'components/Grid';
-import Text from 'components/Text';
 
 type BrandCollectionType = {
   brand: string;
@@ -46,7 +46,9 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     const validateUrl = (url: string) => {
-      const regex = new RegExp('^https://v2\.brij\.it/r/product/[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$');
+      const regex = new RegExp(
+        '^https://v2.brij.it/r/product/[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$'
+      );
       return regex.test(url);
     };
     if (scanResult) {
@@ -57,8 +59,8 @@ const Collection: React.FC = () => {
           type: 'success',
         });
         logEvent({
-          type: 'EVENT_SCAN',
-          name: 'SCAN_TAG',
+          type: 'ENGAGEMENTS',
+          name: 'USER_SCAN_A_TAG',
           data: scanResult,
         });
       } else if (!validateUrl(scanResult.toString())) {
@@ -71,9 +73,9 @@ const Collection: React.FC = () => {
           message: t('scanErrorMessage'),
           type: 'error',
         });
-      };
+      }
       setScanResult('');
-    };
+    }
   }, [scanResult, logEvent, t]);
 
   useEffect(() => {
@@ -130,10 +132,12 @@ const Collection: React.FC = () => {
                 item={node}
                 key={node.product.id}
                 goToDetails={() => {
-                  history.push(RoutesHashMap.ProductDetails.path(node.tag.slug));
+                  history.push(
+                    RoutesHashMap.ProductDetails.path(node.tag.slug)
+                  );
                   logEvent({
-                    type: 'EVENT_COLLECTION',
-                    name: 'PRODUCT_CLICKED',
+                    type: 'ENGAGEMENTS',
+                    name: 'VIEW_PRODUCT_INFO',
                     data: node.product,
                   });
                 }}
@@ -159,7 +163,10 @@ const Collection: React.FC = () => {
         position='relative'
         overflow='auto'
       >
-        <PageHeader title={t('collectionPageTitle')} actionButton={menuButton} />
+        <PageHeader
+          title={t('collectionPageTitle')}
+          actionButton={menuButton}
+        />
         {loading ? (
           <LoadingIndicator />
         ) : sortedCollection?.length > 0 ? (
@@ -181,7 +188,7 @@ const Collection: React.FC = () => {
                   if (data) {
                     toggleScanMode(false);
                     setScanResult(data);
-                  };
+                  }
                 }}
               />
             </Wrapper>

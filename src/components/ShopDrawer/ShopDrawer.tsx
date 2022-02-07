@@ -108,7 +108,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       selectedQuantity
     );
     logEvent({
-      type: 'EVENT_MODULE',
+      type: 'ENGAGEMENTS',
       name: 'SHOPPING_CHECK_OUT',
       data: {
         details: {

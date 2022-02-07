@@ -1,4 +1,30 @@
+import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
+import externalLink from 'assets/icons/svg/external-link.svg';
+import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
+import placeholder from 'assets/images/png/placeholder.png';
+import AuthDrawer from 'components/AuthDrawer';
+import BottomDrawer from 'components/BottomDrawer';
+import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
+import CustomDrawer from 'components/CustomDrawer';
+import IconButton from 'components/IconButton';
+import Image from 'components/Image';
+import PageHeader from 'components/PageHeader';
+import ReferralDrawer from 'components/ReferralDrawer';
+import ShopDrawer from 'components/ShopDrawer';
+import Text from 'components/Text';
+import { showToast } from 'components/Toast/Toast';
+import WarrantyDrawer from 'components/WarrantyDrawer';
+import Wrapper from 'components/Wrapper';
+import useLogEvent from 'hooks/useLogEvent';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
+import ProgressiveImage from 'react-progressive-image';
+import { useParams } from 'react-router';
+import { Redirect } from 'react-router-dom';
+import { CollectionItem } from 'types/User';
+import { useAPI } from 'utils/api';
+import { useGlobal } from '../../context/global/GlobalContext';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -6,32 +32,6 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
-import { useAPI } from 'utils/api';
-import { Helmet } from 'react-helmet';
-import { useParams } from 'react-router';
-import { Redirect } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { showToast } from 'components/Toast/Toast';
-import { useGlobal } from '../../context/global/GlobalContext';
-import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
-import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
-import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
-import externalLink from 'assets/icons/svg/external-link.svg';
-import placeholder from 'assets/images/png/placeholder.png';
-import ProgressiveImage from 'react-progressive-image';
-import WarrantyDrawer from 'components/WarrantyDrawer';
-import ReferralDrawer from 'components/ReferralDrawer';
-import BottomDrawer from 'components/BottomDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import AuthDrawer from 'components/AuthDrawer';
-import IconButton from 'components/IconButton';
-import PageHeader from 'components/PageHeader';
-import ShopDrawer from 'components/ShopDrawer';
-import useLogEvent from 'hooks/useLogEvent';
-import Wrapper from 'components/Wrapper';
-import Image from 'components/Image';
-import Text from 'components/Text';
-import { CollectionItem } from 'types/User';
 
 type UrlParam = {
   id: string;
@@ -44,7 +44,8 @@ const ProductDetails: React.FC = () => {
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
-  const [disableModalDismiss, setDisableModalDismiss] = useState<boolean>(false);
+  const [disableModalDismiss, setDisableModalDismiss] =
+    useState<boolean>(false);
   const {
     productDetails: details,
     loading,
@@ -58,19 +59,19 @@ const ProductDetails: React.FC = () => {
     user,
     previewEvent,
     isPreviewMode,
-    previewAuthenticated
+    previewAuthenticated,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
   const { t } = useTranslation('translation', { keyPrefix: 'productDetails' });
 
   const onSuccess = useCallback(() => {
-    getPersonalDetails()
+    getPersonalDetails();
   }, [getPersonalDetails]);
 
   const onError = (error: any) => {
-    showToast({ message: error.message, type: 'error' })
-  }
+    showToast({ message: error.message, type: 'error' });
+  };
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(null);
@@ -81,7 +82,7 @@ const ProductDetails: React.FC = () => {
     (index) => {
       setCurrentPage(index);
       if (currentPage) {
-        const moduleType = details?.modules[currentPage]?.type
+        const moduleType = details?.modules[currentPage]?.type;
         setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
         if (moduleType !== 'LINK_MODULE')
           setPageTitle(details?.modules[index].title);
@@ -97,8 +98,8 @@ const ProductDetails: React.FC = () => {
     endpoint: 'auth/update',
     method: 'PUT',
     onSuccess,
-    onError
-  })
+    onError,
+  });
 
   useEffect(() => {
     if (id) {
@@ -117,7 +118,7 @@ const ProductDetails: React.FC = () => {
     if (event && event.type === 'changeDrawerPage') {
       changeDrawerPage(event.data);
     } else if (event && event.type === 'closeDrawerPage') {
-      closeDrawerPage()
+      closeDrawerPage();
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage]);
 
@@ -147,11 +148,11 @@ const ProductDetails: React.FC = () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
-              let moduleData = module?.moduleInfo as LinkModuleType
-              window.open(moduleData?.link, "_blank");
+              let moduleData = module?.moduleInfo as LinkModuleType;
+              window.open(moduleData?.link, '_blank');
             } else changeDrawerPage(x);
             logEvent({
-              type: 'EVENT_MODULE',
+              type: 'ENGAGEMENTS',
               name: 'MODULE_CLICKED',
               data: {
                 details: {
@@ -165,24 +166,24 @@ const ProductDetails: React.FC = () => {
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
             ? {
-              currentPage: x,
-              isDrawerOpen: true,
-              pageTitle: details?.modules[x].title,
-            }
+                currentPage: x,
+                isDrawerOpen: true,
+                pageTitle: details?.modules[x].title,
+              }
             : null,
-          icon: details?.modules[x].type === 'LINK_MODULE' ?
-            <Image
-              src={x === 0 ? externalLinkWhite : externalLink}
-              margin='0 0 0 0.5rem'
-              alt='external-link'
-            />
-            :
-            null,
+          icon:
+            details?.modules[x].type === 'LINK_MODULE' ? (
+              <Image
+                src={x === 0 ? externalLinkWhite : externalLink}
+                margin='0 0 0 0.5rem'
+                alt='external-link'
+              />
+            ) : null,
         };
         buttons.push(buttonObject);
       }
 
-      const { product } = details || {}
+      const { product } = details || {};
 
       let showAddToCollectionButton = true;
 
@@ -194,60 +195,88 @@ const ProductDetails: React.FC = () => {
         showAddToCollectionButton = false;
       }
 
-      if (product.registered && product.tagType === "Unit" && showAddToCollectionButton) {
+      if (
+        product.registered &&
+        product.tagType === 'Unit' &&
+        showAddToCollectionButton
+      ) {
         showAddToCollectionButton = false;
       }
 
       if (showAddToCollectionButton) {
         let title = t('addToCollection');
 
-        const productCollection = personalDetails?.profile?.productCollection || [];
+        const productCollection =
+          personalDetails?.profile?.productCollection || [];
 
         const existInCollection = productCollection.find(
-          (productTag: CollectionItem) => details?.tag?.slug === productTag.tagId
+          (productTag: CollectionItem) =>
+            details?.tag?.slug === productTag.tagId
         );
 
         if (existInCollection) {
           title = t('removeFromCollection');
-        };
+        }
 
         let onClick = () => {
           if (existInCollection) {
             updateUser({
-              productCollection: [...productCollection.filter(productTag => productTag.tagId !== id)]
-            })
-            showToast({ message: t('removeFromCollectionToast'), type: 'success'});
+              productCollection: [
+                ...productCollection.filter(
+                  (productTag) => productTag.tagId !== id
+                ),
+              ],
+            });
+            showToast({
+              message: t('removeFromCollectionToast'),
+              type: 'success',
+            });
           } else {
             updateUser({
-              productCollection: [...productCollection, {
-                tagId: id,
-                brandId: details?.brand?.id,
-                productId: details?.product?.id,
-                variantId: null
-              }]
-            })
-            showToast({ message: t('addToCollectionToast'), type: 'success'});
+              productCollection: [
+                ...productCollection,
+                {
+                  tagId: id,
+                  brandId: details?.brand?.id,
+                  productId: details?.product?.id,
+                  variantId: null,
+                },
+              ],
+            });
+            showToast({ message: t('addToCollectionToast'), type: 'success' });
           }
-        }
+        };
         buttons.push({
           title,
           onClick: onClick,
           isHighlight: false,
           locked: false,
           pageState: null,
-          icon: addToLoading ? <LoadingAnimation width={32} /> : null
+          icon: addToLoading ? <LoadingAnimation width={32} /> : null,
         });
-      };
-    };
+      }
+    }
     return buttons;
-  }, [changeDrawerPage, id, details, setSignInRedirect, personalDetails, user, logEvent, t, updateUser]);
+  }, [
+    changeDrawerPage,
+    id,
+    details,
+    setSignInRedirect,
+    personalDetails,
+    user,
+    logEvent,
+    t,
+    updateUser,
+    addToLoading,
+  ]);
 
   const leadModule: any = details?.leadModule || {};
 
   const leadInformation = useMemo(() => {
     switch (leadModule.type) {
       case 'SHOPPING_MODULE':
-        const defaultVariantDetails = leadModule?.moduleInfo?.defaultVariantDetails;
+        const defaultVariantDetails =
+          leadModule?.moduleInfo?.defaultVariantDetails;
 
         const price = defaultVariantDetails?.price || 0;
         const discountedPrice = defaultVariantDetails?.discountedPrice;
@@ -258,7 +287,7 @@ const ProductDetails: React.FC = () => {
               <span>{`$${price}`}</span>
             </Text>
           );
-        };
+        }
 
         return (
           <Wrapper direction='column' alignItems='flex-end'>
@@ -269,17 +298,14 @@ const ProductDetails: React.FC = () => {
               <span>{`$${discountedPrice}`}</span>
             </Text>
           </Wrapper>
-        )
+        );
       case 'WARRANTY_MODULE':
         const { registeredTo } = leadModule?.moduleInfo || {};
         const tagType = details?.product?.tagType;
 
         if (registeredTo && tagType === 'Unit') {
           return (
-            <Wrapper
-              direction='column'
-              alignItems='flex-end'
-            >
+            <Wrapper direction='column' alignItems='flex-end'>
               <Text height='20px' fontSize='0.8rem'>
                 <span>Registered To</span>
               </Text>
@@ -288,16 +314,13 @@ const ProductDetails: React.FC = () => {
               </Text>
             </Wrapper>
           );
-        };
+        }
 
-        const { period, duration } = details?.warrantyInformation || {}
+        const { period, duration } = details?.warrantyInformation || {};
         if (!period && !duration) return null;
 
         return (
-          <Wrapper
-            direction='column'
-            alignItems='flex-end'
-          >
+          <Wrapper direction='column' alignItems='flex-end'>
             <Text height='20px' fontSize='0.7rem'>
               <span>Warranty</span>
             </Text>
@@ -305,7 +328,7 @@ const ProductDetails: React.FC = () => {
               <span>{`${period} ${duration?.label}`}</span>
             </Text>
           </Wrapper>
-        )
+        );
       default:
         return null;
     }
@@ -316,18 +339,21 @@ const ProductDetails: React.FC = () => {
       const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
 
-      if ((showAuthPage || module?.locked) && (!isPreviewMode || !previewAuthenticated)) {
+      if (
+        (showAuthPage || module?.locked) &&
+        (!isPreviewMode || !previewAuthenticated)
+      ) {
         return (
           <AuthDrawer
             html={details?.registration?.registrationText}
             onPersonalDetailshow={() => setDisableModalDismiss(true)}
             showFooter={!disableModalDismiss}
             onAuthComplete={() => {
-              setShowAuthPage(false)
-              setDisableModalDismiss(false)
+              setShowAuthPage(false);
+              setDisableModalDismiss(false);
             }}
           />
-        )
+        );
       }
 
       switch (moduleType) {
@@ -335,9 +361,7 @@ const ProductDetails: React.FC = () => {
           return (
             <CustomDrawer
               drawerTitle={details?.modules[currentPage as number]?.title}
-              drawerData={
-                module?.moduleInfo as CustomModuleType
-              }
+              drawerData={module?.moduleInfo as CustomModuleType}
             />
           );
         case 'WARRANTY_MODULE':
@@ -345,9 +369,7 @@ const ProductDetails: React.FC = () => {
             <WarrantyDrawer
               closePage={closeDrawerPage}
               drawerTitle={details?.modules[currentPage as number]?.title}
-              warrantyData={
-                module?.moduleInfo as WarrantyModuleType
-              }
+              warrantyData={module?.moduleInfo as WarrantyModuleType}
               warrantyId={module?.id}
             />
           );
@@ -355,9 +377,7 @@ const ProductDetails: React.FC = () => {
           return (
             <ReferralDrawer
               drawerTitle={details?.modules[currentPage as number]?.title}
-              referralData={
-                module?.moduleInfo as ReferralModuleType
-              }
+              referralData={module?.moduleInfo as ReferralModuleType}
             />
           );
         case 'SHOPPING_MODULE':
@@ -368,7 +388,14 @@ const ProductDetails: React.FC = () => {
           return null;
       }
     }
-  }, [currentPage, closeDrawerPage, details, showAuthPage, disableModalDismiss, previewAuthenticated]);
+  }, [
+    currentPage,
+    closeDrawerPage,
+    details,
+    showAuthPage,
+    disableModalDismiss,
+    previewAuthenticated,
+  ]);
 
   const logo = useCallback(
     (image: string) => <Image src={image} alt='brand-logo' maxWidth='110px' />,
@@ -403,7 +430,10 @@ const ProductDetails: React.FC = () => {
         </Helmet>
       )}
       {details?.product?.image && (
-        <ProgressiveImage src={details?.product?.image} placeholder={placeholder}>
+        <ProgressiveImage
+          src={details?.product?.image}
+          placeholder={placeholder}
+        >
           {(src: string, loading: boolean) => (
             <Image
               src={src}
