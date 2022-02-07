@@ -2,7 +2,12 @@ import styled from 'styled-components';
 import Wrapper from 'components/Wrapper';
 
 const HtmlWrapper = styled(Wrapper)`
-  a {
+  animation: fade-in 0.6s ease-in-out forwards;
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  & .ql-size-large {
     cursor: pointer;
     font-weight: 500 !important;
     font-size: 18px !important;

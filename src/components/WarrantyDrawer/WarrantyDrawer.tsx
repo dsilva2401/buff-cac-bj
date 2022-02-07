@@ -112,8 +112,8 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         <Animated
           animationIn='slideInRight'
           animationOut='slideOutLeft'
-          animationInDuration={300}
-          animationOutDuration={300}
+          animationInDuration={retractDrawer ? 0 : 300}
+          animationOutDuration={retractDrawer ? 0 : 300}
           animationInDelay={retractDrawer ? 200 : 0}
           isVisible={true}
           style={{ width: '100%' }}

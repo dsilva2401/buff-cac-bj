@@ -6,6 +6,7 @@ type DrawerProps = {
 
 type DrawerHeaderProps = {
   isChildOpen: boolean;
+  isDrawerOpen: boolean;
 };
 
 export const Drawer = styled.div<DrawerProps>`
@@ -27,18 +28,12 @@ export const Drawer = styled.div<DrawerProps>`
 `;
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
-  display: flex;
+  display: ${(props) => (props.isChildOpen ? 'none' : 'flex')};
+  padding: ${(props) => (props.isDrawerOpen ? '1.25rem 2rem' : '0 2rem')};
+  height: ${(props) => (props.isDrawerOpen ? 'auto' : '5.25rem')};
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  height: ${(props) => (props.isChildOpen ? '4.1rem' : '5.25rem')};
-  width: ${(props) => (props.isChildOpen ? 'max-content' : '100%')};
-  position: ${(props) => (props.isChildOpen ? 'absolute' : 'relative')};
-  ${(props) => {
-    if (props.isChildOpen) {
-      return `top: 0; right: 0; z-index: 10;`;
-    }
-  }}
+  width: 100%;
 `;
 
 export const DrawerBody = styled.div`
@@ -79,9 +74,13 @@ export const DrawerClose = styled.button`
   height: 32px;
   min-width: 32px;
   min-height: 32px;
-  background-color: #f7f7f7;
-  border-radius: 50%;
+  position: absolute;
+  right: 32px;
+  top: 16px;
+  z-index: 100;
   display: flex;
+  border-radius: 50%;
+  background-color: #f7f7f7;
   justify-content: center;
   align-items: center;
   cursor: pointer;

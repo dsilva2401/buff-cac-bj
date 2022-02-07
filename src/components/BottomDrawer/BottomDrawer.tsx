@@ -176,7 +176,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             justifyContent='space-between'
             alignItems='center'
           >
-            <DrawerHeader isChildOpen={isChildOpen}>
+            <DrawerHeader isDrawerOpen={isDrawerOpen} isChildOpen={isChildOpen}>
               {!isChildOpen && (
                 <Wrapper
                   justifyContent='space-between'
@@ -189,7 +189,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   {isDrawerOpen ? null : leadInformation}
                 </Wrapper>
               )}
-              {isDrawerOpen && !disableModalDismiss && (
+            </DrawerHeader>
+            {isDrawerOpen && !disableModalDismiss && (
                 <DrawerClose
                   onClick={() => {
                     if (isChildOpen) {
@@ -208,12 +209,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <Close />
                 </DrawerClose>
               )}
-            </DrawerHeader>
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               <DragBar />
               {!isDrawerOpen && (
-                <>
-                  {buttons?.map((button) => {
+                <Wrapper
+                  gap='1rem'
+                  width='100%'
+                  direction='column'
+                  margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
+                >
+                  {buttons?.map(button => {
                     if (button.isHighlight) {
                       return (
                         <Button
@@ -233,7 +238,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         </Button>
                       );
                     }
-                    return <></>;
                   })}
                   <Button
                     variant='light'
@@ -244,7 +248,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   >
                     More
                   </Button>
-                </>
+                </Wrapper>
               )}
               {isDrawerOpen &&
                 (isChildOpen ? (
