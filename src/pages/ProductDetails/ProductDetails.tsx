@@ -147,7 +147,7 @@ const ProductDetails: React.FC = () => {
             setShowAuthPage(module?.locked);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
-              window.open(moduleData?.link, '_blank');
+              window.open(`http://${moduleData?.link}`, '_blank');
             } else changeDrawerPage(x);
             logEvent({
               type: 'ENGAGEMENTS',

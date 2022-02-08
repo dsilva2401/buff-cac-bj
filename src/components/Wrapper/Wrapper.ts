@@ -52,6 +52,7 @@ type WrapperProps = {
   | 'space-around'
   | 'space-evenly'
   | 'stretch';
+  cursor?: string;
   overflow?: string;
   borderRadius?: string;
   background?: string;
@@ -84,6 +85,7 @@ const Wrapper = styled.div<WrapperProps>`
   align-self: ${(props) => (props.alignSelf ? props.alignSelf : 'unset')};
   align-content: ${(props) =>
     props.alignContent ? props.alignContent : 'unset'};
+  cursor: ${(props) => (props.cursor ? props.cursor : 'unset')};
   overflow: ${(props) => (props.overflow ? props.overflow : 'unset')};
   background: ${(props) => (props.background ? props.background : 'unset')};
   border-radius: ${(props) => (props.borderRadius ? props.borderRadius : 'unset')};

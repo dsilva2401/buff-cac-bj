@@ -69,6 +69,8 @@ export function useAPI<T>(
           setLoading(false);
           onSuccess(response);
           return response;
+        } else if (res.status === 400 && !isPreviewMode) {
+          window.location.href = `${window.location.protocol}//${window.location.host}/404`;
         }
       } catch (e) {
         setLoading(false);
