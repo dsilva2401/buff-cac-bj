@@ -50,7 +50,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
-    createUserWithEmailAndPassword(auth, username, '123456')
+    createUserWithEmailAndPassword(
+      auth,
+      username,
+      process.env.DEFAULT_PASSWORD!
+    )
       .then((data) => {
         console.log('data: ', data);
         onLogin();
