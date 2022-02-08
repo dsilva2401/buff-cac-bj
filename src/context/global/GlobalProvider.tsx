@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useAPI } from 'utils/api';
 import { getAuth, User } from 'firebase/auth';
-import { GlobalContext, PageStateType } from './GlobalContext';
+import useLogEvent from 'hooks/useLogEvent';
 import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useAPI } from 'utils/api';
 import useCollection from '../../hooks/useCollection';
+import { GlobalContext, PageStateType } from './GlobalContext';
 
 const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
@@ -16,12 +17,12 @@ const useUser = () => {
   useEffect(() => {
     const setUserToken = async () => {
       if (personalDetails) {
-        const tokenExtracted = await user?.getIdToken() || null;
+        const tokenExtracted = (await user?.getIdToken()) || null;
         setToken(tokenExtracted);
       }
-    }
+    };
 
-    setUserToken()
+    setUserToken();
   }, [personalDetails, user, setToken]);
 
   useEffect(() => {
@@ -43,9 +44,9 @@ const useUser = () => {
     personalDetails,
     getPersonalDetails,
     authFetched,
-    token
-  }
-}
+    token,
+  };
+};
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -68,10 +69,14 @@ export const GlobalProvider: React.FC = ({ children }) => {
     getPersonalDetails,
     setUser,
     authFetched,
-    token
+    token,
   } = useUser();
 
-  const [productDetails, reFetchProduct, productLoading] = useProductDetails(slug, token, previewEvent);
+  const [productDetails, reFetchProduct, productLoading] = useProductDetails(
+    slug,
+    token,
+    previewEvent
+  );
   const [collectionDetails, getCollection] = useCollection(token);
 
   const onActivateWarrantySuccess = useCallback(() => {
@@ -94,17 +99,21 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (window) {
-      window.addEventListener("message", (event) => {
-        setPreviewEvent({ ...event.data })
-        if (event && event.data && event.data.type === 'enablePreview') {
-          setIsPreviewMode(true);
-          setAppZoom(event.data.zoom);
-        }
-        if(event && event.data && event.data.type === 'setAuthState') {
-          console.log('setAuthState', event.data.data)
-          setPreviewAuthenticated(event.data.data);
-        }
-      }, false);
+      window.addEventListener(
+        'message',
+        (event) => {
+          setPreviewEvent({ ...event.data });
+          if (event && event.data && event.data.type === 'enablePreview') {
+            setIsPreviewMode(true);
+            setAppZoom(event.data.zoom);
+          }
+          if (event && event.data && event.data.type === 'setAuthState') {
+            console.log('setAuthState', event.data.data);
+            setPreviewAuthenticated(event.data.data);
+          }
+        },
+        false
+      );
     }
   }, []);
 
@@ -113,6 +122,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
     // upon unmount clear storage
     return () => localStorage.setItem('signInRedirect', '');
   }, [signInRedirect]);
+
+  const logEvent = useLogEvent();
 
   return (
     <GlobalContext.Provider
@@ -147,6 +158,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         token,
         retractDrawer,
         setRetractDrawer,
+        logEvent,
       }}
     >
       {children}

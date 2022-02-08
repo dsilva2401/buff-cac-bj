@@ -2,7 +2,7 @@ import { showToast } from 'components/Toast/Toast';
 import { useCallback } from 'react';
 import { useAPI } from 'utils/api';
 
-interface EventPayload {
+export interface EventPayload {
   type: 'ENGAGEMENTS' | 'CONVERSION_RATES' | 'REVENUE';
   name:
     | 'USER_SCAN_A_TAG'
@@ -22,6 +22,9 @@ interface EventPayload {
     | 'SHOPPING_CHECK_OUT'
     | 'REFERRAL_LINK_COPIED';
   data: any;
+  brand?: string;
+  user?: string;
+  product?: string;
 }
 
 const useLogEvent = () => {

@@ -8,7 +8,6 @@ import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
 import { GlobalContext } from 'context';
-import useLogEvent from 'hooks/useLogEvent';
 import React, {
   useCallback,
   useContext,
@@ -31,7 +30,6 @@ type BrandCollectionType = {
 };
 
 const Collection: React.FC = () => {
-  const logEvent = useLogEvent();
   const [sortedCollection, setSortedCollection] = useState<
     BrandCollectionType[]
   >([]);
@@ -40,8 +38,9 @@ const Collection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
-  const { collectionDetails, getCollection } = useGlobal();
-  const { setIsMenuOpen } = useContext(GlobalContext);
+  const { collectionDetails, getCollection, productDetails, user } =
+    useGlobal();
+  const { setIsMenuOpen, logEvent } = useContext(GlobalContext);
   const history = useHistory();
 
   useEffect(() => {
@@ -62,6 +61,9 @@ const Collection: React.FC = () => {
           type: 'ENGAGEMENTS',
           name: 'USER_SCAN_A_TAG',
           data: scanResult,
+          brand: productDetails?.brand.id,
+          product: productDetails?.product.id,
+          user: user?.uid,
         });
       } else if (!validateUrl(scanResult.toString())) {
         showToast({
@@ -139,6 +141,9 @@ const Collection: React.FC = () => {
                     type: 'ENGAGEMENTS',
                     name: 'VIEW_PRODUCT_INFO',
                     data: node.product,
+                    brand: productDetails?.brand.id,
+                    product: productDetails?.product.id,
+                    user: user?.uid,
                   });
                 }}
               />
@@ -147,7 +152,7 @@ const Collection: React.FC = () => {
         </Grid>
       );
     },
-    [history, logEvent]
+    [history, logEvent, productDetails, user]
   );
 
   return (

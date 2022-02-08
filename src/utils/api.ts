@@ -69,23 +69,13 @@ export function useAPI<T>(
           setLoading(false);
           onSuccess(response);
           return response;
-        } else if (res.status === 400 && !isPreviewMode) {
-          window.location.pathname = '/404';
         }
       } catch (e) {
         setLoading(false);
         onError(JSON.stringify(e));
       }
     },
-    [
-      tokenToUse,
-      shouldUseToken,
-      method,
-      endpoint,
-      onSuccess,
-      onError,
-      isPreviewMode,
-    ]
+    [tokenToUse, shouldUseToken, method, endpoint, onSuccess, onError]
   );
 
   return [apiCall, loading];
