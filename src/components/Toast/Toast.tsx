@@ -1,12 +1,11 @@
-import React from 'react';
-import { theme } from 'styles/theme';
-import { toast, Slide } from 'react-toastify';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { ReactComponent as SuccessIcon } from 'assets/icons/svg/toast-success.svg';
 import { ReactComponent as CautionIcon } from 'assets/icons/svg/toast-caution.svg';
 import { ReactComponent as ErrorIcon } from 'assets/icons/svg/toast-error.svg';
 import { ReactComponent as InfoIcon } from 'assets/icons/svg/toast-info.svg';
+import { ReactComponent as SuccessIcon } from 'assets/icons/svg/toast-success.svg';
+import React from 'react';
+import { Slide, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { theme } from 'styles/theme';
 
 type ToastProps = {
   message: string;
@@ -60,7 +59,7 @@ export const Toast: React.FC = () => (
     position='top-center'
     closeButton={false}
     hideProgressBar
-    autoClose={1500}
+    autoClose={2500}
     closeOnClick
     newestOnTop
     rtl={false}
