@@ -1,7 +1,7 @@
 import { User } from 'firebase/auth';
-import { EventPayload } from 'hooks/useLogEvent';
 import React, { createContext, useContext } from 'react';
 import { UserStruct } from 'types/User';
+import { EventPayload } from '../../hooks/useLogEvent';
 import { ProductDetailsType } from '../../types/ProductDetailsType';
 
 export type PageStateType = {
@@ -47,7 +47,9 @@ export type GlobalContextProps = {
   token: string | null;
   retractDrawer: boolean;
   setRetractDrawer: React.Dispatch<React.SetStateAction<boolean>>;
-  logEvent: (data?: EventPayload | undefined) => Promise<any>;
+  logEvent: (
+    payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
+  ) => Promise<any>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({

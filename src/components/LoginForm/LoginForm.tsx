@@ -53,7 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     createUserWithEmailAndPassword(
       auth,
       username,
-      process.env.DEFAULT_PASSWORD!
+      process.env.REACT_APP_DEFAULT_PASSWORD!
     )
       .then((data) => {
         console.log('data: ', data);

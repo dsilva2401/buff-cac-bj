@@ -5,6 +5,7 @@ import useProductDetails from 'hooks/useProductDetails';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAPI } from 'utils/api';
 import useCollection from '../../hooks/useCollection';
+import { EventPayload } from '../../hooks/useLogEvent';
 import { GlobalContext, PageStateType } from './GlobalContext';
 
 const useUser = () => {
@@ -123,7 +124,21 @@ export const GlobalProvider: React.FC = ({ children }) => {
     return () => localStorage.setItem('signInRedirect', '');
   }, [signInRedirect]);
 
-  const logEvent = useLogEvent();
+  const _logEvent = useLogEvent();
+
+  const logEvent = useCallback(
+    (
+      payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
+    ) =>
+      _logEvent({
+        ...payload,
+        user: user?.uid,
+        product: productDetails?.product.id,
+        tag: productDetails?.tag.slug,
+        brand: productDetails?.brand.id,
+      }),
+    [productDetails, user, _logEvent]
+  );
 
   return (
     <GlobalContext.Provider
