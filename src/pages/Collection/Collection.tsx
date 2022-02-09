@@ -125,7 +125,7 @@ const Collection: React.FC = () => {
       return (
         <Grid
           margin='1rem 0'
-          width={items.length === 1 ? 'max-content' : '100%'}
+          width={items.length === 1 ? 'calc(50% - 8px)' : '100%'}
           templateColumns={`repeat(auto-fit, minmax(40%, 1fr))`}
         >
           {items.map((node) => {
