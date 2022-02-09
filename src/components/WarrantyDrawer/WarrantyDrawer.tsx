@@ -213,6 +213,78 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
             )}
           <Wrapper
             width='100%'
+            direction='column'
+            alignItems='center'
+            justifyContent='flex-start'
+            padding='0 0.75rem'
+            margin='1rem 0 0 0'
+            gap='1rem'
+          >
+            <Wrapper
+              width='100%'
+              gap='0.5rem'
+              cursor='pointer'
+              alignItems='center'
+              justifyContent='center'
+              onClick={() => {
+                toggleCoverage(!expandCoverage);
+                toggleAnimateTable(true);
+              }}
+            >
+              <Text
+                fontSize='1rem'
+                fontWeight='600'
+                color='#202029'
+                textDecoration='underline'
+              >
+                <span>{t('warrantyCoverage')}</span>
+              </Text>
+              <Arrow
+                style={{
+                  transform: expandCoverage ? 'rotate(0deg)' : 'rotate(180deg)',
+                  transition: '0.4s'
+                }}
+              />
+            </Wrapper>
+            <Wrapper overflow='hidden'>
+              <Wrapper
+                ref={tableRef}
+                height='100%'
+                gap='0.5rem'
+                transition='0.3s'
+                direction='column'
+                style={{ transform: expandCoverage ? 'translateY(0)' : 'translateY(-101%)' }}
+              >
+                <DataTable
+                  headers={mulberryCoverage.headers}
+                  tableData={mulberryCoverage.features}
+                />
+                <Wrapper
+                  cursor='pointer'
+                  alignItems='center'
+                  alignSelf='flex-start'
+                  justifyContent='flex-start'
+                  onClick={() => window.open(`http://${mulberryCoverage.fullTermsLink}`, '_blank')}
+                >
+                  <Image
+                    width='0.875rem'
+                    src={externalLink}
+                    margin='-0.05rem 0.25rem 0 0'
+                    alt='external-link'
+                  />
+                  <Text
+                    fontSize='0.75rem'
+                    fontWeight='500'
+                    color={theme.primary}
+                  >
+                    <p>{t('fullTermsLink')}</p>
+                  </Text>
+                </Wrapper>
+              </Wrapper>
+            </Wrapper>
+          </Wrapper>
+          <Wrapper
+            width='100%'
             gap='0.3rem'
             direction='column'
             padding='0 0.75rem'
