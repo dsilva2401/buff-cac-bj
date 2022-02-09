@@ -38,8 +38,7 @@ const Collection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
-  const { collectionDetails, getCollection, productDetails, user } =
-    useGlobal();
+  const { collectionDetails, getCollection } = useGlobal();
   const { setIsMenuOpen, logEvent } = useContext(GlobalContext);
   const history = useHistory();
 
@@ -58,12 +57,9 @@ const Collection: React.FC = () => {
           type: 'success',
         });
         logEvent({
-          type: 'ENGAGEMENTS',
-          name: 'USER_SCAN_A_TAG',
+          eventType: 'ENGAGEMENTS',
+          event: 'USER_SCAN_A_TAG',
           data: scanResult,
-          brand: productDetails?.brand.id,
-          product: productDetails?.product.id,
-          user: user?.uid,
         });
       } else if (!validateUrl(scanResult.toString())) {
         showToast({
@@ -138,12 +134,9 @@ const Collection: React.FC = () => {
                     RoutesHashMap.ProductDetails.path(node.tag.slug)
                   );
                   logEvent({
-                    type: 'ENGAGEMENTS',
-                    name: 'VIEW_PRODUCT_INFO',
+                    eventType: 'ENGAGEMENTS',
+                    event: 'VIEW_PRODUCT_INFO',
                     data: node.product,
-                    brand: productDetails?.brand.id,
-                    product: productDetails?.product.id,
-                    user: user?.uid,
                   });
                 }}
               />
@@ -152,7 +145,7 @@ const Collection: React.FC = () => {
         </Grid>
       );
     },
-    [history, logEvent, productDetails, user]
+    [history, logEvent]
   );
 
   return (

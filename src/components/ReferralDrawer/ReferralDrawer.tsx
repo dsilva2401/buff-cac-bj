@@ -90,12 +90,9 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
                   type: 'success',
                 });
                 logEvent({
-                  type: 'ENGAGEMENTS',
-                  name: 'REFERRAL_LINK_COPIED',
+                  eventType: 'ENGAGEMENTS',
+                  event: 'REFERRAL_LINK_COPIED',
                   data: referralData,
-                  brand: productDetails?.brand.id,
-                  product: productDetails?.product.id,
-                  user: user?.uid,
                 });
               }}
             >
@@ -107,12 +104,9 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               onClick={() => {
                 handleShare();
                 logEvent({
-                  type: 'ENGAGEMENTS',
-                  name: 'SEND_A_REFERRAL_LINK',
+                  eventType: 'ENGAGEMENTS',
+                  event: 'SEND_A_REFERRAL_LINK',
                   data: referralData,
-                  brand: productDetails?.brand.id,
-                  product: productDetails?.product.id,
-                  user: user?.uid,
                 });
               }}
             >

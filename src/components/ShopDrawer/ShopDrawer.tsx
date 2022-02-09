@@ -105,29 +105,17 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       selectedQuantity
     );
     logEvent({
-      type: 'ENGAGEMENTS',
-      name: 'SHOPPING_CHECK_OUT',
+      eventType: 'ENGAGEMENTS',
+      event: 'SHOPPING_CHECK_OUT',
       data: {
-        details: {
-          productId: chosenOption.id,
-          quantity: selectedQuantity,
-        },
+        productId: chosenOption.id,
+        quantity: selectedQuantity,
       },
-      brand: productDetails?.brand.id,
-      product: productDetails?.product.id,
-      user: user?.uid,
     });
     setTimeout(() => {
       window.open(`http://${link}`, '_blank');
     });
-  }, [
-    chosenOption,
-    modifyUrlToIncludeQuantity,
-    selectedQuantity,
-    logEvent,
-    productDetails,
-    user,
-  ]);
+  }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
 
   const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);
