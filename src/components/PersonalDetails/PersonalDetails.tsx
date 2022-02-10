@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useAPI } from 'utils/api';
-import Input from 'components/Input';
 import Button from 'components/Button';
-import InputMask from 'react-input-mask';
-import Wrapper from 'components/Wrapper';
+import Input from 'components/Input';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
+import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import InputMask from 'react-input-mask';
+import { useAPI } from 'utils/api';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -15,11 +15,11 @@ interface UserUpdatePayload {
 }
 
 interface PersonalDetailsProps {
-  onPersonalDetailsUpdate?: () => void
+  onPersonalDetailsUpdate?: () => void;
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
-  onPersonalDetailsUpdate = () => { }
+  onPersonalDetailsUpdate = () => {},
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
 
@@ -29,32 +29,33 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
 
   const onSuccess = useCallback(() => {
     onPersonalDetailsUpdate();
-  }, [])
+  }, [onPersonalDetailsUpdate]);
 
-  const [updateUser, loading] = useAPI<UserUpdatePayload>(
-    {
-      method: 'PUT',
-      endpoint: 'auth/update',
-      onSuccess,
-      onError: (error) => {
-        console.log(error)
+  const [updateUser, loading] = useAPI<UserUpdatePayload>({
+    method: 'PUT',
+    endpoint: 'auth/update',
+    onSuccess,
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const validateUserInformation = useCallback(
+    (details: UserUpdatePayload) => {
+      if (!details.firstName) {
+        showToast({ message: 'First name is required', type: 'error' });
+        return;
       }
-    }
+
+      if (!details.lastName) {
+        showToast({ message: 'Last name is required', type: 'error' });
+        return;
+      }
+
+      updateUser(details);
+    },
+    [updateUser]
   );
-
-  const validateUserInformation = useCallback((details: UserUpdatePayload) => {
-    if (!details.firstName) {
-      showToast({ message: "First name is required", type: "error" });
-      return
-    }
-
-    if (!details.lastName) {
-      showToast({ message: "Last name is required", type: "error" });
-      return
-    }
-
-    updateUser(details);
-  }, [updateUser]);
 
   return (
     <Wrapper

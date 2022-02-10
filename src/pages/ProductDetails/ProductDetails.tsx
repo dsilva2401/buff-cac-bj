@@ -150,17 +150,9 @@ const ProductDetails: React.FC = () => {
               window.open(`http://${moduleData?.link}`, '_blank');
             } else changeDrawerPage(x);
             logEvent({
-              type: 'ENGAGEMENTS',
-              name: 'MODULE_CLICKED',
-              data: {
-                details: {
-                  moduleId: module.id,
-                  moduleName: module.type,
-                },
-              },
-              brand: details.brand.id,
-              product: details.product.id,
-              user: user?.uid,
+              eventType: 'ENGAGEMENTS',
+              event: 'MODULE_CLICKED',
+              moduleType: module.type,
             });
           },
           isHighlight: x === 0,

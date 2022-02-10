@@ -1,24 +1,25 @@
+import PageWrapper from 'components/PageWrapper';
+import ProtectedRoute from 'components/ProtectedRoute';
+import FourZeroFour from 'pages/404';
+import Collection from 'pages/Collection';
+import ForgotPassword from 'pages/ForgotPassword';
+import Login from 'pages/Login';
+import MagicLink from 'pages/MagicLink';
+import ProductDetails from 'pages/ProductDetails';
+import Profile from 'pages/Profile/Profile';
+import SignUp from 'pages/SignUp';
+import Viscosoft from 'pages/Viscosoft';
 import { Route, Switch, useLocation } from 'react-router-dom';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {
   withLastLocation,
-  WithLastLocationProps
-} from "react-router-last-location";
-import ProtectedRoute from 'components/ProtectedRoute';
-import ForgotPassword from 'pages/ForgotPassword';
-import ProductDetails from 'pages/ProductDetails';
-import PageWrapper from 'components/PageWrapper';
-import Profile from 'pages/Profile/Profile';
-import Collection from 'pages/Collection';
-import MagicLink from 'pages/MagicLink';
-import FourZeroFour from 'pages/404';
-import SignUp from 'pages/SignUp';
-import Login from 'pages/Login';
+  WithLastLocationProps,
+} from 'react-router-last-location';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './style.css';
 
 interface RoutesType {
   [key: string]: any;
-};
+}
 
 export const RoutesHashMap: RoutesType = {
   Login: {
@@ -44,27 +45,36 @@ export const RoutesHashMap: RoutesType = {
     protected: true,
   },
   ProductDetails: {
-    path: (id: string = ":id") => `/c/${id}`,
+    path: (id: string = ':id') => `/c/${id}`,
     component: <ProductDetails />,
   },
   MagicLink: {
     path: '/magic-link',
     component: <MagicLink />,
   },
+  ViscoSoft: {
+    path: '/app/l/viscosoft',
+    component: <Viscosoft />,
+  },
 };
 
 const getTransition = (path: string, lastLocation: string) => {
   switch (path) {
-    case '/': return 'inverseslide';
-    case '/signup': return 'slide';
-    case '/forgot-password': return 'slide';
+    case '/':
+      return 'inverseslide';
+    case '/signup':
+      return 'slide';
+    case '/forgot-password':
+      return 'slide';
     case '/app/collection':
-      return lastLocation === null || lastLocation === '/' ?
-        'slide' : 'inverseslide';
+      return lastLocation === null || lastLocation === '/'
+        ? 'slide'
+        : 'inverseslide';
     case '/app/profile':
       return lastLocation === '/app/collection' ? 'slide' : 'inverseslide';
-    default: return 'slide';
-  };
+    default:
+      return 'slide';
+  }
 };
 
 const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
@@ -75,47 +85,31 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
       <CSSTransition
         timeout={300}
         key={location.key}
-        classNames={
-          getTransition(location.pathname, lastLocation ? lastLocation?.pathname : '')
-        }
+        classNames={getTransition(
+          location.pathname,
+          lastLocation ? lastLocation?.pathname : ''
+        )}
       >
         <Switch location={location}>
-          {Object.keys(RoutesHashMap)
-            .map(
-              routeKey => {
-                const routeObject = RoutesHashMap[routeKey];
-                const path = (
-                  typeof RoutesHashMap[routeKey].path === 'function'
-                    ? RoutesHashMap[routeKey].path()
-                    : RoutesHashMap[routeKey].path
-                )
-                if (routeObject.protected) {
-                  return (
-                    <ProtectedRoute
-                      exact
-                      path={path}
-                      key={routeKey}
-                    >
-                      <PageWrapper>
-                        {routeObject.component}
-                      </PageWrapper>
-                    </ProtectedRoute>
-                  )
-                }
-                return (
-                  <Route
-                    exact
-                    path={path}
-                    key={routeKey}
-                  >
-                    <PageWrapper>
-                      {routeObject.component}
-                    </PageWrapper>
-                  </Route>
-                )
-              }
-            )
-          }
+          {Object.keys(RoutesHashMap).map((routeKey) => {
+            const routeObject = RoutesHashMap[routeKey];
+            const path =
+              typeof RoutesHashMap[routeKey].path === 'function'
+                ? RoutesHashMap[routeKey].path()
+                : RoutesHashMap[routeKey].path;
+            if (routeObject.protected) {
+              return (
+                <ProtectedRoute exact path={path} key={routeKey}>
+                  <PageWrapper>{routeObject.component}</PageWrapper>
+                </ProtectedRoute>
+              );
+            }
+            return (
+              <Route exact path={path} key={routeKey}>
+                <PageWrapper>{routeObject.component}</PageWrapper>
+              </Route>
+            );
+          })}
           <Route>
             <PageWrapper>
               <FourZeroFour />
@@ -123,7 +117,7 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
           </Route>
         </Switch>
       </CSSTransition>
-    </TransitionGroup >
+    </TransitionGroup>
   );
 };
 
