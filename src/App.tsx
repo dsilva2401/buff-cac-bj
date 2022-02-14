@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { isBrowser } from 'react-device-detect';
 import { BrowserRouter } from 'react-router-dom';
-import { useGlobal } from "./context/global/GlobalContext";
+import { useGlobal } from './context/global/GlobalContext';
 import { LastLocationProvider } from 'react-router-last-location';
 import Container from 'components/Container/Container';
 import AppFrame from 'components/AppFrame/AppFrame';
@@ -34,7 +34,7 @@ export default function App() {
   );
 
   return (
-    <Container isBrowser={isBrowser} style={{zoom: appZoom}}>
+    <Container isBrowser={isBrowser} style={{ zoom: appZoom }}>
       <GlobalStyle />
       {isBrowser ? <AppFrame>{browserRouter}</AppFrame> : browserRouter}
       <Toast />

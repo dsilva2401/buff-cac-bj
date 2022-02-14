@@ -1,41 +1,33 @@
-import ForgotPasswordForm from 'components/ForgotPasswordForm';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useGlobal } from 'context/global/GlobalContext';
+import { useTranslation } from 'react-i18next';
+import { Animated } from 'react-animated-css';
+import LoginForm from 'components/LoginForm';
 import HtmlWrapper from 'components/HtmlWrapper';
 import LoadingIndicator from 'components/LoadingIndicator';
-import LoginForm from 'components/LoginForm';
-import PageFooter from 'components/PageFooter';
-import SignUpForm from 'components/SignUpForm';
 import Wrapper from 'components/Wrapper';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-enum AuthScreen {
-  login = 'login',
-  signup = 'signup',
-  forgotPasssword = 'forgotPasssword',
-}
+import Text from 'components/Text';
 
 interface AuthDrawerProps {
   onAuthComplete: () => void;
   html: string | undefined | null;
   onPersonalDetailshow?: () => void;
-  showFooter?: boolean;
+  margin?: string;
+  animated?: boolean;
+  brandName?: string;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailshow = () => {},
-  showFooter,
+  onPersonalDetailshow = () => { },
   html,
+  animated,
+  brandName
 }) => {
-  const [authScreen, setAuthScreen] = useState<AuthScreen>(AuthScreen.login);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { t: signInTranslation } = useTranslation('translation', {
-    keyPrefix: 'signIn',
-  });
-  const { t: signUpTranslation } = useTranslation('translation', {
-    keyPrefix: 'signUp',
-  });
+  const { t } = useTranslation('translation', { keyPrefix: 'drawers.authDrawer' });
+  const { retractDrawer } = useGlobal();
 
   const onSuccess = useCallback(() => {
     onAuthComplete();
@@ -43,78 +35,10 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   }, [onAuthComplete, setLoading]);
 
   const authScreenToRender = useMemo(() => {
-    switch (authScreen) {
-      case AuthScreen.login:
-        return (
-          <LoginForm
-            onLogin={onSuccess}
-            onForgotPasswordClick={() =>
-              setAuthScreen(AuthScreen.forgotPasssword)
-            }
-          />
-        );
-      case AuthScreen.signup:
-        return (
-          <SignUpForm
-            onPersonalDetailshow={onPersonalDetailshow}
-            onSignup={onSuccess}
-          />
-        );
-      case AuthScreen.forgotPasssword:
-        return (
-          <ForgotPasswordForm goBack={() => setAuthScreen(AuthScreen.login)} />
-        );
-      default:
-        return (
-          <LoginForm
-            onLogin={onSuccess}
-            onForgotPasswordClick={() =>
-              setAuthScreen(AuthScreen.forgotPasssword)
-            }
-          />
-        );
-    }
-  }, [authScreen, onPersonalDetailshow, onSuccess]);
+    return <LoginForm isDrawer onLogin={onSuccess} />;
+  }, [onPersonalDetailshow, onSuccess]);
 
-  const footerToRender = useMemo(() => {
-    let onActionClick: any = () => {};
-    let descriptionText: string = '';
-    let actionText: string = '';
-
-    switch (authScreen) {
-      case AuthScreen.login:
-        onActionClick = () => setAuthScreen(AuthScreen.signup);
-        descriptionText = signInTranslation('newToBrij');
-        actionText = signInTranslation('signUpLink');
-        break;
-      case AuthScreen.signup:
-        onActionClick = () => setAuthScreen(AuthScreen.login);
-        descriptionText = signUpTranslation('existingUser');
-        actionText = signUpTranslation('signInLink');
-        break;
-      case AuthScreen.forgotPasssword:
-        onActionClick = () => {};
-        descriptionText = '';
-        actionText = '';
-        break;
-      default:
-        onActionClick = () => setAuthScreen(AuthScreen.signup);
-        descriptionText = signInTranslation('newToBrij');
-        actionText = signInTranslation('signUpLink');
-    }
-
-    return (
-      <PageFooter>
-        <p>{descriptionText}</p>
-        <p onClick={onActionClick}>{actionText}</p>
-      </PageFooter>
-    );
-  }, [authScreen, signInTranslation, signUpTranslation]);
-
-  if (loading) {
-    return <LoadingIndicator />;
-  }
-
+  if (loading) return <LoadingIndicator />;
   return (
     <Wrapper
       width='100%'
@@ -123,20 +47,46 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       alignItems='center'
       gap='1.2rem'
       overflow='auto'
-      margin='2rem 0'
+      margin={animated ? '1.5rem 0' : '3.75rem 0'}
     >
-      {html ? (
+      {html &&
         <HtmlWrapper
-          width='100%'
-          direction='column'
-          justifyContent='center'
-          alignItems='center'
           gap='1rem'
+          width='100%'
+          padding='0 1rem'
+          direction='column'
+          alignItems='center'
+          justifyContent='center'
           dangerouslySetInnerHTML={{ __html: html }}
         />
-      ) : null}
+      }
+      <Animated
+        animationIn='slideInRight'
+        animationOut='slideOutLeft'
+        animationInDuration={retractDrawer ? 0 : 300}
+        animationOutDuration={retractDrawer ? 0 : 300}
+        animateOnMount
+        isVisible={true}
+        style={{ width: '100%' }}
+      >
+        <Wrapper padding='0 1rem' style={{ borderTop: '2px solid #E7EAEB' }}>
+          <Text margin='1rem 0 0 0' fontSize='0.625rem' textAlign='left' color='#414149'>
+            <p>
+              {t('termsAndconditions.part1')}
+              {brandName}
+              {t('termsAndconditions.part2')}
+              <a
+                target='_blank'
+                href='https://brij.it/terms'
+                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              >
+                {t('termsAndconditions.link')}
+              </a>
+            </p>
+          </Text>
+        </Wrapper>
+      </Animated>
       {authScreenToRender}
-      {/* {showFooter ? footerToRender : null} */}
     </Wrapper>
   );
 };

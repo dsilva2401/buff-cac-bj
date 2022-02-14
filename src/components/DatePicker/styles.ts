@@ -63,11 +63,11 @@ export const InputPlaceholder = styled.span<PickerProps>`
   transition: all 0.3s ease;
   z-index: 1;
   font-size: ${(props) =>
-    props.isFocused || props.isDateSelected ? "0.85rem" : "0.9rem"};
+    props.isFocused || props.isDateSelected ? '0.85rem' : '0.9rem'};
   background-color: ${(props) =>
-    props.isFocused || props.isDateSelected ? "#fff" : "transparent"};
+    props.isFocused || props.isDateSelected ? '#fff' : 'transparent'};
   transform: ${(props) =>
     props.isFocused || props.isDateSelected
-      ? "scale(0.8) translate(-25px, -35px)"
-      : "translate(5px, 0)"};
+      ? 'scale(0.8) translate(-25px, -35px)'
+      : 'translate(5px, 0)'};
 `;

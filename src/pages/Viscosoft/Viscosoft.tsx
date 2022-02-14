@@ -1,17 +1,18 @@
+import React from 'react';
+import { theme } from 'styles/theme';
+import { Helmet } from 'react-helmet';
+import topStripe from 'assets/images/svg/top-stripe.svg';
 import placeholder from 'assets/images/png/placeholder.png';
+import checkmark from 'assets/icons/svg/checkmark-white.svg';
 import bottomStripe from 'assets/images/svg/bottom-stripe.svg';
 import horizontalStripe from 'assets/images/svg/horizontal-stripe.svg';
-import topStripe from 'assets/images/svg/top-stripe.svg';
 import viscosoftBackground from 'assets/images/svg/viscosoft-background.svg';
 import viscosoftLogo from 'assets/logos/svg/viscosoft-logo.svg';
+import ProgressiveImage from 'react-progressive-image';
+import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
 import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import ProgressiveImage from 'react-progressive-image';
-import { theme } from 'styles/theme';
 
 const Viscosoft: React.FC = () => {
   return (
@@ -58,15 +59,33 @@ const Viscosoft: React.FC = () => {
         background='rgba(0, 0, 0, 0.4)'
       >
         <Text
-          color='#FFFFFF'
           textAlign='left'
-          fontSize='1.125rem'
           fontWeight='600'
-          margin='0 0 1.5rem 0'
+          fontSize='1.125rem'
+          color='rgba(256, 256, 256, 0.9)'
         >
           <h2>
-            Register to get 12 months of FREE protection against accidents
+            Register and watch your product care video to get 12 months of FREE accident protection
           </h2>
+        </Text>
+        <Text
+          fontWeight='500'
+          fontSize='0.875rem'
+          color='#FFFFFF'
+        >
+          <p>What's covered:</p>
+          <Wrapper margin='0.25rem 0' alignItems='flex-start'>
+            <Image src={checkmark} margin='0 0.375rem 0 0' />
+            <span>Stains from food, drinks &#38; pen ink</span>
+          </Wrapper>
+          <Wrapper margin='0.25rem 0' alignItems='flex-start'>
+            <Image src={checkmark} margin='0 0.375rem 0 0' />
+            <span>Stains from human &#38; pet bodily fluids</span>
+          </Wrapper>
+          <Wrapper margin='0.25rem 0' alignItems='flex-start'>
+            <Image src={checkmark} margin='0 0.375rem 0 0' />
+            <span>Accidental rips &#38; tears</span>
+          </Wrapper>
         </Text>
         <Button
           variant='light'

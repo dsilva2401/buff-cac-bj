@@ -30,9 +30,8 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
           {headers.map((header, index) =>
             <TableCell
               key={header}
-              featured={header === 'mulberry'}
               edgecaseTop={header === 'mulberry'}
-              style={{ borderBottom: `1px solid ${theme.primary}` }}
+              style={header !== 'mulberry' ? { boxShadow: `0px 1px 0px 0px ${theme.primary}` } : { }}
             >
               <Text
                 color={header === 'mulberry' ? theme.primary : 'black'}

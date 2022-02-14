@@ -6,17 +6,19 @@ import { ReactComponent as GoogleLogo } from 'assets/logos/svg/google.svg';
 import { ReactComponent as FacebookLogo } from 'assets/logos/svg/facebook.svg';
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import useFirebaseError from 'hooks/useFirebaseError';
-import Button from 'components/Button';
 import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
 
 interface SocialLoginProps {
   setLoading: (loading: boolean) => void,
-  onSuccess: () => void
-}
+  onSuccess: () => void,
+  isDrawer?: boolean
+};
 
 const SocialLogin: React.FC<SocialLoginProps> = ({
   setLoading,
-  onSuccess
+  onSuccess,
+  isDrawer
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'socialLogin' });
 
@@ -56,22 +58,23 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       direction='column'
       justifyContent='center'
       alignItems='center'
-      gap='1rem'
-      margin='2rem 0 0 0'
+      gap='0.5rem'
     >
       <Button
         variant='light'
         style={{ border: '0', color: '#000000' }}
         onClick={() => handleSocialAuth(ProviderName.Google)}
       >
-        <GoogleLogo /> {t('googleButton')}
+        <GoogleLogo />
+        {isDrawer ? t('registerGoogleButton') : t('continueGoogleButton')}
       </Button>
       <Button
         variant='light'
         style={{ border: '0', color: '#000000' }}
         onClick={() => handleSocialAuth(ProviderName.Facebook)}
       >
-        <FacebookLogo /> {t('facebookButton')}
+        <FacebookLogo />
+        {isDrawer ? t('registerFacebookButton') : t('continueFacebookButton')}
       </Button>
     </Wrapper>
   );

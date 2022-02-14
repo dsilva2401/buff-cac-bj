@@ -146,7 +146,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         animationOut='slideOutLeft'
         animationInDuration={retractDrawer ? 0 : 300}
         animationOutDuration={retractDrawer ? 0 : 300}
-        animationInDelay={retractDrawer ? 200 : 0}
         isVisible={true}
         style={{ width: '100%' }}
       >
@@ -324,8 +323,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   {isValidCombo === null
                     ? t('checkoutHint.chooseOptions')
                     : isValidCombo === false
-                    ? t('checkoutHint.comboUnavailable')
-                    : ''}
+                      ? t('checkoutHint.comboUnavailable')
+                      : ''}
                 </p>
               </Text>
             )}

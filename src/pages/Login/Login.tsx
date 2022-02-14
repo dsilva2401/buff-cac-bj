@@ -1,20 +1,18 @@
-import brijLogo from 'assets/logos/svg/brij-colored.svg';
-import IconButton from 'components/IconButton';
-import Image from 'components/Image';
-import LoginForm from 'components/LoginForm';
-import PageHeader from 'components/PageHeader';
-import Wrapper from 'components/Wrapper';
-import { useGlobal } from 'context/global/GlobalContext';
-import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
 import React, { useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { RoutesHashMap } from 'routes';
+import { useTranslation } from 'react-i18next';
+import { useGlobal } from 'context/global/GlobalContext';
+import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
+import brijLogo from 'assets/logos/svg/brij-colored.svg';
+import IconButton from 'components/IconButton';
+import PageHeader from 'components/PageHeader';
+import LoginForm from 'components/LoginForm';
+import Wrapper from 'components/Wrapper';
+import Image from 'components/Image';
 
 const Login: React.FC = () => {
   const { user, setIsMenuOpen } = useGlobal();
-  const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
   const logo = useMemo(
@@ -57,21 +55,7 @@ const Login: React.FC = () => {
           logo={logo}
           actionButton={menuButton}
         />
-        <LoginForm
-          onForgotPasswordClick={() => {
-            history.push(RoutesHashMap.ForgotPassword.path);
-          }}
-        />
-        {/* <PageFooter>
-          <Text>
-            <p>{t('newToBrij')}</p>
-          </Text>
-          <Link to={RoutesHashMap.Signup.path} style={{ textDecoration: 'none' }}>
-            <Text color='#4B6EFA'>
-              <p>{t('signUpLink')}</p>
-            </Text>
-          </Link>
-        </PageFooter> */}
+        <LoginForm />
       </Wrapper>
     </>
   );
