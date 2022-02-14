@@ -1,5 +1,6 @@
 import React from 'react';
 import { Drawer } from './styles';
+import { Animated } from 'react-animated-css';
 import Text from 'components/Text';
 import CheckAnimation from './CheckAnimation';
 import DrawerMask from 'components/DrawerMask';

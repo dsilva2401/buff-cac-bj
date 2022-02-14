@@ -71,10 +71,10 @@ const Wrapper = styled.div<WrapperProps>`
   padding: ${(props) => (props.padding ? props.padding : 'unset')};
   padding-top: ${(props) => (props.paddingTop ? props.paddingTop : 'unset')};
   position: ${(props) => (props.position ? props.position : 'inherit')};
-  top: ${(props) => props.top ? props.top : "unset"};
-  left: ${(props) => props.left ? props.left : "unset"};
-  bottom: ${(props) => props.bottom ? props.bottom : "unset"};
-  right: ${(props) => props.right ? props.right : "unset"};
+  top: ${(props) => props.top ? props.top : 'unset'};
+  left: ${(props) => props.left ? props.left : 'unset'};
+  bottom: ${(props) => props.bottom ? props.bottom : 'unset'};
+  right: ${(props) => props.right ? props.right : 'unset'};
   display: flex;
   gap: ${(props) => (props.gap ? props.gap : 'unset')};
   flex-direction: ${(props) => (props.direction ? props.direction : 'row')};
@@ -93,7 +93,7 @@ const Wrapper = styled.div<WrapperProps>`
 
   &::before {
     content: ${(props) =>
-    props.before?.content ? `"${props.before.content}"` : 'none'};
+    props.before?.content ? `'${props.before.content}'` : 'none'};
     width: ${(props) => (props.before?.width ? props.before.width : 'auto')};
     height: ${(props) => (props.before?.height ? props.before.height : 'auto')};
     position: ${(props) =>
@@ -117,7 +117,7 @@ const Wrapper = styled.div<WrapperProps>`
 
   &::after {
     content: ${(props) =>
-    props.after?.content ? `"${props.after.content}"` : 'none'};
+    props.after?.content ? `'${props.after.content}'` : 'none'};
     width: ${(props) => (props.after?.width ? props.after.width : 'auto')};
     height: ${(props) => (props.after?.height ? props.after.height : 'auto')};
     position: ${(props) =>

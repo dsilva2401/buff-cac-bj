@@ -1,22 +1,20 @@
-import PageWrapper from 'components/PageWrapper';
-import ProtectedRoute from 'components/ProtectedRoute';
-import FourZeroFour from 'pages/404';
-import Collection from 'pages/Collection';
-import ForgotPassword from 'pages/ForgotPassword';
-import Login from 'pages/Login';
-import MagicLink from 'pages/MagicLink';
-import ProductDetails from 'pages/ProductDetails';
-import Profile from 'pages/Profile/Profile';
-import SignUp from 'pages/SignUp';
-import Viscosoft from 'pages/Viscosoft';
+import React from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Route, Switch, useLocation } from 'react-router-dom';
+import ProtectedRoute from 'components/ProtectedRoute';
+import ProductDetails from 'pages/ProductDetails';
+import PageWrapper from 'components/PageWrapper';
+import Profile from 'pages/Profile/Profile';
+import Collection from 'pages/Collection';
+import MagicLink from 'pages/MagicLink';
+import Viscosoft from 'pages/Viscosoft';
+import FourZeroFour from 'pages/404';
+import Login from 'pages/Login';
 import {
   withLastLocation,
   WithLastLocationProps,
 } from 'react-router-last-location';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './style.css';
-
 interface RoutesType {
   [key: string]: any;
 }
@@ -25,14 +23,6 @@ export const RoutesHashMap: RoutesType = {
   Login: {
     path: '/',
     component: <Login />,
-  },
-  Signup: {
-    path: '/signup',
-    component: <SignUp />,
-  },
-  ForgotPassword: {
-    path: '/forgot-password',
-    component: <ForgotPassword />,
   },
   Collection: {
     path: '/app/collection',

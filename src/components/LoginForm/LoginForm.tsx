@@ -1,37 +1,42 @@
-import Button from 'components/Button';
-import Input from 'components/Input';
-import LoadingIndicator from 'components/LoadingIndicator';
-import SocialLogin from 'components/SocialLogin';
-import Text from 'components/Text';
+import React, { useState, useRef, useEffect } from 'react';
+import { Animated } from 'react-animated-css';
+import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
-import Wrapper from 'components/Wrapper';
 import { useGlobal } from 'context/global/GlobalContext';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import useFirebaseError from 'hooks/useFirebaseError';
+import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
+import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
-import { useCallback, useState } from 'react';
-import { Animated } from 'react-animated-css';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import LoadingIndicator from 'components/LoadingIndicator';
+import useFirebaseError from 'hooks/useFirebaseError';
+import SocialLogin from 'components/SocialLogin';
+import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Text from 'components/Text';
+import validator from 'validator';
 
 interface LoginFormProps {
+  isDrawer?: boolean;
   onLogin?: () => void;
-  onForgotPasswordClick?: () => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  onLogin = () => {},
-  onForgotPasswordClick = () => {},
+  onLogin = () => { },
+  isDrawer
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
+  const inputRef = useRef<HTMLInputElement>(null);
   const getErrorMessage = useFirebaseError();
   const { retractDrawer } = useGlobal();
   const location = useLocation();
   const auth = getAuth();
 
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [emailRegistration, toggleEmailRegistration] = useState<boolean>(false);
+  const [emailValidated, setEmailValidated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   // get magic link header
@@ -42,10 +47,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
     success,
   } = useMagicLinkHandler(username);
 
-  const handleUsernameChanged = useCallback(
-    ({ target: { value } }) => setUsername(value),
-    []
-  );
+  const validateEmail = (value: string) => {
+    if (validator.isEmail(value))
+      setEmailValidated(true);
+    else setEmailValidated(false);
+  }
+
+  const handleUsernameChanged = (value: string) => {
+    setUsername(value);
+    validateEmail(value);
+  };
 
   const handleLogin = async () => {
     setLoading(true);
@@ -56,7 +67,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
       process.env.REACT_APP_DEFAULT_PASSWORD!
     )
       .then((data) => {
-        console.log('data: ', data);
         onLogin();
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
@@ -70,6 +80,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       .finally(() => setLoading(false));
   };
 
+  useEffect(() => {
+    if (emailRegistration && inputRef !== null)
+      inputRef.current?.focus();
+  }, [emailRegistration])
+
   return (
     <Wrapper
       width='100%'
@@ -78,12 +93,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
       justifyContent='flex-start'
       alignItems='center'
       overflow='hidden'
+      paddingTop={location.pathname === '/' || location.pathname === '' ? '2rem' : '0'}
     >
       <Animated
         animationIn='slideInRight'
         animationOut='slideOutLeft'
-        animationInDuration={location.pathname === '/' ? 0 : 300}
-        animationOutDuration={location.pathname === '/' ? 0 : 300}
+        animationInDuration={location.pathname === '/' || retractDrawer ? 0 : 300}
+        animationOutDuration={location.pathname === '/' || retractDrawer ? 0 : 300}
         animationInDelay={location.pathname !== '/' && retractDrawer ? 200 : 0}
         animateOnMount
         isVisible={true}
@@ -93,38 +109,53 @@ const LoginForm: React.FC<LoginFormProps> = ({
           direction='column'
           justifyContent='flex-start'
           alignItems='center'
-          padding='2rem 1rem'
+          padding='0 1rem'
+          gap='0.5rem'
           overflow='hidden'
-          gap='1.2rem'
           height='auto'
         >
-          <SocialLogin setLoading={setLoading} onSuccess={onLogin} />
-          <Wrapper justifyContent='center' alignItems='center'>
-            <Text fontSize='1.2rem' color='#98A3AA'>
-              <p>or</p>
-            </Text>
-          </Wrapper>
+          <SocialLogin
+            isDrawer={isDrawer}
+            setLoading={setLoading}
+            onSuccess={onLogin}
+          />
           <Wrapper
             direction='column'
             width='100%'
             justifyContent='center'
             alignItems='center'
+            overflow='hidden'
+            transition='0.2s'
+            height={emailRegistration ? '52px' : '0px'}
+            margin={emailRegistration ? '0' : '-0.5rem 0 0 0'}
           >
             <Input
               type='text'
+              ref={inputRef}
               value={username}
-              placeholder={t('emailInput')}
-              onChange={handleUsernameChanged}
               autoCapitalize='none'
-              margin='0 0 1rem'
+              placeholder={t('emailInput')}
+              onChange={(event) => handleUsernameChanged(event.target.value)}
             />
           </Wrapper>
           <Wrapper width='100%' justifyContent='center' alignItems='center'>
             {loading || magicLinkLoading ? (
               <LoadingIndicator />
             ) : (
-              <Button variant='dark' onClick={handleLogin}>
-                {t('signInButton')}
+              <Button
+                variant='light'
+                transition='0s'
+                style={!emailRegistration ? { border: '0', color: '#000000' } : {}}
+                onClick={() => {
+                  emailValidated ? handleLogin() : (
+                    emailRegistration ? showToast({ type: 'error', message: 'Invalid Email' })
+                      :
+                      toggleEmailRegistration(!emailRegistration)
+                  )
+                }}
+              >
+                {emailRegistration ? <EmailLogoPrimary /> : <EmailLogo />}
+                {isDrawer ? t('registerWithEmail') : t('continueWithEmail')}
               </Button>
             )}
           </Wrapper>

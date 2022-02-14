@@ -7,6 +7,7 @@ type ButtonProps = {
   squared?: boolean;
   width?: string;
   iconRight?: boolean;
+  transition?: string;
 };
 
 const Button = styled.button<ButtonProps>`
@@ -19,7 +20,7 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
 
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: ${(props) => props.transition ? props.transition : 'all 0.3s ease'};
   width: ${(props) => props.width ? props.width : '100%'};
   border-radius: ${(props) => props.squared ? '0.5rem' : '5rem'};
   border: ${(props) =>
