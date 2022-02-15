@@ -10,7 +10,7 @@ import Wrapper from 'components/Wrapper';
 import PageHeader from 'components/PageHeader';
 import IconButton from 'components/IconButton';
 import brijLogo from 'assets/logos/svg/brij-colored.svg';
-import background from "assets/icons/svg/404-background.svg";
+import background from 'assets/icons/svg/404-background.svg';
 import externalLink from 'assets/icons/svg/external-link.svg';
 
 const FourZeroFour: React.FC = () => {

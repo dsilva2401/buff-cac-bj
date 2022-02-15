@@ -1,6 +1,13 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { theme } from 'styles/theme';
 import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
 import externalLink from 'assets/icons/svg/external-link.svg';
+import MulberryDrawer from 'components/MulberryDrawer';
 import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
+import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
+import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
+import DataTable from 'components/DataTable';
 import placeholder from 'assets/images/png/placeholder.png';
 import AuthDrawer from 'components/AuthDrawer';
 import BottomDrawer from 'components/BottomDrawer';
@@ -12,11 +19,10 @@ import PageHeader from 'components/PageHeader';
 import ReferralDrawer from 'components/ReferralDrawer';
 import ShopDrawer from 'components/ShopDrawer';
 import Text from 'components/Text';
+import useElementSize from 'hooks/useElementSize';
 import { showToast } from 'components/Toast/Toast';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import Wrapper from 'components/Wrapper';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import ProgressiveImage from 'react-progressive-image';
 import { useParams } from 'react-router';
@@ -24,6 +30,7 @@ import { Redirect } from 'react-router-dom';
 import { CollectionItem } from 'types/User';
 import { useAPI } from 'utils/api';
 import { useGlobal } from '../../context/global/GlobalContext';
+import { Animated } from 'react-animated-css';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -31,6 +38,7 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import HtmlWrapper from 'components/HtmlWrapper';
 
 type UrlParam = {
   id: string;
@@ -38,6 +46,8 @@ type UrlParam = {
 
 const ProductDetails: React.FC = () => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
+  const [animateTable, toggleAnimateTable] = useState<boolean>(false);
+  const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
@@ -58,10 +68,12 @@ const ProductDetails: React.FC = () => {
     isPreviewMode,
     previewAuthenticated,
     logEvent,
+    retractDrawer
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
   const { t } = useTranslation('translation', { keyPrefix: 'productDetails' });
+  const [tableRef, { height }] = useElementSize();
 
   const onSuccess = useCallback(() => {
     getPersonalDetails();
@@ -73,6 +85,7 @@ const ProductDetails: React.FC = () => {
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(null);
+    toggleAnimateTable(false);
     setIsDrawerPageOpen(false);
   }, []);
 
@@ -159,10 +172,10 @@ const ProductDetails: React.FC = () => {
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
             ? {
-                currentPage: x,
-                isDrawerOpen: true,
-                pageTitle: details?.modules[x].title,
-              }
+              currentPage: x,
+              isDrawerOpen: true,
+              pageTitle: details?.modules[x].title,
+            }
             : null,
           icon:
             details?.modules[x].type === 'LINK_MODULE' ? (
@@ -337,15 +350,119 @@ const ProductDetails: React.FC = () => {
         (!isPreviewMode || !previewAuthenticated)
       ) {
         return (
-          <AuthDrawer
-            html={details?.registration?.registrationText}
-            onPersonalDetailshow={() => setDisableModalDismiss(true)}
-            showFooter={!disableModalDismiss}
-            onAuthComplete={() => {
-              setShowAuthPage(false);
-              setDisableModalDismiss(false);
-            }}
-          />
+          <Wrapper width='100%' direction='column'>
+            {moduleType === 'WARRANTY_MODULE' && mulberryCoverage.coverage && (
+              <Wrapper
+                width='100%'
+                direction='column'
+                alignItems='center'
+                justifyContent='flex-start'
+                padding='0 0.75rem'
+                gap='1rem'
+              >
+                <Wrapper width='100%'>
+                  <MulberryLogo width='7.2rem' style={{ margin: '1.25rem 3rem 1.25rem 0rem' }} />
+                </Wrapper>
+                <Animated
+                  animationIn='slideInRight'
+                  animationOut='slideOutLeft'
+                  animationInDuration={retractDrawer ? 0 : 300}
+                  animationOutDuration={retractDrawer ? 0 : 300}
+                  animationInDelay={retractDrawer ? 200 : 0}
+                  isVisible={true}
+                >
+                  <HtmlWrapper
+                    width='100%'
+                    direction='column'
+                    padding='1rem 0'
+                    dangerouslySetInnerHTML={{ __html: `<p>HTML contetn for testing</p>` }}
+                  />
+                  <Wrapper
+                    width='100%'
+                    gap='0.5rem'
+                    cursor='pointer'
+                    alignItems='center'
+                    justifyContent='center'
+                    onClick={() => {
+                      toggleCoverageTable(!showCoverageTable);
+                      toggleAnimateTable(true);
+                    }}
+                  >
+                    <Text
+                      fontSize='1rem'
+                      fontWeight='600'
+                      color='#202029'
+                      textDecoration='underline'
+                    >
+                      <span>What is Covered?</span>
+                    </Text>
+                    <Arrow
+                      style={{
+                        transform: showCoverageTable ? 'rotate(0deg)' : 'rotate(180deg)',
+                        transition: '0.4s'
+                      }}
+                    />
+                  </Wrapper>
+                  <Wrapper overflow='hidden'>
+                    <Wrapper paddingTop='1px'>
+                      <Wrapper
+                        ref={tableRef}
+                        height='100%'
+                        gap='0.5rem'
+                        transition='0.3s'
+                        paddingTop='2rem'
+                        direction='column'
+                        style={{ transform: showCoverageTable ? 'translateY(0)' : 'translateY(-101%)' }}
+                      >
+                        <DataTable
+                          headers={mulberryCoverage.headers}
+                          tableData={mulberryCoverage.features}
+                        />
+                        <Wrapper
+                          cursor='pointer'
+                          alignItems='center'
+                          alignSelf='flex-start'
+                          justifyContent='flex-start'
+                          onClick={() => window.open(`http://${mulberryCoverage.fullTermsLink}`, '_blank')}
+                        >
+                          <Image
+                            width='0.875rem'
+                            src={externalLink}
+                            margin='-0.05rem 0.25rem 0 0'
+                            alt='external-link'
+                          />
+                          <Text
+                            fontSize='0.75rem'
+                            fontWeight='500'
+                            color={theme.primary}
+                          >
+                            <p>See full terms</p>
+                          </Text>
+                        </Wrapper>
+                      </Wrapper>
+                    </Wrapper>
+                  </Wrapper>
+                </Animated>
+              </Wrapper>
+            )}
+            <Wrapper
+              width='100%'
+              direction='column'
+              transition={animateTable ? '0.3s' : '0'}
+              style={{ transform: !showCoverageTable ? `translateY(-${height}px)` : 'translateY(0)' }}
+            >
+              <AuthDrawer
+                brandName={details?.brand?.name}
+                animated={mulberryCoverage.coverage && moduleType === 'WARRANTY_MODULE'}
+                html={details?.registration?.registrationText}
+                onPersonalDetailshow={() => setDisableModalDismiss(true)}
+                onAuthComplete={() => {
+                  setShowAuthPage(false);
+                  setDisableModalDismiss(false);
+                }}
+              />
+            </Wrapper>
+          </Wrapper>
         );
       }
 
@@ -359,12 +476,16 @@ const ProductDetails: React.FC = () => {
           );
         case 'WARRANTY_MODULE':
           return (
-            <WarrantyDrawer
-              closePage={closeDrawerPage}
-              drawerTitle={details?.modules[currentPage as number]?.title}
-              warrantyData={module?.moduleInfo as WarrantyModuleType}
-              warrantyId={module?.id}
-            />
+            mulberryCoverage.coverage ? (
+              <MulberryDrawer />
+            ) : (
+              <WarrantyDrawer
+                closePage={closeDrawerPage}
+                drawerTitle={details?.modules[currentPage as number]?.title}
+                warrantyData={module?.moduleInfo as WarrantyModuleType}
+                warrantyId={module?.id}
+              />
+            )
           );
         case 'REFERRAL_MODULE':
           return (
@@ -389,6 +510,11 @@ const ProductDetails: React.FC = () => {
     disableModalDismiss,
     previewAuthenticated,
     isPreviewMode,
+    toggleAnimateTable,
+    showCoverageTable,
+    height,
+    tableRef,
+    t,
   ]);
 
   const logo = useCallback(
@@ -475,3 +601,36 @@ const ProductDetails: React.FC = () => {
 };
 
 export default ProductDetails;
+
+const mulberryCoverage = {
+  coverage: false,
+  fullTermsLink: 'www.google.com',
+  headers: ["What's Covered", "mulberry", "Manu. Warranty"],
+  features: [
+    {
+      title: 'Manufacturing defects',
+      mulberry: true,
+      manufacturerWarranty: true,
+    },
+    {
+      title: 'Damange from stains, rips & tears',
+      mulberry: true,
+      manufacturerWarranty: false,
+    },
+    {
+      title: 'Damage from liquid marks & rings',
+      mulberry: true,
+      manufacturerWarranty: false,
+    },
+    {
+      title: 'Broken heating, reclining & vibration',
+      mulberry: true,
+      manufacturerWarranty: false,
+    },
+    {
+      title: 'Broken mirrors & glass, loss of mirror silvering',
+      mulberry: true,
+      manufacturerWarranty: false,
+    },
+  ],
+};

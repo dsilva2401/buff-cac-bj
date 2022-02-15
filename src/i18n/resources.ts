@@ -3,8 +3,10 @@ export const resources = {
     translation: {
       socialLogin: {
         signInToastMessage: 'Sign In Successful',
-        googleButton: 'Continue with Google',
-        facebookButton: 'Continue with Facebook',
+        registerGoogleButton: 'Register with Google',
+        continueGoogleButton: 'Continue with Google',
+        registerFacebookButton: 'Register with Facebook',
+        continueFacebookButton: 'Continue with Facebook',
       },
       firebaseErrors: {
         'auth/invalid-email': 'Please provie a valid email',
@@ -62,6 +64,8 @@ export const resources = {
       signIn: {
         pageTitle: 'Sign In to Brij',
         pageHeaderTitle: 'Sign In',
+        registerWithEmail: 'Register with Email',
+        continueWithEmail: 'Continue with Email',
         signInButton: 'Register',
         magicLinkButton: 'Send magic link',
         emailInput: 'Enter email...',
@@ -101,6 +105,13 @@ export const resources = {
         removeFromCollectionToast: 'Removed from Collection',
       },
       drawers: {
+        authDrawer: {
+          termsAndconditions: {
+            part1: 'By registering you agree to email communications from ',
+            part2: " and accept Brij's ",
+            link: 'Terms & Conditions'
+          }
+        },
         registrationDrawer: {
           signInDisclaimer:
             'By registering you agree to email communications from Gucci and accept Brij’s Terms & Conditions',
@@ -127,8 +138,8 @@ export const resources = {
           signInDisclaimer:
             'By registering you agree to email communications from Gucci and accept Brij’s Terms & Conditions',
           registerButton: 'Register with Email',
-          googleButton: 'Continue with Google',
-          facebookButton: 'Continue with Facebook',
+          googleButton: 'Register with Google',
+          facebookButton: 'Register with Facebook',
           emailInput: 'Enter email...',
           details: 'Details',
           duration: 'Duration',

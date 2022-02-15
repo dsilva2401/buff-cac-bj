@@ -22,21 +22,21 @@ export const TableRow = styled.tr``;
 
 export const TableCell = styled.td<TableCellProps>`
   padding: ${(props) => (props.padding ? props.padding : '0.5rem 0')};
-  border-bottom: ${(props) => (props.lastRow ? '0' : '1px solid #E7EAEB')};
+  box-shadow: 0px 1px 0px 0px #E7EAEB;
   text-align: center;
-  ${({ featured }) => {
-    if(featured) {
-      return `border-right: 1px solid ${theme.primary}; border-left: 1px solid ${theme.primary};`;
+  ${({ featured, lastRow }) => {
+    if(featured && !lastRow) {
+      return `box-shadow: 0px 1px 0px #E7EAEB, -1px 0px 0px 0px ${theme.primary}, 1px 0px 0px 0px ${theme.primary};`;
     }
   }}
   ${({ edgecaseTop }) => {
     if(edgecaseTop) {
-      return `border-top: 1px solid ${theme.primary};`;
+      return `border-top-left-radius: 5px; border-top-right-radius: 5px; box-shadow: 0px 0px 0px 1px ${theme.primary};`;
     }
   }}
   ${({ edgecaseBottom }) => {
     if(edgecaseBottom) {
-      return `border-bottom: 1px solid ${theme.primary};`;
+      return `border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 1px 0px ${theme.primary}, -1px 1px 1px ${theme.primary}, 1px 1px 0px ${theme.primary};`;
     }
   }}
 `;

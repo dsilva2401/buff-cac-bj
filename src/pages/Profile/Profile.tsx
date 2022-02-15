@@ -138,6 +138,12 @@ const Profile: React.FC<PersonalDetailsProps> = ({
                   />
                 )}
               </InputMask>
+              <Input
+                disabled
+                type='text'
+                placeholder={personalDetails?.emails[0]?.email}
+                margin='0 0 1rem'
+              />
             </Wrapper>
           </Wrapper>
           <Wrapper width='100%' justifyContent='center' alignItems='center'>
