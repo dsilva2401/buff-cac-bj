@@ -96,6 +96,7 @@ export const DragBar = styled.div`
   top: 8px;
   left: 0;
   right: 0;
+  z-index: 2;
   margin-left: auto;
   margin-right: auto;
   border-radius: 7px;

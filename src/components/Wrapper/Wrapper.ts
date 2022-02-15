@@ -27,6 +27,7 @@ type WrapperProps = {
   padding?: string;
   paddingTop?: string;
   position?: string;
+  zIndex?: number,
   top?: string;
   left?: string;
   bottom?: string;
@@ -71,6 +72,7 @@ const Wrapper = styled.div<WrapperProps>`
   padding: ${(props) => (props.padding ? props.padding : 'unset')};
   padding-top: ${(props) => (props.paddingTop ? props.paddingTop : 'unset')};
   position: ${(props) => (props.position ? props.position : 'inherit')};
+  z-index: ${(props) => (props.zIndex ? props.zIndex : 'unset')};
   top: ${(props) => props.top ? props.top : 'unset'};
   left: ${(props) => props.left ? props.left : 'unset'};
   bottom: ${(props) => props.bottom ? props.bottom : 'unset'};

@@ -1,18 +1,18 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { theme } from 'styles/theme';
+import { useTranslation } from 'react-i18next';
+import { useGlobal } from 'context/global/GlobalContext';
+import QuantityController from 'components/QuantityController';
 import placeholder from 'assets/images/png/placeholder.png';
+import SuccessDrawer from 'components/SuccessDrawer';
+import ModuleWrapper from 'components/ModuleWrapper';
+import SelectInput from 'components/SelectInput';
+import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
-import QuantityController from 'components/QuantityController';
-import SelectInput from 'components/SelectInput';
-import SuccessDrawer from 'components/SuccessDrawer';
 import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import { useGlobal } from 'context/global/GlobalContext';
 import hash from 'object-hash';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Animated } from 'react-animated-css';
-import { useTranslation } from 'react-i18next';
 import ProgressiveImage from 'react-progressive-image';
-import { theme } from 'styles/theme';
 import '../../../node_modules/slick-carousel/slick/slick-theme.css';
 import '../../../node_modules/slick-carousel/slick/slick.css';
 import {
@@ -26,7 +26,6 @@ type ShopDrawerProps = {
 };
 
 const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
-  const [successDrawer, setSuccessDrawer] = useState(false);
   const {
     allOptions,
     variantDetails,
@@ -35,19 +34,20 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     discountCode,
   } = data;
 
-  const { retractDrawer, logEvent, productDetails, user } = useGlobal();
-
+  const [successDrawer, setSuccessDrawer] = useState(false);
   // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
-
   // Chosen option will be the one shown always. It may be product or variant
   const [chosenOption, setChosenOption] = useState<VariantDetails>(
     defaultVariantDetails
   );
-
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
-
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+
+  const { logEvent } = useGlobal();
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'drawers.shopDrawer',
+  });
 
   useEffect(() => {
     if (defaultVariantDetails.options) {
@@ -75,10 +75,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       }
     }
   }, [option, variantDetails, isProductLevel]);
-
-  const { t } = useTranslation('translation', {
-    keyPrefix: 'drawers.shopDrawer',
-  });
 
   const handleQuantity = useCallback((value: string) => {
     setSelectedQuantity(parseInt(value));
@@ -141,14 +137,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
         description={''}
         close={closeSuccess}
       />
-      <Animated
-        animationIn='slideInRight'
-        animationOut='slideOutLeft'
-        animationInDuration={retractDrawer ? 0 : 300}
-        animationOutDuration={retractDrawer ? 0 : 300}
-        isVisible={true}
-        style={{ width: '100%' }}
-      >
+      <ModuleWrapper>
         <Wrapper
           width='100%'
           height='100%'
@@ -175,9 +164,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             width='100%'
             justifyContent='space-between'
             alignItems='center'
-            margin='3rem 0 0 0'
-            gap='0.5rem'
             minHeight='200px'
+            gap='0.5rem'
           >
             <ProgressiveImage
               src={chosenOption.image}
@@ -330,7 +318,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             )}
           </Wrapper>
         </Wrapper>
-      </Animated>
+      </ModuleWrapper>
     </>
   );
 };

@@ -7,6 +7,7 @@ import { useGlobal } from 'context/global/GlobalContext';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
 import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
+import FloatingLabelInput from 'components/FloatingLabelInput';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
 import useFirebaseError from 'hooks/useFirebaseError';
@@ -16,6 +17,8 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Text from 'components/Text';
 import validator from 'validator';
+
+import { TextField } from '@material-ui/core';
 
 interface LoginFormProps {
   isDrawer?: boolean;
@@ -126,17 +129,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
             alignItems='center'
             overflow='hidden'
             transition='0.2s'
-            height={emailRegistration ? '52px' : '0px'}
+            height={emailRegistration ? '60px' : '0px'}
             margin={emailRegistration ? '0' : '-0.5rem 0 0 0'}
           >
-            <Input
-              type='text'
-              ref={inputRef}
-              value={username}
-              autoCapitalize='none'
-              placeholder={t('emailInput')}
-              onChange={(event) => handleUsernameChanged(event.target.value)}
-            />
+            <Wrapper width='100%'>
+              <FloatingLabelInput
+                ref={inputRef}
+                value={username}
+                placeholder={t('emailInput')}
+                onChange={(event) => handleUsernameChanged(event.target.value)}
+              />
+            </Wrapper>
           </Wrapper>
           <Wrapper width='100%' justifyContent='center' alignItems='center'>
             {loading || magicLinkLoading ? (
