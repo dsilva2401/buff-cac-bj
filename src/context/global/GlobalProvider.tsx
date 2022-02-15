@@ -1,18 +1,17 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { GlobalContext, PageStateType, UserLocationType } from './GlobalContext';
+import { EventPayload } from '../../hooks/useLogEvent';
 import { getAuth, User } from 'firebase/auth';
-import useLogEvent from 'hooks/useLogEvent';
+import { useAPI } from 'utils/api';
 import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useAPI } from 'utils/api';
 import useCollection from '../../hooks/useCollection';
-import { EventPayload } from '../../hooks/useLogEvent';
-import { GlobalContext, PageStateType } from './GlobalContext';
+import useLogEvent from 'hooks/useLogEvent';
 
 const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-
   const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
 
   useEffect(() => {
@@ -22,19 +21,14 @@ const useUser = () => {
         setToken(tokenExtracted);
       }
     };
-
     setUserToken();
   }, [personalDetails, user, setToken]);
 
   useEffect(() => {
     const auth = getAuth();
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-
+      if (user) setUser(user);
+      else setUser(null);
       setAuthFetched(true);
     });
   }, [setAuthFetched, setUser]);
@@ -55,6 +49,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     localStorage.getItem('signInRedirect') || ''
   );
   const [retractDrawer, setRetractDrawer] = useState<boolean>(false);
+  const [userLocation, setUserLocation] = useState<UserLocationType>({ latitude: 0, longitude: 0 });
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -72,6 +67,17 @@ export const GlobalProvider: React.FC = ({ children }) => {
     authFetched,
     token,
   } = useUser();
+
+  useEffect(() => {
+    if (user && window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition((location) => {
+        setUserLocation({
+          latitude: location?.coords?.latitude,
+          longitude: location?.coords?.longitude
+        });
+      });
+    };
+  }, [user]);
 
   const [productDetails, reFetchProduct, productLoading] = useProductDetails(
     slug,
@@ -133,6 +139,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
       _logEvent({
         ...payload,
         user: user?.uid,
+        location: userLocation,
         product: productDetails?.product.id,
         tag: productDetails?.tag.slug,
         brand: productDetails?.brand.id,
@@ -151,6 +158,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setAppZoom,
         previewAuthenticated,
         setPreviewAuthenticated,
+        userLocation,
+        setUserLocation,
         isMenuOpen,
         setIsMenuOpen,
         signInRedirect,

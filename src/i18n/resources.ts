@@ -8,6 +8,15 @@ export const resources = {
         registerFacebookButton: 'Register with Facebook',
         continueFacebookButton: 'Continue with Facebook',
       },
+      signIn: {
+        pageTitle: 'Sign In to Brij',
+        pageHeaderTitle: 'Sign In',
+        registerWithEmail: 'Register with Email',
+        continueWithEmail: 'Continue with Email',
+        emailInput: 'Enter email...',
+        signUpLink: 'Sign up!',
+        signInToastMessage: 'Login Successful',
+      },
       firebaseErrors: {
         'auth/invalid-email': 'Please provie a valid email',
         'auth/missing-email': 'Please provie an email',
@@ -48,41 +57,6 @@ export const resources = {
         saveChanges: 'Save Changes',
         updateToastMessage: 'Profile Updated',
       },
-      signUp: {
-        pageTitle: 'Sign Up for Brij',
-        pageHeaderTitle: 'Sign Up',
-        signUpButton: 'Sign Up',
-        magicLinkButton: 'Send magic link',
-        emailInput: 'Enter email...',
-        passwordInput: 'Enter password...',
-        existingUser: 'Already have a BRIJ account?',
-        signInLink: 'Sign in!',
-        signUpToastMessage: 'Sign Up Successful',
-        usePassword: 'Use password',
-        useMagicLink: 'Use magic link',
-      },
-      signIn: {
-        pageTitle: 'Sign In to Brij',
-        pageHeaderTitle: 'Sign In',
-        registerWithEmail: 'Register with Email',
-        continueWithEmail: 'Continue with Email',
-        signInButton: 'Register',
-        magicLinkButton: 'Send magic link',
-        emailInput: 'Enter email...',
-        passwordInput: 'Enter password...',
-        forgotPassword: 'Forgot Password?',
-        newToBrij: 'New to BRIJ?',
-        signUpLink: 'Sign up!',
-        signInToastMessage: 'Login Successful',
-        usePassword: 'Use password',
-        useMagicLink: 'Use magic link',
-      },
-      forgotPassword: {
-        pageTitle: 'Password Reset',
-        pageHeaderTitle: 'Forgot Password',
-        emailInput: 'Enter email...',
-        sendEmailLink: 'Email me a Link!',
-      },
       collection: {
         pageTitle: 'My Collection',
         collectionPageTitle: 'My Collection',
@@ -111,28 +85,6 @@ export const resources = {
             part2: " and accept Brij's ",
             link: 'Terms & Conditions'
           }
-        },
-        registrationDrawer: {
-          signInDisclaimer:
-            'By registering you agree to email communications from Gucci and accept Brij’s Terms & Conditions',
-          emailRegisterButton: 'Register with Email',
-          googleButton: 'Register with Google',
-          facebookButton: 'Register with Facebook',
-          emailInput: 'Enter email...',
-          successDrawer: {
-            title: 'Product Regsitered!',
-            description: 'Check your email for details',
-          },
-          detailsForm: {
-            title: 'Complete your profile',
-            firstNameInput: 'Enter first name...',
-            lastNameInput: 'Enter last name...',
-            phoneNumberInput: 'Enter phone number...',
-            passwordInput: 'Enter password...',
-            confirmPasswordInput: 'Confirm password...',
-            submitButton: 'Submit',
-            doLaterButton: "I'll do this later",
-          },
         },
         warrantyDrawer: {
           signInDisclaimer:

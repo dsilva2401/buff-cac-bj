@@ -1,5 +1,5 @@
-import { User } from 'firebase/auth';
 import React, { createContext, useContext } from 'react';
+import { User } from 'firebase/auth';
 import { UserStruct } from 'types/User';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { ProductDetailsType } from '../../types/ProductDetailsType';
@@ -9,6 +9,11 @@ export type PageStateType = {
   isDrawerOpen: boolean;
   pageTitle: string;
 } | null;
+
+export type UserLocationType = {
+  latitude: number;
+  longitude: number;
+};
 
 export type GlobalContextProps = {
   isMenuOpen: boolean;
@@ -20,6 +25,8 @@ export type GlobalContextProps = {
   setPreviewEvent: React.Dispatch<React.SetStateAction<any>>;
   previewAuthenticated: any;
   setPreviewAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  userLocation: UserLocationType;
+  setUserLocation: React.Dispatch<React.SetStateAction<UserLocationType>>;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   signInRedirect: string;
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
@@ -61,6 +68,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setPreviewEvent: () => {},
   previewAuthenticated: false,
   setPreviewAuthenticated: () => {},
+  userLocation: { latitude: 0, longitude: 0 },
+  setUserLocation: () => {},
   isMenuOpen: false,
   setIsMenuOpen: () => {},
   signInRedirect: '',

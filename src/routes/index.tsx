@@ -6,7 +6,6 @@ import ProductDetails from 'pages/ProductDetails';
 import PageWrapper from 'components/PageWrapper';
 import Profile from 'pages/Profile/Profile';
 import Collection from 'pages/Collection';
-import MagicLink from 'pages/MagicLink';
 import Viscosoft from 'pages/Viscosoft';
 import FourZeroFour from 'pages/404';
 import Login from 'pages/Login';
@@ -38,10 +37,6 @@ export const RoutesHashMap: RoutesType = {
     path: (id: string = ':id') => `/c/${id}`,
     component: <ProductDetails />,
   },
-  MagicLink: {
-    path: '/magic-link',
-    component: <MagicLink />,
-  },
   ViscoSoft: {
     path: '/app/l/viscosoft',
     component: <Viscosoft />,
@@ -52,10 +47,6 @@ const getTransition = (path: string, lastLocation: string) => {
   switch (path) {
     case '/':
       return 'inverseslide';
-    case '/signup':
-      return 'slide';
-    case '/forgot-password':
-      return 'slide';
     case '/app/collection':
       return lastLocation === null || lastLocation === '/'
         ? 'slide'
