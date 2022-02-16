@@ -35,7 +35,7 @@ const Viscosoft: React.FC = () => {
           />
         )}
       </ProgressiveImage>
-      <Wrapper left='0' top='2.75rem' position='absolute' style={{ zIndex: 1 }}>
+      <Wrapper left='0' top='2.75rem' position='absolute' zIndex={1}>
         <Image width='150px' src={viscosoftLogo} alt='viscosoft-logo' />
         <Image position='absolute' src={topStripe} left='150px' top='-100px' />
         <Image src={horizontalStripe} position='absolute' left='150px' />

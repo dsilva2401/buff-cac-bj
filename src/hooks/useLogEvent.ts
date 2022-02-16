@@ -1,4 +1,5 @@
 import { showToast } from 'components/Toast/Toast';
+import { UserLocationType } from 'context/global/GlobalContext';
 import { useCallback } from 'react';
 import { useAPI } from 'utils/api';
 
@@ -35,10 +36,7 @@ export type EventPayload = {
   brand?: string;
   sku?: string;
   cost?: string;
-  location?: {
-    latitude: number;
-    longitude: number;
-  };
+  location?: UserLocationType;
 };
 
 const useLogEvent = () => {
