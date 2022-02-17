@@ -1,6 +1,6 @@
 import React from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import ProtectedRoute from 'components/ProtectedRoute';
 import ProductDetails from 'pages/ProductDetails';
 import PageWrapper from 'components/PageWrapper';
@@ -22,6 +22,14 @@ export const RoutesHashMap: RoutesType = {
   Login: {
     path: '/',
     component: <Login />,
+  },
+  MagicLink: {
+    path: '/app/magic-link',
+    component: <Collection />,
+  },
+  FourZeroFour: {
+    path: '/app/404',
+    component: <FourZeroFour />,
   },
   Collection: {
     path: '/app/collection',
@@ -93,7 +101,7 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
           })}
           <Route>
             <PageWrapper>
-              <FourZeroFour />
+              <Redirect to="/app/404" />
             </PageWrapper>
           </Route>
         </Switch>
