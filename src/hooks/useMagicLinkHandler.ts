@@ -26,7 +26,7 @@ const useMagicLinkHandler = (
 
   const handleMagicLink = useCallback(() => {
     const actionCodeSettings = {
-      url: `${window.location.protocol}//${window.location.host}/magic-link?email=${email}&isNewUser=${isNewUser}`,
+      url: `${window.location.protocol}//${window.location.host}/app/magic-link?email=${email}&isNewUser=${isNewUser}`,
       handleCodeInApp: true,
     };
 

@@ -540,7 +540,7 @@ const ProductDetails: React.FC = () => {
     [handleOpenMenuClicked]
   );
 
-  if (error) return <Redirect to='/404' />;
+  if (error) return <Redirect to='/app/404' />;
 
   return (
     <>
