@@ -3,6 +3,7 @@ import { theme } from 'styles/theme';
 
 type MenuProps = {
   isMenuOpen: boolean;
+  theme?: string;
 };
 
 const Menu = styled.div<MenuProps>`
@@ -13,7 +14,7 @@ const Menu = styled.div<MenuProps>`
   right: 0;
   border-radius: 26px 0 0 0;
   box-shadow: 0px 16px 40px rgba(0, 0, 0, 0.08);
-  background-color: ${theme.primary};
+  background-color: ${props => props.theme ? props.theme : theme.primary};
   z-index: 10;
   transition: all 0.3s ease;
 

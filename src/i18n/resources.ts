@@ -142,7 +142,7 @@ export const resources = {
             post: '% with Brij',
           },
           checkoutButton: {
-            purchaseNow: 'Purchase Now!',
+            callToAction: 'Checkout',
             unavailable: 'Not Available in stock',
           },
           checkoutHint: {

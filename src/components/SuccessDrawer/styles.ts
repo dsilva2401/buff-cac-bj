@@ -3,6 +3,7 @@ import { theme } from 'styles/theme';
 
 type DrawerType = {
   isOpen?: boolean;
+  appTheme?: string;
 };
 
 export const Drawer = styled.div<DrawerType>`
@@ -18,7 +19,7 @@ export const Drawer = styled.div<DrawerType>`
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  background-color: ${theme.primary};
+  background-color: ${(props) => props.appTheme || theme.primary};
   z-index: 5;
   transition: transform 0.3s ease;
   transform: ${(props) => (props.isOpen ? 'translateY(-1001px)' : 'none')};

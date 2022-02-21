@@ -19,6 +19,8 @@ export type GlobalContextProps = {
   isMenuOpen: boolean;
   isPreviewMode: boolean;
   setIsPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
+  appTheme: string;
+  setAppTheme: React.Dispatch<React.SetStateAction<string>>;
   appZoom: number;
   setAppZoom: React.Dispatch<React.SetStateAction<number>>;
   previewEvent: any;
@@ -62,6 +64,8 @@ export type GlobalContextProps = {
 export const GlobalContext = createContext<GlobalContextProps>({
   isPreviewMode: false,
   setIsPreviewMode: () => {},
+  appTheme: '',
+  setAppTheme: () => {},
   appZoom: 1,
   setAppZoom: () => {},
   previewEvent: {},

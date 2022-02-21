@@ -4,12 +4,12 @@ import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
 import phoneCallIcon from 'assets/icons/svg/social_phone-call.svg';
 import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
 import emailIcon from 'assets/icons/svg/social_email.svg';
+import LinesEllipsis from 'react-lines-ellipsis';
 import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -51,7 +51,6 @@ type BottomDrawerProps = {
   closeChild: () => void;
   buttons: ButtonType[] | null;
   socials: SocialsType;
-  loadingState?: boolean;
   leadInformation?: React.ReactNode;
   disableModalDismiss?: boolean;
 };
@@ -63,7 +62,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   closeChild,
   buttons,
   socials,
-  loadingState,
   leadInformation,
   disableModalDismiss
 }) => {
@@ -72,6 +70,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     retractDrawer,
     setRetractDrawer,
     appZoom,
+    appTheme,
     isPreviewMode
   } = useGlobal();
 
@@ -180,35 +179,42 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               {!isChildOpen && (
                 <Wrapper
                   justifyContent='space-between'
-                  width='100%'
                   alignItems='center'
+                  width='100%'
                 >
-                  <Text fontSize='1rem' fontWeight='600'>
-                    <h1>{title}</h1>
-                  </Text>
+                  <Wrapper width='65%'>
+                    <LinesEllipsis
+                      text={title}
+                      maxLine='2'
+                      ellipsis='...'
+                      trimRight
+                      basedOn='letters'
+                      style={{ fontSize: '1rem', fontWeight: '600' }}
+                    />
+                  </Wrapper>
                   {isDrawerOpen ? null : leadInformation}
                 </Wrapper>
               )}
             </DrawerHeader>
             {isDrawerOpen && !disableModalDismiss && (
-                <DrawerClose
-                  onClick={() => {
-                    if (isChildOpen) {
-                      closeChild();
-                      if (retractDrawer) {
-                        setPosition({ ...position, y: bottomHeight });
-                        setIsDrawerOpen(false);
-                      }
-                    } else {
-                      setPageState(null);
+              <DrawerClose
+                onClick={() => {
+                  if (isChildOpen) {
+                    closeChild();
+                    if (retractDrawer) {
                       setPosition({ ...position, y: bottomHeight });
                       setIsDrawerOpen(false);
                     }
-                  }}
-                >
-                  <Close />
-                </DrawerClose>
-              )}
+                  } else {
+                    setPageState(null);
+                    setPosition({ ...position, y: bottomHeight });
+                    setIsDrawerOpen(false);
+                  }
+                }}
+              >
+                <Close />
+              </DrawerClose>
+            )}
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               <DragBar />
               {!isDrawerOpen && (
@@ -223,6 +229,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       return (
                         <Button
                           key={button.title}
+                          appTheme={appTheme}
                           variant='dark'
                           onClick={() => {
                             if (button.icon === null) {
@@ -241,6 +248,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   })}
                   <Button
                     variant='light'
+                    appTheme={appTheme}
                     onClick={() => {
                       setPosition({ ...position, y: topHeight });
                       setRetractDrawer(false);
@@ -258,6 +266,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     {buttons?.map((button) => (
                       <Button
                         key={button.title}
+                        appTheme={appTheme}
                         variant={button.isHighlight ? 'dark' : 'light'}
                         iconRight
                         onClick={() => {

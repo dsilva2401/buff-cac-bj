@@ -44,7 +44,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  const { logEvent } = useGlobal();
+  const { logEvent, appTheme } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.shopDrawer',
   });
@@ -300,10 +300,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             {isValidCombo ? (
               <Button
                 variant='dark'
+                appTheme={appTheme}
                 onClick={handleCheckout}
                 disabled={!isValidCombo}
               >
-                {t('checkoutButton.purchaseNow')}
+                {t('checkoutButton.callToAction')}
               </Button>
             ) : (
               <Text fontSize='1rem' fontWeight='600'>

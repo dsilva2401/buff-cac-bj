@@ -1,5 +1,6 @@
 import Wrapper from 'components/Wrapper';
 import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
+import { theme } from 'styles/theme';
 
 const LoadingIndicator = () => {
   return (
@@ -10,7 +11,7 @@ const LoadingIndicator = () => {
       justifyContent='center'
       alignItems='center'
     >
-      <LoadingAnimation width='100%' height='60px' />
+      <LoadingAnimation stroke={theme.primary} width='100%' height='60px' />
     </Wrapper>
   );
 };
