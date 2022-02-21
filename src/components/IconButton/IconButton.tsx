@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from './styles';
+import { useGlobal } from 'context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import { ReactComponent as CloseLight } from 'assets/icons/svg/close-white.svg';
 import { ReactComponent as ChevronLeft } from 'assets/icons/svg/chevron-left.svg';
@@ -25,6 +26,8 @@ export default function IconButton({
   children,
   onClick,
 }: IconButtonProps) {
+  const { appTheme } = useGlobal();
+
   const renderIcon = () => {
     switch (iconName) {
       case 'close':
@@ -43,7 +46,7 @@ export default function IconButton({
   };
 
   return (
-    <Button variant={variant} onClick={onClick}>
+    <Button appTheme={appTheme} variant={variant} onClick={onClick}>
       {children ? children : renderIcon()}
     </Button>
   );

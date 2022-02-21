@@ -6,8 +6,8 @@ import ProductDetails from 'pages/ProductDetails';
 import PageWrapper from 'components/PageWrapper';
 import Profile from 'pages/Profile/Profile';
 import Collection from 'pages/Collection';
-import Viscosoft from 'pages/Viscosoft';
 import FourZeroFour from 'pages/404';
+import Landing from 'pages/Landing';
 import Login from 'pages/Login';
 import {
   withLastLocation,
@@ -45,9 +45,9 @@ export const RoutesHashMap: RoutesType = {
     path: (id: string = ':id') => `/c/${id}`,
     component: <ProductDetails />,
   },
-  ViscoSoft: {
-    path: '/app/l/viscosoft',
-    component: <Viscosoft />,
+  Landing: {
+    path: '/app/l/:brandname',
+    component: <Landing />,
   },
 };
 

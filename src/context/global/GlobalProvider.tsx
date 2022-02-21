@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { GlobalContext, PageStateType, UserLocationType } from './GlobalContext';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { getAuth, User } from 'firebase/auth';
+import { theme } from 'styles/theme';
 import { useAPI } from 'utils/api';
 import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
@@ -58,6 +59,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [appZoom, setAppZoom] = useState(1);
   const [previewEvent, setPreviewEvent] = useState({});
   const [previewAuthenticated, setPreviewAuthenticated] = useState(false);
+  const [appTheme, setAppTheme] = useState<string>(localStorage.getItem('accentColor') || theme.primary);
 
   const {
     user,
@@ -85,6 +87,13 @@ export const GlobalProvider: React.FC = ({ children }) => {
     previewEvent
   );
   const [collectionDetails, getCollection] = useCollection(token);
+
+  useEffect(() => {
+    setAppTheme(
+      window.location.pathname.includes(`c/${slug}`)
+      && localStorage.getItem('accentColor')
+      || theme.primary);
+  }, [productDetails, window.location.pathname]);
 
   const onActivateWarrantySuccess = useCallback(() => {
     reFetchProduct();
@@ -154,6 +163,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPreviewEvent,
         isPreviewMode,
         setIsPreviewMode,
+        appTheme,
+        setAppTheme,
         appZoom,
         setAppZoom,
         previewAuthenticated,
@@ -182,7 +193,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         token,
         retractDrawer,
         setRetractDrawer,
-        logEvent,
+        logEvent
       }}
     >
       {children}

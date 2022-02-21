@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { theme } from 'styles/theme';
 import { Animated } from 'react-animated-css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,6 @@ import useFirebaseError from 'hooks/useFirebaseError';
 import SocialLogin from 'components/SocialLogin';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
-import Input from 'components/Input';
 import Text from 'components/Text';
 import validator from 'validator';
 
@@ -31,8 +31,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const inputRef = useRef<HTMLInputElement>(null);
+  const { retractDrawer, appTheme } = useGlobal();
   const getErrorMessage = useFirebaseError();
-  const { retractDrawer } = useGlobal();
   const location = useLocation();
   const auth = getAuth();
 
@@ -148,6 +148,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <Button
                 variant='light'
                 transition='0s'
+                appTheme={appTheme}
                 style={!emailRegistration ? { border: '0', color: '#000000' } : {}}
                 onClick={() => {
                   emailValidated ? handleLogin() : (
@@ -157,7 +158,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                   )
                 }}
               >
-                {emailRegistration ? <EmailLogoPrimary /> : <EmailLogo />}
+                {emailRegistration ? <EmailLogoPrimary fill={appTheme || theme.primary} /> : <EmailLogo />}
                 {isDrawer ? t('registerWithEmail') : t('continueWithEmail')}
               </Button>
             )}
