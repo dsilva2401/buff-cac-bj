@@ -28,9 +28,15 @@ function usePrevious<T>(value: T) {
 }
 
 const SideMenu: React.FC = () => {
+  const {
+    productDetails: details,
+    user,
+    isMenuOpen,
+    setIsMenuOpen,
+    logEvent,
+    appTheme
+  } = useGlobal();
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
-  const { isMenuOpen, setIsMenuOpen } = useGlobal();
-  const { productDetails: details, user } = useGlobal();
   const previousUser = usePrevious(user);
   const location = useLocation();
   const history = useHistory();
@@ -75,7 +81,7 @@ const SideMenu: React.FC = () => {
         onClick={() => setIsMenuOpen(false)}
         zIndex={9}
       />
-      <Menu isMenuOpen={isMenuOpen}>
+      <Menu theme={appTheme} isMenuOpen={isMenuOpen}>
         <div>
           <span>
             <button onClick={() => setIsMenuOpen(false)}>
@@ -103,7 +109,14 @@ const SideMenu: React.FC = () => {
                 href={details?.brand?.website || ''}
                 target='_blank'
                 rel='noopener noreferrer'
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  logEvent({
+                    eventType: 'ENGAGEMENTS',
+                    event: 'WEBSITE_VISITS',
+                    data: details?.brand,
+                  });
+                }}
               >
                 {t('visitWebsite')}
                 <External />

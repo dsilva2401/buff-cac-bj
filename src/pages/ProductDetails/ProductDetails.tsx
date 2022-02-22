@@ -8,7 +8,6 @@ import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
 import DataTable from 'components/DataTable';
-import placeholder from 'assets/images/png/placeholder.png';
 import AuthDrawer from 'components/AuthDrawer';
 import BottomDrawer from 'components/BottomDrawer';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
@@ -68,7 +67,7 @@ const ProductDetails: React.FC = () => {
     isPreviewMode,
     previewAuthenticated,
     logEvent,
-    retractDrawer
+    retractDrawer,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -132,6 +131,14 @@ const ProductDetails: React.FC = () => {
       closeDrawerPage();
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage]);
+
+  const customBgColor = '#FFCEB0';
+  useEffect(() => {
+    const customAccentColor = '#FF7142';
+    if (customAccentColor)
+      localStorage.setItem('accentColor', customAccentColor);
+    else localStorage.setItem('accentColor', '');
+  }, [details, window.location])
 
   let buttonsArray = useMemo(() => {
     let buttons: ButtonType[] = [];
@@ -540,7 +547,7 @@ const ProductDetails: React.FC = () => {
     [handleOpenMenuClicked]
   );
 
-  if (error) return <Redirect to='/404' />;
+  if (error) return <Redirect to='/app/404' />;
 
   return (
     <>
@@ -552,21 +559,29 @@ const ProductDetails: React.FC = () => {
       {details?.product?.image && (
         <ProgressiveImage
           src={details?.product?.image}
-          placeholder={placeholder}
+          placeholder=''
         >
-          {(src: string, loading: boolean) => (
-            <Image
-              src={src}
-              alt={details?.product?.name}
-              position='absolute'
-              width='100vw'
-              margin='auto'
-              objectFit='cover'
-              transition='0.3s'
-              opacity={loading ? 0.5 : 1}
-              style={{ minHeight: '85vh' }}
-            />
-          )}
+          {(src: string, loading: boolean) => {
+            return (
+              loading ? <Wrapper width='100%' height='100%' background={customBgColor} /> : (
+                <Animated
+                  isVisible
+                  animationIn='fadeIn'
+                  animationOut='fadeIn'
+                >
+                  <Image
+                    src={src}
+                    alt={details?.product?.name}
+                    position='absolute'
+                    width='100vw'
+                    margin='auto'
+                    objectFit='cover'
+                    style={{ minHeight: '80vh' }}
+                  />
+                </Animated>
+              )
+            )
+          }}
         </ProgressiveImage>
       )}
       <Wrapper
@@ -587,7 +602,6 @@ const ProductDetails: React.FC = () => {
       <BottomDrawer
         title={pageTitle}
         buttons={buttonsArray}
-        loadingState={addToLoading || loading}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
         closeChild={closeDrawerPage}

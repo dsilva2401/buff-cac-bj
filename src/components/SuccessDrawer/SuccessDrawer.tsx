@@ -1,9 +1,9 @@
 import React from 'react';
 import { Drawer } from './styles';
-import { Animated } from 'react-animated-css';
-import Text from 'components/Text';
-import CheckAnimation from './CheckAnimation';
+import { useGlobal } from 'context/global/GlobalContext';
 import DrawerMask from 'components/DrawerMask';
+import CheckAnimation from './CheckAnimation';
+import Text from 'components/Text';
 
 type SuccessDrawerProps = {
   isOpen: boolean;
@@ -18,6 +18,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
   description,
   close,
 }) => {
+  const { appTheme } = useGlobal();
   return (
     <>
       <DrawerMask
@@ -26,7 +27,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
         style={{ top: '-97%', backgroundColor: 'transparent' }}
         onClick={close}
       />
-      <Drawer isOpen={isOpen}>
+      <Drawer appTheme={appTheme} isOpen={isOpen}>
         {isOpen && (
           <>
             <CheckAnimation

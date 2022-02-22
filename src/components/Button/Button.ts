@@ -8,6 +8,12 @@ type ButtonProps = {
   width?: string;
   iconRight?: boolean;
   transition?: string;
+  appTheme?: string;
+};
+
+const hex2rgba = (hex: any, alpha = 1) => {
+  const [r, g, b] = hex.match(/\w\w/g).map((x: any) => parseInt(x, 16));
+  return `rgba(${r},${g},${b},${alpha})`;
 };
 
 const Button = styled.button<ButtonProps>`
@@ -24,17 +30,17 @@ const Button = styled.button<ButtonProps>`
   width: ${(props) => props.width ? props.width : '100%'};
   border-radius: ${(props) => props.squared ? '0.5rem' : '5rem'};
   border: ${(props) =>
-    props.variant === 'light' ? `1px solid ${theme.button.border}` : 'none'};
+    props.variant === 'light' ? `1px solid ${hex2rgba(props.appTheme || theme.button.border, 0.5)}` : 'none'};
   background-color: ${(props) =>
-    props.variant === 'dark' ? (props.warning ? theme.button.warning : theme.button.primary) : theme.button.secondary};
+    props.variant === 'dark' ? (props.warning ? theme.button.warning : props.appTheme || theme.button.primary) : theme.button.secondary};
   box-shadow: ${(props) =>
     props.variant === 'dark' ? '' : '0px 1px 4px rgba(0, 0, 0, 0.12)'};
   color: ${(props) =>
-    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
+    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : props.appTheme || theme.button.primary};
 
   a {
     color: ${(props) =>
-    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : theme.button.primary};
+    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : props.appTheme || theme.button.primary};
     text-decoration: none;
   }
 

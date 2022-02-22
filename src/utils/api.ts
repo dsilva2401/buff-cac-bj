@@ -70,7 +70,7 @@ export function useAPI<T>(
           onSuccess(response);
           return response;
         } else if (res.status === 400 && !isPreviewMode) {
-          window.location.href = `${window.location.protocol}//${window.location.host}/404`;
+          window.location.href = `${window.location.protocol}//${window.location.host}/app/404`;
         }
       } catch (e) {
         setLoading(false);

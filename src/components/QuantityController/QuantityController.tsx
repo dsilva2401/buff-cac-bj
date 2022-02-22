@@ -1,5 +1,7 @@
 import React from 'react';
 import Wrapper from 'components/Wrapper';
+import { theme } from 'styles/theme';
+import { useGlobal } from 'context/global/GlobalContext';
 import { ControllerButton, NumberInput } from './styles';
 import { ReactComponent as Plus } from 'assets/icons/svg/plus.svg';
 import { ReactComponent as Minus } from 'assets/icons/svg/minus.svg';
@@ -15,6 +17,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   onChange,
   limit,
 }) => {
+  const { appTheme } = useGlobal();
   const changeQuantity = (value: string, operation?: 'sum' | 'subtract') => {
     let currValue: number;
 
@@ -42,6 +45,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   return (
     <Wrapper gap='0.3rem'>
       <ControllerButton
+        theme={appTheme || theme.primary}
         disabled={Number(value) <= 1 ? true : false}
         onClick={() => changeQuantity(value, 'subtract')}
       >
@@ -53,6 +57,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
         onChange={({ target: { value } }) => changeQuantity(value)}
       />
       <ControllerButton
+        theme={appTheme || theme.primary}
         disabled={limit ? Number(value) >= limit : false}
         onClick={() => changeQuantity(value, 'sum')}
       >

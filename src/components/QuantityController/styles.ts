@@ -1,4 +1,3 @@
-import { theme } from 'styles/theme';
 import styled from 'styled-components';
 
 export const NumberInput = styled.input`
@@ -25,6 +24,7 @@ export const NumberInput = styled.input`
 
 type ControllerButtonProps = {
   disabled: boolean;
+  theme?: string;
 };
 
 export const ControllerButton = styled.button<ControllerButtonProps>`
@@ -34,8 +34,8 @@ export const ControllerButton = styled.button<ControllerButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${(props) => (props.disabled ? '#e7eaeb' : theme.primary)};
-  background-color: ${(props) => (props.disabled ? '#e7eaeb' : theme.primary)};
+  border: 1px solid ${(props) => (props.disabled ? '#e7eaeb' : props.theme)};
+  background-color: ${(props) => (props.disabled ? '#e7eaeb' : props.theme)};
   transition: all 0.3s ease;
 
   svg {
