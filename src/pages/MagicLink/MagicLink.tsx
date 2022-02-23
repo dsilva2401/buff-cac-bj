@@ -1,6 +1,7 @@
 import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import { useGlobal } from 'context/global/GlobalContext';
+import { MAGIC_ACTION } from 'context/global/GlobalProvider';
 import {
   getAuth,
   isSignInWithEmailLink,
@@ -12,18 +13,24 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 
 const MagicLink = () => {
-  const { user, setUser, signInRedirect, setSignInRedirect } = useGlobal();
+  const { user, setUser, signInRedirect, setSignInRedirect, setMagicPayload, setMagicAction } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
 
   const auth = getAuth();
-  const location = useLocation();
+  const location = useLocation()
   const history = useHistory();
 
-  const { email, isNewUser } = qs.parse(location.search);
+  const { email, isNewUser, action, productSlug, payload } = qs.parse(location.search);
+
+  useEffect(() => {
+    if (payload) {
+      const payloadObject = JSON.parse(decodeURIComponent(payload as string));
+      setMagicPayload(payloadObject);
+    }
+  }, [payload]);
 
   const redirectUser = useCallback(() => {
-    console.log('signInRedirect: ', signInRedirect);
     if (signInRedirect) {
       history.push(signInRedirect);
       setSignInRedirect('');
@@ -40,14 +47,25 @@ const MagicLink = () => {
         return;
       }
 
-      // let link = signInRedirect || RoutesHashMap.Collection.path;
-      // SUSH: Temp. change to route to collection. Need to undo and fix
-      const link = RoutesHashMap.Collection.path;
-
       setSignInRedirect('');
-      history.push(link);
+      setMagicAction(action as MAGIC_ACTION);
+
+      switch (action) {
+        case MAGIC_ACTION.OPEN_MODULE: {
+          const productLink = RoutesHashMap.ProductDetails.path(productSlug);
+          history.push(productLink);
+          break;
+        }
+
+        default: {
+          // let link = signInRedirect || RoutesHashMap.Collection.path;
+          // SUSH: Temp. change to route to collection. Need to undo and fix
+          const link = RoutesHashMap.Collection.path;
+          history.push(link);
+        }
+      }
     }
-  }, [user, history, isNewUser, signInRedirect, setSignInRedirect]);
+  }, [user, history, isNewUser, signInRedirect, setSignInRedirect, action, productSlug]);
 
   useEffect(() => {
     if (isSignInWithEmailLink(auth, window.location.href)) {

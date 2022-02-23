@@ -9,6 +9,11 @@ import useProductDetails from 'hooks/useProductDetails';
 import useCollection from '../../hooks/useCollection';
 import useLogEvent from 'hooks/useLogEvent';
 
+export enum MAGIC_ACTION {
+  OPEN_MODULE = "OPEN_MODULE",
+  REDIRECT = "REDIRECT"
+}
+
 const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
@@ -59,6 +64,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [appZoom, setAppZoom] = useState(1);
   const [previewEvent, setPreviewEvent] = useState({});
   const [previewAuthenticated, setPreviewAuthenticated] = useState(false);
+  const [magicAction, setMagicAction] = useState<MAGIC_ACTION>(MAGIC_ACTION.REDIRECT);
+  const [magicPayload, setMagicPayload] = useState<any>({});
   const [appTheme, setAppTheme] = useState<string>(localStorage.getItem('accentColor') || theme.primary);
 
   const {
@@ -193,7 +200,11 @@ export const GlobalProvider: React.FC = ({ children }) => {
         token,
         retractDrawer,
         setRetractDrawer,
-        logEvent
+        logEvent,
+        magicAction,
+        setMagicAction,
+        magicPayload,
+        setMagicPayload
       }}
     >
       {children}

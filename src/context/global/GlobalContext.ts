@@ -3,6 +3,7 @@ import { User } from 'firebase/auth';
 import { UserStruct } from 'types/User';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { ProductDetailsType } from '../../types/ProductDetailsType';
+import { MAGIC_ACTION } from './GlobalProvider';
 
 export type PageStateType = {
   currentPage: number;
@@ -59,6 +60,10 @@ export type GlobalContextProps = {
   logEvent: (
     payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
   ) => Promise<any>;
+  magicAction: MAGIC_ACTION,
+  setMagicAction: (magicAction: MAGIC_ACTION) => void,
+  magicPayload: any,
+  setMagicPayload: (payload: any) => void
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -97,6 +102,10 @@ export const GlobalContext = createContext<GlobalContextProps>({
   retractDrawer: false,
   setRetractDrawer: () => {},
   logEvent: () => new Promise((res, rej) => {}),
+  magicAction: MAGIC_ACTION.REDIRECT,
+  setMagicAction: (magicAction: MAGIC_ACTION) => {},
+  magicPayload: {},
+  setMagicPayload: (payload: any) => {}
 });
 
 export const useGlobal = () => useContext(GlobalContext);
