@@ -151,11 +151,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               : '',
             width: 'auto',
             height: 'auto',
-            padding: '0.4rem 1.5rem',
+            padding: '1rem 1.5rem 0.4rem 1.5rem',
             position: 'absolute',
             color: '#fff',
             top: '-1px',
-            background: theme.primary,
+            background: appTheme || theme.primary,
             fontSize: '0.8rem',
             borderRadius: '0 0 15px 15px',
           }}
@@ -166,6 +166,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             alignItems='center'
             minHeight='200px'
             gap='0.5rem'
+            margin='4rem 0 0 0'
           >
             <ProgressiveImage
               src={chosenOption.image}
