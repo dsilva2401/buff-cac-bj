@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useAPI } from 'utils/api';
 
@@ -34,7 +34,7 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
     console.log('ERROR MSG: ', error.message);
   }, []);
 
-  const [getProduct, loading] = useAPI({
+  const [getProduct, loading, controller] = useAPI({
     method: 'GET',
     endpoint: `products/${slug}`,
     onSuccess,
@@ -42,7 +42,10 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
   }, token)
 
   useEffect(() => {
-    if (slug) getProduct();
+    if (slug) {
+      if (controller) controller.abort();
+      getProduct()
+    };
   }, [token, slug, getProduct])
 
   useEffect(() => {

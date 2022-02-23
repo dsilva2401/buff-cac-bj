@@ -1,4 +1,5 @@
 import { showToast } from 'components/Toast/Toast';
+import { useGlobal } from 'context/global/GlobalContext';
 import { getAuth, sendSignInLinkToEmail } from 'firebase/auth';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +17,7 @@ const useMagicLinkHandler = (
   isNewUser: boolean = false
 ): MagicHandlerMap => {
   const auth = getAuth();
+  const { magicAction, slug, magicPayload } = useGlobal();
   const { t } = useTranslation('translation', { keyPrefix: 'magicLink' });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,8 +27,11 @@ const useMagicLinkHandler = (
   const getErrorMessage = useFirebaseError();
 
   const handleMagicLink = useCallback(() => {
+    const payload = JSON.stringify(magicPayload)
+    const payloadEncodedString = encodeURIComponent(payload);
+
     const actionCodeSettings = {
-      url: `${window.location.protocol}//${window.location.host}/app/magic-link?email=${email}&isNewUser=${isNewUser}`,
+      url: `${window.location.protocol}//${window.location.host}/app/magic-link?email=${email}&isNewUser=${isNewUser}&action=${magicAction}&productSlug=${slug}&payload=${payloadEncodedString}`,
       handleCodeInApp: true,
     };
 
@@ -45,7 +50,7 @@ const useMagicLinkHandler = (
         showToast({ message: getErrorMessage(error.code), type: 'error' })
       )
       .finally(() => setLoading(false));
-  }, [email, auth, isNewUser, t, getErrorMessage]);
+  }, [email, auth, isNewUser, t, getErrorMessage, magicAction, magicPayload]);
 
   return {
     handleMagicLink,
