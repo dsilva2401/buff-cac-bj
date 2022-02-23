@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { isBrowser } from 'react-device-detect';
 import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
@@ -14,7 +13,6 @@ import DrawerMask from 'components/DrawerMask';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
-import Text from 'components/Text';
 import {
   Drawer,
   DragBar,
@@ -24,6 +22,8 @@ import {
   DrawerHeader,
   DrawerIconLink,
 } from './styles';
+import { Position } from 'types/Misc';
+import useHeights from 'hooks/useHeights';
 
 export type ButtonType = {
   title: any | undefined;
@@ -53,6 +53,10 @@ type BottomDrawerProps = {
   socials: SocialsType;
   leadInformation?: React.ReactNode;
   disableModalDismiss?: boolean;
+  setMainDrawerOpen: (open: boolean) => void;
+  mainDrawerOpen: boolean;
+  position: Position,
+  setPosition: (position: Position) => void;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -63,7 +67,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   buttons,
   socials,
   leadInformation,
-  disableModalDismiss
+  disableModalDismiss,
+  setMainDrawerOpen,
+  mainDrawerOpen,
+  position,
+  setPosition
 }) => {
   const {
     setPageState,
@@ -74,27 +82,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     isPreviewMode
   } = useGlobal();
 
-  const topHeight = 0;
-  let bottomHeight: number;
-  let margin = 290;
-  if (isBrowser || isPreviewMode) {
-    if (window.innerHeight < 700)
-      margin = 340;
-    else if (window.innerHeight >= 700 && window.innerHeight < 800)
-      margin = 350;
-    else if (window.innerHeight >= 800 && window.innerHeight < 900)
-      margin = 370;
-    else if (window.innerHeight >= 900 && window.innerHeight < 1000)
-      margin = 390;
-    else if (window.innerHeight >= 1000)
-      margin = window.innerHeight * 0.4;
-  }
-
-  if (isPreviewMode) {
-    bottomHeight = ((window.innerHeight / appZoom) - ((window.innerHeight * 0.45) / appZoom));
-  } else {
-    bottomHeight = (window.innerHeight - margin);
-  }
+  const { topHeight, bottomHeight } = useHeights();
 
   useEffect(() => {
     if (isPreviewMode) {
@@ -106,16 +94,14 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     }
   }, [isChildOpen, appZoom]);
 
-  const [position, setPosition] = useState({ x: 0, y: bottomHeight });
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (position.y === topHeight) {
-      setIsDrawerOpen(true);
+      setMainDrawerOpen(true);
     } else if (position.y === bottomHeight) {
-      setIsDrawerOpen(false);
+      setMainDrawerOpen(false);
       closeChild();
     }
   }, [
@@ -123,7 +109,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     topHeight,
     bottomHeight,
     closeChild,
-    setIsDrawerOpen,
+    setMainDrawerOpen,
     setPageState,
     isChildOpen,
     appZoom
@@ -153,7 +139,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   return (
     <>
-      <DrawerMask isDrawerOpen={!!isDrawerOpen} />
+      <DrawerMask isDrawerOpen={!!mainDrawerOpen} />
       <Draggable
         axis='y'
         bounds={{ top: topHeight, bottom: bottomHeight }}
@@ -175,7 +161,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             justifyContent='space-between'
             alignItems='center'
           >
-            <DrawerHeader isDrawerOpen={isDrawerOpen} isChildOpen={isChildOpen}>
+            <DrawerHeader isDrawerOpen={mainDrawerOpen} isChildOpen={isChildOpen}>
               {!isChildOpen && (
                 <Wrapper
                   justifyContent='space-between'
@@ -192,23 +178,23 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       style={{ fontSize: '1rem', fontWeight: '600' }}
                     />
                   </Wrapper>
-                  {isDrawerOpen ? null : leadInformation}
+                  {mainDrawerOpen ? null : leadInformation}
                 </Wrapper>
               )}
             </DrawerHeader>
-            {isDrawerOpen && !disableModalDismiss && (
+            {mainDrawerOpen && !disableModalDismiss && (
               <DrawerClose
                 onClick={() => {
                   if (isChildOpen) {
                     closeChild();
                     if (retractDrawer) {
                       setPosition({ ...position, y: bottomHeight });
-                      setIsDrawerOpen(false);
+                      setMainDrawerOpen(false);
                     }
                   } else {
                     setPageState(null);
                     setPosition({ ...position, y: bottomHeight });
-                    setIsDrawerOpen(false);
+                    setMainDrawerOpen(false);
                   }
                 }}
               >
@@ -217,7 +203,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             )}
             <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
               <DragBar />
-              {!isDrawerOpen && (
+              {!mainDrawerOpen && (
                 <Wrapper
                   gap='1rem'
                   width='100%'
@@ -258,7 +244,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </Button>
                 </Wrapper>
               )}
-              {isDrawerOpen &&
+              {mainDrawerOpen &&
                 (isChildOpen ? (
                   children
                 ) : (

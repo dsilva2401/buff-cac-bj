@@ -9,6 +9,7 @@ import Collection from 'pages/Collection';
 import FourZeroFour from 'pages/404';
 import Landing from 'pages/Landing';
 import Login from 'pages/Login';
+import MagicLink from 'pages/MagicLink';
 import {
   withLastLocation,
   WithLastLocationProps,
@@ -25,7 +26,7 @@ export const RoutesHashMap: RoutesType = {
   },
   MagicLink: {
     path: '/app/magic-link',
-    component: <Collection />,
+    component: <MagicLink />,
   },
   FourZeroFour: {
     path: '/app/404',

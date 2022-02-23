@@ -38,6 +38,9 @@ import {
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
 import HtmlWrapper from 'components/HtmlWrapper';
+import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { Position } from 'types/Misc';
+import useHeights from 'hooks/useHeights';
 
 type UrlParam = {
   id: string;
@@ -50,8 +53,13 @@ const ProductDetails: React.FC = () => {
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
-  const [disableModalDismiss, setDisableModalDismiss] =
-    useState<boolean>(false);
+  const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
+
+  const { topHeight, bottomHeight } = useHeights();
+
+  const [position, setPosition] = useState<Position>({ x: 0, y: bottomHeight });
+
+  const [disableModalDismiss, setDisableModalDismiss] = useState<boolean>(false);
   const {
     productDetails: details,
     loading,
@@ -68,6 +76,10 @@ const ProductDetails: React.FC = () => {
     previewAuthenticated,
     logEvent,
     retractDrawer,
+    setMagicAction,
+    setMagicPayload,
+    magicAction,
+    magicPayload
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -91,6 +103,16 @@ const ProductDetails: React.FC = () => {
   const changeDrawerPage = useCallback(
     (index) => {
       setCurrentPage(index);
+
+      // refactor this to be controlled from module config
+
+      const newModule = details?.modules[index];
+
+      setMagicAction(MAGIC_ACTION.OPEN_MODULE);
+      setMagicPayload({
+        moduleId: newModule?.id
+      });
+
       if (currentPage) {
         const moduleType = details?.modules[currentPage]?.type;
         setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
@@ -132,7 +154,36 @@ const ProductDetails: React.FC = () => {
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage]);
 
+  useEffect(() => {
+    if (
+      magicAction === MAGIC_ACTION.OPEN_MODULE
+      && user
+      && details?.modules?.length
+    ) {
+      const { moduleId } = magicPayload;
+      const moduleIndex = details?.modules?.findIndex(
+        (moduleDetail) => moduleDetail.id === moduleId
+      );
+      if (moduleIndex !== -1) {
+        changeDrawerPage(moduleIndex);
+        setPosition({ x: 0, y: topHeight })
+        setMainDrawerOpen(true);
+      }
+
+      setMagicAction(MAGIC_ACTION.REDIRECT);
+    }
+  }, [
+    magicPayload,
+    changeDrawerPage,
+    magicAction,
+    user,
+    currentPage,
+    details,
+    topHeight
+  ]);
+
   const customBgColor = '#FFCEB0';
+  
   useEffect(() => {
     const customAccentColor = '#FF7142';
     if (customAccentColor)
@@ -607,6 +658,10 @@ const ProductDetails: React.FC = () => {
         closeChild={closeDrawerPage}
         leadInformation={leadInformation}
         disableModalDismiss={disableModalDismiss}
+        mainDrawerOpen={mainDrawerOpen}
+        setMainDrawerOpen={setMainDrawerOpen}
+        position={position}
+        setPosition={setPosition}
       >
         {renderDrawerPage()}
       </BottomDrawer>

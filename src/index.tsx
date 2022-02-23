@@ -3,10 +3,12 @@ import App from './App';
 import ReactDOM from 'react-dom';
 import { initializeApp } from '@firebase/app';
 import { GlobalProvider } from './context';
-import config from './firebase/config';
+import getFirebaseConfig from './firebase/config';
 import './i18n';
 
-initializeApp(config.firebase);
+const firebaseConfig = getFirebaseConfig();
+
+initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>

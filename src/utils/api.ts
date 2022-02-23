@@ -8,7 +8,7 @@ interface APIpayload {
   onError: (error: string) => any;
 }
 
-type UseAPIVars<T> = [(data?: T) => Promise<any>, boolean];
+type UseAPIVars<T> = [(data?: T) => Promise<any>, boolean, AbortController];
 
 // In dev mode, pass REACT_APP_API_URL manually. In production mode, this will be null as this code will be served from same host
 const API_URL =
@@ -21,6 +21,7 @@ export function useAPI<T>(
 ): UseAPIVars<T> {
   const { token, isPreviewMode } = useGlobal();
   const { method, endpoint, onSuccess, onError } = payload;
+  const [ cancelController, setCancelController ] = useState<any>(null);
 
   // in some cases we will call the useAPI hook inside useGlobal
   // and in that case the user is not always up to date with global context state
@@ -58,8 +59,15 @@ export function useAPI<T>(
 
       try {
         setLoading(true);
+
+        const controller = new AbortController();
+        const signal = controller.signal
+
+        setCancelController(controller);
+
         const res = await fetch(`${API_URL}/app_api/${endpoint}`, {
           method,
+          signal,
           headers,
           body: JSON.stringify(data),
         });
@@ -80,5 +88,5 @@ export function useAPI<T>(
     [tokenToUse, shouldUseToken, method, endpoint, onSuccess, onError]
   );
 
-  return [apiCall, loading];
+  return [apiCall, loading, cancelController];
 }
