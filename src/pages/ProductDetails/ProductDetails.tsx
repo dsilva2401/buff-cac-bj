@@ -54,7 +54,7 @@ const ProductDetails: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
   const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
-
+  const [loc, setLoc] = React.useState<any>(null);
   const { topHeight, bottomHeight } = useHeights();
 
   const [position, setPosition] = useState<Position>({ x: 0, y: bottomHeight });
@@ -182,14 +182,11 @@ const ProductDetails: React.FC = () => {
     topHeight
   ]);
 
-  const customBgColor = '#FFCEB0';
-  
   useEffect(() => {
-    const customAccentColor = '#FF7142';
-    if (customAccentColor)
-      localStorage.setItem('accentColor', customAccentColor);
+    if (details?.brand?.customAccentColor)
+      localStorage.setItem('accentColor', details?.brand?.customAccentColor);
     else localStorage.setItem('accentColor', '');
-  }, [details, window.location])
+  }, [details, window.location.pathname]);
 
   let buttonsArray = useMemo(() => {
     let buttons: ButtonType[] = [];
@@ -614,7 +611,7 @@ const ProductDetails: React.FC = () => {
         >
           {(src: string, loading: boolean) => {
             return (
-              loading ? <Wrapper width='100%' height='100%' background={customBgColor} /> : (
+              loading ? <Wrapper width='100%' height='100%' background={details.brand.customBgColor || ''} /> : (
                 <Animated
                   isVisible
                   animationIn='fadeIn'

@@ -89,13 +89,13 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
                 : RoutesHashMap[routeKey].path;
             if (routeObject.protected) {
               return (
-                <ProtectedRoute exact path={path} key={routeKey}>
+                <ProtectedRoute exact path={path} key={routeKey + window.location.href}>
                   <PageWrapper>{routeObject.component}</PageWrapper>
                 </ProtectedRoute>
               );
             }
             return (
-              <Route exact path={path} key={routeKey}>
+              <Route exact path={path} key={routeKey + window.location.href}>
                 <PageWrapper>{routeObject.component}</PageWrapper>
               </Route>
             );

@@ -109,7 +109,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       },
     });
     setTimeout(() => {
-      window.open(`http://${link}`, '_blank');
+      window.open(`https://${link}`, '_blank');
     });
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
 

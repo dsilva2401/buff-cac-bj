@@ -73,12 +73,14 @@ const Landing: React.FC = () => {
           </Wrapper>
 
           <Wrapper
+            zIndex={3}
             width='100%'
             height='100%'
             gap='0.75rem'
             padding='1.5rem'
             direction='column'
             position='relative'
+            margin='6rem 0 0 0'
             alignItems='flex-start'
             justifyContent='center'
           >

@@ -19,17 +19,17 @@ import Menu from './styles';
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
-
   useEffect(() => {
     ref.current = value;
   }, [value]);
 
-  return ref.current
-}
+  return ref.current;
+};
 
 const SideMenu: React.FC = () => {
   const {
     productDetails: details,
+    slug,
     user,
     isMenuOpen,
     setIsMenuOpen,
@@ -104,7 +104,7 @@ const SideMenu: React.FC = () => {
                 <Collection />
               </Link>
             ) : null}
-            {details && (
+            {details && window.location.pathname === `/c/${slug}` && (
               <a
                 href={details?.brand?.website || ''}
                 target='_blank'
