@@ -40,11 +40,11 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start-dev-client": "NODE_ENV=development react-scripts start",
-        "start-prod-client": "NODE_ENV=production react-scripts start",
+        "start-dev-client": "REACT_APP_NODE_ENV=development REACT_APP_STAND_ALONE_MODE=false react-scripts start",
+        "start-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=false react-scripts start",
         "start-dev-client-windows": "react-scripts start",
-        "build-dev-client": "NODE_ENV=development react-scripts build",
-        "build-prod-client": "NODE_ENV=production react-scripts build"
+        "build-dev-client": "NODE_ENV=development REACT_APP_STAND_ALONE_MODE=true react-scripts build",
+        "build-prod-client": "NODE_ENV=production REACT_APP_STAND_ALONE_MODE=true react-scripts build"
     },
     "eslintConfig": {
         "extends": [
