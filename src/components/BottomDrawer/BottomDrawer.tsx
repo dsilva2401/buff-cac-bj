@@ -169,14 +169,20 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   width='100%'
                 >
                   <Wrapper width='65%'>
-                    <LinesEllipsis
-                      text={title}
-                      maxLine='2'
-                      ellipsis='...'
-                      trimRight
-                      basedOn='letters'
-                      style={{ fontSize: '1rem', fontWeight: '600' }}
-                    />
+                    {title && (
+                      <LinesEllipsis
+                        trimRight
+                        maxLine='2'
+                        text={title}
+                        ellipsis='...'
+                        basedOn='letters'
+                        style={{
+                          fontSize: '1rem',
+                          fontWeight: '600',
+                          lineHeight: '20px'
+                        }}
+                      />
+                    )}
                   </Wrapper>
                   {mainDrawerOpen ? null : leadInformation}
                 </Wrapper>
@@ -284,7 +290,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 )}
                 {socials?.twitter && (
                   <DrawerIconLink
-                    href={`http://${socials?.twitter}`}
+                    href={socials?.twitter}
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -293,7 +299,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 )}
                 {socials?.instagram && (
                   <DrawerIconLink
-                    href={`http://${socials?.instagram}`}
+                    href={socials?.instagram}
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -302,7 +308,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 )}
                 {socials?.facebook && (
                   <DrawerIconLink
-                    href={`http://${socials?.facebook}`}
+                    href={socials?.facebook}
                     target='_blank'
                     rel='noopener noreferrer'
                   >

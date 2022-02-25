@@ -160,6 +160,8 @@ export type ProductDetailsType = {
     image: string;
     name: string;
     website: string;
+    customAccentColor?: string;
+    customBgColor?: string;
     registrationDetails?: string;
     social: {
       // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
