@@ -7,7 +7,7 @@ import Text from 'components/Text';
 
 type ModuleWrapperProps = {
   children: any;
-  drawerTitle?: string;
+  drawerTitle?: string | React.ReactNode;
 }
 
 const ModuleWrapper: React.FC<ModuleWrapperProps> = ({ drawerTitle, children }) => {
@@ -31,14 +31,17 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({ drawerTitle, children }) 
           minHeight='4rem'
           position='fixed'
           borderRadius='26px'
+          background='#FFFFFF'
         >
-          <Text
-            fontSize='1rem'
-            fontWeight='600'
-            margin='1.25rem 4rem 1.25rem 1.75rem'
-          >
-            <h1>{drawerTitle}</h1>
-          </Text>
+          {typeof drawerTitle === 'object' ? drawerTitle : (
+            <Text
+              fontSize='1rem'
+              fontWeight='600'
+              margin='1.25rem 4rem 1.25rem 1.75rem'
+            >
+              <h1>{drawerTitle}</h1>
+            </Text>
+          )}
         </Wrapper>
       )}
       <Animated

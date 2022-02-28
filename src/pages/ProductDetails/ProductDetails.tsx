@@ -1,35 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { CollectionItem } from 'types/User';
+import { useTranslation } from 'react-i18next';
+import { useGlobal } from '../../context/global/GlobalContext';
+import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
+import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { showToast } from 'components/Toast/Toast';
+import { Animated } from 'react-animated-css';
+import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router';
+import { Position } from 'types/Misc';
 import { Helmet } from 'react-helmet';
 import { theme } from 'styles/theme';
-import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
-import externalLink from 'assets/icons/svg/external-link.svg';
-import MulberryDrawer from 'components/MulberryDrawer';
-import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
-import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
-import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
-import DataTable from 'components/DataTable';
-import AuthDrawer from 'components/AuthDrawer';
-import BottomDrawer from 'components/BottomDrawer';
-import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import IconButton from 'components/IconButton';
-import Image from 'components/Image';
-import PageHeader from 'components/PageHeader';
-import ReferralDrawer from 'components/ReferralDrawer';
-import ShopDrawer from 'components/ShopDrawer';
-import Text from 'components/Text';
-import useElementSize from 'hooks/useElementSize';
-import { showToast } from 'components/Toast/Toast';
-import WarrantyDrawer from 'components/WarrantyDrawer';
-import Wrapper from 'components/Wrapper';
-import { useTranslation } from 'react-i18next';
-import ProgressiveImage from 'react-progressive-image';
-import { useParams } from 'react-router';
-import { Redirect } from 'react-router-dom';
-import { CollectionItem } from 'types/User';
 import { useAPI } from 'utils/api';
-import { useGlobal } from '../../context/global/GlobalContext';
-import { Animated } from 'react-animated-css';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -37,10 +19,27 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
+import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
+import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
+import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
+import externalLink from 'assets/icons/svg/external-link.svg';
+import ReferralDrawer from 'components/ReferralDrawer';
+import WarrantyDrawer from 'components/WarrantyDrawer';
+import BottomDrawer from 'components/BottomDrawer';
+import CustomDrawer from 'components/CustomDrawer';
+import ShopDrawer from 'components/ShopDrawer';
+import AuthDrawer from 'components/AuthDrawer';
+import IconButton from 'components/IconButton';
+import PageHeader from 'components/PageHeader';
+import ProgressiveImage from 'react-progressive-image';
+import useElementSize from 'hooks/useElementSize';
 import HtmlWrapper from 'components/HtmlWrapper';
-import { MAGIC_ACTION } from 'context/global/GlobalProvider';
-import { Position } from 'types/Misc';
+import DataTable from 'components/DataTable';
 import useHeights from 'hooks/useHeights';
+import Wrapper from 'components/Wrapper';
+import Image from 'components/Image';
+import Text from 'components/Text';
 
 type UrlParam = {
   id: string;
@@ -54,7 +53,6 @@ const ProductDetails: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
   const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
-  const [loc, setLoc] = React.useState<any>(null);
   const { topHeight, bottomHeight } = useHeights();
 
   const [position, setPosition] = useState<Position>({ x: 0, y: bottomHeight });
@@ -406,7 +404,7 @@ const ProductDetails: React.FC = () => {
       ) {
         return (
           <Wrapper width='100%' direction='column'>
-            {moduleType === 'WARRANTY_MODULE' && mulberryCoverage.coverage && (
+            {moduleType === 'WARRANTY_MODULE' && mulberry && (
               <Wrapper
                 width='100%'
                 direction='column'
@@ -430,7 +428,9 @@ const ProductDetails: React.FC = () => {
                     width='100%'
                     direction='column'
                     padding='1rem 0'
-                    dangerouslySetInnerHTML={{ __html: `<p>HTML contetn for testing</p>` }}
+                    dangerouslySetInnerHTML={{
+                      __html: details?.registration?.registrationText
+                    }}
                   />
                   <Wrapper
                     width='100%'
@@ -449,7 +449,7 @@ const ProductDetails: React.FC = () => {
                       color='#202029'
                       textDecoration='underline'
                     >
-                      <span>What is Covered?</span>
+                      <span>View Details</span>
                     </Text>
                     <Arrow
                       style={{
@@ -470,15 +470,15 @@ const ProductDetails: React.FC = () => {
                         style={{ transform: showCoverageTable ? 'translateY(0)' : 'translateY(-101%)' }}
                       >
                         <DataTable
-                          headers={mulberryCoverage.headers}
-                          tableData={mulberryCoverage.features}
+                          headers={["What's Covered", "mulberry", "Manu. Warranty"]}
+                          tableData={mulberry.coverageDetails}
                         />
                         <Wrapper
                           cursor='pointer'
                           alignItems='center'
                           alignSelf='flex-start'
                           justifyContent='flex-start'
-                          onClick={() => window.open(`http://${mulberryCoverage.fullTermsLink}`, '_blank')}
+                          onClick={() => window.open(mulberry.policyTermsUrl, '_blank')}
                         >
                           <Image
                             width='0.875rem'
@@ -508,9 +508,11 @@ const ProductDetails: React.FC = () => {
             >
               <AuthDrawer
                 brandName={details?.brand?.name}
-                animated={mulberryCoverage.coverage && moduleType === 'WARRANTY_MODULE'}
-                html={details?.registration?.registrationText}
+                html={mulberry && moduleType === 'WARRANTY_MODULE'
+                  ? null : details?.registration?.registrationText}
+                animated={mulberry && moduleType === 'WARRANTY_MODULE'}
                 onPersonalDetailshow={() => setDisableModalDismiss(true)}
+                showMulberryTerms={mulberry && moduleType === 'WARRANTY_MODULE'}
                 onAuthComplete={() => {
                   setShowAuthPage(false);
                   setDisableModalDismiss(false);
@@ -531,16 +533,12 @@ const ProductDetails: React.FC = () => {
           );
         case 'WARRANTY_MODULE':
           return (
-            mulberryCoverage.coverage ? (
-              <MulberryDrawer />
-            ) : (
-              <WarrantyDrawer
-                closePage={closeDrawerPage}
-                drawerTitle={details?.modules[currentPage as number]?.title}
-                warrantyData={module?.moduleInfo as WarrantyModuleType}
-                warrantyId={module?.id}
-              />
-            )
+            <WarrantyDrawer
+              closePage={closeDrawerPage}
+              drawerTitle={details?.modules[currentPage as number]?.title}
+              warrantyData={module?.moduleInfo as WarrantyModuleType}
+              warrantyId={module?.id}
+            />
           );
         case 'REFERRAL_MODULE':
           return (
@@ -668,35 +666,18 @@ const ProductDetails: React.FC = () => {
 
 export default ProductDetails;
 
-const mulberryCoverage = {
-  coverage: false,
-  fullTermsLink: 'www.google.com',
-  headers: ["What's Covered", "mulberry", "Manu. Warranty"],
-  features: [
-    {
-      title: 'Manufacturing defects',
-      mulberry: true,
-      manufacturerWarranty: true,
-    },
-    {
-      title: 'Damange from stains, rips & tears',
-      mulberry: true,
-      manufacturerWarranty: false,
-    },
-    {
-      title: 'Damage from liquid marks & rings',
-      mulberry: true,
-      manufacturerWarranty: false,
-    },
-    {
-      title: 'Broken heating, reclining & vibration',
-      mulberry: true,
-      manufacturerWarranty: false,
-    },
-    {
-      title: 'Broken mirrors & glass, loss of mirror silvering',
-      mulberry: true,
-      manufacturerWarranty: false,
-    },
+// const mulberry = null;
+const mulberry = {
+  isCovered: true,
+  coverageDetails: [
+    'Manufacturing defects',
+    'Damange from stains, rips & tears',
+    'Damage from liquid marks & rings',
+    'Broken heating, reclining & vibration',
+    'Broken mirrors & glass, loss of mirror silvering',
   ],
+  policyTermsUrl: 'https://www.gmail.com',
+  warrantyOfferId: '12345678',
+  issueDate: '26/02/2022',
+  expiryDate: '26/02/2023',
 };

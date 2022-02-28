@@ -15,14 +15,16 @@ interface AuthDrawerProps {
   margin?: string;
   animated?: boolean;
   brandName?: string;
-}
+  showMulberryTerms?: boolean;
+};
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
   onPersonalDetailshow = () => { },
   html,
   animated,
-  brandName
+  brandName,
+  showMulberryTerms
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -75,6 +77,10 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
               {t('termsAndconditions.part1')}
               {brandName}
               {t('termsAndconditions.part2')}
+              {showMulberryTerms
+                ? t('termsAndconditions.mulberryAndBrijBrand')
+                : t('termsAndconditions.brijBrand')
+              }
               <a
                 target='_blank'
                 href='https://brij.it/terms'
