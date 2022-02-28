@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { theme } from 'styles/theme';
 
 type TableCellProps = {
+  theme: string;
   padding?: string;
   lastRow?: boolean;
   featured?: boolean;
@@ -24,19 +24,19 @@ export const TableCell = styled.td<TableCellProps>`
   padding: ${(props) => (props.padding ? props.padding : '0.5rem 0')};
   box-shadow: 0px 1px 0px 0px #E7EAEB;
   text-align: center;
-  ${({ featured, lastRow }) => {
+  ${({ featured, lastRow, theme}) => {
     if(featured && !lastRow) {
-      return `box-shadow: 0px 1px 0px #E7EAEB, -1px 0px 0px 0px ${theme.primary}, 1px 0px 0px 0px ${theme.primary};`;
+      return `box-shadow: 0px 1px 0px #E7EAEB, -1px 0px 0px 0px ${theme}, 1px 0px 0px 0px ${theme};`;
     }
   }}
-  ${({ edgecaseTop }) => {
+  ${({ edgecaseTop, theme }) => {
     if(edgecaseTop) {
-      return `border-top-left-radius: 5px; border-top-right-radius: 5px; box-shadow: 0px 0px 0px 1px ${theme.primary};`;
+      return `border-top-left-radius: 5px; border-top-right-radius: 5px; box-shadow: 0px 0px 0px 1px ${theme};`;
     }
   }}
-  ${({ edgecaseBottom }) => {
+  ${({ edgecaseBottom, theme }) => {
     if(edgecaseBottom) {
-      return `border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 1px 0px ${theme.primary}, -1px 1px 1px ${theme.primary}, 1px 1px 0px ${theme.primary};`;
+      return `border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 1px 0px ${theme}, -1px 1px 1px ${theme}, 1px 1px 0px ${theme};`;
     }
   }}
 `;

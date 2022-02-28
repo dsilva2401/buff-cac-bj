@@ -75,6 +75,20 @@ export type WarrantyModuleType = {
   // same as above, created and set when user called activateWarranty mutation, If not set, it is undefined
   // expirationDate = purchaseDate + period duration
   expirationDate?: string; // UTC timestamp
+  
+  // optional mulberry warranty coverage details
+  mulberry?: {
+    isCovered: boolean;
+    coverageDetails: {
+      title: string,
+      mulberry: boolean,
+      manufacturerWarranty: boolean,
+    }[];
+    policyTermsUrl: string;
+    warrantyOfferId: string;
+    issueDate: string;
+    expiryDate: string;
+  };
 };
 
 export type ShoppingModuleOptionsType = {
