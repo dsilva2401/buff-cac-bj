@@ -4,7 +4,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import InputMask from 'react-input-mask';
 import { useAPI } from 'utils/api';
@@ -20,7 +20,7 @@ interface PersonalDetailsProps {
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
-  onPersonalDetailsUpdate = () => {},
+  onPersonalDetailsUpdate = () => { },
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
 
@@ -57,6 +57,10 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
     },
     [updateUser]
   );
+
+  useEffect(() => {
+    onPersonalDetailsUpdate()
+  }, [])
 
   return (
     <Wrapper
@@ -110,21 +114,21 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           <LoadingIndicator />
         ) : (
           <>
-          <Button
-            variant='dark'
-            onClick={() =>
-              validateUserInformation({
-                firstName,
-                lastName,
-                phoneNumber,
-              })
-            }
-          >
-            {t('continueButton')}
-          </Button>
-          <Text fontSize='0.8rem' textDecoration='underline' padding='10px' cursor='pointer'>
-            <p onClick={onPersonalDetailsUpdate}>Skip for now</p>
-          </Text>
+            <Button
+              variant='dark'
+              onClick={() =>
+                validateUserInformation({
+                  firstName,
+                  lastName,
+                  phoneNumber,
+                })
+              }
+            >
+              {t('continueButton')}
+            </Button>
+            <Text fontSize='0.8rem' textDecoration='underline' padding='10px' cursor='pointer'>
+              <p onClick={onPersonalDetailsUpdate}>Skip for now</p>
+            </Text>
           </>
         )}
       </Wrapper>
