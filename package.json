@@ -44,8 +44,8 @@
         "start-dev-client": "REACT_APP_NODE_ENV=development REACT_APP_STAND_ALONE_MODE=false react-scripts start",
         "start-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=false react-scripts start",
         "start-dev-client-windows": "react-scripts start",
-        "build-dev-client": "NODE_ENV=development REACT_APP_STAND_ALONE_MODE=true react-scripts build",
-        "build-prod-client": "NODE_ENV=production REACT_APP_STAND_ALONE_MODE=true react-scripts build"
+        "build-dev-client": "REACT_APP_NODE_ENV=development REACT_APP_STAND_ALONE_MODE=true react-scripts build",
+        "build-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=true react-scripts build"
     },
     "eslintConfig": {
         "extends": [
