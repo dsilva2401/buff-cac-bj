@@ -55,6 +55,7 @@ type WrapperProps = {
   | 'stretch';
   cursor?: string;
   overflow?: string;
+  border?: string;
   borderRadius?: string;
   background?: string;
   before?: PseudoElement;
@@ -90,6 +91,7 @@ const Wrapper = styled.div<WrapperProps>`
   cursor: ${(props) => (props.cursor ? props.cursor : 'unset')};
   overflow: ${(props) => (props.overflow ? props.overflow : 'unset')};
   background: ${(props) => (props.background ? props.background : 'unset')};
+  border: ${(props) => (props.border ? props.border : 'unset')};
   border-radius: ${(props) => (props.borderRadius ? props.borderRadius : 'unset')};
   transition: ${(props) => (props.transition ? props.transition : 'unset')};
 

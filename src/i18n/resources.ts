@@ -82,28 +82,21 @@ export const resources = {
         authDrawer: {
           termsAndconditions: {
             part1: 'By registering you agree to email communications from ',
-            part2: " and accept Brij's ",
+            part2: ' and accept ',
+            brijBrand: " Brij's ",
+            mulberryAndBrijBrand: " mulberry & Brij's ",
             link: 'Terms & Conditions'
           }
         },
         warrantyDrawer: {
-          signInDisclaimer:
-            'By registering you agree to email communications from Gucci and accept Brij’s Terms & Conditions',
-          registerButton: 'Register with Email',
-          googleButton: 'Register with Google',
-          facebookButton: 'Register with Facebook',
-          emailInput: 'Enter email...',
-          details: 'Details',
-          duration: 'Duration',
-          status: 'Status',
-          warrantyStatusActivated: 'Activated',
-          warrantyStatusNotActivated: 'Not Activated',
-          warrantyCoverage: 'What is Covered?',
+          warrantyHeading: 'Manufacturer Warranty',
+          expiredWarrantyHeading: 'Manufacturer Warranty Expired!',
+          mulberryWarrantyHeading: 'Accident Protection by MulberryCare',
+          expiredMulberryWarrantyHeading: 'Manufacturer Warranty Expired!',
+          issueDate: 'Issue Date',
+          expirationDate: 'Expiration Date',
           fullTermsLink: 'See full terms',
-          purchaseDate: 'Purchase Date',
-          expires: 'Expires',
-          changePurchaseDetails: 'Change Purchase Details',
-          activateDetails: 'Activate Warranty',
+          viewDetails: 'View Details',
           detailsModal: {
             activateWarrantyHeading: 'Activate Warranty',
             updateWarrantyHeading: 'Update Details',
