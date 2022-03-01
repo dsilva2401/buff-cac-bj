@@ -1,6 +1,7 @@
 import Button from 'components/Button';
 import Input from 'components/Input';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
 import React, { useCallback, useState } from 'react';
@@ -104,10 +105,11 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           )}
         </InputMask>
       </Wrapper>
-      <Wrapper width='100%' justifyContent='center' alignItems='center'>
+      <Wrapper width='100%' justifyContent='center' alignItems='center' direction='column'>
         {loading ? (
           <LoadingIndicator />
         ) : (
+          <>
           <Button
             variant='dark'
             onClick={() =>
@@ -120,6 +122,10 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           >
             {t('continueButton')}
           </Button>
+          <Text fontSize='0.8rem' textDecoration='underline' padding='10px' cursor='pointer'>
+            <p onClick={onPersonalDetailsUpdate}>Skip for now</p>
+          </Text>
+          </>
         )}
       </Wrapper>
     </Wrapper>
