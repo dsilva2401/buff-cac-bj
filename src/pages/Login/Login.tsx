@@ -1,17 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { theme } from 'styles/theme';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useGlobal } from 'context/global/GlobalContext';
 import { ReactComponent as BrijLogo } from 'assets/logos/svg/brij-colored.svg';
-import useRedirectLoggedInUser from 'hooks/useRedirectLoggedInUser';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import LoginForm from 'components/LoginForm';
 import Wrapper from 'components/Wrapper';
+import { useHistory } from 'react-router-dom';
+import { RoutesHashMap } from 'routes';
 
 const Login: React.FC = () => {
-  const { user, setIsMenuOpen } = useGlobal();
+  const { setIsMenuOpen, user, signInRedirect, setSignInRedirect } = useGlobal();
+  const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
   const logo = useMemo(
@@ -32,7 +34,23 @@ const Login: React.FC = () => {
     [setIsMenuOpen]
   );
 
-  useRedirectLoggedInUser(user);
+  // create a copy of signInRedirect so it doesn't change when singInRedirect
+  // sets to empty which will cause the redirection to occur again
+  // We will fix this once the user will be in the global context
+
+  const redirect = useRef<string>(signInRedirect);
+
+  const onLogin = useCallback(() => {
+    if (user) {
+      let link = redirect.current || RoutesHashMap.Collection.path;
+
+      if (redirect.current) {
+        setSignInRedirect('');
+      };
+
+      history.push(link);
+    }
+  }, [user, history, redirect, setSignInRedirect]);
 
   return (
     <>
@@ -54,7 +72,7 @@ const Login: React.FC = () => {
           logo={logo}
           actionButton={menuButton}
         />
-        <LoginForm />
+        <LoginForm onLogin={onLogin} />
       </Wrapper>
     </>
   );

@@ -18,7 +18,7 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
 
-import { TextField } from '@material-ui/core';
+import PersonalDetails from 'components/PersonalDetails';
 
 interface LoginFormProps {
   isDrawer?: boolean;
@@ -41,6 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [showPersonalDetailsForm, togglePersonalDetailsForm] = useState<boolean>(false);
 
   // get magic link header
   const {
@@ -69,8 +70,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       username,
       process.env.REACT_APP_DEFAULT_PASSWORD!
     )
-      .then((data) => {
-        onLogin();
+      .then(() => {
+        togglePersonalDetailsForm(true);
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {
@@ -87,6 +88,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
     if (emailRegistration && inputRef !== null)
       inputRef.current?.focus();
   }, [emailRegistration])
+
+  if (showPersonalDetailsForm) {
+    return <PersonalDetails onPersonalDetailsUpdate={onLogin} />
+  }
 
   return (
     <Wrapper
