@@ -80,7 +80,6 @@ const Landing: React.FC = () => {
             padding='1.5rem'
             direction='column'
             position='relative'
-            margin='6rem 0 0 0'
             alignItems='flex-start'
             justifyContent='center'
           >
