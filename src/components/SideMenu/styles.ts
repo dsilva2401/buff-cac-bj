@@ -14,7 +14,7 @@ const Menu = styled.div<MenuProps>`
   right: 0;
   border-radius: 26px 0 0 0;
   box-shadow: 0px 16px 40px rgba(0, 0, 0, 0.08);
-  background-color: ${props => props.theme ? props.theme : theme.primary};
+  background-color: ${(props) => (props.theme ? props.theme : theme.primary)};
   z-index: 10;
   transition: all 0.3s ease;
 
@@ -47,7 +47,9 @@ const Menu = styled.div<MenuProps>`
       justify-content: flex-start;
       align-items: flex-end;
       gap: 1.2rem;
-      a, span, p {
+      a,
+      span,
+      p {
         cursor: pointer;
         color: #fff;
         display: flex;

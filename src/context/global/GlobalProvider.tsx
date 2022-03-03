@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { GlobalContext, PageStateType, UserLocationType } from './GlobalContext';
+import {
+  GlobalContext,
+  PageStateType,
+  UserLocationType,
+} from './GlobalContext';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { getAuth, User } from 'firebase/auth';
 import { theme } from 'styles/theme';
@@ -10,8 +14,8 @@ import useCollection from '../../hooks/useCollection';
 import useLogEvent from 'hooks/useLogEvent';
 
 export enum MAGIC_ACTION {
-  OPEN_MODULE = "OPEN_MODULE",
-  REDIRECT = "REDIRECT"
+  OPEN_MODULE = 'OPEN_MODULE',
+  REDIRECT = 'REDIRECT',
 }
 
 const useUser = () => {
@@ -55,7 +59,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
     localStorage.getItem('signInRedirect') || ''
   );
   const [retractDrawer, setRetractDrawer] = useState<boolean>(false);
-  const [userLocation, setUserLocation] = useState<UserLocationType>({ latitude: 0, longitude: 0 });
+  const [userLocation, setUserLocation] = useState<UserLocationType>({
+    latitude: 0,
+    longitude: 0,
+  });
   const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,9 +71,13 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [appZoom, setAppZoom] = useState(1);
   const [previewEvent, setPreviewEvent] = useState({});
   const [previewAuthenticated, setPreviewAuthenticated] = useState(false);
-  const [magicAction, setMagicAction] = useState<MAGIC_ACTION>(MAGIC_ACTION.REDIRECT);
+  const [magicAction, setMagicAction] = useState<MAGIC_ACTION>(
+    MAGIC_ACTION.REDIRECT
+  );
   const [magicPayload, setMagicPayload] = useState<any>({});
-  const [appTheme, setAppTheme] = useState<string>(localStorage.getItem('accentColor') || theme.primary);
+  const [appTheme, setAppTheme] = useState<string>(
+    localStorage.getItem('accentColor') || theme.primary
+  );
 
   const {
     user,
@@ -82,10 +93,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
       window.navigator.geolocation.getCurrentPosition((location) => {
         setUserLocation({
           latitude: location?.coords?.latitude,
-          longitude: location?.coords?.longitude
+          longitude: location?.coords?.longitude,
         });
       });
-    };
+    }
   }, [user]);
 
   const [productDetails, reFetchProduct, productLoading] = useProductDetails(
@@ -97,9 +108,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     setAppTheme(
-      window.location.pathname.includes(`c/${slug}`)
-      && localStorage.getItem('accentColor')
-      || theme.primary);
+      (window.location.pathname.includes(`c/${slug}`) &&
+        localStorage.getItem('accentColor')) ||
+        theme.primary
+    );
   }, [productDetails, window.location.pathname]);
 
   const onActivateWarrantySuccess = useCallback(() => {
@@ -204,7 +216,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         magicAction,
         setMagicAction,
         magicPayload,
-        setMagicPayload
+        setMagicPayload,
       }}
     >
       {children}

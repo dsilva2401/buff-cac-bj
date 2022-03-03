@@ -17,125 +17,107 @@ import { useAPI } from 'utils/api';
 import { LandingHtmlWrapper } from './styles';
 
 const Landing: React.FC = () => {
-    const [pageData, setPageData] = useState<LandingPageType | null>(null);
-    const [fetchData, loading] = useAPI(
-        {
-            method: 'GET',
-            endpoint: `landing/page/viscosoft`,
-            onSuccess: (response) => {
-                console.log('Response: ', response);
-                setPageData(response);
-            },
-            onError: (error) => console.log('Error: ', error),
-        },
-        null,
-        false
-    );
+  const [pageData, setPageData] = useState<LandingPageType | null>(null);
+  const [fetchData, loading] = useAPI(
+    {
+      method: 'GET',
+      endpoint: `landing/page/viscosoft`,
+      onSuccess: (response) => {
+        console.log('Response: ', response);
+        setPageData(response);
+      },
+      onError: (error) => console.log('Error: ', error),
+    },
+    null,
+    false
+  );
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    return (
+  return (
+    <>
+      <Helmet>
+        <title>{pageData ? pageData[0]?.brand[0]?.name : 'Loading...'}</title>
+      </Helmet>
+      {loading || !pageData ? (
+        <LoadingIndicator />
+      ) : (
         <>
-            <Helmet>
-                <title>
-                    {pageData ? pageData[0]?.brand[0]?.name : 'Loading...'}
-                </title>
-            </Helmet>
-            {loading || !pageData ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ProgressiveImage
-                        src={viscosoftBackground}
-                        placeholder={placeholder}
-                    >
-                        {(src: string, loading: boolean) => (
-                            <Image
-                                src={src}
-                                alt="background"
-                                position="absolute"
-                                width="100vw"
-                                margin="auto"
-                                objectFit="cover"
-                                transition="0.3s"
-                                opacity={loading ? 0.5 : 1}
-                                style={{ minHeight: '100%', minWidth: '100%' }}
-                            />
-                        )}
-                    </ProgressiveImage>
-
-                    <Wrapper
-                        left="0"
-                        top="2.75rem"
-                        position="absolute"
-                        zIndex={1}
-                    >
-                        <Image
-                            width="150px"
-                            src={viscosoftLogo}
-                            alt="brand-logo"
-                        />
-                        {/* viscosoft specific */}
-                        <Image
-                            position="absolute"
-                            src={topStripe}
-                            left="168px"
-                            top="-99px"
-                        />
-                        <Image
-                            src={horizontalStripe}
-                            position="absolute"
-                            left="167px"
-                        />
-                        <Image
-                            src={horizontalStripe}
-                            position="absolute"
-                            left="167px"
-                            top="41px"
-                        />
-                        <Image
-                            src={bottomStripe}
-                            position="absolute"
-                            left="168px"
-                            top="42px"
-                        />
-                        {/* viscosoft specific */}
-                    </Wrapper>
-
-                    <Wrapper
-                        zIndex={3}
-                        width="100%"
-                        height="100%"
-                        gap="0.75rem"
-                        padding="1.5rem"
-                        direction="column"
-                        position="relative"
-                        alignItems="flex-start"
-                        justifyContent="center"
-                    >
-                        <LandingHtmlWrapper
-                            dangerouslySetInnerHTML={{
-                                __html: pageData[0]?.brand[0]?.details,
-                            }}
-                        />
-                        {pageData[0]?.links?.map((node) => (
-                            <Button
-                                key={node.title}
-                                variant="light"
-                                onClick={() => window.open(node.url, '_blank')}
-                            >
-                                <Text color="#1C3965">
-                                    <p>{node.title}</p>
-                                </Text>
-                            </Button>
-                        ))}
-                    </Wrapper>
-                </>
+          <ProgressiveImage src={viscosoftBackground} placeholder={placeholder}>
+            {(src: string, loading: boolean) => (
+              <Image
+                src={src}
+                alt='background'
+                position='absolute'
+                width='100vw'
+                margin='auto'
+                objectFit='cover'
+                transition='0.3s'
+                opacity={loading ? 0.5 : 1}
+                style={{ minHeight: '100%', minWidth: '100%' }}
+              />
             )}
+          </ProgressiveImage>
+
+          <Wrapper left='0' top='2.75rem' position='absolute' zIndex={1}>
+            <Image width='150px' src={viscosoftLogo} alt='brand-logo' />
+            {/* viscosoft specific */}
+            <Image
+              position='absolute'
+              src={topStripe}
+              left='168px'
+              top='-99px'
+            />
+            <Image src={horizontalStripe} position='absolute' left='167px' />
+            <Image
+              src={horizontalStripe}
+              position='absolute'
+              left='167px'
+              top='41px'
+            />
+            <Image
+              src={bottomStripe}
+              position='absolute'
+              left='168px'
+              top='42px'
+            />
+            {/* viscosoft specific */}
+          </Wrapper>
+
+          <Wrapper
+            zIndex={3}
+            width='100%'
+            height='100%'
+            gap='0.75rem'
+            padding='1.5rem'
+            direction='column'
+            position='relative'
+            alignItems='flex-start'
+            justifyContent='center'
+          >
+            <LandingHtmlWrapper
+              dangerouslySetInnerHTML={{
+                __html: pageData[0]?.brand[0]?.details,
+              }}
+            />
+            {pageData[0]?.links?.map((node) => (
+              <Button
+                key={node.title}
+                variant='light'
+                onClick={() => window.open(node.url, '_blank')}
+              >
+                <Text color='#1C3965'>
+                  <p>{node.title}</p>
+                </Text>
+              </Button>
+            ))}
+          </Wrapper>
         </>
-    );
+      )}
+    </>
+  );
 };
 
 export default Landing;

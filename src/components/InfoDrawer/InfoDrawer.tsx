@@ -9,7 +9,11 @@ type InfoDrawerProps = {
   productInfo: any;
 };
 
-const InfoDrawer: React.FC<InfoDrawerProps> = ({ product, closePage, productInfo }) => {
+const InfoDrawer: React.FC<InfoDrawerProps> = ({
+  product,
+  closePage,
+  productInfo,
+}) => {
   return (
     <Wrapper
       width='100%'
@@ -22,7 +26,12 @@ const InfoDrawer: React.FC<InfoDrawerProps> = ({ product, closePage, productInfo
       padding='1rem'
     >
       <Wrapper width='100%' justifyContent='center' alignItems='center'>
-        <Image src={product?.image} alt='Product information' height='200px' rounded />
+        <Image
+          src={product?.image}
+          alt='Product information'
+          height='200px'
+          rounded
+        />
       </Wrapper>
       <Wrapper
         width='100%'
@@ -35,9 +44,7 @@ const InfoDrawer: React.FC<InfoDrawerProps> = ({ product, closePage, productInfo
           <p>{productInfo?.serialNumber}</p>
         </Text>
         <Text fontSize='0.8rem' fontWeight='400' color='rgba(0,0,0,.58)'>
-          <p>
-            {productInfo?.description}
-          </p>
+          <p>{productInfo?.description}</p>
         </Text>
         <Text
           fontSize='0.8rem'
@@ -45,7 +52,9 @@ const InfoDrawer: React.FC<InfoDrawerProps> = ({ product, closePage, productInfo
           listStyle='disc'
           color='rgba(0,0,0,.58)'
         >
-          {productInfo?.features?.map((feature: string) => <li>{feature}</li>)}
+          {productInfo?.features?.map((feature: string) => (
+            <li>{feature}</li>
+          ))}
         </Text>
       </Wrapper>
     </Wrapper>

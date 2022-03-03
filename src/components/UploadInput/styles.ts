@@ -15,7 +15,7 @@ export const InputWrapper = styled.div<UploadInputProps>`
     props.isFileSelected || props.isFocused ? 'transparent' : '#f4f4f4'};
   border: 1px solid
     ${(props) =>
-    props.isFileSelected || props.isFocused ? '#1b1b1b' : 'transparent'};
+      props.isFileSelected || props.isFocused ? '#1b1b1b' : 'transparent'};
   border-radius: 30px;
   transition: all 0.3s ease;
   input {

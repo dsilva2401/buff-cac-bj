@@ -30,9 +30,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
       <Drawer appTheme={appTheme} isOpen={isOpen}>
         {isOpen && (
           <>
-            <CheckAnimation
-              isDrawerOpen={isOpen}
-            />
+            <CheckAnimation isDrawerOpen={isOpen} />
             <Text
               fontSize='2rem'
               fontWeight='700'

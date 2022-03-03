@@ -16,19 +16,21 @@ interface AuthDrawerProps {
   animated?: boolean;
   brandName?: string;
   showMulberryTerms?: boolean;
-};
+}
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailshow = () => { },
+  onPersonalDetailshow = () => {},
   html,
   animated,
   brandName,
-  showMulberryTerms
+  showMulberryTerms,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { t } = useTranslation('translation', { keyPrefix: 'drawers.authDrawer' });
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'drawers.authDrawer',
+  });
   const { retractDrawer } = useGlobal();
 
   const onSuccess = useCallback(() => {
@@ -51,7 +53,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       overflow='auto'
       margin={animated ? '1.5rem 0' : '3.75rem 0'}
     >
-      {html &&
+      {html && (
         <HtmlWrapper
           gap='1rem'
           width='100%'
@@ -61,7 +63,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           justifyContent='center'
           dangerouslySetInnerHTML={{ __html: html }}
         />
-      }
+      )}
       <Animated
         animationIn='slideInRight'
         animationOut='slideOutLeft'
@@ -72,15 +74,19 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         style={{ width: '100%' }}
       >
         <Wrapper padding='0 1rem' style={{ borderTop: '2px solid #E7EAEB' }}>
-          <Text margin='1rem 0 0 0' fontSize='0.625rem' textAlign='left' color='#414149'>
+          <Text
+            margin='1rem 0 0 0'
+            fontSize='0.625rem'
+            textAlign='left'
+            color='#414149'
+          >
             <p>
               {t('termsAndconditions.part1')}
               {brandName}
               {t('termsAndconditions.part2')}
               {showMulberryTerms
                 ? t('termsAndconditions.mulberryAndBrijBrand')
-                : t('termsAndconditions.brijBrand')
-              }
+                : t('termsAndconditions.brijBrand')}
               <a
                 target='_blank'
                 href='https://brij.it/terms'

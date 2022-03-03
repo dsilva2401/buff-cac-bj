@@ -20,7 +20,7 @@ interface PersonalDetailsProps {
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
-  onPersonalDetailsUpdate = () => { },
+  onPersonalDetailsUpdate = () => {},
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
 
@@ -59,8 +59,8 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   );
 
   useEffect(() => {
-    onPersonalDetailsUpdate()
-  }, [])
+    onPersonalDetailsUpdate();
+  }, []);
 
   return (
     <Wrapper
@@ -109,7 +109,12 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           )}
         </InputMask>
       </Wrapper>
-      <Wrapper width='100%' justifyContent='center' alignItems='center' direction='column'>
+      <Wrapper
+        width='100%'
+        justifyContent='center'
+        alignItems='center'
+        direction='column'
+      >
         {loading ? (
           <LoadingIndicator />
         ) : (
@@ -126,7 +131,12 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             >
               {t('continueButton')}
             </Button>
-            <Text fontSize='0.8rem' textDecoration='underline' padding='10px' cursor='pointer'>
+            <Text
+              fontSize='0.8rem'
+              textDecoration='underline'
+              padding='10px'
+              cursor='pointer'
+            >
               <p onClick={onPersonalDetailsUpdate}>Skip for now</p>
             </Text>
           </>

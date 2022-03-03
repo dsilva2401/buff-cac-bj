@@ -26,39 +26,57 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
 
   cursor: pointer;
-  transition: ${(props) => props.transition ? props.transition : 'all 0.3s ease'};
-  width: ${(props) => props.width ? props.width : '100%'};
-  border-radius: ${(props) => props.squared ? '0.5rem' : '5rem'};
+  transition: ${(props) =>
+    props.transition ? props.transition : 'all 0.3s ease'};
+  width: ${(props) => (props.width ? props.width : '100%')};
+  border-radius: ${(props) => (props.squared ? '0.5rem' : '5rem')};
   border: ${(props) =>
-    props.variant === 'light' ? `1px solid ${hex2rgba(props.appTheme || theme.button.border, 0.5)}` : 'none'};
+    props.variant === 'light'
+      ? `1px solid ${hex2rgba(props.appTheme || theme.button.border, 0.5)}`
+      : 'none'};
   background-color: ${(props) =>
-    props.variant === 'dark' ? (props.warning ? theme.button.warning : props.appTheme || theme.button.primary) : theme.button.secondary};
+    props.variant === 'dark'
+      ? props.warning
+        ? theme.button.warning
+        : props.appTheme || theme.button.primary
+      : theme.button.secondary};
   box-shadow: ${(props) =>
     props.variant === 'dark' ? '' : '0px 1px 4px rgba(0, 0, 0, 0.12)'};
   color: ${(props) =>
-    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : props.appTheme || theme.button.primary};
+    props.variant === 'dark'
+      ? theme.button.secondary
+      : props.warning
+      ? theme.button.warning
+      : props.appTheme || theme.button.primary};
 
   a {
     color: ${(props) =>
-    props.variant === 'dark' ? theme.button.secondary : props.warning ? theme.button.warning : props.appTheme || theme.button.primary};
+      props.variant === 'dark'
+        ? theme.button.secondary
+        : props.warning
+        ? theme.button.warning
+        : props.appTheme || theme.button.primary};
     text-decoration: none;
   }
 
   svg {
     position: absolute;
     border-radius: 50%;
-    ${(props) => props.iconRight ? `right: 1rem;` : `left: 1rem;`};
+    ${(props) => (props.iconRight ? `right: 1rem;` : `left: 1rem;`)};
   }
 
   &:active {
     box-shadow: ${(props) =>
-    props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
+      props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
   }
 
   &:disabled {
-    background-color: ${(props) => (props.variant === 'dark' ? '#ccc' : theme.button.secondary)};
+    background-color: ${(props) =>
+      props.variant === 'dark' ? '#ccc' : theme.button.secondary};
     color: ${(props) =>
-    props.variant === 'dark' ? theme.button.secondary : theme.button.disabled};
+      props.variant === 'dark'
+        ? theme.button.secondary
+        : theme.button.disabled};
   }
 `;
 

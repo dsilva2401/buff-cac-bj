@@ -2,13 +2,13 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 import useEventListener from './useEventListener';
 
 interface Size {
-  width: number
-  height: number
-};
+  width: number;
+  height: number;
+}
 
 function useElementSize<T extends HTMLElement = HTMLDivElement>(): [
   (node: T | null) => void,
-  Size,
+  Size
 ] {
   const [ref, setRef] = useState<T | null>(null);
   const [size, setSize] = useState<Size>({
@@ -30,6 +30,6 @@ function useElementSize<T extends HTMLElement = HTMLDivElement>(): [
   }, [ref?.offsetHeight, ref?.offsetWidth]);
 
   return [setRef, size];
-};
+}
 
 export default useElementSize;

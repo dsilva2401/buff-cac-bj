@@ -12,14 +12,12 @@ import { useHistory } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 
 const Login: React.FC = () => {
-  const { setIsMenuOpen, user, signInRedirect, setSignInRedirect } = useGlobal();
+  const { setIsMenuOpen, user, signInRedirect, setSignInRedirect } =
+    useGlobal();
   const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
-  const logo = useMemo(
-    () => <BrijLogo fill={theme.primary} />,
-    []
-  );
+  const logo = useMemo(() => <BrijLogo fill={theme.primary} />, []);
 
   const menuButton = useMemo(
     () => (
@@ -46,7 +44,7 @@ const Login: React.FC = () => {
 
       if (redirect.current) {
         setSignInRedirect('');
-      };
+      }
 
       history.push(link);
     }

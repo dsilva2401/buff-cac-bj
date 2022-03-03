@@ -10,8 +10,16 @@ export const LandingHtmlWrapper = styled.div<LandingHtmlWrapperProps>`
   flex-direction: column;
   gap: 0.75rem;
   margin: 2.875rem 0;
-  span, h1, h2, h3, h4, h5, h6, p, label {
-    color: #1C3965;
+  span,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  label {
+    color: #1c3965;
   }
   ul {
     list-style: none;

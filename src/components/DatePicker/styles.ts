@@ -11,7 +11,7 @@ export const InputWrapper = styled.div<PickerProps>`
     props.isDateSelected || props.isFocused ? 'transparent' : '#f4f4f4'};
   border: 1px solid
     ${(props) =>
-    props.isDateSelected || props.isFocused ? '#1b1b1b' : 'transparent'};
+      props.isDateSelected || props.isFocused ? '#1b1b1b' : 'transparent'};
   color: ${(props) =>
     props.isDateSelected || props.isFocused ? '#000' : 'transparent'};
   border-radius: 30px;
@@ -44,7 +44,7 @@ export const NativePicker = styled.input<PickerProps>`
     font-family: 'Poppins', sans-serif;
     background: transparent url(${''}) 97% 50% no-repeat;
     color: ${(props) =>
-    props.isDateSelected || props.isFocused ? '#000' : 'transparent'};
+      props.isDateSelected || props.isFocused ? '#000' : 'transparent'};
     &::-webkit-inner-spin-button {
       display: none;
     }

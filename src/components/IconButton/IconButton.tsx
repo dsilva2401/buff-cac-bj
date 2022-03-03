@@ -50,4 +50,4 @@ export default function IconButton({
       {children ? children : renderIcon()}
     </Button>
   );
-};
+}

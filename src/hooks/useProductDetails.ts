@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useAPI } from 'utils/api';
 
-function useProductDetails(slug: string | null, token: string | null = null, previewEvent: any): [
-  ProductDetailsType | null,
-  () => Promise<any>,
-  boolean
-] {
-  const [productDetails, setProductDetails] = useState<ProductDetailsType | null>(null);
+function useProductDetails(
+  slug: string | null,
+  token: string | null = null,
+  previewEvent: any
+): [ProductDetailsType | null, () => Promise<any>, boolean] {
+  const [productDetails, setProductDetails] =
+    useState<ProductDetailsType | null>(null);
 
   const onSuccess = useCallback((productDetails) => {
     const { product, modules } = productDetails;
@@ -17,16 +18,20 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
     let moduleCopy = [...modules];
 
     if (
-      !product.registeredToCurrentUser
-      && product.registered
-      && product.tagType === 'Unit'
+      !product.registeredToCurrentUser &&
+      product.registered &&
+      product.tagType === 'Unit'
     ) {
       moduleCopy = moduleCopy.filter(
-        module => module.type !== 'WARRANTY_MODULE'
-      )
-    };
+        (module) => module.type !== 'WARRANTY_MODULE'
+      );
+    }
 
-    setProductDetails({ ...productDetails, modules: [...moduleCopy], leadModule });
+    setProductDetails({
+      ...productDetails,
+      modules: [...moduleCopy],
+      leadModule,
+    });
   }, []);
 
   const onError = useCallback((error) => {
@@ -34,19 +39,22 @@ function useProductDetails(slug: string | null, token: string | null = null, pre
     console.log('ERROR MSG: ', error.message);
   }, []);
 
-  const [getProduct, loading, controller] = useAPI({
-    method: 'GET',
-    endpoint: `products/${slug}`,
-    onSuccess,
-    onError
-  }, token)
+  const [getProduct, loading, controller] = useAPI(
+    {
+      method: 'GET',
+      endpoint: `products/${slug}`,
+      onSuccess,
+      onError,
+    },
+    token
+  );
 
   useEffect(() => {
     if (slug) {
       if (controller) controller.abort();
-      getProduct()
-    };
-  }, [token, slug, getProduct])
+      getProduct();
+    }
+  }, [token, slug, getProduct]);
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'product') {

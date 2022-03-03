@@ -36,12 +36,12 @@ export type ButtonType = {
 
 type SocialsType =
   | {
-    phone?: string | undefined;
-    email?: string | undefined;
-    twitter?: string | undefined;
-    instagram?: string | undefined;
-    facebook?: string | undefined;
-  }
+      phone?: string | undefined;
+      email?: string | undefined;
+      twitter?: string | undefined;
+      instagram?: string | undefined;
+      facebook?: string | undefined;
+    }
   | undefined;
 
 type BottomDrawerProps = {
@@ -55,7 +55,7 @@ type BottomDrawerProps = {
   disableModalDismiss?: boolean;
   setMainDrawerOpen: (open: boolean) => void;
   mainDrawerOpen: boolean;
-  position: Position,
+  position: Position;
   setPosition: (position: Position) => void;
 };
 
@@ -71,7 +71,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   setMainDrawerOpen,
   mainDrawerOpen,
   position,
-  setPosition
+  setPosition,
 }) => {
   const {
     setPageState,
@@ -79,7 +79,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     setRetractDrawer,
     appZoom,
     appTheme,
-    isPreviewMode
+    isPreviewMode,
   } = useGlobal();
 
   const { topHeight, bottomHeight } = useHeights();
@@ -112,7 +112,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     setMainDrawerOpen,
     setPageState,
     isChildOpen,
-    appZoom
+    appZoom,
   ]);
 
   const handleStart = () => {
@@ -161,7 +161,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             justifyContent='space-between'
             alignItems='center'
           >
-            <DrawerHeader isDrawerOpen={mainDrawerOpen} isChildOpen={isChildOpen}>
+            <DrawerHeader
+              isDrawerOpen={mainDrawerOpen}
+              isChildOpen={isChildOpen}
+            >
               {!isChildOpen && (
                 <Wrapper
                   justifyContent='space-between'
@@ -179,7 +182,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         style={{
                           fontSize: '1rem',
                           fontWeight: '600',
-                          lineHeight: '20px'
+                          lineHeight: '20px',
                         }}
                       />
                     )}
@@ -216,7 +219,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   direction='column'
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
                 >
-                  {buttons?.map(button => {
+                  {buttons?.map((button) => {
                     if (button.isHighlight) {
                       return (
                         <Button
@@ -233,7 +236,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                               setPageState(button.pageState);
                           }}
                         >
-                          {button.title}{button.icon}
+                          {button.title}
+                          {button.icon}
                         </Button>
                       );
                     }
@@ -273,8 +277,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       </Button>
                     ))}
                   </Wrapper>
-                ))
-              }
+                ))}
             </DrawerBody>
             {!isChildOpen && (
               <DrawerFooter>

@@ -16,7 +16,7 @@ export const Drawer = styled.div<DrawerProps>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: 1px 0 0 0 solid #e7eaeb;
   box-shadow: 2px -2px 5px rgb(0 0 0 / 6%);
   border-radius: 26px 26px 0px 0px;
@@ -100,5 +100,5 @@ export const DragBar = styled.div`
   margin-left: auto;
   margin-right: auto;
   border-radius: 7px;
-  background: #CBD1D4;
+  background: #cbd1d4;
 `;

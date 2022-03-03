@@ -2,12 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 type FloatingLabelInputProps = {
-  value: string,
-  placeholder: string,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  value: string;
+  placeholder: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>((props, ref) => (
+const FloatingLabelInput = React.forwardRef<
+  HTMLInputElement,
+  FloatingLabelInputProps
+>((props, ref) => (
   <Container>
     <Input
       ref={ref}
@@ -19,7 +22,6 @@ const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInput
     <Label>{props.placeholder}</Label>
   </Container>
 ));
-
 
 export default FloatingLabelInput;
 
@@ -33,7 +35,7 @@ const Container = styled.div`
 `;
 
 const Label = styled.label`
-  color: #98A3AA;
+  color: #98a3aa;
   order: 1;
   position: absolute;
   pointer-events: none;
@@ -51,19 +53,19 @@ const Input = styled.input`
   color: #000;
   order: 2;
   width: 100%;
-  background: #F4F4F4;
+  background: #f4f4f4;
   &:focus {
     outline: 0;
-    background: #FFFFFF;
-    border: 1px solid #98A3AA;
+    background: #ffffff;
+    border: 1px solid #98a3aa;
   }
   &:not(:focus) {
     color: transparent;
   }
   &:focus + ${Label} {
-    color: #98A3AA;
+    color: #98a3aa;
     opacity: 1;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 20px;
     padding: 1px 6px;
     transform: scale(0.7) translate3d(30px, -12px, 0);
