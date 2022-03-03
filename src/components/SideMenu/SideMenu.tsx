@@ -24,7 +24,7 @@ function usePrevious<T>(value: T) {
   }, [value]);
 
   return ref.current;
-};
+}
 
 const SideMenu: React.FC = () => {
   const {
@@ -34,7 +34,7 @@ const SideMenu: React.FC = () => {
     isMenuOpen,
     setIsMenuOpen,
     logEvent,
-    appTheme
+    appTheme,
   } = useGlobal();
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
   const previousUser = usePrevious(user);
@@ -57,7 +57,7 @@ const SideMenu: React.FC = () => {
   useEffect(() => {
     if (previousUser && !user) {
       history.push(RoutesHashMap.Login.path);
-    };
+    }
   }, [previousUser, user, history]);
 
   const handleLogoutButtonClicked = useCallback(() => {
@@ -90,7 +90,10 @@ const SideMenu: React.FC = () => {
           </span>
           <nav>
             {signedIn ? (
-              <Link to={RoutesHashMap.Profile.path} onClick={() => setIsMenuOpen(false)}>
+              <Link
+                to={RoutesHashMap.Profile.path}
+                onClick={() => setIsMenuOpen(false)}
+              >
                 {t('myProfile')}
                 <Profile />
               </Link>

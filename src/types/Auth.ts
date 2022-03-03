@@ -1,4 +1,4 @@
 export enum ProviderName {
   Facebook = 'facebook',
-  Google = 'google'
-};
+  Google = 'google',
+}

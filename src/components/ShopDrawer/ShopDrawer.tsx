@@ -313,8 +313,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   {isValidCombo === null
                     ? t('checkoutHint.chooseOptions')
                     : isValidCombo === false
-                      ? t('checkoutHint.comboUnavailable')
-                      : ''}
+                    ? t('checkoutHint.comboUnavailable')
+                    : ''}
                 </p>
               </Text>
             )}

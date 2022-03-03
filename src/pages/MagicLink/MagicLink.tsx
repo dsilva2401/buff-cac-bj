@@ -13,15 +13,24 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 
 const MagicLink = () => {
-  const { user, setUser, signInRedirect, setSignInRedirect, setMagicPayload, setMagicAction } = useGlobal();
+  const {
+    user,
+    setUser,
+    signInRedirect,
+    setSignInRedirect,
+    setMagicPayload,
+    setMagicAction,
+  } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
 
   const auth = getAuth();
-  const location = useLocation()
+  const location = useLocation();
   const history = useHistory();
 
-  const { email, isNewUser, action, productSlug, payload } = qs.parse(location.search);
+  const { email, isNewUser, action, productSlug, payload } = qs.parse(
+    location.search
+  );
 
   useEffect(() => {
     if (payload) {
@@ -65,7 +74,15 @@ const MagicLink = () => {
         }
       }
     }
-  }, [user, history, isNewUser, signInRedirect, setSignInRedirect, action, productSlug]);
+  }, [
+    user,
+    history,
+    isNewUser,
+    signInRedirect,
+    setSignInRedirect,
+    action,
+    productSlug,
+  ]);
 
   useEffect(() => {
     if (isSignInWithEmailLink(auth, window.location.href)) {

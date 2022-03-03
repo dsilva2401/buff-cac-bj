@@ -4,20 +4,24 @@ import Wrapper from 'components/Wrapper';
 const HtmlWrapper = styled(Wrapper)`
   animation: fade-in 0.6s ease-in-out forwards;
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   & .ql-size-large {
     cursor: pointer;
     font-weight: 500 !important;
     font-size: 18px !important;
-    color: #FFFFFF !important;
+    color: #ffffff !important;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 20px auto 0;
     height: 52px;
-    background: #0A0B0A;
+    background: #0a0b0a;
     border-radius: 50px;
     text-decoration: none !important;
   }
@@ -27,7 +31,7 @@ const HtmlWrapper = styled(Wrapper)`
     margin: 0;
     padding: 0;
     strong {
-      color: #98A3AA;
+      color: #98a3aa;
       margin: 0;
       padding: 0;
     }

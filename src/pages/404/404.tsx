@@ -20,7 +20,11 @@ const FourZeroFour: React.FC = () => {
   const menuButton = useMemo(
     () => (
       <Wrapper width='100%' justifyContent='flex-end'>
-        <IconButton variant='dark' iconName='menu' onClick={() => setIsMenuOpen(true)} />
+        <IconButton
+          variant='dark'
+          iconName='menu'
+          onClick={() => setIsMenuOpen(true)}
+        />
       </Wrapper>
     ),
     [setIsMenuOpen]
@@ -57,7 +61,12 @@ const FourZeroFour: React.FC = () => {
           justifyContent='flex-end'
           padding='0 2rem 5rem 2rem'
         >
-          <Wrapper gap='1.875rem' direction='column' alignItems='center' alignSelf='flex-end'>
+          <Wrapper
+            gap='1.875rem'
+            direction='column'
+            alignItems='center'
+            alignSelf='flex-end'
+          >
             <h3>{t('message')}</h3>
             <Button
               squared

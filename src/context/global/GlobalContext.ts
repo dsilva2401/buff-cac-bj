@@ -60,10 +60,10 @@ export type GlobalContextProps = {
   logEvent: (
     payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
   ) => Promise<any>;
-  magicAction: MAGIC_ACTION,
-  setMagicAction: (magicAction: MAGIC_ACTION) => void,
-  magicPayload: any,
-  setMagicPayload: (payload: any) => void
+  magicAction: MAGIC_ACTION;
+  setMagicAction: (magicAction: MAGIC_ACTION) => void;
+  magicPayload: any;
+  setMagicPayload: (payload: any) => void;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -105,7 +105,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   magicAction: MAGIC_ACTION.REDIRECT,
   setMagicAction: (magicAction: MAGIC_ACTION) => {},
   magicPayload: {},
-  setMagicPayload: (payload: any) => {}
+  setMagicPayload: (payload: any) => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

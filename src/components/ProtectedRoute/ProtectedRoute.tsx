@@ -14,12 +14,12 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
         <LoadingIndicator />
       </Wrapper>
     );
-  };
+  }
   if (user) {
     return <Route {...props} />;
-  };
+  }
 
   return <Redirect to={RoutesHashMap.Login.Path} />;
-}
+};
 
 export default ProtectedRoute;

@@ -8,9 +8,12 @@ import Text from 'components/Text';
 type ModuleWrapperProps = {
   children: any;
   drawerTitle?: string | React.ReactNode;
-}
+};
 
-const ModuleWrapper: React.FC<ModuleWrapperProps> = ({ drawerTitle, children }) => {
+const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
+  drawerTitle,
+  children,
+}) => {
   const [headerRef, { height }] = useElementSize();
   const { retractDrawer } = useGlobal();
 
@@ -33,7 +36,9 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({ drawerTitle, children }) 
           borderRadius='26px'
           background='#FFFFFF'
         >
-          {typeof drawerTitle === 'object' ? drawerTitle : (
+          {typeof drawerTitle === 'object' ? (
+            drawerTitle
+          ) : (
             <Text
               fontSize='1rem'
               fontWeight='600'

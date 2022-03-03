@@ -85,8 +85,8 @@ export const resources = {
             part2: ' and accept ',
             brijBrand: " Brij's ",
             mulberryAndBrijBrand: " mulberry & Brij's ",
-            link: 'Terms & Conditions'
-          }
+            link: 'Terms & Conditions',
+          },
         },
         warrantyDrawer: {
           warrantyHeading: 'Manufacturer Warranty',

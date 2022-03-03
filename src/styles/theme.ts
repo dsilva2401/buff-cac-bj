@@ -1,20 +1,20 @@
 export type ThemeType = {
-  primary: string,
-  secondary: string,
-  background: string,
+  primary: string;
+  secondary: string;
+  background: string;
   button: {
-    primary: string,
-    secondary: string,
-    disabled: string,
-    warning: string,
-    border: string,
-  },
+    primary: string;
+    secondary: string;
+    disabled: string;
+    warning: string;
+    border: string;
+  };
   toast: {
-    info: string,
-    success: string,
-    error: string,
-    warn: string,
-  }
+    info: string;
+    success: string;
+    error: string;
+    warn: string;
+  };
 };
 
 export const theme: ThemeType = {
@@ -33,5 +33,5 @@ export const theme: ThemeType = {
     success: '#25AE88',
     error: '#FD6157',
     warn: '#FE931E',
-  }
+  },
 };

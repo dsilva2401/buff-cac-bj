@@ -23,14 +23,16 @@ interface UserUpdatePayload {
 }
 
 interface PersonalDetailsProps {
-  onPersonalDetailsUpdate?: () => void
+  onPersonalDetailsUpdate?: () => void;
 }
 
 const Profile: React.FC<PersonalDetailsProps> = ({
-  onPersonalDetailsUpdate = () => { }
+  onPersonalDetailsUpdate = () => {},
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'profile' });
-  const { t: personalDetailsTranslation } = useTranslation('translation', { keyPrefix: 'personalDetails' });
+  const { t: personalDetailsTranslation } = useTranslation('translation', {
+    keyPrefix: 'personalDetails',
+  });
   const { user, personalDetails } = useGlobal();
   const history = useHistory();
 
@@ -41,20 +43,18 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>('');
 
   const onSuccess = useCallback(() => {
-    showToast({ message: t('updateToastMessage'), type: 'success' })
+    showToast({ message: t('updateToastMessage'), type: 'success' });
     onPersonalDetailsUpdate();
-  }, [onPersonalDetailsUpdate, t])
+  }, [onPersonalDetailsUpdate, t]);
 
-  const [updateUser, loading] = useAPI<UserUpdatePayload>(
-    {
-      method: 'PUT',
-      endpoint: 'auth/update',
-      onSuccess,
-      onError: (error) => {
-        showToast({ message: error, type: 'error' })
-      }
-    }
-  );
+  const [updateUser, loading] = useAPI<UserUpdatePayload>({
+    method: 'PUT',
+    endpoint: 'auth/update',
+    onSuccess,
+    onError: (error) => {
+      showToast({ message: error, type: 'error' });
+    },
+  });
 
   useEffect(() => {
     if (profile) {
@@ -91,8 +91,19 @@ const Profile: React.FC<PersonalDetailsProps> = ({
           padding='2rem 1rem'
           gap='1.2rem'
         >
-          <Wrapper width='100%' alignItems='center' direction='column' margin='2rem 0' gap='1.2rem'>
-            <Wrapper width='40%' justifyContent='center' alignItems='center' margin='0 0 1.25rem 0'>
+          <Wrapper
+            width='100%'
+            alignItems='center'
+            direction='column'
+            margin='2rem 0'
+            gap='1.2rem'
+          >
+            <Wrapper
+              width='40%'
+              justifyContent='center'
+              alignItems='center'
+              margin='0 0 1.25rem 0'
+            >
               <Avatar>
                 <Text color={theme.primary} fontSize='3rem'>
                   <h1>
@@ -133,7 +144,9 @@ const Profile: React.FC<PersonalDetailsProps> = ({
                   <Input
                     type='tel'
                     pattern='[+-]?\d+(?:[.,]\d+)?'
-                    placeholder={personalDetailsTranslation('phoneNumberInputPlaceholder')}
+                    placeholder={personalDetailsTranslation(
+                      'phoneNumberInputPlaceholder'
+                    )}
                     margin='0 0 1rem'
                   />
                 )}

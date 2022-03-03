@@ -14,19 +14,28 @@ const Button = styled.button<ButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => (props.variant === 'dark' ? props.appTheme || theme.button.primary : theme.button.secondary)};
+  background-color: ${(props) =>
+    props.variant === 'dark'
+      ? props.appTheme || theme.button.primary
+      : theme.button.secondary};
   box-shadow: ${(props) =>
     props.variant === 'dark' ? '' : '0px 1px 4px rgba(0, 0, 0, 0.12)'};
-  color: ${(props) => (props.variant === 'dark' ? theme.button.secondary : props.appTheme || theme.button.primary)};
+  color: ${(props) =>
+    props.variant === 'dark'
+      ? theme.button.secondary
+      : props.appTheme || theme.button.primary};
   transition: all 0.3s ease;
 
   svg {
-    fill: ${(props) => (props.variant === 'dark' ? theme.button.secondary : props.appTheme || theme.button.primary)};
+    fill: ${(props) =>
+      props.variant === 'dark'
+        ? theme.button.secondary
+        : props.appTheme || theme.button.primary};
   }
 
   &:active {
     box-shadow: ${(props) =>
-    props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
+      props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
   }
 `;
 

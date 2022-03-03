@@ -102,7 +102,7 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
           })}
           <Route>
             <PageWrapper>
-              <Redirect to="/app/404" />
+              <Redirect to='/app/404' />
             </PageWrapper>
           </Route>
         </Switch>

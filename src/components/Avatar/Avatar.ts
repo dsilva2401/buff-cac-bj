@@ -8,7 +8,7 @@ export const Avatar = styled.div`
   align-items: center;
   border-radius: 50%;
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
-  background: #F4F4F4;
+  background: #f4f4f4;
   overflow: hidden;
   img {
     width: 100%;

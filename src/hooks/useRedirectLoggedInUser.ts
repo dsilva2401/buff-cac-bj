@@ -4,7 +4,10 @@ import { RoutesHashMap } from 'routes';
 import { useHistory } from 'react-router-dom';
 import { useGlobal } from 'context/global/GlobalContext';
 
-const useRedirectLoggedInUser = (user?: User | null, isNewEmailUser?: boolean) => {
+const useRedirectLoggedInUser = (
+  user?: User | null,
+  isNewEmailUser?: boolean
+) => {
   const history = useHistory();
   const { signInRedirect, setSignInRedirect } = useGlobal();
 
@@ -19,13 +22,13 @@ const useRedirectLoggedInUser = (user?: User | null, isNewEmailUser?: boolean) =
       if (isNewEmailUser) {
         history.push(RoutesHashMap.PersonalDetails.path);
         return;
-      };
+      }
 
       let link = redirect.current || RoutesHashMap.Collection.path;
 
       if (redirect.current) {
         setSignInRedirect('');
-      };
+      }
 
       history.push(link);
     }

@@ -26,8 +26,8 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  onLogin = () => { },
-  isDrawer
+  onLogin = () => {},
+  isDrawer,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +41,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const [showPersonalDetailsForm, togglePersonalDetailsForm] = useState<boolean>(false);
+  const [showPersonalDetailsForm, togglePersonalDetailsForm] =
+    useState<boolean>(false);
 
   // get magic link header
   const {
@@ -52,10 +53,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
   } = useMagicLinkHandler(username);
 
   const validateEmail = (value: string) => {
-    if (validator.isEmail(value))
-      setEmailValidated(true);
+    if (validator.isEmail(value)) setEmailValidated(true);
     else setEmailValidated(false);
-  }
+  };
 
   const handleUsernameChanged = (value: string) => {
     setUsername(value);
@@ -85,12 +85,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   useEffect(() => {
-    if (emailRegistration && inputRef !== null)
-      inputRef.current?.focus();
-  }, [emailRegistration])
+    if (emailRegistration && inputRef !== null) inputRef.current?.focus();
+  }, [emailRegistration]);
 
   if (showPersonalDetailsForm) {
-    return <PersonalDetails onPersonalDetailsUpdate={onLogin} />
+    return <PersonalDetails onPersonalDetailsUpdate={onLogin} />;
   }
 
   return (
@@ -101,13 +100,19 @@ const LoginForm: React.FC<LoginFormProps> = ({
       justifyContent='flex-start'
       alignItems='center'
       overflow='hidden'
-      paddingTop={location.pathname === '/' || location.pathname === '' ? '2rem' : '0'}
+      paddingTop={
+        location.pathname === '/' || location.pathname === '' ? '2rem' : '0'
+      }
     >
       <Animated
         animationIn='slideInRight'
         animationOut='slideOutLeft'
-        animationInDuration={location.pathname === '/' || retractDrawer ? 0 : 300}
-        animationOutDuration={location.pathname === '/' || retractDrawer ? 0 : 300}
+        animationInDuration={
+          location.pathname === '/' || retractDrawer ? 0 : 300
+        }
+        animationOutDuration={
+          location.pathname === '/' || retractDrawer ? 0 : 300
+        }
         animationInDelay={location.pathname !== '/' && retractDrawer ? 200 : 0}
         animateOnMount
         isVisible={true}
@@ -154,16 +159,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 variant='light'
                 transition='0s'
                 appTheme={appTheme}
-                style={!emailRegistration ? { border: '0', color: '#000000' } : {}}
+                style={
+                  !emailRegistration ? { border: '0', color: '#000000' } : {}
+                }
                 onClick={() => {
-                  emailValidated ? handleLogin() : (
-                    emailRegistration ? showToast({ type: 'error', message: 'Invalid Email' })
-                      :
-                      toggleEmailRegistration(!emailRegistration)
-                  )
+                  emailValidated
+                    ? handleLogin()
+                    : emailRegistration
+                    ? showToast({ type: 'error', message: 'Invalid Email' })
+                    : toggleEmailRegistration(!emailRegistration);
                 }}
               >
-                {emailRegistration ? <EmailLogoPrimary fill={appTheme || theme.primary} /> : <EmailLogo />}
+                {emailRegistration ? (
+                  <EmailLogoPrimary fill={appTheme || theme.primary} />
+                ) : (
+                  <EmailLogo />
+                )}
                 {isDrawer ? t('registerWithEmail') : t('continueWithEmail')}
               </Button>
             )}

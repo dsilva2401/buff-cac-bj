@@ -9,7 +9,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  NullIcon
+  NullIcon,
 } from './styles';
 
 type TableProps = {
@@ -24,15 +24,23 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
     <Table>
       <TableHead>
         <TableRow>
-          {headers.map((header, index) =>
+          {headers.map((header, index) => (
             <TableCell
               key={header}
               theme={appTheme || theme.primary}
               edgecaseTop={header === 'mulberry'}
-              style={header !== 'mulberry' ? { boxShadow: `0px 1px 0px 0px ${appTheme || theme.primary}` } : {}}
+              style={
+                header !== 'mulberry'
+                  ? {
+                      boxShadow: `0px 1px 0px 0px ${appTheme || theme.primary}`,
+                    }
+                  : {}
+              }
             >
               <Text
-                color={header === 'mulberry' ? appTheme || theme.primary : 'black'}
+                color={
+                  header === 'mulberry' ? appTheme || theme.primary : 'black'
+                }
                 fontSize={index === 0 ? '1rem' : '0.75rem'}
                 textAlign={index === 0 ? 'left' : 'center'}
                 padding={index === 0 ? '0' : '0 0.5rem'}
@@ -41,7 +49,7 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
                 <p>{header}</p>
               </Text>
             </TableCell>
-          )}
+          ))}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -66,8 +74,15 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
             >
               <TableCheckmark fill={appTheme || theme.primary} />
             </TableCell>
-            <TableCell lastRow={index === tableData.length - 1} theme={appTheme || theme.primary}>
-              {index === 0 ? <TableCheckmark fill={appTheme || theme.primary} /> : <NullIcon />}
+            <TableCell
+              lastRow={index === tableData.length - 1}
+              theme={appTheme || theme.primary}
+            >
+              {index === 0 ? (
+                <TableCheckmark fill={appTheme || theme.primary} />
+              ) : (
+                <NullIcon />
+              )}
             </TableCell>
           </TableRow>
         ))}
