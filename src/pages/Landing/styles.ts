@@ -8,8 +8,8 @@ export const LandingHtmlWrapper = styled.div<LandingHtmlWrapperProps>`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin: 2.875rem 0;
+  margin: 5rem 0;
+  gap: 0.25rem;
   span,
   h1,
   h2,
@@ -17,9 +17,18 @@ export const LandingHtmlWrapper = styled.div<LandingHtmlWrapperProps>`
   h4,
   h5,
   h6,
-  p,
   label {
     color: #1c3965;
+    opacity: 0.9;
+  }
+  p {
+    opacity: 0.9;
+    color: #1c3965;
+    font-size: 18px;
+  }
+  strong {
+    color: #000000;
+    font-weight: 700;
   }
   ul {
     list-style: none;

@@ -1,20 +1,20 @@
+import React, { useEffect, useState } from 'react';
+import { LandingPageType } from 'types/LandingPageType';
+import { LandingHtmlWrapper } from './styles';
+import { Helmet } from 'react-helmet';
+import { useAPI } from 'utils/api';
+import Image from 'components/Image';
+import Button from 'components/Button';
+import topStripe from 'assets/images/svg/top-stripe.svg';
 import placeholder from 'assets/images/png/placeholder.png';
 import bottomStripe from 'assets/images/svg/bottom-stripe.svg';
-import horizontalStripe from 'assets/images/svg/horizontal-stripe.svg';
-import topStripe from 'assets/images/svg/top-stripe.svg';
-import viscosoftBackground from 'assets/images/svg/viscosoft-background.svg';
 import viscosoftLogo from 'assets/logos/svg/viscosoft-logo.svg';
-import Button from 'components/Button';
-import Image from 'components/Image';
+import horizontalStripe from 'assets/images/svg/horizontal-stripe.svg';
+import viscosoftBackground from 'assets/images/svg/viscosoft-background.svg';
 import LoadingIndicator from 'components/LoadingIndicator';
-import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
 import ProgressiveImage from 'react-progressive-image';
-import { LandingPageType } from 'types/LandingPageType';
-import { useAPI } from 'utils/api';
-import { LandingHtmlWrapper } from './styles';
+import Wrapper from 'components/Wrapper';
+import Text from 'components/Text';
 
 const Landing: React.FC = () => {
   const [pageData, setPageData] = useState<LandingPageType | null>(null);
@@ -91,7 +91,7 @@ const Landing: React.FC = () => {
             width='100%'
             height='100%'
             gap='0.75rem'
-            padding='1.5rem'
+            padding='1.125rem'
             direction='column'
             position='relative'
             alignItems='flex-start'
@@ -102,13 +102,15 @@ const Landing: React.FC = () => {
                 __html: pageData[0]?.brand[0]?.details,
               }}
             />
+
             {pageData[0]?.links?.map((node) => (
               <Button
                 key={node.title}
                 variant='light'
                 onClick={() => window.open(node.url, '_blank')}
+                style={{ border: '1px solid #1C3965' }}
               >
-                <Text color='#1C3965'>
+                <Text color='#1C3965' fontWeight='600'>
                   <p>{node.title}</p>
                 </Text>
               </Button>
