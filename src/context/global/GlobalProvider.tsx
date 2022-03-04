@@ -88,16 +88,16 @@ export const GlobalProvider: React.FC = ({ children }) => {
     token,
   } = useUser();
 
-  useEffect(() => {
-    if (user && window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition((location) => {
-        setUserLocation({
-          latitude: location?.coords?.latitude,
-          longitude: location?.coords?.longitude,
-        });
-      });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user && window.navigator.geolocation) {
+  //     window.navigator.geolocation.getCurrentPosition((location) => {
+  //       setUserLocation({
+  //         latitude: location?.coords?.latitude,
+  //         longitude: location?.coords?.longitude,
+  //       });
+  //     });
+  //   }
+  // }, [user]);
 
   const [productDetails, reFetchProduct, productLoading] = useProductDetails(
     slug,
