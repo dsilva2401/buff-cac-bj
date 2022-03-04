@@ -18,7 +18,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
   description,
   close,
 }) => {
-  const { appTheme } = useGlobal();
+  const { brandTheme } = useGlobal();
   return (
     <>
       <DrawerMask
@@ -27,7 +27,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
         style={{ top: '-97%', backgroundColor: 'transparent' }}
         onClick={close}
       />
-      <Drawer appTheme={appTheme} isOpen={isOpen}>
+      <Drawer brandTheme={brandTheme} isOpen={isOpen}>
         {isOpen && (
           <>
             <CheckAnimation isDrawerOpen={isOpen} />

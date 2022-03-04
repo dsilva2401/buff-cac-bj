@@ -219,7 +219,13 @@ const ProductDetails: React.FC = () => {
             setShowAuthPage(module?.locked);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
-              window.open(`http://${moduleData?.link}`, '_blank');
+              window.open(
+                moduleData?.link.includes('https://') ||
+                  moduleData?.link.includes('http://')
+                  ? moduleData?.link
+                  : `https://${moduleData?.link}`,
+                '_blank'
+              );
             } else changeDrawerPage(x);
             logEvent({
               eventType: 'ENGAGEMENTS',
@@ -674,6 +680,7 @@ const ProductDetails: React.FC = () => {
         justifyContent='space-between'
         overflow='auto'
         position='relative'
+        background={details?.brand.customBgColor || ''}
       >
         <PageHeader
           logo={logo(details?.brand?.image ?? '')}

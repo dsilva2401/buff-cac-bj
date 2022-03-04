@@ -31,7 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const inputRef = useRef<HTMLInputElement>(null);
-  const { retractDrawer, appTheme } = useGlobal();
+  const { retractDrawer, brandTheme } = useGlobal();
   const getErrorMessage = useFirebaseError();
   const location = useLocation();
   const auth = getAuth();
@@ -158,7 +158,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <Button
                 variant='light'
                 transition='0s'
-                appTheme={appTheme}
+                brandTheme={brandTheme}
                 style={
                   !emailRegistration ? { border: '0', color: '#000000' } : {}
                 }
@@ -171,7 +171,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 }}
               >
                 {emailRegistration ? (
-                  <EmailLogoPrimary fill={appTheme || theme.primary} />
+                  <EmailLogoPrimary fill={brandTheme || theme.primary} />
                 ) : (
                   <EmailLogo />
                 )}

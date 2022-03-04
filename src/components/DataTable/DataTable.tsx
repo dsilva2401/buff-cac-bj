@@ -18,7 +18,7 @@ type TableProps = {
 };
 
 const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
-  const { appTheme } = useGlobal();
+  const { brandTheme } = useGlobal();
 
   return (
     <Table>
@@ -27,19 +27,21 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
           {headers.map((header, index) => (
             <TableCell
               key={header}
-              theme={appTheme || theme.primary}
+              theme={brandTheme || theme.primary}
               edgecaseTop={header === 'mulberry'}
               style={
                 header !== 'mulberry'
                   ? {
-                      boxShadow: `0px 1px 0px 0px ${appTheme || theme.primary}`,
+                      boxShadow: `0px 1px 0px 0px ${
+                        brandTheme || theme.primary
+                      }`,
                     }
                   : {}
               }
             >
               <Text
                 color={
-                  header === 'mulberry' ? appTheme || theme.primary : 'black'
+                  header === 'mulberry' ? brandTheme || theme.primary : 'black'
                 }
                 fontSize={index === 0 ? '1rem' : '0.75rem'}
                 textAlign={index === 0 ? 'left' : 'center'}
@@ -58,7 +60,7 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
             <TableCell
               width='60%'
               key={title}
-              theme={appTheme || theme.primary}
+              theme={brandTheme || theme.primary}
               padding='0.5rem 1rem 0.5rem 0rem'
               lastRow={index === tableData.length - 1}
             >
@@ -68,18 +70,18 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
             </TableCell>
             <TableCell
               featured
-              theme={appTheme || theme.primary}
+              theme={brandTheme || theme.primary}
               lastRow={index === tableData.length - 1}
               edgecaseBottom={index === tableData.length - 1}
             >
-              <TableCheckmark fill={appTheme || theme.primary} />
+              <TableCheckmark fill={brandTheme || theme.primary} />
             </TableCell>
             <TableCell
               lastRow={index === tableData.length - 1}
-              theme={appTheme || theme.primary}
+              theme={brandTheme || theme.primary}
             >
               {index === 0 ? (
-                <TableCheckmark fill={appTheme || theme.primary} />
+                <TableCheckmark fill={brandTheme || theme.primary} />
               ) : (
                 <NullIcon />
               )}

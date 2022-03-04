@@ -38,14 +38,13 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   warrantyData,
   warrantyId,
 }) => {
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(
-    !warrantyData?.activated
-  );
+  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
+  const [activatingWarranty, setActivatingWarranty] = useState<boolean>(true);
 
-  const { loading, activateWarranty, slug, appTheme } = useGlobal();
+  const { loading, activateWarranty, slug, brandTheme } = useGlobal();
   const [tableRef, { height }] = useElementSize();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
@@ -70,23 +69,27 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
       activateWarranty({
         warrantyId,
         tag: slug,
-      }).then(() => {
-        setSuccessDrawer(true);
-        setTimeout(() => {
-          setSuccessDrawer(false);
-        }, 3000);
       });
     };
     if (!warrantyData?.activated) {
+      setActivatingWarranty(true);
       checkAndActivateWarranty();
+      setActivatingWarranty(false);
     }
   }, [warrantyData?.activated, slug, warrantyId, activateWarranty]);
+
+  useEffect(() => {
+    if (warrantyData?.activated) {
+      setSuccessDrawer(true);
+    }
+  }, [warrantyData?.activated]);
 
   useEffect(() => {
     if (successDrawer) {
       setTimeout(() => {
         setIsDetailsOpen(false);
-      }, 1000);
+        setSuccessDrawer(false);
+      }, 3000);
     }
   }, [successDrawer, closePage]);
 
@@ -117,12 +120,12 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         <Checkmark
           width='15px'
           height='15px'
-          fill={expired ? '#FD6157' : appTheme || theme.primary}
+          fill={expired ? '#FD6157' : brandTheme || theme.primary}
         />
         <Text
           fontWeight='600'
           fontSize='0.875rem'
-          color={expired ? '#FD6157' : appTheme || theme.primary}
+          color={expired ? '#FD6157' : brandTheme || theme.primary}
         >
           <p>{title}</p>
         </Text>
@@ -194,29 +197,15 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   );
 
   if (loading && !successDrawer) {
-    return <LoadingIndicator />;
-  }
-
-  if (successDrawer) {
     return (
-      <Animated
-        animationIn='slideInUp'
-        animationOut='slideOutDown'
-        animationInDuration={400}
-        animationOutDuration={0}
-        isVisible={successDrawer}
-        style={{
-          width: 'calc(100% + 2rem)',
-          height: '100%',
-        }}
+      <Wrapper
+        width='100%'
+        height='100%'
+        alignItems='center'
+        justifyContent='center'
       >
-        <SuccessDrawer
-          isOpen={true}
-          title={t('successDrawer.title')}
-          description={t('successDrawer.description')}
-          close={closeSuccess}
-        />
-      </Animated>
+        <LoadingIndicator />
+      </Wrapper>
     );
   }
 
@@ -228,184 +217,207 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
         warrantyActivated={warrantyData?.activated}
         confirmWarranty={confirmWarranty}
       />
-      <ModuleWrapper
-        drawerTitle={
-          !warrantyData?.mulberry ? (
-            drawerTitle
-          ) : (
-            <Wrapper width='100%'>
-              <MulberryLogo
-                width='7.2rem'
-                style={{
-                  margin: '1.25rem 4rem 1.25rem 1.75rem',
-                }}
+      <SuccessDrawer
+        isOpen={successDrawer && !activatingWarranty && !loading}
+        title={t('successDrawer.title')}
+        description={t('successDrawer.description')}
+        close={closeSuccess}
+      />
+      {!loading ? (
+        <ModuleWrapper
+          drawerTitle={
+            !warrantyData?.mulberry ? (
+              drawerTitle
+            ) : (
+              <Wrapper width='100%'>
+                <MulberryLogo
+                  width='7.2rem'
+                  style={{
+                    margin: '1.25rem 4rem 1.25rem 1.75rem',
+                  }}
+                />
+              </Wrapper>
+            )
+          }
+        >
+          <HtmlWrapper
+            width='100%'
+            direction='column'
+            dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
+            onClick={() => setSuccessDrawer(true)}
+          />
+          {warrantyData?.mulberry && (
+            <Wrapper width='100%' direction='column'>
+              <WarrantyInfo
+                title={
+                  validateDate(
+                    new Date(
+                      dateFormat(
+                        warrantyData?.mulberry?.expirationDate,
+                        'mmmm d, yyyy'
+                      )
+                    )
+                  )
+                    ? t('expiredMulberryWarrantyHeading')
+                    : t('mulberryWarrantyHeading')
+                }
+                issueDate={dateFormat(
+                  warrantyData!.mulberry!.issueDate,
+                  'mmmm d, yyyy'
+                )}
+                expiryDate={dateFormat(
+                  warrantyData!.mulberry!.expirationDate,
+                  'mmmm d, yyyy'
+                )}
+                expired={validateDate(
+                  new Date(
+                    dateFormat(
+                      warrantyData!.mulberry!.expirationDate,
+                      'mmmm d, yyyy'
+                    )
+                  )
+                )}
               />
+              <Wrapper
+                width='100%'
+                gap='0.5rem'
+                cursor='pointer'
+                alignItems='center'
+                justifyContent='center'
+                onClick={() => {
+                  toggleCoverageTable(!showCoverageTable);
+                  toggleAnimateTable(true);
+                }}
+              >
+                <Text
+                  fontSize='1rem'
+                  fontWeight='600'
+                  color='#202029'
+                  textDecoration='underline'
+                >
+                  <span>{t('viewDetails')}</span>
+                </Text>
+                <Arrow
+                  style={{
+                    transform: showCoverageTable
+                      ? 'rotate(0deg)'
+                      : 'rotate(180deg)',
+                    transition: '0.4s',
+                  }}
+                />
+              </Wrapper>
+              <Wrapper overflow='hidden' margin='0 0 1.25rem 0'>
+                <Wrapper paddingTop='1px'>
+                  <Wrapper
+                    ref={tableRef}
+                    height='100%'
+                    gap='0.5rem'
+                    transition='0.3s'
+                    paddingTop='2rem'
+                    direction='column'
+                    style={{
+                      transform: showCoverageTable
+                        ? 'translateY(0)'
+                        : 'translateY(-101%)',
+                    }}
+                  >
+                    <DataTable
+                      headers={["What's Covered", 'mulberry', 'Manu. Warranty']}
+                      tableData={warrantyData!.mulberry!.coverages}
+                    />
+                    <Wrapper
+                      cursor='pointer'
+                      alignItems='center'
+                      alignSelf='flex-start'
+                      justifyContent='flex-start'
+                      onClick={() =>
+                        window.open(
+                          warrantyData!.mulberry!.policyTermsUrl,
+                          '_blank'
+                        )
+                      }
+                    >
+                      <ExternalLink
+                        fill={brandTheme || theme.primary}
+                        style={{
+                          margin: '-0.05rem 0.25rem 0 0',
+                        }}
+                      />
+                      <Text
+                        fontSize='0.75rem'
+                        fontWeight='500'
+                        color={brandTheme || theme.primary}
+                      >
+                        <p>{t('fullTermsLink')}</p>
+                      </Text>
+                    </Wrapper>
+                    <Text fontSize='0.75rem'>
+                      <p>
+                        To extend protection or file a claim, click the account
+                        activation link that was sent to your email from
+                        Mulberry. You can also reach out to Mulberry support{' '}
+                        <span
+                          style={{
+                            color: brandTheme || theme.primary,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() =>
+                            window.open('mailto:help@getmulberry.com')
+                          }
+                        >
+                          here
+                        </span>
+                        .
+                      </p>
+                    </Text>
+                  </Wrapper>
+                </Wrapper>
+              </Wrapper>
             </Wrapper>
-          )
-        }
-      >
-        <HtmlWrapper
-          width='100%'
-          direction='column'
-          dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
-        />
-        {warrantyData?.mulberry && (
-          <Wrapper width='100%' direction='column'>
+          )}
+          <Wrapper
+            width='100%'
+            direction='column'
+            transition={animateTable ? '0.3s' : '0'}
+            style={{
+              transform: !showCoverageTable
+                ? `translateY(-${height}px)`
+                : 'translateY(0)',
+            }}
+          >
             <WarrantyInfo
               title={
                 validateDate(
                   new Date(
-                    dateFormat(
-                      warrantyData?.mulberry?.expirationDate,
-                      'mmmm d, yyyy'
-                    )
+                    dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
                   )
                 )
-                  ? t('expiredMulberryWarrantyHeading')
-                  : t('mulberryWarrantyHeading')
+                  ? t('expiredWarrantyHeading')
+                  : t('warrantyHeading')
               }
-              issueDate={dateFormat(
-                warrantyData!.mulberry!.issueDate,
-                'mmmm d, yyyy'
-              )}
+              issueDate={dateFormat(warrantyData.purchaseDate, 'mmmm d, yyyy')}
               expiryDate={dateFormat(
-                warrantyData!.mulberry!.expirationDate,
+                warrantyData.expirationDate,
                 'mmmm d, yyyy'
               )}
               expired={validateDate(
                 new Date(
-                  dateFormat(
-                    warrantyData!.mulberry!.expirationDate,
-                    'mmmm d, yyyy'
-                  )
+                  dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
                 )
               )}
             />
-            <Wrapper
-              width='100%'
-              gap='0.5rem'
-              cursor='pointer'
-              alignItems='center'
-              justifyContent='center'
-              onClick={() => {
-                toggleCoverageTable(!showCoverageTable);
-                toggleAnimateTable(true);
-              }}
-            >
-              <Text
-                fontSize='1rem'
-                fontWeight='600'
-                color='#202029'
-                textDecoration='underline'
-              >
-                <span>{t('viewDetails')}</span>
-              </Text>
-              <Arrow
-                style={{
-                  transform: showCoverageTable
-                    ? 'rotate(0deg)'
-                    : 'rotate(180deg)',
-                  transition: '0.4s',
-                }}
-              />
-            </Wrapper>
-            <Wrapper overflow='hidden' margin='0 0 1.25rem 0'>
-              <Wrapper paddingTop='1px'>
-                <Wrapper
-                  ref={tableRef}
-                  height='100%'
-                  gap='0.5rem'
-                  transition='0.3s'
-                  paddingTop='2rem'
-                  direction='column'
-                  style={{
-                    transform: showCoverageTable
-                      ? 'translateY(0)'
-                      : 'translateY(-101%)',
-                  }}
-                >
-                  <DataTable
-                    headers={["What's Covered", 'mulberry', 'Manu. Warranty']}
-                    tableData={warrantyData!.mulberry!.coverages}
-                  />
-                  <Wrapper
-                    cursor='pointer'
-                    alignItems='center'
-                    alignSelf='flex-start'
-                    justifyContent='flex-start'
-                    onClick={() =>
-                      window.open(
-                        warrantyData!.mulberry!.policyTermsUrl,
-                        '_blank'
-                      )
-                    }
-                  >
-                    <ExternalLink
-                      fill={appTheme || theme.primary}
-                      style={{
-                        margin: '-0.05rem 0.25rem 0 0',
-                      }}
-                    />
-                    <Text
-                      fontSize='0.75rem'
-                      fontWeight='500'
-                      color={appTheme || theme.primary}
-                    >
-                      <p>{t('fullTermsLink')}</p>
-                    </Text>
-                  </Wrapper>
-                  <Text fontSize='0.75rem'>
-                    <p>
-                      To extend protection or file a claim, click the account
-                      activation link that was sent to your email from Mulberry.
-                      You can also reach out to Mulberry support{' '}
-                      <span
-                        style={{
-                          color: appTheme || theme.primary,
-                          cursor: 'pointer',
-                        }}
-                        onClick={() =>
-                          window.open('mailto:help@getmulberry.com')
-                        }
-                      >
-                        here
-                      </span>
-                      .
-                    </p>
-                  </Text>
-                </Wrapper>
-              </Wrapper>
-            </Wrapper>
           </Wrapper>
-        )}
+        </ModuleWrapper>
+      ) : (
         <Wrapper
           width='100%'
-          direction='column'
-          transition={animateTable ? '0.3s' : '0'}
-          style={{
-            transform: !showCoverageTable
-              ? `translateY(-${height}px)`
-              : 'translateY(0)',
-          }}
+          height='100%'
+          alignItems='center'
+          justifyContent='center'
         >
-          <WarrantyInfo
-            title={
-              validateDate(
-                new Date(
-                  dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
-                )
-              )
-                ? t('expiredWarrantyHeading')
-                : t('warrantyHeading')
-            }
-            issueDate={dateFormat(warrantyData.purchaseDate, 'mmmm d, yyyy')}
-            expiryDate={dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')}
-            expired={validateDate(
-              new Date(dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy'))
-            )}
-          />
+          <LoadingIndicator />
         </Wrapper>
-      </ModuleWrapper>
+      )}
     </>
   );
 };

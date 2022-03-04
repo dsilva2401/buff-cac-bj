@@ -44,7 +44,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  const { logEvent, appTheme } = useGlobal();
+  const { logEvent, brandTheme } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.shopDrawer',
   });
@@ -155,7 +155,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             position: 'absolute',
             color: '#fff',
             top: '-1px',
-            background: appTheme || theme.primary,
+            background: brandTheme || theme.primary,
             fontSize: '0.8rem',
             borderRadius: '0 0 15px 15px',
           }}
@@ -301,7 +301,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
             {isValidCombo ? (
               <Button
                 variant='dark'
-                appTheme={appTheme}
+                brandTheme={brandTheme}
                 onClick={handleCheckout}
                 disabled={!isValidCombo}
               >

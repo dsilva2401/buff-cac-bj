@@ -20,8 +20,8 @@ export type GlobalContextProps = {
   isMenuOpen: boolean;
   isPreviewMode: boolean;
   setIsPreviewMode: React.Dispatch<React.SetStateAction<boolean>>;
-  appTheme: string;
-  setAppTheme: React.Dispatch<React.SetStateAction<string>>;
+  brandTheme: string;
+  setBrandTheme: React.Dispatch<React.SetStateAction<string>>;
   appZoom: number;
   setAppZoom: React.Dispatch<React.SetStateAction<number>>;
   previewEvent: any;
@@ -59,7 +59,7 @@ export type GlobalContextProps = {
   setRetractDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   logEvent: (
     payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
-  ) => Promise<any>;
+  ) => Promise<any> | undefined;
   magicAction: MAGIC_ACTION;
   setMagicAction: (magicAction: MAGIC_ACTION) => void;
   magicPayload: any;
@@ -69,8 +69,8 @@ export type GlobalContextProps = {
 export const GlobalContext = createContext<GlobalContextProps>({
   isPreviewMode: false,
   setIsPreviewMode: () => {},
-  appTheme: '',
-  setAppTheme: () => {},
+  brandTheme: '',
+  setBrandTheme: () => {},
   appZoom: 1,
   setAppZoom: () => {},
   previewEvent: {},

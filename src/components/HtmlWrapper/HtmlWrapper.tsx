@@ -11,6 +11,9 @@ const HtmlWrapper = styled(Wrapper)`
       opacity: 1;
     }
   }
+  ul {
+    padding-left: 1.25rem;
+  }
   & .ql-size-large {
     cursor: pointer;
     font-weight: 500 !important;

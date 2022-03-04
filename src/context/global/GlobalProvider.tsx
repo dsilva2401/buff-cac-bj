@@ -75,7 +75,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     MAGIC_ACTION.REDIRECT
   );
   const [magicPayload, setMagicPayload] = useState<any>({});
-  const [appTheme, setAppTheme] = useState<string>(
+  const [brandTheme, setBrandTheme] = useState<string>(
     localStorage.getItem('accentColor') || theme.primary
   );
 
@@ -107,7 +107,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [collectionDetails, getCollection] = useCollection(token);
 
   useEffect(() => {
-    setAppTheme(
+    setBrandTheme(
       (window.location.pathname.includes(`c/${slug}`) &&
         localStorage.getItem('accentColor')) ||
         theme.primary
@@ -143,7 +143,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
             setAppZoom(event.data.zoom);
           }
           if (event && event.data && event.data.type === 'setAuthState') {
-            console.log('setAuthState', event.data.data);
             setPreviewAuthenticated(event.data.data);
           }
         },
@@ -182,8 +181,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPreviewEvent,
         isPreviewMode,
         setIsPreviewMode,
-        appTheme,
-        setAppTheme,
+        brandTheme,
+        setBrandTheme,
         appZoom,
         setAppZoom,
         previewAuthenticated,

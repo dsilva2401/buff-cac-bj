@@ -47,20 +47,14 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
         showToast({ message: 'First name is required', type: 'error' });
         return;
       }
-
       if (!details.lastName) {
         showToast({ message: 'Last name is required', type: 'error' });
         return;
       }
-
       updateUser(details);
     },
     [updateUser]
   );
-
-  useEffect(() => {
-    onPersonalDetailsUpdate();
-  }, []);
 
   return (
     <Wrapper

@@ -17,7 +17,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   onChange,
   limit,
 }) => {
-  const { appTheme } = useGlobal();
+  const { brandTheme } = useGlobal();
   const changeQuantity = (value: string, operation?: 'sum' | 'subtract') => {
     let currValue: number;
 
@@ -45,7 +45,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   return (
     <Wrapper gap='0.3rem'>
       <ControllerButton
-        theme={appTheme || theme.primary}
+        theme={brandTheme || theme.primary}
         disabled={Number(value) <= 1 ? true : false}
         onClick={() => changeQuantity(value, 'subtract')}
       >
@@ -57,7 +57,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
         onChange={({ target: { value } }) => changeQuantity(value)}
       />
       <ControllerButton
-        theme={appTheme || theme.primary}
+        theme={brandTheme || theme.primary}
         disabled={limit ? Number(value) >= limit : false}
         onClick={() => changeQuantity(value, 'sum')}
       >

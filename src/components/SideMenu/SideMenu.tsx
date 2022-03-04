@@ -34,7 +34,7 @@ const SideMenu: React.FC = () => {
     isMenuOpen,
     setIsMenuOpen,
     logEvent,
-    appTheme,
+    brandTheme,
   } = useGlobal();
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
   const previousUser = usePrevious(user);
@@ -81,7 +81,7 @@ const SideMenu: React.FC = () => {
         onClick={() => setIsMenuOpen(false)}
         zIndex={9}
       />
-      <Menu theme={appTheme} isMenuOpen={isMenuOpen}>
+      <Menu theme={brandTheme} isMenuOpen={isMenuOpen}>
         <div>
           <span>
             <button onClick={() => setIsMenuOpen(false)}>
@@ -109,7 +109,13 @@ const SideMenu: React.FC = () => {
             ) : null}
             {details && window.location.pathname === `/c/${slug}` && (
               <a
-                href={details?.brand?.website || ''}
+                href={
+                  (details?.brand?.website &&
+                    details?.brand?.website.includes('https://')) ||
+                  details?.brand?.website.includes('http://')
+                    ? details?.brand?.website
+                    : ''
+                }
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={() => {

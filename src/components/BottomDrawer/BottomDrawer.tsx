@@ -78,7 +78,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     retractDrawer,
     setRetractDrawer,
     appZoom,
-    appTheme,
+    brandTheme,
     isPreviewMode,
   } = useGlobal();
 
@@ -135,6 +135,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setPosition({ ...position, y: topHeight });
       }
     }
+  };
+
+  const validateSocials = (socials: SocialsType) => {
+    return socials?.email ||
+      socials?.facebook ||
+      socials?.instagram ||
+      socials?.phone ||
+      socials?.twitter
+      ? true
+      : false;
   };
 
   return (
@@ -224,7 +234,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       return (
                         <Button
                           key={button.title}
-                          appTheme={appTheme}
+                          brandTheme={brandTheme}
                           variant='dark'
                           onClick={() => {
                             if (button.icon === null) {
@@ -244,7 +254,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   })}
                   <Button
                     variant='light'
-                    appTheme={appTheme}
+                    brandTheme={brandTheme}
                     onClick={() => {
                       setPosition({ ...position, y: topHeight });
                       setRetractDrawer(false);
@@ -262,7 +272,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     {buttons?.map((button) => (
                       <Button
                         key={button.title}
-                        appTheme={appTheme}
+                        brandTheme={brandTheme}
                         variant={button.isHighlight ? 'dark' : 'light'}
                         iconRight
                         onClick={() => {
@@ -279,7 +289,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </Wrapper>
                 ))}
             </DrawerBody>
-            {!isChildOpen && (
+            {!isChildOpen && validateSocials(socials) && (
               <DrawerFooter>
                 {socials?.phone && (
                   <DrawerIconLink href={`tel:+${socials.phone}`}>
@@ -291,18 +301,30 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     <Image src={emailIcon} alt='email-icon' />
                   </DrawerIconLink>
                 )}
-                {socials?.twitter && (
-                  <DrawerIconLink
-                    href={socials?.twitter}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image src={twitterIcon} alt='twitter-icon' />
-                  </DrawerIconLink>
-                )}
+                {socials?.twitter &&
+                  (console.log('Twitter: ', socials.twitter),
+                  (
+                    <DrawerIconLink
+                      href={
+                        socials?.twitter.includes('https://') ||
+                        socials?.twitter.includes('http://')
+                          ? socials?.twitter
+                          : `https://${socials?.twitter}`
+                      }
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <Image src={twitterIcon} alt='twitter-icon' />
+                    </DrawerIconLink>
+                  ))}
                 {socials?.instagram && (
                   <DrawerIconLink
-                    href={socials?.instagram}
+                    href={
+                      socials?.instagram.includes('https://') ||
+                      socials?.instagram.includes('http://')
+                        ? socials?.instagram
+                        : `https://${socials?.instagram}`
+                    }
                     target='_blank'
                     rel='noopener noreferrer'
                   >
@@ -311,7 +333,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 )}
                 {socials?.facebook && (
                   <DrawerIconLink
-                    href={socials?.facebook}
+                    href={
+                      socials?.facebook.includes('https://') ||
+                      socials?.facebook.includes('http://')
+                        ? socials?.facebook
+                        : `https://${socials?.facebook}`
+                    }
                     target='_blank'
                     rel='noopener noreferrer'
                   >

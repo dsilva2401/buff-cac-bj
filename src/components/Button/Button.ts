@@ -8,7 +8,7 @@ type ButtonProps = {
   width?: string;
   iconRight?: boolean;
   transition?: string;
-  appTheme?: string;
+  brandTheme?: string;
 };
 
 const hex2rgba = (hex: any, alpha = 1) => {
@@ -32,13 +32,13 @@ const Button = styled.button<ButtonProps>`
   border-radius: ${(props) => (props.squared ? '0.5rem' : '5rem')};
   border: ${(props) =>
     props.variant === 'light'
-      ? `1px solid ${hex2rgba(props.appTheme || theme.button.border, 0.5)}`
+      ? `1px solid ${hex2rgba(props.brandTheme || theme.button.border, 0.5)}`
       : 'none'};
   background-color: ${(props) =>
     props.variant === 'dark'
       ? props.warning
         ? theme.button.warning
-        : props.appTheme || theme.button.primary
+        : props.brandTheme || theme.button.primary
       : theme.button.secondary};
   box-shadow: ${(props) =>
     props.variant === 'dark' ? '' : '0px 1px 4px rgba(0, 0, 0, 0.12)'};
@@ -47,7 +47,7 @@ const Button = styled.button<ButtonProps>`
       ? theme.button.secondary
       : props.warning
       ? theme.button.warning
-      : props.appTheme || theme.button.primary};
+      : props.brandTheme || theme.button.primary};
 
   a {
     color: ${(props) =>
@@ -55,7 +55,7 @@ const Button = styled.button<ButtonProps>`
         ? theme.button.secondary
         : props.warning
         ? theme.button.warning
-        : props.appTheme || theme.button.primary};
+        : props.brandTheme || theme.button.primary};
     text-decoration: none;
   }
 

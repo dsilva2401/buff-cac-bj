@@ -26,7 +26,7 @@ export default function IconButton({
   children,
   onClick,
 }: IconButtonProps) {
-  const { appTheme } = useGlobal();
+  const { brandTheme } = useGlobal();
 
   const renderIcon = () => {
     switch (iconName) {
@@ -46,7 +46,7 @@ export default function IconButton({
   };
 
   return (
-    <Button appTheme={appTheme} variant={variant} onClick={onClick}>
+    <Button brandTheme={brandTheme} variant={variant} onClick={onClick}>
       {children ? children : renderIcon()}
     </Button>
   );
