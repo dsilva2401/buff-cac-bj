@@ -680,7 +680,6 @@ const ProductDetails: React.FC = () => {
         justifyContent='space-between'
         overflow='auto'
         position='relative'
-        background={details?.brand.customBgColor || ''}
       >
         <PageHeader
           logo={logo(details?.brand?.image ?? '')}

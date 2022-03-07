@@ -301,22 +301,20 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     <Image src={emailIcon} alt='email-icon' />
                   </DrawerIconLink>
                 )}
-                {socials?.twitter &&
-                  (console.log('Twitter: ', socials.twitter),
-                  (
-                    <DrawerIconLink
-                      href={
-                        socials?.twitter.includes('https://') ||
-                        socials?.twitter.includes('http://')
-                          ? socials?.twitter
-                          : `https://${socials?.twitter}`
-                      }
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      <Image src={twitterIcon} alt='twitter-icon' />
-                    </DrawerIconLink>
-                  ))}
+                {socials?.twitter && (
+                  <DrawerIconLink
+                    href={
+                      socials?.twitter.includes('https://') ||
+                      socials?.twitter.includes('http://')
+                        ? socials?.twitter
+                        : `https://${socials?.twitter}`
+                    }
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <Image src={twitterIcon} alt='twitter-icon' />
+                  </DrawerIconLink>
+                )}
                 {socials?.instagram && (
                   <DrawerIconLink
                     href={

@@ -8,7 +8,6 @@ export const LandingHtmlWrapper = styled.div<LandingHtmlWrapperProps>`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 5rem 0;
   gap: 0.25rem;
   span,
   h1,

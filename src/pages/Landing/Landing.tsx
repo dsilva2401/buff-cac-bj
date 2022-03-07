@@ -87,10 +87,11 @@ const Landing: React.FC = () => {
           </Wrapper>
 
           <Wrapper
+            gap='8%'
             zIndex={3}
             width='100%'
             height='100%'
-            gap='0.75rem'
+            paddingTop='6rem'
             padding='1.125rem'
             direction='column'
             position='relative'
@@ -102,19 +103,20 @@ const Landing: React.FC = () => {
                 __html: pageData[0]?.brand[0]?.details,
               }}
             />
-
-            {pageData[0]?.links?.map((node) => (
-              <Button
-                key={node.title}
-                variant='light'
-                onClick={() => window.open(node.url, '_blank')}
-                style={{ border: '1px solid #1C3965' }}
-              >
-                <Text color='#1C3965' fontWeight='600'>
-                  <p>{node.title}</p>
-                </Text>
-              </Button>
-            ))}
+            <Wrapper width='100%' direction='column' gap='0.75rem'>
+              {pageData[0]?.links?.map((node) => (
+                <Button
+                  key={node.title}
+                  variant='light'
+                  onClick={() => window.open(node.url, '_blank')}
+                  style={{ border: '1px solid #1C3965' }}
+                >
+                  <Text color='#1C3965' fontWeight='600'>
+                    <p>{node.title}</p>
+                  </Text>
+                </Button>
+              ))}
+            </Wrapper>
           </Wrapper>
         </>
       )}
