@@ -48,11 +48,11 @@ type UrlParam = {
   id: string;
 };
 
-const getWarrantyModule = (details: ProductDetailsType) => {  
+const getWarrantyModule = (details: ProductDetailsType) => {
   return details?.modules?.find(
-    (module: ModuleInfoType) => module?.type === "WARRANTY_MODULE"
-  )
-}
+    (module: ModuleInfoType) => module?.type === 'WARRANTY_MODULE'
+  );
+};
 
 const ProductDetails: React.FC = () => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
@@ -425,6 +425,16 @@ const ProductDetails: React.FC = () => {
         const warrantyModuleInfo = module?.moduleInfo as WarrantyModuleType;
         mulberry = warrantyModuleInfo.mulberry;
       }
+      if (!mulberry) {
+        let result = details?.modules?.findIndex(
+          (element) => element.type === 'WARRANTY_MODULE'
+        );
+        const module = details?.modules[result as number];
+        if (module?.moduleInfo) {
+          const warrantyModuleInfo = module?.moduleInfo as WarrantyModuleType;
+          mulberry = warrantyModuleInfo.mulberry;
+        }
+      }
 
       if (
         (showAuthPage || module?.locked) &&
@@ -432,7 +442,7 @@ const ProductDetails: React.FC = () => {
       ) {
         return (
           <Wrapper width='100%' direction='column'>
-            {moduleType === 'WARRANTY_MODULE' && mulberry && (
+            {mulberry && (
               <Wrapper
                 width='100%'
                 direction='column'
@@ -557,16 +567,10 @@ const ProductDetails: React.FC = () => {
             >
               <AuthDrawer
                 brandName={details?.brand?.name}
-                html={
-                  mulberry && moduleType === 'WARRANTY_MODULE'
-                    ? null
-                    : details?.registration?.registrationText
-                }
-                animated={!!mulberry && moduleType === 'WARRANTY_MODULE'}
+                html={mulberry ? null : details?.registration?.registrationText}
+                animated={!!mulberry}
                 onPersonalDetailshow={() => setDisableModalDismiss(true)}
-                showMulberryTerms={
-                  !!mulberry && moduleType === 'WARRANTY_MODULE'
-                }
+                showMulberryTerms={!!mulberry}
                 onAuthComplete={() => {
                   setShowAuthPage(false);
                   setDisableModalDismiss(false);
@@ -580,48 +584,36 @@ const ProductDetails: React.FC = () => {
       const renderOtherModules = () => {
         switch (moduleType) {
           case 'CUSTOM_MODULE':
-              return (
-                  <CustomDrawer
-                      drawerTitle={
-                          details?.modules[currentPage as number]?.title
-                      }
-                      drawerData={module?.moduleInfo as CustomModuleType}
-                  />
-              );
+            return (
+              <CustomDrawer
+                drawerTitle={details?.modules[currentPage as number]?.title}
+                drawerData={module?.moduleInfo as CustomModuleType}
+              />
+            );
           case 'WARRANTY_MODULE':
-              return (
-                  <WarrantyDrawer
-                      closePage={closeDrawerPage}
-                      drawerTitle={
-                          details?.modules[currentPage as number]?.title
-                      }
-                      warrantyData={
-                          module?.moduleInfo as WarrantyModuleType
-                      }
-                      warrantyId={module?.id}
-                  />
-              );
+            return (
+              <WarrantyDrawer
+                closePage={closeDrawerPage}
+                drawerTitle={details?.modules[currentPage as number]?.title}
+                warrantyData={module?.moduleInfo as WarrantyModuleType}
+                warrantyId={module?.id}
+              />
+            );
           case 'REFERRAL_MODULE':
-              return (
-                  <ReferralDrawer
-                      drawerTitle={
-                          details?.modules[currentPage as number]?.title
-                      }
-                      referralData={
-                          module?.moduleInfo as ReferralModuleType
-                      }
-                  />
-              );
+            return (
+              <ReferralDrawer
+                drawerTitle={details?.modules[currentPage as number]?.title}
+                referralData={module?.moduleInfo as ReferralModuleType}
+              />
+            );
           case 'SHOPPING_MODULE':
-              const data = details?.modules[currentPage as number]
-                  ?.moduleInfo as ShoppingModuleType;
-              return (
-                  <ShopDrawer data={data} closePage={closeDrawerPage} />
-              );
+            const data = details?.modules[currentPage as number]
+              ?.moduleInfo as ShoppingModuleType;
+            return <ShopDrawer data={data} closePage={closeDrawerPage} />;
           default:
-              return null;
+            return null;
         }
-      }
+      };
 
       const warrantyModule = getWarrantyModule(details);
 
@@ -635,7 +627,7 @@ const ProductDetails: React.FC = () => {
         >
           {renderOtherModules()}
         </RegistratonDrawer>
-      )
+      );
     }
   }, [
     currentPage,
