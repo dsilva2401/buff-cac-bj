@@ -19,7 +19,6 @@ import Text from 'components/Text';
 import validator from 'validator';
 
 import PersonalDetails from 'components/PersonalDetails';
-
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: () => void;

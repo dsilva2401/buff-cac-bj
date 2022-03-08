@@ -133,6 +133,24 @@ export const GlobalProvider: React.FC = ({ children }) => {
     token
   );
 
+  const onRegisterProductSuccess = useCallback(() => {
+    reFetchProduct();
+  }, [reFetchProduct]);
+
+  const onRegisterProductError = useCallback((error) => {
+    console.log(error);
+  }, []);
+
+  const [registerProduct] = useAPI(
+    {
+      method: 'POST',
+      endpoint: `products/register/${slug}`,
+      onSuccess: onRegisterProductSuccess,
+      onError: onRegisterProductError,
+    },
+    token
+  );
+
   useEffect(() => {
     if (window) {
       window.addEventListener(
@@ -277,6 +295,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         loading: loading || productLoading,
         error,
         activateWarranty,
+        registerProduct,
         slug,
         setSlug,
         setUser,

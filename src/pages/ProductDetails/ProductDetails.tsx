@@ -13,6 +13,7 @@ import IconButton from 'components/IconButton';
 import Image from 'components/Image';
 import PageHeader from 'components/PageHeader';
 import ReferralDrawer from 'components/ReferralDrawer';
+import RegistratonDrawer from 'components/RegistratonDrawer';
 import ShopDrawer from 'components/ShopDrawer';
 import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
@@ -36,6 +37,8 @@ import { useGlobal } from '../../context/global/GlobalContext';
 import {
   CustomModuleType,
   LinkModuleType,
+  ModuleInfoType,
+  ProductDetailsType,
   ReferralModuleType,
   ShoppingModuleType,
   WarrantyModuleType,
@@ -44,6 +47,12 @@ import {
 type UrlParam = {
   id: string;
 };
+
+const getWarrantyModule = (details: ProductDetailsType) => {  
+  return details?.modules?.find(
+    (module: ModuleInfoType) => module?.type === "WARRANTY_MODULE"
+  )
+}
 
 const ProductDetails: React.FC = () => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
@@ -568,37 +577,65 @@ const ProductDetails: React.FC = () => {
         );
       }
 
-      switch (moduleType) {
-        case 'CUSTOM_MODULE':
-          return (
-            <CustomDrawer
-              drawerTitle={details?.modules[currentPage as number]?.title}
-              drawerData={module?.moduleInfo as CustomModuleType}
-            />
-          );
-        case 'WARRANTY_MODULE':
-          return (
-            <WarrantyDrawer
-              closePage={closeDrawerPage}
-              drawerTitle={details?.modules[currentPage as number]?.title}
-              warrantyData={module?.moduleInfo as WarrantyModuleType}
-              warrantyId={module?.id}
-            />
-          );
-        case 'REFERRAL_MODULE':
-          return (
-            <ReferralDrawer
-              drawerTitle={details?.modules[currentPage as number]?.title}
-              referralData={module?.moduleInfo as ReferralModuleType}
-            />
-          );
-        case 'SHOPPING_MODULE':
-          const data = details?.modules[currentPage as number]
-            ?.moduleInfo as ShoppingModuleType;
-          return <ShopDrawer data={data} closePage={closeDrawerPage} />;
-        default:
-          return null;
+      const renderOtherModules = () => {
+        switch (moduleType) {
+          case 'CUSTOM_MODULE':
+              return (
+                  <CustomDrawer
+                      drawerTitle={
+                          details?.modules[currentPage as number]?.title
+                      }
+                      drawerData={module?.moduleInfo as CustomModuleType}
+                  />
+              );
+          case 'WARRANTY_MODULE':
+              return (
+                  <WarrantyDrawer
+                      closePage={closeDrawerPage}
+                      drawerTitle={
+                          details?.modules[currentPage as number]?.title
+                      }
+                      warrantyData={
+                          module?.moduleInfo as WarrantyModuleType
+                      }
+                      warrantyId={module?.id}
+                  />
+              );
+          case 'REFERRAL_MODULE':
+              return (
+                  <ReferralDrawer
+                      drawerTitle={
+                          details?.modules[currentPage as number]?.title
+                      }
+                      referralData={
+                          module?.moduleInfo as ReferralModuleType
+                      }
+                  />
+              );
+          case 'SHOPPING_MODULE':
+              const data = details?.modules[currentPage as number]
+                  ?.moduleInfo as ShoppingModuleType;
+              return (
+                  <ShopDrawer data={data} closePage={closeDrawerPage} />
+              );
+          default:
+              return null;
+        }
       }
+
+      const warrantyModule = getWarrantyModule(details);
+
+      return (
+        <RegistratonDrawer
+          warrantyData={warrantyModule}
+          warrantyId={warrantyModule?.id as string}
+          currentModule={module}
+          closePage={closeDrawerPage}
+          product={details?.product}
+        >
+          {renderOtherModules()}
+        </RegistratonDrawer>
+      )
     }
   }, [
     currentPage,

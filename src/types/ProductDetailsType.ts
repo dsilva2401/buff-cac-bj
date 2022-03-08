@@ -6,6 +6,22 @@ export type PossibleModulesType =
   | 'REGISTRATION_MODULE'
   | 'REFERRAL_MODULE';
 
+export interface Product {
+  id: string;
+  name: string;
+  // @manoj: same as brand image i.e. construct and send a full url
+  image: string;
+  // @sush: I need to clarify where to get this from. For now, just set it to false
+  registered: boolean;
+  registeredToCurrentUser: boolean;
+  // ageGate field in document
+  ageGateEnabled: boolean;
+  // date on which the product was registered
+  registeredDate: string;
+  // defines the type of tag
+  tagType: string;
+};
+
 export type ModuleInfoType = {
   // Find this in Products => modules array
 
@@ -21,6 +37,7 @@ export type ModuleInfoType = {
   title: string;
   // this indicates whether we need an actual login to unlock this module
   locked: boolean;
+  registrationRequired: boolean;
   // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
   moduleInfo:
     | CustomModuleType
@@ -183,21 +200,7 @@ export type ProductDetailsType = {
     };
   };
   // Find this data in Products
-  product: {
-    id: string;
-    name: string;
-    // @manoj: same as brand image i.e. construct and send a full url
-    image: string;
-    // @sush: I need to clarify where to get this from. For now, just set it to false
-    registered: boolean;
-    registeredToCurrentUser: boolean;
-    // ageGate field in document
-    ageGateEnabled: boolean;
-    // date on which the product was registered
-    registeredDate: string;
-    // defines the type of tag
-    tagType: string;
-  };
+  product: Product;
   // @arqam: modules will now be sent as an array of ModulesUnion type
   // You need to loop through it to check what kind of module it is and then
   // get resulting info. Also sort order indicates the order in which it is shown

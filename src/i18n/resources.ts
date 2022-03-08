@@ -88,6 +88,12 @@ export const resources = {
             link: 'Terms & Conditions',
           },
         },
+        registrationDrawer: {
+          successDrawer: {
+            title: 'Product Registered!',
+            description: 'Check your email for details',
+          },
+        },
         warrantyDrawer: {
           warrantyHeading: 'Manufacturer Warranty',
           expiredWarrantyHeading: 'Manufacturer Warranty Expired!',
