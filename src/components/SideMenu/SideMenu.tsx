@@ -107,30 +107,30 @@ const SideMenu: React.FC = () => {
                 <Collection />
               </Link>
             ) : null}
-            {details && window.location.pathname === `/c/${slug}` && (
-              <a
-                href={
-                  (details?.brand?.website &&
-                    details?.brand?.website.includes('https://')) ||
-                  details?.brand?.website.includes('http://')
-                    ? details?.brand?.website
-                    : ''
-                }
-                target='_blank'
-                rel='noopener noreferrer'
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  logEvent({
-                    eventType: 'ENGAGEMENTS',
-                    event: 'WEBSITE_VISITS',
-                    data: details?.brand,
-                  });
-                }}
-              >
-                {t('visitWebsite')}
-                <External />
-              </a>
-            )}
+            {details?.brand?.website &&
+              window.location.pathname === `/c/${slug}` && (
+                <a
+                  href={
+                    details?.brand?.website?.includes('https://') ||
+                    details?.brand?.website?.includes('http://')
+                      ? details?.brand?.website
+                      : `https://${details?.brand?.website}`
+                  }
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    logEvent({
+                      eventType: 'ENGAGEMENTS',
+                      event: 'WEBSITE_VISITS',
+                      data: details?.brand,
+                    });
+                  }}
+                >
+                  {t('visitWebsite')}
+                  <External />
+                </a>
+              )}
             {signedIn ? (
               <p onClick={handleLogoutButtonClicked}>
                 {t('signOut')}

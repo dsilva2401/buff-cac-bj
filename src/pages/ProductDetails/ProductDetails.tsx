@@ -64,7 +64,6 @@ const ProductDetails: React.FC = () => {
     useState<boolean>(false);
   const {
     productDetails: details,
-    loading,
     error,
     pageState,
     setSignInRedirect,
@@ -127,7 +126,7 @@ const ProductDetails: React.FC = () => {
         setPageTitle(details?.modules[index].title);
       }
     },
-    [details, currentPage]
+    [details, currentPage, setMagicAction, setMagicPayload]
   );
 
   const [updateUser, addToLoading] = useAPI<any>({

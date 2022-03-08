@@ -3,6 +3,7 @@ import {
   GlobalContext,
   PageStateType,
   UserLocationType,
+  ProductMapType,
 } from './GlobalContext';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { getAuth, User } from 'firebase/auth';
@@ -159,20 +160,96 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   const _logEvent = useLogEvent();
 
-  const logEvent = useCallback(
-    (
-      payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
-    ) =>
-      _logEvent({
+  const logEvent = (
+    payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
+  ) => {
+    const THRESHOLD: number = 86400000; // 24 hours
+    if (payload.event === 'USER_SCAN_A_TAG') {
+      let currentTime: string = new Date().toString();
+      let currentProduct: string = payload.data.replace(
+        'https://v2.brij.it/c/',
+        ''
+      );
+
+      // new product node
+      let newProduct: ProductMapType = {
+        slug: currentProduct,
+        timeStamp: currentTime,
+      };
+
+      // get product map from localstorage
+      let productScans: string | null = localStorage.getItem('productScanMap');
+      let productScanMap: ProductMapType[];
+      if (productScans) productScanMap = JSON.parse(productScans);
+      else productScanMap = [];
+
+      // purge older than time threshold nodes
+      let productScanMapFiltered: ProductMapType[] = productScanMap.filter(
+        (element) =>
+          new Date().getTime() - new Date(element.timeStamp).getTime() <
+          THRESHOLD
+      );
+
+      // find if scanned product exists
+      let index = productScanMapFiltered.findIndex(
+        (node) => node.slug === currentProduct
+      );
+
+      if (index > -1) {
+        // if slug exists already
+        let timeDifference =
+          new Date().getTime() -
+          new Date(productScanMapFiltered[index].timeStamp).getTime();
+        if (timeDifference > THRESHOLD) {
+          // if enough time has passed since last scan
+          productScanMapFiltered.splice(index, 1, newProduct);
+          localStorage.setItem(
+            'productScanMap',
+            JSON.stringify(productScanMapFiltered)
+          );
+          return _logEvent({
+            ...payload,
+            user: user?.uid,
+            location: userLocation,
+            product: productDetails?.product.id,
+            tag: productDetails?.tag.slug,
+            brand: productDetails?.brand.id,
+          });
+        } else {
+          // if enough time has not passed since last scan
+          localStorage.setItem(
+            'productScanMap',
+            JSON.stringify(productScanMapFiltered)
+          );
+          return undefined;
+        }
+      } else {
+        // if slug is uniquely new
+        productScanMapFiltered.push(newProduct);
+        localStorage.setItem(
+          'productScanMap',
+          JSON.stringify(productScanMapFiltered)
+        );
+        return _logEvent({
+          ...payload,
+          user: user?.uid,
+          location: userLocation,
+          product: productDetails?.product.id,
+          tag: productDetails?.tag.slug,
+          brand: productDetails?.brand.id,
+        });
+      }
+    } else {
+      return _logEvent({
         ...payload,
         user: user?.uid,
         location: userLocation,
         product: productDetails?.product.id,
         tag: productDetails?.tag.slug,
         brand: productDetails?.brand.id,
-      }),
-    [productDetails, user, _logEvent]
-  );
+      });
+    }
+  };
 
   return (
     <GlobalContext.Provider

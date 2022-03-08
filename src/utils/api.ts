@@ -87,7 +87,15 @@ export function useAPI<T>(
         onError(JSON.stringify(e));
       }
     },
-    [tokenToUse, shouldUseToken, method, endpoint, onSuccess, onError]
+    [
+      isPreviewMode,
+      tokenToUse,
+      shouldUseToken,
+      method,
+      endpoint,
+      onSuccess,
+      onError,
+    ]
   );
 
   return [apiCall, loading, cancelController];

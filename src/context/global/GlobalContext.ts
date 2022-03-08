@@ -16,6 +16,11 @@ export type UserLocationType = {
   longitude: number;
 };
 
+export type ProductMapType = {
+  slug: string;
+  timeStamp: string;
+};
+
 export type GlobalContextProps = {
   isMenuOpen: boolean;
   isPreviewMode: boolean;
