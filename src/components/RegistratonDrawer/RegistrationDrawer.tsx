@@ -16,7 +16,8 @@ type RegistrationDrawerProps = {
   product: Product,
   currentModule: ModuleInfoType,
   isNewUser: boolean,
-  onUserUpdate: () => void
+  onUserUpdate: () => void,
+  setDisableModalDismiss: (dismissModal: boolean) => void;
 };
 
 const canRegister = (product: Product) => {
@@ -38,7 +39,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   product,
   currentModule,
   isNewUser,
-  onUserUpdate
+  onUserUpdate,
+  setDisableModalDismiss
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(canRegister(product));
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
@@ -90,6 +92,10 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         }
     }
   }, [slug, warrantyId, activateWarranty, product, warrantyData, user]);
+
+  useEffect(() => {
+    setDisableModalDismiss(successDrawer);
+  }, [successDrawer]);
 
   if (!user || !currentModule.registrationRequired) {
     return children;
