@@ -66,7 +66,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       padding='2rem 1rem'
       gap='1.2rem'
       overflow='auto'
-      margin='2rem 0'
+      margin='4rem 0'
     >
       <Wrapper
         direction='column'
@@ -125,14 +125,13 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             >
               {t('continueButton')}
             </Button>
-            <Text
-              fontSize='0.8rem'
-              textDecoration='underline'
-              padding='10px'
-              cursor='pointer'
+            <Button
+              variant='light'
+              marginTop="1rem"
+              onClick={onPersonalDetailsUpdate}
             >
-              <p onClick={onPersonalDetailsUpdate}>Skip for now</p>
-            </Text>
+              {t('skip')}
+            </Button>
           </>
         )}
       </Wrapper>

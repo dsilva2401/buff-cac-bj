@@ -42,9 +42,8 @@ const useMagicLinkHandler = (
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then((data) =>
         showToast({
-          message:
-            'You already have an account with Brij. please try to log in with a third-party vendor.',
-          type: 'error',
+          message: t("linkSentToastMessage"),
+          type: 'success',
         })
       )
       .catch((error) =>

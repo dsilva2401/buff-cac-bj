@@ -6,18 +6,15 @@ import DataTable from 'components/DataTable';
 import HtmlWrapper from 'components/HtmlWrapper';
 import LoadingIndicator from 'components/LoadingIndicator';
 import ModuleWrapper from 'components/ModuleWrapper';
-import SuccessDrawer from 'components/SuccessDrawer';
 import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
 import dateFormat from 'dateformat';
 import useElementSize from 'hooks/useElementSize';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Animated } from 'react-animated-css';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme } from 'styles/theme';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { WarrantyModuleType } from '../../types/ProductDetailsType';
-import DetailsModal from './DetailsModal';
 
 type WarrantyDrawerProps = {
   closePage(): void;
@@ -33,65 +30,18 @@ const validateDate = (date: Date) => {
 };
 
 const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
-  closePage,
   drawerTitle,
   warrantyData,
-  warrantyId,
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
-  const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
-  const [activatingWarranty, setActivatingWarranty] = useState<boolean>(true);
 
-  const { loading, activateWarranty, slug, brandTheme } = useGlobal();
+  const { loading, brandTheme } = useGlobal();
   const [tableRef, { height }] = useElementSize();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
-
-  const closeSuccess = useCallback(() => {
-    setIsDetailsOpen(false);
-    setSuccessDrawer(false);
-    closePage();
-  }, [closePage]);
-
-  const closeDetails = () => {
-    setIsDetailsOpen(false);
-  };
-
-  const confirmWarranty = () => {
-    setSuccessDrawer(true);
-  };
-
-  useEffect(() => {
-    const checkAndActivateWarranty = async () => {
-      activateWarranty({
-        warrantyId,
-        tag: slug,
-      });
-    };
-    if (!warrantyData?.activated) {
-      setActivatingWarranty(true);
-      checkAndActivateWarranty();
-      setActivatingWarranty(false);
-    }
-  }, [warrantyData?.activated, slug, warrantyId, activateWarranty]);
-
-  useEffect(() => {
-    if (warrantyData?.activated) {
-      setSuccessDrawer(true);
-    }
-  }, [warrantyData?.activated]);
-
-  useEffect(() => {
-    if (successDrawer) {
-      setTimeout(() => {
-        setIsDetailsOpen(false);
-        setSuccessDrawer(false);
-      }, 3000);
-    }
-  }, [successDrawer, closePage]);
 
   const WarrantyInfo = ({
     title,
@@ -211,18 +161,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
 
   return (
     <>
-      <DetailsModal
-        isOpen={isDetailsOpen}
-        close={closeDetails}
-        warrantyActivated={warrantyData?.activated}
-        confirmWarranty={confirmWarranty}
-      />
-      <SuccessDrawer
-        isOpen={successDrawer && !activatingWarranty && !loading}
-        title={t('successDrawer.title')}
-        description={t('successDrawer.description')}
-        close={closeSuccess}
-      />
       {!loading ? (
         <ModuleWrapper
           drawerTitle={
@@ -244,7 +182,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
             width='100%'
             direction='column'
             dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
-            onClick={() => setSuccessDrawer(true)}
           />
           {warrantyData?.mulberry && (
             <Wrapper width='100%' direction='column'>

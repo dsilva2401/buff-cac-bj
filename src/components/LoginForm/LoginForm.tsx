@@ -21,7 +21,7 @@ import validator from 'validator';
 import PersonalDetails from 'components/PersonalDetails';
 interface LoginFormProps {
   isDrawer?: boolean;
-  onLogin?: () => void;
+  onLogin?: (isNewUser?: boolean) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
@@ -70,7 +70,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       process.env.REACT_APP_DEFAULT_PASSWORD!
     )
       .then(() => {
-        togglePersonalDetailsForm(true);
+        if (!isDrawer) {
+          togglePersonalDetailsForm(true);
+        } else {
+          onLogin(true);
+        }
         showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {

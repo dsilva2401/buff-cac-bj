@@ -9,7 +9,7 @@ import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 
 interface AuthDrawerProps {
-  onAuthComplete: () => void;
+  onAuthComplete: (isNewUser?: boolean) => void;
   html: string | undefined | null;
   onPersonalDetailshow?: () => void;
   margin?: string;
@@ -33,8 +33,8 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   });
   const { retractDrawer } = useGlobal();
 
-  const onSuccess = useCallback(() => {
-    onAuthComplete();
+  const onSuccess = useCallback((isNewUser?: boolean) => {
+    onAuthComplete(isNewUser);
     setLoading(true);
   }, [onAuthComplete, setLoading]);
 

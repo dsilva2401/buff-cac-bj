@@ -9,6 +9,7 @@ type ButtonProps = {
   iconRight?: boolean;
   transition?: string;
   brandTheme?: string;
+  marginTop?: string;
 };
 
 const hex2rgba = (hex: any, alpha = 1) => {
@@ -26,6 +27,7 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
 
   cursor: pointer;
+  margin-top:${(props) => props.marginTop ? props.marginTop: ''};
   transition: ${(props) =>
     props.transition ? props.transition : 'all 0.3s ease'};
   width: ${(props) => (props.width ? props.width : '100%')};

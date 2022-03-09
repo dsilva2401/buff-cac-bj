@@ -6,6 +6,7 @@ import { Animated } from 'react-animated-css';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SuccessDrawer from 'components/SuccessDrawer';
 import Wrapper from 'components/Wrapper';
+import PersonalDetails from 'components/PersonalDetails';
 
 type RegistrationDrawerProps = {
   closePage(): void;
@@ -13,7 +14,9 @@ type RegistrationDrawerProps = {
   warrantyData?: ModuleInfoType;
   children: React.ReactElement<any, any> | null,
   product: Product,
-  currentModule: ModuleInfoType
+  currentModule: ModuleInfoType,
+  isNewUser: boolean,
+  onUserUpdate: () => void
 };
 
 const canRegister = (product: Product) => {
@@ -33,9 +36,13 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   warrantyId,
   children,
   product,
-  currentModule
+  currentModule,
+  isNewUser,
+  onUserUpdate
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(canRegister(product));
+  const [showPersonalDetailsForm, togglePersonalDetailsForm] =
+    useState<boolean>(isNewUser);
 
   const { loading, activateWarranty, slug, user, registerProduct } = useGlobal();
   const { t } = useTranslation('translation', {
@@ -125,6 +132,13 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
       </Animated>
     );
   };
+
+  if (showPersonalDetailsForm) {
+    return <PersonalDetails onPersonalDetailsUpdate={() => {
+      togglePersonalDetailsForm(false);
+      onUserUpdate();
+    }} />;
+  }
 
   return children;
 };

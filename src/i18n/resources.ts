@@ -30,7 +30,7 @@ export const resources = {
       },
       magicLink: {
         linkSentToastMessage:
-          'You already have an account with Brij. Check your email to get sign in link',
+          'Check your email to get sign in link',
         magicLinkError: 'An error occurred',
         redirecting: 'Redirecting...',
       },
@@ -39,6 +39,7 @@ export const resources = {
         lastNameInputPlaceholder: 'Last Name',
         phoneNumberInputPlaceholder: 'Phone Number',
         continueButton: 'Continue',
+        skip: `I'll do this later`,
       },
       sideMenu: {
         myProfile: 'My Profile',

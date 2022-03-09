@@ -62,6 +62,7 @@ const ProductDetails: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number | null>(null);
   const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
   const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
+  const [isNewUser, setNewUser] = useState<boolean>(false);
   const { topHeight, bottomHeight } = useHeights();
 
   const [position, setPosition] = useState<Position>({
@@ -108,6 +109,7 @@ const ProductDetails: React.FC = () => {
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(null);
+    setNewUser(false);
     toggleAnimateTable(false);
     setIsDrawerPageOpen(false);
   }, []);
@@ -571,7 +573,8 @@ const ProductDetails: React.FC = () => {
                 animated={!!mulberry}
                 onPersonalDetailshow={() => setDisableModalDismiss(true)}
                 showMulberryTerms={!!mulberry}
-                onAuthComplete={() => {
+                onAuthComplete={(isNewUser?: boolean) => {
+                  setNewUser(isNewUser as boolean);
                   setShowAuthPage(false);
                   setDisableModalDismiss(false);
                 }}
@@ -624,6 +627,8 @@ const ProductDetails: React.FC = () => {
           currentModule={module}
           closePage={closeDrawerPage}
           product={details?.product}
+          isNewUser={isNewUser}
+          onUserUpdate={() => setNewUser(false)}
         >
           {renderOtherModules()}
         </RegistratonDrawer>
