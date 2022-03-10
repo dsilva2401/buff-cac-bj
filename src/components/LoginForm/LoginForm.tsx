@@ -75,7 +75,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
         } else {
           onLogin(true);
         }
-        showToast({ message: t('signInToastMessage'), type: 'success' });
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {

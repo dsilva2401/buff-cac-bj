@@ -4,6 +4,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import Text from 'components/Text';
 import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
+import { useGlobal } from 'context/global/GlobalContext';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import InputMask from 'react-input-mask';
@@ -23,6 +24,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   onPersonalDetailsUpdate = () => {},
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
+  const { brandTheme } = useGlobal();
 
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -115,6 +117,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           <>
             <Button
               variant='dark'
+              brandTheme={brandTheme}
               onClick={() =>
                 validateUserInformation({
                   firstName,
@@ -127,6 +130,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             </Button>
             <Button
               variant='light'
+              brandTheme={brandTheme}
               marginTop="1rem"
               onClick={onPersonalDetailsUpdate}
             >
