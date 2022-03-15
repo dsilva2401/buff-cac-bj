@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from 'context/global/GlobalContext';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken } from 'firebase/auth';
 import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
 import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
 import FloatingLabelInput from 'components/FloatingLabelInput';
@@ -19,6 +19,7 @@ import Text from 'components/Text';
 import validator from 'validator';
 
 import PersonalDetails from 'components/PersonalDetails';
+import useLoginToken from 'hooks/useLoginToken';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -61,29 +62,35 @@ const LoginForm: React.FC<LoginFormProps> = ({
     validateEmail(value);
   };
 
+  const [getToken, token, exisitingUser] = useLoginToken();
+
+  useEffect(() => {
+    if (exisitingUser) {
+      setLoading(false);
+      return handleMagicLink();
+    } else if (token) {
+      signInWithCustomToken(
+        auth,
+        token
+      )
+        .then(() => {
+          if (!isDrawer) {
+            togglePersonalDetailsForm(true);
+          } else {
+            onLogin(true);
+          }
+        })
+        .catch((error) => {
+          showToast({ message: getErrorMessage(error.code), type: 'error' });
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [token, exisitingUser, handleMagicLink])
+
   const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
-    createUserWithEmailAndPassword(
-      auth,
-      username,
-      process.env.REACT_APP_DEFAULT_PASSWORD!
-    )
-      .then(() => {
-        if (!isDrawer) {
-          togglePersonalDetailsForm(true);
-        } else {
-          onLogin(true);
-        }
-      })
-      .catch((error) => {
-        if (error.code === 'auth/email-already-in-use') {
-          handleMagicLink();
-        } else {
-          showToast({ message: getErrorMessage(error.code), type: 'error' });
-        }
-      })
-      .finally(() => setLoading(false));
+    getToken(username);
   };
 
   useEffect(() => {
