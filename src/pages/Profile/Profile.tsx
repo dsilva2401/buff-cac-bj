@@ -33,7 +33,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
   const { t: personalDetailsTranslation } = useTranslation('translation', {
     keyPrefix: 'personalDetails',
   });
-  const { user, personalDetails } = useGlobal();
+  const { user, personalDetails, getPersonalDetails } = useGlobal();
   const history = useHistory();
 
   const { profile } = personalDetails || {};
@@ -44,6 +44,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
 
   const onSuccess = useCallback(() => {
     showToast({ message: t('updateToastMessage'), type: 'success' });
+    getPersonalDetails();
     onPersonalDetailsUpdate();
   }, [onPersonalDetailsUpdate, t]);
 
