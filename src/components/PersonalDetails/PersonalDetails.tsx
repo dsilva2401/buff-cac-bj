@@ -1,14 +1,13 @@
-import Button from 'components/Button';
-import Input from 'components/Input';
-import LoadingIndicator from 'components/LoadingIndicator';
-import Text from 'components/Text';
-import { showToast } from 'components/Toast/Toast';
-import Wrapper from 'components/Wrapper';
+import React, { useCallback, useState } from 'react';
 import { useGlobal } from 'context/global/GlobalContext';
-import React, { useCallback, useEffect, useState } from 'react';
+import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
-import InputMask from 'react-input-mask';
 import { useAPI } from 'utils/api';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import LoadingIndicator from 'components/LoadingIndicator';
+import Wrapper from 'components/Wrapper';
+import InputMask from 'react-input-mask';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -132,7 +131,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             <Button
               variant='light'
               brandTheme={brandTheme}
-              marginTop="1rem"
+              marginTop='1rem'
               onClick={onPersonalDetailsUpdate}
             >
               {t('skip')}

@@ -65,8 +65,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     longitude: 0,
   });
   const [pageState, setPageState] = useState<PageStateType | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [slug, setSlug] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [appZoom, setAppZoom] = useState(1);
@@ -89,17 +87,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     token,
   } = useUser();
 
-  // useEffect(() => {
-  //   if (user && window.navigator.geolocation) {
-  //     window.navigator.geolocation.getCurrentPosition((location) => {
-  //       setUserLocation({
-  //         latitude: location?.coords?.latitude,
-  //         longitude: location?.coords?.longitude,
-  //       });
-  //     });
-  //   }
-  // }, [user]);
-
   const [productDetails, reFetchProduct, productLoading] = useProductDetails(
     slug,
     token,
@@ -113,7 +100,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         localStorage.getItem('accentColor')) ||
         theme.primary
     );
-  }, [productDetails, window.location.pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productDetails, window.location.pathname, slug]);
 
   const onActivateWarrantySuccess = useCallback(() => {
     reFetchProduct();
@@ -292,8 +280,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setPageState,
         user,
         productDetails,
-        loading: loading || productLoading,
-        error,
+        loading: productLoading,
         activateWarranty,
         registerProduct,
         slug,

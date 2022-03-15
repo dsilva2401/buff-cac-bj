@@ -33,14 +33,17 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   });
   const { retractDrawer } = useGlobal();
 
-  const onSuccess = useCallback((isNewUser?: boolean) => {
-    onAuthComplete(isNewUser);
-    setLoading(true);
-  }, [onAuthComplete, setLoading]);
+  const onSuccess = useCallback(
+    (isNewUser?: boolean) => {
+      onAuthComplete(isNewUser);
+      setLoading(true);
+    },
+    [onAuthComplete, setLoading]
+  );
 
   const authScreenToRender = useMemo(() => {
     return <LoginForm isDrawer onLogin={onSuccess} />;
-  }, [onPersonalDetailshow, onSuccess]);
+  }, [onSuccess]);
 
   if (loading) return <LoadingIndicator />;
   return (
@@ -89,6 +92,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
                 : t('termsAndconditions.brijBrand')}
               <a
                 target='_blank'
+                rel='noreferrer'
                 href='https://brij.it/terms'
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
               >

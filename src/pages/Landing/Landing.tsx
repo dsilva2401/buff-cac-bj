@@ -22,10 +22,7 @@ const Landing: React.FC = () => {
     {
       method: 'GET',
       endpoint: `landing/page/viscosoft`,
-      onSuccess: (response) => {
-        console.log('Response: ', response);
-        setPageData(response);
-      },
+      onSuccess: (response) => setPageData(response),
       onError: (error) => console.log('Error: ', error),
     },
     null,
@@ -34,6 +31,7 @@ const Landing: React.FC = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

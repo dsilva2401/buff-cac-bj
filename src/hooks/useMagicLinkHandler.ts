@@ -42,7 +42,7 @@ const useMagicLinkHandler = (
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then((data) =>
         showToast({
-          message: t("linkSentToastMessage"),
+          message: t('linkSentToastMessage'),
           type: 'success',
         })
       )
@@ -50,7 +50,16 @@ const useMagicLinkHandler = (
         showToast({ message: getErrorMessage(error.code), type: 'error' })
       )
       .finally(() => setLoading(false));
-  }, [email, auth, isNewUser, t, getErrorMessage, magicAction, magicPayload]);
+  }, [
+    t,
+    slug,
+    auth,
+    email,
+    isNewUser,
+    getErrorMessage,
+    magicPayload,
+    magicAction,
+  ]);
 
   return {
     handleMagicLink,

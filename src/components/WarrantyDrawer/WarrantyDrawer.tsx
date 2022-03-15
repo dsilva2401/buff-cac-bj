@@ -33,7 +33,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   drawerTitle,
   warrantyData,
 }) => {
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
 
@@ -146,7 +145,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     </>
   );
 
-  if (loading && !successDrawer) {
+  if (loading) {
     return (
       <Wrapper
         width='100%'

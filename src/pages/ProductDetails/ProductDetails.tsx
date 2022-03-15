@@ -1,39 +1,33 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
-import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
-import externalLink from 'assets/icons/svg/external-link.svg';
-import { ReactComponent as LoadingAnimation } from 'assets/icons/svg/loading.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
-import AuthDrawer from 'components/AuthDrawer';
-import BottomDrawer from 'components/BottomDrawer';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import DataTable from 'components/DataTable';
-import HtmlWrapper from 'components/HtmlWrapper';
-import IconButton from 'components/IconButton';
+import { useGlobal } from '../../context/global/GlobalContext';
+import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { Animated } from 'react-animated-css';
+import { useParams } from 'react-router';
+import { Position } from 'types/Misc';
+import { Helmet } from 'react-helmet';
+import { theme } from 'styles/theme';
+import Text from 'components/Text';
 import Image from 'components/Image';
+import DataTable from 'components/DataTable';
+import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
+import AuthDrawer from 'components/AuthDrawer';
+import ShopDrawer from 'components/ShopDrawer';
+import HtmlWrapper from 'components/HtmlWrapper';
+import BottomDrawer from 'components/BottomDrawer';
+import CustomDrawer from 'components/CustomDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
 import RegistratonDrawer from 'components/RegistratonDrawer';
-import ShopDrawer from 'components/ShopDrawer';
-import Text from 'components/Text';
-import { showToast } from 'components/Toast/Toast';
+import externalLink from 'assets/icons/svg/external-link.svg';
+import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
 import WarrantyDrawer from 'components/WarrantyDrawer';
-import Wrapper from 'components/Wrapper';
-import { MAGIC_ACTION } from 'context/global/GlobalProvider';
-import useElementSize from 'hooks/useElementSize';
-import useHeights from 'hooks/useHeights';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Animated } from 'react-animated-css';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
 import ProgressiveImage from 'react-progressive-image';
-import { useParams } from 'react-router';
-import { Redirect } from 'react-router-dom';
-import { theme } from 'styles/theme';
-import { Position } from 'types/Misc';
-import { CollectionItem } from 'types/User';
-import { useAPI } from 'utils/api';
-import { useGlobal } from '../../context/global/GlobalContext';
+import useElementSize from 'hooks/useElementSize';
+import Wrapper from 'components/Wrapper';
+import useHeights from 'hooks/useHeights';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -74,13 +68,10 @@ const ProductDetails: React.FC = () => {
     useState<boolean>(false);
   const {
     productDetails: details,
-    error,
     pageState,
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
-    personalDetails,
-    getPersonalDetails,
     user,
     previewEvent,
     isPreviewMode,
@@ -94,18 +85,7 @@ const ProductDetails: React.FC = () => {
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
-  const { t } = useTranslation('translation', {
-    keyPrefix: 'productDetails',
-  });
   const [tableRef, { height }] = useElementSize();
-
-  const onSuccess = useCallback(() => {
-    getPersonalDetails();
-  }, [getPersonalDetails]);
-
-  const onError = (error: any) => {
-    showToast({ message: error.message, type: 'error' });
-  };
 
   const closeDrawerPage = useCallback(() => {
     setCurrentPage(null);
@@ -140,12 +120,12 @@ const ProductDetails: React.FC = () => {
     [details, currentPage, setMagicAction, setMagicPayload]
   );
 
-  const [updateUser, addToLoading] = useAPI<any>({
-    endpoint: 'auth/update',
-    method: 'PUT',
-    onSuccess,
-    onError,
-  });
+  // const [updateUser, addToLoading] = useAPI<any>({
+  //   endpoint: 'auth/update',
+  //   method: 'PUT',
+  //   onSuccess,
+  //   onError,
+  // });
 
   useEffect(() => {
     if (id) {
@@ -189,6 +169,7 @@ const ProductDetails: React.FC = () => {
   }, [
     magicPayload,
     changeDrawerPage,
+    setMagicAction,
     magicAction,
     user,
     currentPage,
@@ -200,7 +181,7 @@ const ProductDetails: React.FC = () => {
     if (details?.brand?.customAccentColor)
       localStorage.setItem('accentColor', details?.brand?.customAccentColor);
     else localStorage.setItem('accentColor', '');
-  }, [details, window.location.pathname]);
+  }, [details]);
 
   let buttonsArray = useMemo(() => {
     let buttons: ButtonType[] = [];
@@ -341,20 +322,11 @@ const ProductDetails: React.FC = () => {
       // }
     }
     return buttons;
-  }, [
-    changeDrawerPage,
-    id,
-    details,
-    setSignInRedirect,
-    personalDetails,
-    user,
-    logEvent,
-    t,
-    updateUser,
-    addToLoading,
-  ]);
+  }, [changeDrawerPage, id, details, setSignInRedirect, logEvent]);
 
-  const leadModule: any = details?.leadModule || {};
+  const leadModule: any = useMemo(() => {
+    return details?.leadModule || {};
+  }, [details]);
 
   const leadInformation = useMemo(() => {
     switch (leadModule.type) {
@@ -637,17 +609,18 @@ const ProductDetails: React.FC = () => {
     }
   }, [
     currentPage,
+    animateTable,
+    isNewUser,
+    retractDrawer,
     closeDrawerPage,
     details,
     showAuthPage,
-    disableModalDismiss,
     previewAuthenticated,
     isPreviewMode,
     toggleAnimateTable,
     showCoverageTable,
     height,
     tableRef,
-    t,
   ]);
 
   const logo = useCallback(
@@ -672,8 +645,6 @@ const ProductDetails: React.FC = () => {
     ),
     [handleOpenMenuClicked]
   );
-
-  if (error) return <Redirect to='/app/404' />;
 
   return (
     <>

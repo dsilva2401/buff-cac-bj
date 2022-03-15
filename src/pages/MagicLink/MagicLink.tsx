@@ -37,7 +37,7 @@ const MagicLink = () => {
       const payloadObject = JSON.parse(decodeURIComponent(payload as string));
       setMagicPayload(payloadObject);
     }
-  }, [payload]);
+  }, [payload, setMagicPayload]);
 
   const redirectUser = useCallback(() => {
     if (signInRedirect) {
@@ -79,6 +79,7 @@ const MagicLink = () => {
     history,
     isNewUser,
     signInRedirect,
+    setMagicAction,
     setSignInRedirect,
     action,
     productSlug,

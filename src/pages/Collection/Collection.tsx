@@ -1,13 +1,3 @@
-import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
-import Button from 'components/Button';
-import Grid from 'components/Grid';
-import IconButton from 'components/IconButton';
-import LoadingIndicator from 'components/LoadingIndicator';
-import PageHeader from 'components/PageHeader';
-import Text from 'components/Text';
-import { showToast } from 'components/Toast/Toast';
-import Wrapper from 'components/Wrapper';
-import { GlobalContext } from 'context';
 import React, {
   useCallback,
   useContext,
@@ -15,14 +5,24 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import QrReader from 'react-qr-reader';
-import { useHistory } from 'react-router';
-import { RoutesHashMap } from 'routes';
-import { ProductDetailsType } from 'types/ProductDetailsType';
+import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
 import { useGlobal } from '../../context/global/GlobalContext';
+import { ProductDetailsType } from 'types/ProductDetailsType';
+import { showToast } from 'components/Toast/Toast';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { GlobalContext } from 'context';
+import { RoutesHashMap } from 'routes';
+import { Helmet } from 'react-helmet';
+import Text from 'components/Text';
+import Grid from 'components/Grid';
+import Button from 'components/Button';
+import Wrapper from 'components/Wrapper';
+import IconButton from 'components/IconButton';
+import PageHeader from 'components/PageHeader';
+import LoadingIndicator from 'components/LoadingIndicator';
 import ProductImage from './ProductImage';
+import QrReader from 'react-qr-reader';
 
 type BrandCollectionType = {
   brand: string;
@@ -121,6 +121,7 @@ const Collection: React.FC = () => {
       return (
         <Grid
           margin='1rem 0'
+          key={items[0]?.brand?.id}
           width={items.length === 1 ? 'calc(50% - 8px)' : '100%'}
           templateColumns={`repeat(auto-fit, minmax(40%, 1fr))`}
         >
@@ -201,7 +202,7 @@ const Collection: React.FC = () => {
               alignItems='flex-start'
             >
               {sortedCollection.map((item) => (
-                <>
+                <Wrapper width='100%' key={item.brand} direction='column'>
                   <Wrapper width='100%' justifyContent='flex-start'>
                     <Text fontSize='1rem' fontWeight='600'>
                       <h2>
@@ -210,7 +211,7 @@ const Collection: React.FC = () => {
                     </Text>
                   </Wrapper>
                   {renderCollection(item.items)}
-                </>
+                </Wrapper>
               ))}
             </Wrapper>
           )

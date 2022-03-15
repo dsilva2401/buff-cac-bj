@@ -51,9 +51,8 @@ export type GlobalContextProps = {
     warrantyId: string;
     tag: string | null;
   }) => Promise<void>;
-  registerProduct: () => Promise<void>
+  registerProduct: () => Promise<void>;
   loading: boolean;
-  error: string | null;
   slug: string | null;
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -96,7 +95,6 @@ export const GlobalContext = createContext<GlobalContextProps>({
   productDetails: null,
   collectionDetails: [],
   loading: false,
-  error: null,
   activateWarranty: () => new Promise((res, rej) => res()),
   registerProduct: () => new Promise((res, rej) => res()),
   slug: null,

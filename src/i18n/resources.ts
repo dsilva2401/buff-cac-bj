@@ -29,8 +29,7 @@ export const resources = {
           'You are accessing the website from a non secure domain.',
       },
       magicLink: {
-        linkSentToastMessage:
-          'Check your email to get sign in link',
+        linkSentToastMessage: 'Check your email to get sign in link',
         magicLinkError: 'An error occurred',
         redirecting: 'Redirecting...',
       },
@@ -72,12 +71,6 @@ export const resources = {
         message: 'This experience does not exist',
         learnMoreButton: 'Learn about Brij',
         learnMoreLink: 'https://brij.it/',
-      },
-      productDetails: {
-        addToCollection: 'Add to collection',
-        removeFromCollection: 'Remove from collection',
-        addToCollectionToast: 'Added to Collection',
-        removeFromCollectionToast: 'Removed from Collection',
       },
       drawers: {
         authDrawer: {

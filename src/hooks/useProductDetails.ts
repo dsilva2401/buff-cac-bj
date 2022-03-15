@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useAPI } from 'utils/api';
 
@@ -51,9 +51,10 @@ function useProductDetails(
 
   useEffect(() => {
     if (slug) {
-      if (controller) controller.abort();
+      controller && controller.abort();
       getProduct();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, slug, getProduct]);
 
   useEffect(() => {

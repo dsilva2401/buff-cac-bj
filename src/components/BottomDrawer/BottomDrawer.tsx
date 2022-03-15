@@ -10,6 +10,7 @@ import twitterIcon from 'assets/icons/svg/social_twitter.svg';
 import emailIcon from 'assets/icons/svg/social_email.svg';
 import LinesEllipsis from 'react-lines-ellipsis';
 import DrawerMask from 'components/DrawerMask';
+import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
@@ -23,7 +24,6 @@ import {
   DrawerIconLink,
 } from './styles';
 import { Position } from 'types/Misc';
-import useHeights from 'hooks/useHeights';
 
 export type ButtonType = {
   title: any | undefined;
@@ -92,7 +92,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setPosition({ ...position, y: bottomHeight });
       }
     }
-  }, [isChildOpen, appZoom]);
+  }, [
+    isChildOpen,
+    topHeight,
+    bottomHeight,
+    isPreviewMode,
+    position,
+    setPosition,
+    appZoom,
+  ]);
 
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
@@ -230,8 +238,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
                 >
                   {buttons?.map((button) => {
-                    if (button.isHighlight) {
-                      return (
+                    return (
+                      button.isHighlight && (
                         <Button
                           key={button.title}
                           brandTheme={brandTheme}
@@ -249,8 +257,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           {button.title}
                           {button.icon}
                         </Button>
-                      );
-                    }
+                      )
+                    );
                   })}
                   <Button
                     variant='light'
