@@ -34,6 +34,7 @@ export const resources = {
         redirecting: 'Redirecting...',
       },
       personalDetails: {
+        pageTitle: 'Complete Profile',
         firstNameInputPlaceholder: 'First Name',
         lastNameInputPlaceholder: 'Last Name',
         phoneNumberInputPlaceholder: 'Phone Number',

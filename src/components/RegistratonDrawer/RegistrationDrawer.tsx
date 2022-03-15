@@ -132,7 +132,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         animationIn='slideInUp'
         animationOut='slideOutDown'
         animationInDuration={400}
-        animationOutDuration={0}
+        animationOutDuration={400}
         isVisible={successDrawer}
         style={{
           width: 'calc(100% + 2rem)',

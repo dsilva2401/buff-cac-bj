@@ -38,6 +38,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
 
   const { loading, brandTheme } = useGlobal();
   const [tableRef, { height }] = useElementSize();
+
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
@@ -159,9 +160,11 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
   }
 
   return (
-    <>
+    <Wrapper overflow='hidden'>
       {!loading ? (
         <ModuleWrapper
+          tableShown={showCoverageTable}
+          tableHeight={height}
           drawerTitle={
             !warrantyData?.mulberry ? (
               drawerTitle
@@ -354,7 +357,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           <LoadingIndicator />
         </Wrapper>
       )}
-    </>
+    </Wrapper>
   );
 };
 

@@ -8,11 +8,15 @@ import Text from 'components/Text';
 type ModuleWrapperProps = {
   children: any;
   drawerTitle?: string | React.ReactNode;
+  tableShown?: boolean;
+  tableHeight?: number;
 };
 
 const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
   drawerTitle,
   children,
+  tableShown,
+  tableHeight,
 }) => {
   const [headerRef, { height }] = useElementSize();
   const { retractDrawer } = useGlobal();
@@ -20,9 +24,11 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
   return (
     <Wrapper
       width='100%'
+      overflow='scroll'
       direction='column'
       alignItems='flex-start'
       justifyContent='flex-start'
+      margin={tableShown ? '0' : `0 0 -${tableHeight}px 0`}
     >
       {drawerTitle && (
         <Wrapper

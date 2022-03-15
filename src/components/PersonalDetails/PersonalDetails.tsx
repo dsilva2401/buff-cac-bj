@@ -3,11 +3,12 @@ import { useGlobal } from 'context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
 import { useAPI } from 'utils/api';
+import Text from 'components/Text';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
-import Wrapper from 'components/Wrapper';
 import InputMask from 'react-input-mask';
+import Wrapper from 'components/Wrapper';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -22,12 +23,12 @@ interface PersonalDetailsProps {
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   onPersonalDetailsUpdate = () => {},
 }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
-  const { brandTheme, getPersonalDetails } = useGlobal();
-
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+
+  const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
+  const { brandTheme } = useGlobal();
 
   const onSuccess = useCallback(() => {
     getPersonalDetails();
@@ -64,12 +65,20 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       height='100%'
       direction='column'
       justifyContent='flex-start'
+      padding='2rem 0.25rem'
       alignItems='center'
-      padding='2rem 1rem'
-      gap='1.2rem'
       overflow='auto'
-      margin='4rem 0'
+      margin='0 0 4rem'
+      gap='0.5rem'
     >
+      <Text
+        fontSize='1rem'
+        fontWeight='600'
+        padding='1.5rem 0.75rem'
+        style={{ width: '100%' }}
+      >
+        <p>{t('pageTitle')}</p>
+      </Text>
       <Wrapper
         direction='column'
         width='100%'
@@ -131,7 +140,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             <Button
               variant='light'
               brandTheme={brandTheme}
-              marginTop='1rem'
+              marginTop='0.75rem'
               onClick={onPersonalDetailsUpdate}
             >
               {t('skip')}

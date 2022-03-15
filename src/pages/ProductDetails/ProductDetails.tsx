@@ -29,9 +29,9 @@ import useElementSize from 'hooks/useElementSize';
 import Wrapper from 'components/Wrapper';
 import useHeights from 'hooks/useHeights';
 import {
-  CustomModuleType,
   LinkModuleType,
   ModuleInfoType,
+  CustomModuleType,
   ProductDetailsType,
   ReferralModuleType,
   ShoppingModuleType,
@@ -415,15 +415,21 @@ const ProductDetails: React.FC = () => {
         (!isPreviewMode || !previewAuthenticated)
       ) {
         return (
-          <Wrapper width='100%' direction='column'>
+          <Wrapper
+            width='100%'
+            direction='column'
+            transition='0.3s'
+            height={showCoverageTable ? '100%' : `calc(100% - ${height}px)`}
+          >
             {mulberry && (
               <Wrapper
+                gap='1rem'
                 width='100%'
                 direction='column'
                 alignItems='center'
-                justifyContent='flex-start'
                 padding='0 0.75rem'
-                gap='1rem'
+                justifyContent='flex-start'
+                transition={animateTable ? '0.3s' : '0'}
               >
                 <Wrapper width='100%'>
                   <MulberryLogo
@@ -532,7 +538,7 @@ const ProductDetails: React.FC = () => {
             <Wrapper
               width='100%'
               direction='column'
-              transition={animateTable ? '0.3s' : '0'}
+              transition='0.3s'
               style={{
                 transform: !showCoverageTable
                   ? `translateY(-${height}px)`
