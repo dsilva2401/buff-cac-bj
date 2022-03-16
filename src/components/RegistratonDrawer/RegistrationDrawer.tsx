@@ -104,8 +104,11 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   ]);
 
   useEffect(() => {
-    setDisableModalDismiss(successDrawer);
-  }, [successDrawer, setDisableModalDismiss]);
+    // only update disableModal when user is loggedIn
+    if (user) {
+      setDisableModalDismiss(successDrawer);
+    }
+  }, [successDrawer, setDisableModalDismiss, user]);
 
   if (!user || !currentModule.registrationRequired) {
     return children;

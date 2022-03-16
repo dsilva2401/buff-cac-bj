@@ -28,7 +28,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
-  const { brandTheme } = useGlobal();
+  const { brandTheme, getPersonalDetails } = useGlobal();
 
   const onSuccess = useCallback(() => {
     getPersonalDetails();
