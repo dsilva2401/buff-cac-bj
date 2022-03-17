@@ -12,8 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 
 const Login: React.FC = () => {
-  const { setIsMenuOpen, user, signInRedirect, setSignInRedirect } =
-    useGlobal();
+  const { setIsMenuOpen, signInRedirect, setSignInRedirect } = useGlobal();
   const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
@@ -39,18 +38,14 @@ const Login: React.FC = () => {
   const redirect = useRef<string>(signInRedirect);
 
   const onLogin = useCallback(() => {
-    if (user) {
-      let link = redirect.current || RoutesHashMap.Collection.path;
+    let link = redirect.current || RoutesHashMap.Collection.path;
 
-      console.log('TRIGGER: ', link);
-
-      if (redirect.current) {
-        setSignInRedirect('');
-      }
-
-      history.push(link);
+    if (redirect.current) {
+      setSignInRedirect('');
     }
-  }, [user, history, redirect, setSignInRedirect]);
+
+    history.push(link);
+  }, [history, redirect, setSignInRedirect]);
 
   return (
     <>

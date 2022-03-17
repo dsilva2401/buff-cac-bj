@@ -129,7 +129,7 @@ const Collection: React.FC = () => {
             return (
               <ProductImage
                 item={node}
-                key={node.product.id}
+                key={node.tag.slug}
                 goToDetails={() => {
                   history.push(
                     RoutesHashMap.ProductDetails.path(node.tag.slug)
