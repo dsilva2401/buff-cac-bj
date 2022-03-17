@@ -20,7 +20,7 @@ export interface Product {
   registeredDate: string;
   // defines the type of tag
   tagType: string;
-};
+}
 
 export type ModuleInfoType = {
   // Find this in Products => modules array

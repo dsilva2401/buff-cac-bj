@@ -6,8 +6,10 @@
     "@material-ui/core": "^4.12.3",
     "dateformat": "^5.0.3",
     "firebase": "^9.5.0",
+    "husky": "4",
     "i18next": "^21.3.2",
     "object-hash": "^2.2.0",
+    "prettier": "^2.6.0",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-animated-css": "^1.2.1",
@@ -46,7 +48,9 @@
     "start-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=false react-scripts start",
     "start-dev-client-windows": "react-scripts start",
     "build-dev-client": "REACT_APP_NODE_ENV=development REACT_APP_STAND_ALONE_MODE=true react-scripts build",
-    "build-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=true react-scripts build"
+    "build-prod-client": "REACT_APP_NODE_ENV=production REACT_APP_STAND_ALONE_MODE=true react-scripts build",
+    "format": "prettier --write \"src/**/*.ts\" && prettier --write \"src/**/*.tsx\"",
+    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\""
   },
   "eslintConfig": {
     "extends": [
@@ -106,5 +110,10 @@
     "useTabs": false,
     "semi": true,
     "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn format && git add -A ."
+    }
   }
 }
