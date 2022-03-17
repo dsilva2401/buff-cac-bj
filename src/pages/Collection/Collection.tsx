@@ -38,8 +38,8 @@ const Collection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
-  const { collectionDetails, getCollection } = useGlobal();
   const { setIsMenuOpen, logEvent } = useContext(GlobalContext);
+  const { collectionDetails, getCollection } = useGlobal();
   const history = useHistory();
 
   useEffect(() => {

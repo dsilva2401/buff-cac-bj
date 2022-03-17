@@ -13,7 +13,8 @@ export const resources = {
         pageHeaderTitle: 'Sign In',
         registerWithEmail: 'Register with Email',
         continueWithEmail: 'Continue with Email',
-        emailInput: 'Enter email...',
+        emailInputPlaceholder: 'Enter email...',
+        emailInputFilledPlaceholder: 'Email',
         signUpLink: 'Sign up!',
         signInToastMessage: 'Login Successful',
       },
@@ -32,6 +33,15 @@ export const resources = {
         linkSentToastMessage: 'Check your email to get sign in link',
         magicLinkError: 'An error occurred',
         redirecting: 'Redirecting...',
+      },
+      productDetails: {
+        ageGate: {
+          title: 'Confirm your age',
+          subtitle: 'Are you 21 or older?',
+          confirmationButton: 'YES',
+          disapprovalButton: 'NO',
+          warningMessage: 'You must be 21+ to view this site!',
+        },
       },
       personalDetails: {
         pageTitle: 'Complete Profile',

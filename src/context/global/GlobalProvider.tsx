@@ -73,6 +73,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [magicAction, setMagicAction] = useState<MAGIC_ACTION>(
     MAGIC_ACTION.REDIRECT
   );
+  const [agegateDisplay, toggleAgegateDisplay] = useState<boolean>(false);
   const [magicPayload, setMagicPayload] = useState<any>({});
   const [brandTheme, setBrandTheme] = useState<string>(
     localStorage.getItem('accentColor') || theme.primary
@@ -299,6 +300,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setMagicAction,
         magicPayload,
         setMagicPayload,
+        agegateDisplay,
+        toggleAgegateDisplay,
       }}
     >
       {children}

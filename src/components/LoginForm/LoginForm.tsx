@@ -1,25 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { theme } from 'styles/theme';
+import { RoutesHashMap } from 'routes';
 import { Animated } from 'react-animated-css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from 'context/global/GlobalContext';
-import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken } from 'firebase/auth';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
 import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
 import FloatingLabelInput from 'components/FloatingLabelInput';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
+import PersonalDetails from 'components/PersonalDetails';
 import useFirebaseError from 'hooks/useFirebaseError';
+import useElementSize from 'hooks/useElementSize';
 import SocialLogin from 'components/SocialLogin';
+import useLoginToken from 'hooks/useLoginToken';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
 
-import PersonalDetails from 'components/PersonalDetails';
-import useLoginToken from 'hooks/useLoginToken';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -29,13 +31,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onLogin = () => {},
   isDrawer,
 }) => {
-  const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { retractDrawer, brandTheme } = useGlobal();
-  const getErrorMessage = useFirebaseError();
-  const location = useLocation();
-  const auth = getAuth();
-
   const [emailRegistration, toggleEmailRegistration] = useState<boolean>(false);
   const [emailValidated, setEmailValidated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +38,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [error, setError] = useState<string>('');
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
+
+  const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
+  const { retractDrawer, brandTheme } = useGlobal();
+  const [inputWrapperRef, { width }] = useElementSize();
+  const getErrorMessage = useFirebaseError();
+  const location = useLocation();
+  const auth = getAuth();
 
   // get magic link header
   const {
@@ -69,10 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       setLoading(false);
       return handleMagicLink();
     } else if (token) {
-      signInWithCustomToken(
-        auth,
-        token
-      )
+      signInWithCustomToken(auth, token)
         .then(() => {
           if (!isDrawer) {
             togglePersonalDetailsForm(true);
@@ -85,17 +84,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
         })
         .finally(() => setLoading(false));
     }
-  }, [token, exisitingUser, handleMagicLink])
+  }, [
+    auth,
+    token,
+    exisitingUser,
+    handleMagicLink,
+    getErrorMessage,
+    isDrawer,
+    onLogin,
+  ]);
 
   const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
     getToken(username);
   };
-
-  useEffect(() => {
-    if (emailRegistration && inputRef !== null) inputRef.current?.focus();
-  }, [emailRegistration]);
 
   if (showPersonalDetailsForm) {
     return <PersonalDetails onPersonalDetailsUpdate={onLogin} />;
@@ -110,19 +113,30 @@ const LoginForm: React.FC<LoginFormProps> = ({
       alignItems='center'
       overflow='hidden'
       paddingTop={
-        location.pathname === '/' || location.pathname === '' ? '2rem' : '0'
+        location.pathname === RoutesHashMap.Login.path ||
+        location.pathname === ''
+          ? '2rem'
+          : '0'
       }
     >
       <Animated
         animationIn='slideInRight'
         animationOut='slideOutLeft'
         animationInDuration={
-          location.pathname === '/' || retractDrawer ? 0 : 300
+          location.pathname === RoutesHashMap.Login.path || retractDrawer
+            ? 0
+            : 300
         }
         animationOutDuration={
-          location.pathname === '/' || retractDrawer ? 0 : 300
+          location.pathname === RoutesHashMap.Login.path || retractDrawer
+            ? 0
+            : 300
         }
-        animationInDelay={location.pathname !== '/' && retractDrawer ? 200 : 0}
+        animationInDelay={
+          location.pathname !== RoutesHashMap.Login.path && retractDrawer
+            ? 200
+            : 0
+        }
         animateOnMount
         isVisible={true}
         style={{ width: '100%' }}
@@ -151,11 +165,22 @@ const LoginForm: React.FC<LoginFormProps> = ({
             height={emailRegistration ? '60px' : '0px'}
             margin={emailRegistration ? '0' : '-0.5rem 0 0 0'}
           >
-            <Wrapper width='100%'>
+            <Wrapper
+              width='100%'
+              ref={inputWrapperRef}
+              alignItems='stretch'
+              position='relative'
+              paddingTop='2px'
+            >
               <FloatingLabelInput
-                ref={inputRef}
+                width={width}
+                placeholder={
+                  username === ''
+                    ? t('emailInputPlaceholder')
+                    : t('emailInputFilledPlaceholder')
+                }
                 value={username}
-                placeholder={t('emailInput')}
+                autoFocus={emailRegistration}
                 onChange={(event) => handleUsernameChanged(event.target.value)}
               />
             </Wrapper>

@@ -7,6 +7,7 @@ type ButtonProps = {
   squared?: boolean;
   width?: string;
   iconRight?: boolean;
+  inlineIcon?: boolean;
   transition?: string;
   brandTheme?: string;
   marginTop?: string;
@@ -20,6 +21,8 @@ const hex2rgba = (hex: any, alpha = 1) => {
 const Button = styled.button<ButtonProps>`
   position: relative;
   display: flex;
+  gap: 0.25rem;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   font-size: 1rem;
@@ -27,7 +30,7 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
 
   cursor: pointer;
-  margin-top:${(props) => props.marginTop ? props.marginTop: ''};
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : '')};
   transition: ${(props) =>
     props.transition ? props.transition : 'all 0.3s ease'};
   width: ${(props) => (props.width ? props.width : '100%')};
@@ -64,7 +67,8 @@ const Button = styled.button<ButtonProps>`
   svg {
     position: absolute;
     border-radius: 50%;
-    ${(props) => (props.iconRight ? `right: 1rem;` : `left: 1rem;`)};
+    ${(props) =>
+      props.iconRight ? `right: 1rem;` : props.inlineIcon ? '' : `left: 1rem;`};
   }
 
   &:active {

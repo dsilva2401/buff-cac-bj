@@ -33,7 +33,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   const onSuccess = useCallback(() => {
     getPersonalDetails();
     onPersonalDetailsUpdate();
-  }, [onPersonalDetailsUpdate]);
+  }, [onPersonalDetailsUpdate, getPersonalDetails]);
 
   const [updateUser, loading] = useAPI<UserUpdatePayload>({
     method: 'PUT',

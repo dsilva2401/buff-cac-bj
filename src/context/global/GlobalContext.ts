@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from 'react';
-import { User } from 'firebase/auth';
-import { UserStruct } from 'types/User';
-import { EventPayload } from '../../hooks/useLogEvent';
 import { ProductDetailsType } from '../../types/ProductDetailsType';
+import { EventPayload } from '../../hooks/useLogEvent';
 import { MAGIC_ACTION } from './GlobalProvider';
+import { UserStruct } from 'types/User';
+import { User } from 'firebase/auth';
 
 export type PageStateType = {
   currentPage: number;
@@ -69,6 +69,8 @@ export type GlobalContextProps = {
   setMagicAction: (magicAction: MAGIC_ACTION) => void;
   magicPayload: any;
   setMagicPayload: (payload: any) => void;
+  agegateDisplay: boolean;
+  toggleAgegateDisplay: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -111,6 +113,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setMagicAction: (magicAction: MAGIC_ACTION) => {},
   magicPayload: {},
   setMagicPayload: (payload: any) => {},
+  agegateDisplay: false,
+  toggleAgegateDisplay: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

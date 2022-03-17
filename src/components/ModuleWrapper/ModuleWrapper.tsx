@@ -26,6 +26,7 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
       width='100%'
       overflow='scroll'
       direction='column'
+      position='relative'
       alignItems='flex-start'
       justifyContent='flex-start'
       margin={tableShown ? '0' : `0 0 -${tableHeight}px 0`}

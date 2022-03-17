@@ -6,10 +6,10 @@ import ProductDetails from 'pages/ProductDetails';
 import PageWrapper from 'components/PageWrapper';
 import Profile from 'pages/Profile/Profile';
 import Collection from 'pages/Collection';
+import MagicLink from 'pages/MagicLink';
 import FourZeroFour from 'pages/404';
 import Landing from 'pages/Landing';
 import Login from 'pages/Login';
-import MagicLink from 'pages/MagicLink';
 import {
   withLastLocation,
   WithLastLocationProps,
@@ -21,7 +21,7 @@ interface RoutesType {
 
 export const RoutesHashMap: RoutesType = {
   Login: {
-    path: '/',
+    path: '/app/login',
     component: <Login />,
   },
   MagicLink: {
@@ -54,10 +54,10 @@ export const RoutesHashMap: RoutesType = {
 
 const getTransition = (path: string, lastLocation: string) => {
   switch (path) {
-    case '/':
+    case '/app/login':
       return 'inverseslide';
     case '/app/collection':
-      return lastLocation === null || lastLocation === '/'
+      return lastLocation === null || lastLocation === '/app/login'
         ? 'slide'
         : 'inverseslide';
     case '/app/profile':
@@ -102,7 +102,11 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
           })}
           <Route>
             <PageWrapper>
-              <Redirect to='/app/404' />
+              {location?.pathname === '/' ? (
+                <Redirect to='/app/login' />
+              ) : (
+                <Redirect to='/app/404' />
+              )}
             </PageWrapper>
           </Route>
         </Switch>

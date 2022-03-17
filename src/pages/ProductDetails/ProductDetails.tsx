@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
+import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
@@ -11,6 +12,7 @@ import { Helmet } from 'react-helmet';
 import { theme } from 'styles/theme';
 import Text from 'components/Text';
 import Image from 'components/Image';
+import AgeGate from 'components/AgeGate';
 import DataTable from 'components/DataTable';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
@@ -22,7 +24,6 @@ import CustomDrawer from 'components/CustomDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
 import RegistratonDrawer from 'components/RegistratonDrawer';
 import externalLink from 'assets/icons/svg/external-link.svg';
-import externalLinkWhite from 'assets/icons/svg/external-link-white.svg';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ProgressiveImage from 'react-progressive-image';
 import useElementSize from 'hooks/useElementSize';
@@ -82,6 +83,8 @@ const ProductDetails: React.FC = () => {
     setMagicPayload,
     magicAction,
     magicPayload,
+    toggleAgegateDisplay,
+    brandTheme,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -178,6 +181,10 @@ const ProductDetails: React.FC = () => {
   ]);
 
   useEffect(() => {
+    details?.product?.ageGateEnabled && toggleAgegateDisplay(true);
+  }, [details, toggleAgegateDisplay]);
+
+  useEffect(() => {
     if (details?.brand?.customAccentColor)
       localStorage.setItem('accentColor', details?.brand?.customAccentColor);
     else localStorage.setItem('accentColor', '');
@@ -235,10 +242,10 @@ const ProductDetails: React.FC = () => {
             : null,
           icon:
             details?.modules[x].type === 'LINK_MODULE' ? (
-              <Image
-                src={x === 0 ? externalLinkWhite : externalLink}
-                margin='0 0 0 0.5rem'
-                alt='external-link'
+              <ExternalLink
+                width={24}
+                style={{ position: 'relative' }}
+                fill={x === 0 ? '#ffffff' : brandTheme}
               />
             ) : null,
         };
@@ -322,7 +329,7 @@ const ProductDetails: React.FC = () => {
       // }
     }
     return buttons;
-  }, [changeDrawerPage, id, details, setSignInRedirect, logEvent]);
+  }, [changeDrawerPage, id, details, setSignInRedirect, logEvent, brandTheme]);
 
   const leadModule: any = useMemo(() => {
     return details?.leadModule || {};
@@ -538,7 +545,7 @@ const ProductDetails: React.FC = () => {
             <Wrapper
               width='100%'
               direction='column'
-              transition='0.3s'
+              transition={animateTable ? '0.3s' : '0'}
               style={{
                 transform: !showCoverageTable
                   ? `translateY(-${height}px)`
@@ -654,6 +661,7 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
+      {details && <AgeGate />}
       {details && (
         <Helmet>
           <title>{details?.brand?.name} by Brij</title>

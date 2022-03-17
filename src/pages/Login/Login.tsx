@@ -42,6 +42,8 @@ const Login: React.FC = () => {
     if (user) {
       let link = redirect.current || RoutesHashMap.Collection.path;
 
+      console.log('TRIGGER: ', link);
+
       if (redirect.current) {
         setSignInRedirect('');
       }

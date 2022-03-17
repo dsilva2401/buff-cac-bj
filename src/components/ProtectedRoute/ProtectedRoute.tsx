@@ -19,7 +19,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
     return <Route {...props} />;
   }
 
-  return <Redirect to={RoutesHashMap.Login.Path} />;
+  return <Redirect to={RoutesHashMap.Login.path} />;
 };
 
 export default ProtectedRoute;

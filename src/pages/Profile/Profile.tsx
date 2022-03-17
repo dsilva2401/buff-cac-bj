@@ -46,7 +46,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
     showToast({ message: t('updateToastMessage'), type: 'success' });
     getPersonalDetails();
     onPersonalDetailsUpdate();
-  }, [onPersonalDetailsUpdate, t]);
+  }, [onPersonalDetailsUpdate, getPersonalDetails, t]);
 
   const [updateUser, loading] = useAPI<UserUpdatePayload>({
     method: 'PUT',

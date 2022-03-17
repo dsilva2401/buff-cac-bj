@@ -244,6 +244,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           key={button.title}
                           brandTheme={brandTheme}
                           variant='dark'
+                          inlineIcon
                           onClick={() => {
                             if (button.icon === null) {
                               setPosition({ ...position, y: topHeight });
@@ -282,7 +283,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         key={button.title}
                         brandTheme={brandTheme}
                         variant={button.isHighlight ? 'dark' : 'light'}
-                        iconRight
+                        inlineIcon
                         onClick={() => {
                           button.onClick();
                           setRetractDrawer(false);
