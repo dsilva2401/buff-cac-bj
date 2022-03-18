@@ -19,7 +19,7 @@ const AgeGate: React.FC = () => {
       animationIn='slideInUp'
       animationOut='slideOutDown'
       animationInDuration={400}
-      animationOutDuration={300}
+      animationOutDuration={0}
       animationInDelay={300}
       style={{
         zIndex: 9999,

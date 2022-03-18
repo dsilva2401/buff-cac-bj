@@ -15,8 +15,8 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
   return (
     <ModuleWrapper drawerTitle={drawerTitle}>
       <HtmlWrapper
+        width='100%'
         direction='column'
-        width='calc(100vw - 56px)'
         dangerouslySetInnerHTML={{ __html: drawerData.content }}
       />
     </ModuleWrapper>
