@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { theme } from 'styles/theme';
 import { RoutesHashMap } from 'routes';
 import { Animated } from 'react-animated-css';
@@ -64,40 +64,37 @@ const LoginForm: React.FC<LoginFormProps> = ({
     validateEmail(value);
   };
 
-  const [getToken, token, exisitingUser] = useLoginToken();
+  const onSuccess = useCallback(
+    (response: any) => {
+      if (response.existingUser) {
+        setLoading(false);
+        return handleMagicLink();
+      } else if (response.token) {
+        signInWithCustomToken(auth, response.token)
+          .then(() => {
+            if (!isDrawer) {
+              togglePersonalDetailsForm(true);
+            } else {
+              onLogin(true);
+            }
+          })
+          .catch((error) => {
+            showToast({ message: getErrorMessage(error.code), type: 'error' });
+          })
+          .finally(() => setLoading(false));
+      }
+    },
+    [handleMagicLink, auth, isDrawer, onLogin, getErrorMessage]
+  );
 
-  useEffect(() => {
-    if (exisitingUser) {
-      setLoading(false);
-      return handleMagicLink();
-    } else if (token) {
-      signInWithCustomToken(auth, token)
-        .then(() => {
-          if (!isDrawer) {
-            togglePersonalDetailsForm(true);
-          } else {
-            onLogin(true);
-          }
-        })
-        .catch((error) => {
-          showToast({ message: getErrorMessage(error.code), type: 'error' });
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [
-    auth,
-    token,
-    exisitingUser,
-    handleMagicLink,
-    getErrorMessage,
-    isDrawer,
-    onLogin,
-  ]);
+  const [getToken] = useLoginToken(onSuccess);
 
   const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
-    getToken(username);
+    getToken({
+      email: username,
+    });
   };
 
   if (showPersonalDetailsForm) {

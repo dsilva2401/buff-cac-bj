@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { theme } from 'styles/theme';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 
 const Login: React.FC = () => {
-  const { setIsMenuOpen, signInRedirect, setSignInRedirect } = useGlobal();
+  const { setIsMenuOpen } = useGlobal();
   const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
 
@@ -31,21 +31,9 @@ const Login: React.FC = () => {
     [setIsMenuOpen]
   );
 
-  // create a copy of signInRedirect so it doesn't change when singInRedirect
-  // sets to empty which will cause the redirection to occur again
-  // We will fix this once the user will be in the global context
-
-  const redirect = useRef<string>(signInRedirect);
-
   const onLogin = useCallback(() => {
-    let link = redirect.current || RoutesHashMap.Collection.path;
-
-    if (redirect.current) {
-      setSignInRedirect('');
-    }
-
-    history.push(link);
-  }, [history, redirect, setSignInRedirect]);
+    history.push(RoutesHashMap.Collection.path);
+  }, [history]);
 
   return (
     <>

@@ -397,6 +397,12 @@ const ProductDetails: React.FC = () => {
     }
   }, [leadModule, details]);
 
+  const onAuthComplete = useCallback((isNewUser?: boolean) => {
+    setNewUser(isNewUser as boolean);
+    setShowAuthPage(false);
+    setDisableModalDismiss(false);
+  }, []);
+
   const renderDrawerPage = useCallback(() => {
     if (details) {
       const module = details?.modules[currentPage as number];
@@ -556,13 +562,8 @@ const ProductDetails: React.FC = () => {
                 brandName={details?.brand?.name}
                 html={mulberry ? null : details?.registration?.registrationText}
                 animated={!!mulberry}
-                onPersonalDetailshow={() => setDisableModalDismiss(true)}
                 showMulberryTerms={!!mulberry}
-                onAuthComplete={(isNewUser?: boolean) => {
-                  setNewUser(isNewUser as boolean);
-                  setShowAuthPage(false);
-                  setDisableModalDismiss(false);
-                }}
+                onAuthComplete={onAuthComplete}
               />
             </Wrapper>
           </Wrapper>
@@ -634,6 +635,7 @@ const ProductDetails: React.FC = () => {
     showCoverageTable,
     height,
     tableRef,
+    onAuthComplete,
   ]);
 
   const logo = useCallback(

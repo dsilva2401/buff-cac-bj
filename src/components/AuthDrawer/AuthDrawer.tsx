@@ -11,7 +11,6 @@ import Text from 'components/Text';
 interface AuthDrawerProps {
   onAuthComplete: (isNewUser?: boolean) => void;
   html: string | undefined | null;
-  onPersonalDetailshow?: () => void;
   margin?: string;
   animated?: boolean;
   brandName?: string;
@@ -20,7 +19,6 @@ interface AuthDrawerProps {
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
   onAuthComplete,
-  onPersonalDetailshow = () => {},
   html,
   animated,
   brandName,
@@ -38,7 +36,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       onAuthComplete(isNewUser);
       setLoading(true);
     },
-    [onAuthComplete, setLoading]
+    [onAuthComplete]
   );
 
   const authScreenToRender = useMemo(() => {
