@@ -97,8 +97,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     topHeight,
     bottomHeight,
     isPreviewMode,
-    position,
-    setPosition,
     appZoom,
   ]);
 
