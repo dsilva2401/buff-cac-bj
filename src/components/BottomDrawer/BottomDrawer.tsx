@@ -92,13 +92,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setPosition({ ...position, y: bottomHeight });
       }
     }
-  }, [
-    isChildOpen,
-    topHeight,
-    bottomHeight,
-    isPreviewMode,
-    appZoom,
-  ]);
+  }, [isChildOpen, topHeight, bottomHeight, isPreviewMode, appZoom]);
 
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);

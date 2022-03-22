@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
 import { useAPI } from 'utils/api';
 
@@ -27,12 +27,6 @@ function useCollection(
     },
     token
   );
-
-  useEffect(() => {
-    if (token) {
-      getCollection();
-    }
-  }, [token, getCollection]);
 
   return [collectionDetails, getCollection];
 }

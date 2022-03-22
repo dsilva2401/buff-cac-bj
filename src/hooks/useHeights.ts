@@ -20,7 +20,7 @@ const useHeights = () => {
 
   if (isPreviewMode) {
     bottomHeight =
-      window.innerHeight / appZoom - (window.innerHeight * 0.60) / appZoom;
+      window.innerHeight / appZoom - (window.innerHeight * 0.6) / appZoom;
   } else {
     bottomHeight = window.innerHeight - margin;
   }

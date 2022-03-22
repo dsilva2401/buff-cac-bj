@@ -39,7 +39,7 @@ const Collection: React.FC = () => {
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
   const { setIsMenuOpen, logEvent } = useContext(GlobalContext);
-  const { collectionDetails, getCollection } = useGlobal();
+  const { collectionDetails, getCollection, token } = useGlobal();
   const history = useHistory();
 
   useEffect(() => {
@@ -78,12 +78,16 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     const fetchCollection = async () => {
+      if (!token) {
+        return;
+      }
+
       setLoading(true);
       await getCollection();
       setLoading(false);
     };
     fetchCollection();
-  }, [getCollection]);
+  }, [getCollection, token]);
 
   useEffect(() => {
     const allBrandsArr = new Set(
