@@ -19,6 +19,10 @@ import {
   ShoppingModuleType,
   VariantDetails,
 } from '../../types/ProductDetailsType';
+import ShoppingBag from 'assets/images/png/shopping-bag.png';
+import Badge from 'components/Badge';
+import { getTextWidth } from 'utils/canvas';
+import { Typography } from '@material-ui/core';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -48,6 +52,20 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.shopDrawer',
   });
+
+  const getCostText = () => {
+    return `(${(
+      parseFloat(
+        !data.isDiscountAvailable
+          ? chosenOption.price
+          : chosenOption.discountedPrice || ''
+      ) * selectedQuantity
+    ).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumSignificantDigits: 3,
+    })}.00)`;
+  };
 
   useEffect(() => {
     if (defaultVariantDetails.options) {
@@ -220,17 +238,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                         textDecoration='line-through'
                       >
                         <p>
-                          {parseInt(
-                            chosenOption.discountedPrice!
-                          ).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                            maximumSignificantDigits: 3,
-                          })}
-                        </p>
-                      </Text>
-                      <Text fontSize='0.9rem' fontWeight='600'>
-                        <p>
                           {parseInt(chosenOption.price).toLocaleString(
                             'en-US',
                             {
@@ -239,6 +246,17 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                               maximumSignificantDigits: 3,
                             }
                           )}
+                        </p>
+                      </Text>
+                      <Text fontSize='0.9rem' fontWeight='600'>
+                        <p>
+                          {parseInt(
+                            chosenOption.discountedPrice!
+                          ).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                            maximumSignificantDigits: 3,
+                          })}
                         </p>
                       </Text>
                     </>
@@ -304,8 +322,28 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                 brandTheme={brandTheme}
                 onClick={handleCheckout}
                 disabled={!isValidCombo}
+                alignItems='flex-end'
               >
-                {t('checkoutButton.callToAction')}
+                <Badge
+                  variant='light'
+                  width='28px'
+                  height='28px'
+                  fontSize='0.8rem'
+                  brandTheme={brandTheme}
+                  background={ShoppingBag}
+                >
+                  {selectedQuantity}
+                </Badge>
+                &nbsp;&nbsp; {t('checkoutButton.callToAction')} &nbsp;
+                <p
+                  style={{
+                    position: 'absolute',
+                    left: `calc(50% + 45px)`,
+                    color: theme.button.secondary,
+                  }}
+                >
+                  {selectedQuantity > 0 && getCostText()}
+                </p>
               </Button>
             ) : (
               <Text fontSize='1rem' fontWeight='600'>
