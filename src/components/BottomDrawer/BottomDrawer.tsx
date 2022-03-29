@@ -240,7 +240,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 <Wrapper
                   gap='1rem'
                   width='100%'
-                  ref={collapsedDrawerRef}
                   direction='column'
                   ref={collapsedDrawerRef}
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
