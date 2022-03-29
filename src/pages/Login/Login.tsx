@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
-import { theme } from 'styles/theme';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import { useGlobal } from 'context/global/GlobalContext';
 import { ReactComponent as BrijLogo } from 'assets/logos/svg/brij-colored.svg';
+import { useGlobal } from 'context/global/GlobalContext';
+import { useHistory } from 'react-router-dom';
+import { RoutesHashMap } from 'routes';
+import { Helmet } from 'react-helmet';
+import { theme } from 'styles/theme';
+import { useTranslation } from 'react-i18next';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import LoginForm from 'components/LoginForm';
 import Wrapper from 'components/Wrapper';
-import { useHistory } from 'react-router-dom';
-import { RoutesHashMap } from 'routes';
 
 const Login: React.FC = () => {
   const { setIsMenuOpen } = useGlobal();

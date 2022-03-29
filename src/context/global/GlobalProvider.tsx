@@ -94,6 +94,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     previewEvent
   );
   const [collectionDetails, getCollection] = useCollection(token);
+  const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
   useEffect(() => {
     setBrandTheme(
@@ -302,6 +303,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setMagicPayload,
         agegateDisplay,
         toggleAgegateDisplay,
+        collapsedDrawerHeight,
+        setCollapsedDrawerHeight,
       }}
     >
       {children}

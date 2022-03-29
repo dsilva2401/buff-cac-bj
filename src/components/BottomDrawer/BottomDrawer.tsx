@@ -8,6 +8,7 @@ import instagramIcon from 'assets/icons/svg/social_instagram.svg';
 import facebookIcon from 'assets/icons/svg/social_facebook.svg';
 import twitterIcon from 'assets/icons/svg/social_twitter.svg';
 import emailIcon from 'assets/icons/svg/social_email.svg';
+import useElementSize from 'hooks/useElementSize';
 import LinesEllipsis from 'react-lines-ellipsis';
 import DrawerMask from 'components/DrawerMask';
 import useHeights from 'hooks/useHeights';
@@ -80,9 +81,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     appZoom,
     brandTheme,
     isPreviewMode,
+    setCollapsedDrawerHeight,
   } = useGlobal();
 
   const { topHeight, bottomHeight } = useHeights();
+  const [collapsedDrawerRef, { height }] = useElementSize();
+
+  useEffect(() => {
+    if (height) setCollapsedDrawerHeight(height);
+  }, [height]);
 
   useEffect(() => {
     if (isPreviewMode) {
@@ -226,6 +233,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 <Wrapper
                   gap='1rem'
                   width='100%'
+                  ref={collapsedDrawerRef}
                   direction='column'
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
                 >

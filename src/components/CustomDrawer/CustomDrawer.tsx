@@ -1,6 +1,7 @@
 import React from 'react';
 import HtmlWrapper from 'components/HtmlWrapper';
 import ModuleWrapper from 'components/ModuleWrapper';
+import { useIframeModifier } from 'hooks/useIframeModifier';
 import { CustomModuleType } from 'types/ProductDetailsType';
 
 type CustomDrawerProps = {
@@ -17,7 +18,9 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
       <HtmlWrapper
         width='100%'
         direction='column'
-        dangerouslySetInnerHTML={{ __html: drawerData.content }}
+        dangerouslySetInnerHTML={{
+          __html: useIframeModifier(drawerData?.content),
+        }}
       />
     </ModuleWrapper>
   );

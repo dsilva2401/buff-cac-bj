@@ -462,8 +462,8 @@ const ProductDetails: React.FC = () => {
                 >
                   <HtmlWrapper
                     width='100%'
-                    direction='column'
                     padding='1rem 0'
+                    direction='column'
                     dangerouslySetInnerHTML={{
                       __html: details?.registration?.registrationText,
                     }}
@@ -687,7 +687,11 @@ const ProductDetails: React.FC = () => {
                   width='100vw'
                   margin='auto'
                   objectFit='cover'
-                  style={{ minHeight: '80vh' }}
+                  style={{
+                    minHeight: '80vh',
+                    // height: '100%',
+                    // paddingBottom: `${collapsedDrawerHeight + 40}px`,
+                  }}
                 />
               </Animated>
             );
