@@ -56,7 +56,7 @@ const DataTable: React.FC<TableProps> = ({ headers, tableData }) => {
       </TableHead>
       <TableBody>
         {tableData.map((title: string, index: number) => (
-          <TableRow>
+          <TableRow key={title}>
             <TableCell
               width='60%'
               key={title}

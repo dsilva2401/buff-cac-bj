@@ -38,6 +38,7 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import parfum from 'assets/images/png/parfum.png';
 
 type UrlParam = {
   id: string;
@@ -676,24 +677,30 @@ const ProductDetails: React.FC = () => {
               <Wrapper
                 width='100%'
                 height='100%'
-                background={details.brand.customBgColor || ''}
+                background={details.brand.customBgColor || 'white'}
               />
             ) : (
-              <Animated isVisible animationIn='fadeIn' animationOut='fadeIn'>
-                <Image
-                  src={src}
-                  alt={details?.product?.name}
-                  position='absolute'
-                  width='100vw'
-                  margin='auto'
-                  objectFit='cover'
-                  style={{
-                    minHeight: '80vh',
-                    // height: '100%',
-                    // paddingBottom: `${collapsedDrawerHeight + 40}px`,
-                  }}
-                />
-              </Animated>
+              <Wrapper
+                width='100%'
+                height='100%'
+                background={details.brand.customBgColor || 'white'}
+              >
+                <Animated isVisible animationIn='fadeIn' animationOut='fadeIn'>
+                  <Image
+                    src={src}
+                    alt={details?.product?.name}
+                    position='absolute'
+                    width='100vw'
+                    margin='auto'
+                    objectFit='cover'
+                    style={{
+                      minHeight: '80vh',
+                      // height: '100%',
+                      // paddingBottom: `${collapsedDrawerHeight + 40}px`,
+                    }}
+                  />
+                </Animated>
+              </Wrapper>
             );
           }}
         </ProgressiveImage>

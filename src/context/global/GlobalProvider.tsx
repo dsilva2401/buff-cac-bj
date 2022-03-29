@@ -97,10 +97,14 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
   useEffect(() => {
+    let pathCheck: boolean = false;
+    if (
+      window.location.pathname.includes(`c/${slug}`) ||
+      window.location.pathname.includes(`*/${slug}`)
+    )
+      pathCheck = true;
     setBrandTheme(
-      (window.location.pathname.includes(`c/${slug}`) &&
-        localStorage.getItem('accentColor')) ||
-        theme.primary
+      (pathCheck && localStorage.getItem('accentColor')) || theme.primary
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productDetails, window.location.pathname, slug]);

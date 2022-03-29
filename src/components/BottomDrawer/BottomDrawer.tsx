@@ -23,6 +23,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerIconLink,
+  DragZone,
 } from './styles';
 import { Position } from 'types/Misc';
 
@@ -89,7 +90,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   useEffect(() => {
     if (height) setCollapsedDrawerHeight(height);
-  }, [height]);
+  }, [height, setCollapsedDrawerHeight]);
 
   useEffect(() => {
     if (isPreviewMode) {
@@ -99,6 +100,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setPosition({ ...position, y: bottomHeight });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChildOpen, topHeight, bottomHeight, isPreviewMode, appZoom]);
 
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
@@ -121,6 +123,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     isChildOpen,
     appZoom,
   ]);
+
+  const handleDrawerClose = () => {
+    setPosition({ ...position, y: bottomHeight });
+    setMainDrawerOpen(false);
+  };
 
   const handleStart = () => {
     setIsControlled(false);
@@ -156,7 +163,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   return (
     <>
-      <DrawerMask isDrawerOpen={!!mainDrawerOpen} />
+      <DrawerMask
+        isDrawerOpen={!!mainDrawerOpen}
+        onTouchEnd={() => handleDrawerClose()}
+        onClick={() => handleDrawerClose()}
+      />
       <Draggable
         axis='y'
         bounds={{ top: topHeight, bottom: bottomHeight }}
@@ -213,21 +224,17 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 onClick={() => {
                   if (isChildOpen) {
                     closeChild();
-                    if (retractDrawer) {
-                      setPosition({ ...position, y: bottomHeight });
-                      setMainDrawerOpen(false);
-                    }
+                    if (retractDrawer) handleDrawerClose();
                   } else {
                     setPageState(null);
-                    setPosition({ ...position, y: bottomHeight });
-                    setMainDrawerOpen(false);
+                    handleDrawerClose();
                   }
                 }}
               >
                 <Close />
               </DrawerClose>
             )}
-            <DrawerBody id={isChildOpen ? 'not-draggable' : 'draggable'}>
+            <DrawerBody>
               <DragBar />
               {!mainDrawerOpen && (
                 <Wrapper
@@ -235,6 +242,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   width='100%'
                   ref={collapsedDrawerRef}
                   direction='column'
+                  ref={collapsedDrawerRef}
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
                 >
                   {buttons?.map((button) => {
@@ -275,7 +283,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               )}
               {mainDrawerOpen &&
                 (isChildOpen ? (
-                  children
+                  <>
+                    <DragZone id='draggable' style={{ zIndex: 99 }} />
+                    <div id='not-draggable'>{children}</div>
+                  </>
                 ) : (
                   <Wrapper width='100%' direction='column' gap='1rem'>
                     {buttons?.map((button) => (

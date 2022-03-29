@@ -102,3 +102,11 @@ export const DragBar = styled.div`
   border-radius: 7px;
   background: #cbd1d4;
 `;
+
+export const DragZone = styled.div`
+  width: 100%;
+  height: 70px;
+  position: absolute;
+  background: transparent;
+  top: 0;
+`;
