@@ -1,5 +1,5 @@
 const config = {
-  dev: {
+  staging: {
     apiKey: 'AIzaSyDYbG1Th_mH18QyJgTSPb9X9_s3nBMyQWM',
     authDomain: 'brij-consumer-app.firebaseapp.com',
     projectId: 'brij-consumer-app',
@@ -17,16 +17,26 @@ const config = {
     appId: '1:169134345429:web:d6e2b729a082518381665c',
     measurementId: 'G-59ZE8ST52G',
   },
+  rc: {
+    apiKey: 'AIzaSyDPUHsSedmwFjuDnGgKcrBC2IzHQsD1rrE',
+    authDomain: 'brij-rc.firebaseapp.com',
+    projectId: 'brij-rc',
+    storageBucket: 'brij-rc.appspot.com',
+    messagingSenderId: '58128415401',
+    appId: '1:58128415401:web:6112a96ecb05f62cacc7b8',
+  },
 };
 
 const getFirebaseConfig = () => {
   switch (process.env.REACT_APP_NODE_ENV) {
-    case 'development':
-      return config.dev;
+    case 'staging':
+      return config.staging;
     case 'production':
       return config.prod;
+    case 'rc':
+      return config.rc;
     default:
-      return config.dev;
+      return config.staging;
   }
 };
 
