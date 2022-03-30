@@ -5,7 +5,7 @@ import { useAPI } from 'utils/api';
 
 function usePersonalDetails(
   user: User | null
-): [UserStruct | null, () => void] {
+): [UserStruct | null, () => void, string | null] {
   const [personalDetails, setpersonalDetails] = useState<UserStruct | null>(
     null
   );
@@ -31,6 +31,12 @@ function usePersonalDetails(
   );
 
   useEffect(() => {
+    // if user doesn't exist remove token ( mostly triggered when user logs out)
+    if (!user) {
+      setToken(null);
+      return;
+    }
+
     if (user && !token) {
       const setUserToken = async () => {
         const tokenExtracted = (await user?.getIdToken()) || null;
@@ -48,7 +54,7 @@ function usePersonalDetails(
     }
   }, [user, getUser, token]);
 
-  return [personalDetails, getUser];
+  return [personalDetails, getUser, token];
 }
 
 export default usePersonalDetails;

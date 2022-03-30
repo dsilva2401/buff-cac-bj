@@ -22,18 +22,7 @@ export enum MAGIC_ACTION {
 const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [personalDetails, getPersonalDetails] = usePersonalDetails(user);
-
-  useEffect(() => {
-    const setUserToken = async () => {
-      if (personalDetails) {
-        const tokenExtracted = (await user?.getIdToken()) || null;
-        setToken(tokenExtracted);
-      }
-    };
-    setUserToken();
-  }, [personalDetails, user, setToken]);
+  const [personalDetails, getPersonalDetails, token] = usePersonalDetails(user);
 
   useEffect(() => {
     const auth = getAuth();
