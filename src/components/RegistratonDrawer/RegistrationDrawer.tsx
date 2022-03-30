@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ModuleInfoType, Product } from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
-import { Animated } from 'react-animated-css';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import SuccessDrawer from 'components/SuccessDrawer';
@@ -115,6 +114,14 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     user,
   ]);
 
+  useEffect(() => {
+    if (successDrawer) {
+      setTimeout(() => {
+        setSuccessDrawer(false);
+      }, 3000);
+    }
+  }, [successDrawer]);
+
   if (!user || !currentModule.registrationRequired) {
     return children;
   }
@@ -134,29 +141,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   const translationToUse = warrantyData ? t : registrationTranslation;
 
-  if (successDrawer) {
-    return (
-      <Animated
-        animationIn='slideInUp'
-        animationOut='slideOutDown'
-        animationInDuration={400}
-        animationOutDuration={400}
-        isVisible={successDrawer}
-        style={{
-          width: 'calc(100% + 2rem)',
-          height: '100%',
-        }}
-      >
-        <SuccessDrawer
-          isOpen={true}
-          title={translationToUse('successDrawer.title')}
-          description={translationToUse('successDrawer.description')}
-          close={closeSuccess}
-        />
-      </Animated>
-    );
-  }
-
   if (showPersonalDetailsForm) {
     return (
       <PersonalDetails
@@ -168,7 +152,17 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     );
   }
 
-  return children;
+  return (
+    <>
+      <SuccessDrawer
+        isOpen={successDrawer}
+        title={translationToUse('successDrawer.title')}
+        description={translationToUse('successDrawer.description')}
+        close={closeSuccess}
+      />
+      {children}
+    </>
+  );
 };
 
 export default RegistrationDrawer;

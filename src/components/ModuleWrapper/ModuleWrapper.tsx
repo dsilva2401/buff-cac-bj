@@ -62,7 +62,7 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
         animationOut='slideOutLeft'
         animationInDuration={retractDrawer ? 0 : 300}
         animationOutDuration={retractDrawer ? 0 : 300}
-        style={{ padding: `${height}px 12px 12px 12px` }}
+        style={{ padding: `${height}px 12px 12px 12px`, width: '100%' }}
       >
         {children}
       </Animated>

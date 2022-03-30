@@ -3,7 +3,6 @@ import {
   GlobalContext,
   PageStateType,
   UserLocationType,
-  ProductMapType,
 } from './GlobalContext';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { getAuth, User } from 'firebase/auth';
@@ -164,50 +163,81 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const logEvent = (
     payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
   ) => {
-    const THRESHOLD: number = 86400000; // 24 hours
+    const LAST_SCAN_INTERVAL_THRESHOLD: number = 3600000; // 1 hour
+    const SCAN_MAP_ENTRIES_THRESHOLD: number = 100; // 100 entries
+    const SCAN_MAP_TIME_THRESHOLD: number = 86400000; // 24 hours
     if (payload.event === 'USER_SCAN_A_TAG') {
-      let currentTime: string = new Date().toString();
-      let currentProduct: string = payload.data.replace(
-        'https://v2.brij.it/c/',
-        ''
-      );
+      let scanTime: string = new Date().toString();
+      let scanSlug: string = payload.data.replace('https://v2.brij.it/c/', '');
 
-      // new product node
-      let newProduct: ProductMapType = {
-        slug: currentProduct,
-        timeStamp: currentTime,
-      };
+      // Get product map from localstorage
+      let scanMap: Map<string, string> | null;
+      if (localStorage.getItem('storedScans'))
+        scanMap = new Map(
+          JSON.parse(localStorage.getItem('storedScans') || '{}')
+        );
+      else scanMap = new Map<string, string>();
+      // console.log('RETRIEVED SCAN MAP: ', scanMap);
 
-      // get product map from localstorage
-      let productScans: string | null = localStorage.getItem('productScanMap');
-      let productScanMap: ProductMapType[];
-      if (productScans) productScanMap = JSON.parse(productScans);
-      else productScanMap = [];
+      // Purge older than threshold entries
+      for (let [key, value] of scanMap) {
+        console.log(key, value);
+        if (
+          new Date().getTime() - new Date(value).getTime() >
+          SCAN_MAP_TIME_THRESHOLD
+        )
+          scanMap.delete(key);
+      }
+      // console.log('FILTERED: ', scanMap);
 
-      // purge older than time threshold nodes
-      let productScanMapFiltered: ProductMapType[] = productScanMap.filter(
-        (element) =>
-          new Date().getTime() - new Date(element.timeStamp).getTime() <
-          THRESHOLD
-      );
+      // Purge the map if entries equal to length threshold
+      if (scanMap.size >= SCAN_MAP_ENTRIES_THRESHOLD) scanMap.clear();
 
-      // find if scanned product exists
-      let index = productScanMapFiltered.findIndex(
-        (node) => node.slug === currentProduct
-      );
-
-      if (index > -1) {
-        // if slug exists already
-        let timeDifference =
-          new Date().getTime() -
-          new Date(productScanMapFiltered[index].timeStamp).getTime();
-        if (timeDifference > THRESHOLD) {
-          // if enough time has passed since last scan
-          productScanMapFiltered.splice(index, 1, newProduct);
+      if (scanMap instanceof Map) {
+        // find if scanned product exists
+        if (scanMap.has(scanSlug)) {
+          let timestamp: string = scanMap.get(scanSlug) || '';
+          // if time threshold has passed since last scan
+          if (
+            timestamp &&
+            new Date().getTime() - new Date(timestamp).getTime() >
+              LAST_SCAN_INTERVAL_THRESHOLD
+          ) {
+            // update entry with new timestamp and log the event
+            scanMap.set(scanSlug, scanTime);
+            // console.log('EVENT LOGGED with updated timestamp');
+            localStorage.setItem(
+              'storedScans',
+              JSON.stringify(Array.from(scanMap.entries()))
+            );
+            // console.log('UPDATED SCAN MAP: ', scanMap);
+            return _logEvent({
+              ...payload,
+              user: user?.uid,
+              location: userLocation,
+              product: productDetails?.product.id,
+              tag: productDetails?.tag.slug,
+              brand: productDetails?.brand.id,
+            });
+          } else {
+            // console.log('EVENT BLOCKED for similar timestamp');
+            localStorage.setItem(
+              'storedScans',
+              JSON.stringify(Array.from(scanMap.entries()))
+            );
+            // console.log('UPDATED SCAN MAP: ', scanMap);
+            return undefined;
+          }
+        } else {
+          // if slug is uniquely new
+          scanMap.set(scanSlug, scanTime);
+          // console.log('EVENT LOGGED for new product');
+          // Save map into localstorage
           localStorage.setItem(
-            'productScanMap',
-            JSON.stringify(productScanMapFiltered)
+            'storedScans',
+            JSON.stringify(Array.from(scanMap.entries()))
           );
+          // console.log('UPDATED SCAN MAP: ', scanMap);
           return _logEvent({
             ...payload,
             user: user?.uid,
@@ -216,39 +246,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
             tag: productDetails?.tag.slug,
             brand: productDetails?.brand.id,
           });
-        } else {
-          // if enough time has not passed since last scan
-          localStorage.setItem(
-            'productScanMap',
-            JSON.stringify(productScanMapFiltered)
-          );
-          return undefined;
         }
-      } else {
-        // if slug is uniquely new
-        productScanMapFiltered.push(newProduct);
-        localStorage.setItem(
-          'productScanMap',
-          JSON.stringify(productScanMapFiltered)
-        );
-        return _logEvent({
-          ...payload,
-          user: user?.uid,
-          location: userLocation,
-          product: productDetails?.product.id,
-          tag: productDetails?.tag.slug,
-          brand: productDetails?.brand.id,
-        });
       }
-    } else {
-      return _logEvent({
-        ...payload,
-        user: user?.uid,
-        location: userLocation,
-        product: productDetails?.product.id,
-        tag: productDetails?.tag.slug,
-        brand: productDetails?.brand.id,
-      });
     }
   };
 

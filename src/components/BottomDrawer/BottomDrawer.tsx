@@ -284,7 +284,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 (isChildOpen ? (
                   <>
                     <DragZone id='draggable' style={{ zIndex: 99 }} />
-                    <div id='not-draggable'>{children}</div>
+                    <div
+                      id='not-draggable'
+                      style={{ width: '100%', overflow: 'auto' }}
+                    >
+                      {children}
+                    </div>
                   </>
                 ) : (
                   <Wrapper width='100%' direction='column' gap='1rem'>

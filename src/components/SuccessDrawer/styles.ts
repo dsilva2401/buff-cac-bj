@@ -12,6 +12,7 @@ export const Drawer = styled.div<DrawerType>`
   position: absolute;
   padding: 30% 3rem 50%;
   top: 1000px;
+  left: 0;
   border-radius: 26px 26px 0px 0px;
   display: flex;
   flex-direction: column;
