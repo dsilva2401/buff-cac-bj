@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-type ContainerProps = {
+type AppContainerProps = {
   isBrowser: boolean;
 };
 
-const Container = styled.div<ContainerProps>`
+const AppContainer = styled.div<AppContainerProps>`
   width: 100%;
   height: 100%;
   display: flex;
@@ -13,4 +13,4 @@ const Container = styled.div<ContainerProps>`
   background-color: ${(props) => (props.isBrowser ? '#F5F5F5' : '#FFFFFF')};
 `;
 
-export default Container;
+export default AppContainer;

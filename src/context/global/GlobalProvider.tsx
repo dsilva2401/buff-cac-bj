@@ -4,10 +4,10 @@ import {
   PageStateType,
   UserLocationType,
 } from './GlobalContext';
-import { EventPayload } from '../../hooks/useLogEvent';
-import { getAuth, User } from 'firebase/auth';
-import { theme } from 'styles/theme';
 import { useAPI } from 'utils/api';
+import { theme } from 'styles/theme';
+import { getAuth, User } from 'firebase/auth';
+import { EventPayload } from '../../hooks/useLogEvent';
 import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
 import useCollection from '../../hooks/useCollection';
@@ -86,11 +86,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     let pathCheck: boolean = false;
-    if (
-      window.location.pathname.includes(`c/${slug}`) ||
-      window.location.pathname.includes(`*/${slug}`)
-    )
-      pathCheck = true;
+    if (window.location.pathname.includes(`c/${slug}`)) pathCheck = true;
     setBrandTheme(
       (pathCheck && localStorage.getItem('accentColor')) || theme.primary
     );
@@ -177,7 +173,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
           JSON.parse(localStorage.getItem('storedScans') || '{}')
         );
       else scanMap = new Map<string, string>();
-      // console.log('RETRIEVED SCAN MAP: ', scanMap);
 
       // Purge older than threshold entries
       for (let [key, value] of scanMap) {
@@ -188,7 +183,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         )
           scanMap.delete(key);
       }
-      // console.log('FILTERED: ', scanMap);
 
       // Purge the map if entries equal to length threshold
       if (scanMap.size >= SCAN_MAP_ENTRIES_THRESHOLD) scanMap.clear();
@@ -205,12 +199,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
           ) {
             // update entry with new timestamp and log the event
             scanMap.set(scanSlug, scanTime);
-            // console.log('EVENT LOGGED with updated timestamp');
             localStorage.setItem(
               'storedScans',
               JSON.stringify(Array.from(scanMap.entries()))
             );
-            // console.log('UPDATED SCAN MAP: ', scanMap);
             return _logEvent({
               ...payload,
               user: user?.uid,
@@ -220,18 +212,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
               brand: productDetails?.brand.id,
             });
           } else {
-            // console.log('EVENT BLOCKED for similar timestamp');
             localStorage.setItem(
               'storedScans',
               JSON.stringify(Array.from(scanMap.entries()))
             );
-            // console.log('UPDATED SCAN MAP: ', scanMap);
             return undefined;
           }
         } else {
           // if slug is uniquely new
           scanMap.set(scanSlug, scanTime);
-          // console.log('EVENT LOGGED for new product');
           // Save map into localstorage
           localStorage.setItem(
             'storedScans',

@@ -2,7 +2,6 @@ export const resources = {
   en: {
     translation: {
       socialLogin: {
-        signInToastMessage: 'Sign In Successful',
         registerGoogleButton: 'Register with Google',
         continueGoogleButton: 'Continue with Google',
         registerFacebookButton: 'Register with Facebook',
@@ -16,7 +15,6 @@ export const resources = {
         emailInputPlaceholder: 'Enter email...',
         emailInputFilledPlaceholder: 'Email',
         signUpLink: 'Sign up!',
-        signInToastMessage: 'Login Successful',
       },
       firebaseErrors: {
         'auth/invalid-email': 'Please provie a valid email',

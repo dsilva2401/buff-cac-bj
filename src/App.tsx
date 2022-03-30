@@ -3,7 +3,7 @@ import { isBrowser } from 'react-device-detect';
 import { BrowserRouter } from 'react-router-dom';
 import { useGlobal } from './context/global/GlobalContext';
 import { LastLocationProvider } from 'react-router-last-location';
-import Container from 'components/Container/Container';
+import AppContainer from 'components/AppContainer/AppContainer';
 import AppFrame from 'components/AppFrame/AppFrame';
 import SideMenu from 'components/SideMenu/SideMenu';
 import GlobalStyle from 'styles/global';
@@ -11,11 +11,12 @@ import Toast from 'components/Toast';
 import Routes from './routes';
 
 export default function App() {
+  const { appZoom } = useGlobal();
+
   useLayoutEffect(() => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
-  const { appZoom } = useGlobal();
 
   if (isBrowser) {
     window.addEventListener('resize', () => {
@@ -34,10 +35,10 @@ export default function App() {
   );
 
   return (
-    <Container isBrowser={isBrowser} style={{ zoom: appZoom }}>
+    <AppContainer isBrowser={isBrowser} style={{ zoom: appZoom }}>
       <GlobalStyle />
       {isBrowser ? <AppFrame>{browserRouter}</AppFrame> : browserRouter}
       <Toast />
-    </Container>
+    </AppContainer>
   );
 }

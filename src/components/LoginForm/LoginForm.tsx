@@ -9,7 +9,6 @@ import { useGlobal } from 'context/global/GlobalContext';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
 import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
-import FloatingLabelInput from 'components/FloatingLabelInput';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
@@ -17,6 +16,7 @@ import useFirebaseError from 'hooks/useFirebaseError';
 import useElementSize from 'hooks/useElementSize';
 import SocialLogin from 'components/SocialLogin';
 import useLoginToken from 'hooks/useLoginToken';
+import EditInput from 'components/EditInput';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
@@ -169,16 +169,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
               position='relative'
               paddingTop='2px'
             >
-              <FloatingLabelInput
+              <EditInput
                 width={width}
+                value={username}
                 placeholder={
                   username === ''
                     ? t('emailInputPlaceholder')
                     : t('emailInputFilledPlaceholder')
                 }
-                value={username}
-                autoFocus={emailRegistration}
-                onChange={(event) => handleUsernameChanged(event.target.value)}
+                onChange={(value) => handleUsernameChanged(value)}
               />
             </Wrapper>
           </Wrapper>

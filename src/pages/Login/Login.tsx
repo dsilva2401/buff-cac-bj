@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { ReactComponent as BrijLogo } from 'assets/logos/svg/brij-colored.svg';
 import { useGlobal } from 'context/global/GlobalContext';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { RoutesHashMap } from 'routes';
 import { Helmet } from 'react-helmet';
 import { theme } from 'styles/theme';
-import { useTranslation } from 'react-i18next';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import LoginForm from 'components/LoginForm';
@@ -13,8 +13,8 @@ import Wrapper from 'components/Wrapper';
 
 const Login: React.FC = () => {
   const { setIsMenuOpen } = useGlobal();
-  const history = useHistory();
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
+  const history = useHistory();
 
   const logo = useMemo(() => <BrijLogo fill={theme.primary} />, []);
 

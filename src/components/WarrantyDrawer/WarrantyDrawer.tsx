@@ -1,5 +1,5 @@
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
-import { ReactComponent as Checkmark } from 'assets/icons/svg/checkmark-white.svg';
+import { ReactComponent as Checkmark } from 'assets/icons/svg/checkmark.svg';
 import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
 import DataTable from 'components/DataTable';

@@ -107,8 +107,7 @@ const SideMenu: React.FC = () => {
                 <Collection />
               </Link>
             ) : null}
-            {(window.location.pathname === `/c/${slug}` ||
-              window.location.pathname === `/*/${slug}`) &&
+            {window.location.pathname === `/c/${slug}` &&
               details?.brand?.website && (
                 <a
                   href={
