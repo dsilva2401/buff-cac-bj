@@ -252,82 +252,6 @@ const ProductDetails: React.FC = () => {
         };
         buttons.push(buttonObject);
       }
-
-      // const { product } = details || {};
-
-      // let showAddToCollectionButton = true;
-
-      // if (!user && showAddToCollectionButton) {
-      //   showAddToCollectionButton = false;
-      // }
-
-      // if (product.registeredToCurrentUser && showAddToCollectionButton) {
-      //   showAddToCollectionButton = false;
-      // }
-
-      // if (
-      //   product.registered &&
-      //   product.tagType === 'Unit' &&
-      //   showAddToCollectionButton
-      // ) {
-      //   showAddToCollectionButton = false;
-      // }
-
-      // if (showAddToCollectionButton) {
-      //   let title = t('addToCollection');
-
-      //   const productCollection =
-      //     personalDetails?.profile?.productCollection || [];
-
-      //   const existInCollection = productCollection.find(
-      //     (productTag: CollectionItem) =>
-      //       details?.tag?.slug === productTag.tagId
-      //   );
-
-      //   if (existInCollection) {
-      //     title = t('removeFromCollection');
-      //   }
-
-      //   let onClick = () => {
-      //     if (existInCollection) {
-      //       updateUser({
-      //         productCollection: [
-      //           ...productCollection.filter(
-      //             (productTag) => productTag.tagId !== id
-      //           ),
-      //         ],
-      //       });
-      //       showToast({
-      //         message: t('removeFromCollectionToast'),
-      //         type: 'success',
-      //       });
-      //     } else {
-      //       updateUser({
-      //         productCollection: [
-      //           ...productCollection,
-      //           {
-      //             tagId: id,
-      //             brandId: details?.brand?.id,
-      //             productId: details?.product?.id,
-      //             variantId: null,
-      //           },
-      //         ],
-      //       });
-      //       showToast({
-      //         message: t('addToCollectionToast'),
-      //         type: 'success',
-      //       });
-      //     }
-      //   };
-      //   buttons.push({
-      //     title,
-      //     onClick: onClick,
-      //     isHighlight: false,
-      //     locked: false,
-      //     pageState: null,
-      //     icon: addToLoading ? <LoadingAnimation width={32} /> : null,
-      //   });
-      // }
     }
     return buttons;
   }, [changeDrawerPage, id, details, setSignInRedirect, logEvent, brandTheme]);
@@ -364,7 +288,7 @@ const ProductDetails: React.FC = () => {
           </Wrapper>
         );
       case 'WARRANTY_MODULE':
-        const { registeredTo } = leadModule?.moduleInfo || {};
+        const { registeredTo, period, duration } = leadModule?.moduleInfo || {};
         const tagType = details?.product?.tagType;
 
         if (registeredTo && tagType === 'Unit') {
@@ -380,7 +304,6 @@ const ProductDetails: React.FC = () => {
           );
         }
 
-        const { period, duration } = details?.warrantyInformation || {};
         if (!period && !duration) return null;
 
         return (
