@@ -20,6 +20,8 @@ export interface Product {
   registeredDate: string;
   // defines the type of tag
   tagType: string;
+  // product description for shopping drawer
+  productDescription: string;
 }
 
 export type ModuleInfoType = {

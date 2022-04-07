@@ -522,7 +522,13 @@ const ProductDetails: React.FC = () => {
           case 'SHOPPING_MODULE':
             const data = details?.modules[currentPage as number]
               ?.moduleInfo as ShoppingModuleType;
-            return <ShopDrawer data={data} closePage={closeDrawerPage} />;
+            return (
+              <ShopDrawer
+                data={data}
+                closePage={closeDrawerPage}
+                productDescription={details.product.productDescription}
+              />
+            );
           default:
             return null;
         }

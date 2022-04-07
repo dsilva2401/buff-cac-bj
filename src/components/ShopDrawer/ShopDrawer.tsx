@@ -14,6 +14,7 @@ import placeholder from 'assets/images/png/placeholder.png';
 import ProgressiveImage from 'react-progressive-image';
 import SuccessDrawer from 'components/SuccessDrawer';
 import ModuleWrapper from 'components/ModuleWrapper';
+import useElementSize from 'hooks/useElementSize';
 import SelectInput from 'components/SelectInput';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
@@ -23,10 +24,15 @@ import hash from 'object-hash';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
+  productDescription?: string;
   closePage(): void;
 };
 
-const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
+const ShopDrawer: React.FC<ShopDrawerProps> = ({
+  data,
+  closePage,
+  productDescription,
+}) => {
   const {
     allOptions,
     variantDetails,
@@ -42,9 +48,12 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
   const [chosenOption, setChosenOption] = useState<VariantDetails>(
     defaultVariantDetails
   );
+
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
+  const [expandDescription, toggleExpandDescription] = useState<boolean>(false);
+  const [contentRef, { height }] = useElementSize();
   const { logEvent, brandTheme } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.shopDrawer',
@@ -209,8 +218,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               height='100%'
               direction='column'
               justifyContent='center'
-              gap='1rem'
               padding='0rem 0.5rem'
+              gap='1rem'
             >
               <Wrapper width='100%' direction='column' gap='0.1rem'>
                 <Text
@@ -289,89 +298,138 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
               )}
             </Wrapper>
           </Wrapper>
-          <Wrapper
-            width='100%'
-            direction='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            gap='0.5rem'
-            margin='1rem 0'
-          >
-            {allOptions?.map((optionItem) => (
-              <SelectInput
-                key={optionItem.name}
-                id={optionItem.name}
-                label={optionItem.name}
-                options={optionItem.values}
-                isSuccess={successDrawer}
-                onChange={(value) =>
-                  updateOption((prev) => ({
-                    ...prev,
-                    [optionItem.name]: String(value),
-                  }))
-                }
-                selected={option[optionItem.name]}
-              />
-            ))}
-          </Wrapper>
-          <Wrapper
-            width='100%'
-            direction='column'
-            justifyContent='flex-start'
-            alignItems='center'
-          >
-            {isValidCombo ? (
-              <Button
-                inlineIcon
-                variant='dark'
-                brandTheme={brandTheme}
-                onClick={handleCheckout}
-                disabled={!isValidCombo}
-                alignItems='flex-end'
+          {productDescription && (
+            <Wrapper
+              overflow='hidden'
+              transition='0.3s'
+              padding='0 0 1rem 0'
+              style={{ height: expandDescription ? height + 16 : '70px' }}
+            >
+              <Wrapper
+                position='relative'
+                direction='column'
+                gap='0.5rem'
+                overflow={expandDescription ? 'visible' : 'hidden'}
               >
-                <div
-                  style={{
-                    position: 'relative',
-                    height: '24px',
-                  }}
+                <Text
+                  color='#414149'
+                  fontSize='0.75rem'
+                  ref={contentRef}
+                  style={{ whiteSpace: 'pre-line' }}
                 >
-                  <ShoppingBag width={24} />
-                  <label
+                  <p>{productDescription}</p>
+                </Text>
+                {height > 54 && (
+                  <Text
+                    fontSize='0.75rem'
+                    color='#4B6EFA'
                     style={{
-                      display: 'flex',
+                      display: 'block',
+                      textDecoration: 'underline',
+                      background: '#FFFFFF',
+                      boxShadow: '-10px 1px 8px 0px rgba(256,256,256,1)',
                       position: 'absolute',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: brandTheme,
-                      fontSize: '0.7rem',
-                      fontWeight: 'bold',
-                      width: '24px',
-                      zIndex: 99,
-                      left: '0',
-                      top: '5px',
+                      cursor: 'pointer',
+                      bottom: expandDescription ? -16 : 0,
+                      right: 0,
+                    }}
+                    onClick={() => toggleExpandDescription(!expandDescription)}
+                  >
+                    <p>
+                      {expandDescription
+                        ? t('productDetails.showLess')
+                        : t('productDetails.showMore')}
+                    </p>
+                  </Text>
+                )}
+              </Wrapper>
+            </Wrapper>
+          )}
+          <Wrapper width='100%' direction='column' transition='0.3s'>
+            <Wrapper
+              width='100%'
+              direction='column'
+              justifyContent='flex-start'
+              alignItems='center'
+              gap='1rem'
+              margin='0 0 1rem 0'
+            >
+              {allOptions?.map((optionItem) => (
+                <SelectInput
+                  key={optionItem.name}
+                  id={optionItem.name}
+                  label={optionItem.name}
+                  options={optionItem.values}
+                  isSuccess={successDrawer}
+                  onChange={(value) =>
+                    updateOption((prev) => ({
+                      ...prev,
+                      [optionItem.name]: String(value),
+                    }))
+                  }
+                  selected={option[optionItem.name]}
+                />
+              ))}
+            </Wrapper>
+            <Wrapper
+              width='100%'
+              direction='column'
+              justifyContent='flex-start'
+              alignItems='center'
+            >
+              {isValidCombo ? (
+                <Button
+                  inlineIcon
+                  variant='dark'
+                  brandTheme={brandTheme}
+                  onClick={handleCheckout}
+                  disabled={!isValidCombo}
+                  alignItems='flex-end'
+                >
+                  <div
+                    style={{
+                      position: 'relative',
+                      height: '24px',
                     }}
                   >
-                    {selectedQuantity}
-                  </label>
-                </div>
-                {t('checkoutButton.callToAction')}
-                {selectedQuantity > 0 && (
-                  <label style={{ color: theme.button.secondary }}>
-                    {getCostText()}
-                  </label>
-                )}
-              </Button>
-            ) : (
-              <Text fontSize='1rem' fontWeight='600'>
-                <p>
-                  {isValidCombo === null
-                    ? t('checkoutHint.chooseOptions')
-                    : isValidCombo === false
-                    ? t('checkoutHint.comboUnavailable')
-                    : ''}
-                </p>
-              </Text>
-            )}
+                    <ShoppingBag width={24} />
+                    <label
+                      style={{
+                        display: 'flex',
+                        position: 'absolute',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: brandTheme,
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        width: '24px',
+                        zIndex: 99,
+                        left: '0',
+                        top: '5px',
+                      }}
+                    >
+                      {selectedQuantity}
+                    </label>
+                  </div>
+                  {t('checkoutButton.callToAction')}
+                  {selectedQuantity > 0 && (
+                    <label style={{ color: theme.button.secondary }}>
+                      {getCostText()}
+                    </label>
+                  )}
+                </Button>
+              ) : (
+                <Text fontSize='1rem' fontWeight='600'>
+                  <p>
+                    {isValidCombo === null
+                      ? t('checkoutHint.chooseOptions')
+                      : isValidCombo === false
+                      ? t('checkoutHint.comboUnavailable')
+                      : ''}
+                  </p>
+                </Text>
+              )}
+            </Wrapper>
           </Wrapper>
         </Wrapper>
       </ModuleWrapper>

@@ -139,6 +139,10 @@ export const resources = {
             title: 'Order Placed!',
             description: 'Check your email for an order confirmation',
           },
+          productDetails: {
+            showMore: 'More',
+            showLess: 'Less',
+          },
           savingBanner: {
             pre: "You're saving ",
             post: '% with Brij',
