@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import ProtectedRoute from 'components/ProtectedRoute';
@@ -74,15 +74,19 @@ const getTransition = (path: string, lastLocation: string) => {
 const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
   const location = useLocation();
 
+  const getCurrentTransition = useCallback(() => {
+    return getTransition(
+      location.pathname,
+      lastLocation ? lastLocation?.pathname : ''
+    );
+  }, [location.pathname, lastLocation]);
+
   return (
     <TransitionGroup>
       <CSSTransition
         timeout={300}
         key={location.key}
-        classNames={getTransition(
-          location.pathname,
-          lastLocation ? lastLocation?.pathname : ''
-        )}
+        classNames={getCurrentTransition()}
       >
         <Switch location={location}>
           {Object.keys(RoutesHashMap).map((routeKey) => {

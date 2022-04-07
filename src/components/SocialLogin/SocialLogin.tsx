@@ -59,7 +59,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         })
         .finally(() => setLoading(false));
     },
-    [auth, t, onSuccess, getFirebaseError, setLoading]
+    [auth, onSuccess, getFirebaseError, setLoading]
   );
 
   return (

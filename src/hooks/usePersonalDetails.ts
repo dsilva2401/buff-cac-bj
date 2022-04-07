@@ -10,10 +10,17 @@ function usePersonalDetails(
     null
   );
   const [token, setToken] = useState<string | null>(null);
+  const [tempToken, setTempToken] = useState<string | null>(null);
 
-  const onSuccess = useCallback((userDetails) => {
-    setpersonalDetails(userDetails);
-  }, []);
+  const onSuccess = useCallback(
+    (userDetails) => {
+      setpersonalDetails(userDetails);
+
+      // set the real token so all the API's can use it.
+      setToken(tempToken);
+    },
+    [tempToken]
+  );
 
   const onError = useCallback((error) => {
     console.log('ERROR CODE: ', error.code);
@@ -27,32 +34,33 @@ function usePersonalDetails(
       onSuccess,
       onError,
     },
-    token
+    tempToken
   );
 
   useEffect(() => {
     // if user doesn't exist remove token ( mostly triggered when user logs out)
     if (!user) {
       setToken(null);
+      setTempToken(null);
       return;
     }
 
-    if (user && !token) {
+    if (user && !tempToken) {
       const setUserToken = async () => {
         const tokenExtracted = (await user?.getIdToken()) || null;
-        setToken(tokenExtracted);
+        setTempToken(tokenExtracted);
       };
 
       setUserToken();
     }
-  }, [user, token]);
+  }, [user, tempToken]);
 
   useEffect(() => {
-    if (user && token) {
+    if (user && tempToken) {
       const { email, phoneNumber, displayName } = user;
       getUser({ email, phoneNumber, firstName: displayName, lastName: '' });
     }
-  }, [user, getUser, token]);
+  }, [user, getUser, tempToken]);
 
   return [personalDetails, getUser, token];
 }

@@ -1,20 +1,20 @@
+import React, { useMemo, useState } from 'react';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as Checkmark } from 'assets/icons/svg/checkmark.svg';
 import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
-import DataTable from 'components/DataTable';
-import HtmlWrapper from 'components/HtmlWrapper';
-import LoadingIndicator from 'components/LoadingIndicator';
-import ModuleWrapper from 'components/ModuleWrapper';
-import Text from 'components/Text';
-import Wrapper from 'components/Wrapper';
-import dateFormat from 'dateformat';
-import useElementSize from 'hooks/useElementSize';
-import React, { useState } from 'react';
+import { WarrantyModuleType } from '../../types/ProductDetailsType';
+import { useGlobal } from '../../context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { theme } from 'styles/theme';
-import { useGlobal } from '../../context/global/GlobalContext';
-import { WarrantyModuleType } from '../../types/ProductDetailsType';
+import Wrapper from 'components/Wrapper';
+import DataTable from 'components/DataTable';
+import HtmlWrapper from 'components/HtmlWrapper';
+import useElementSize from 'hooks/useElementSize';
+import ModuleWrapper from 'components/ModuleWrapper';
+import LoadingIndicator from 'components/LoadingIndicator';
+import dateFormat from 'dateformat';
+import Text from 'components/Text';
 
 type WarrantyDrawerProps = {
   closePage(): void;
@@ -53,98 +53,102 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     issueDate: string;
     expiryDate: string;
     expired: boolean;
-  }) => (
-    <>
-      <Wrapper
-        gap='0.5rem'
-        width='100%'
-        direction='row'
-        background={expired ? '#FFEFEE' : '#EDF0FF'}
-        justifyContent='center'
-        borderRadius='0.25rem'
-        paddingTop='0.75rem'
-        alignItems='center'
-        margin='0.75rem 0'
-        padding='0.75rem'
-      >
-        <Checkmark
-          width='15px'
-          height='15px'
-          fill={expired ? '#FD6157' : brandTheme || theme.primary}
-        />
-        <Text
-          fontWeight='600'
-          fontSize='0.875rem'
-          color={expired ? '#FD6157' : brandTheme || theme.primary}
-        >
-          <p>{title}</p>
-        </Text>
-      </Wrapper>
-      <Wrapper
-        width='100%'
-        direction='row'
-        gap='0.75rem'
-        margin='0 0 0.75rem 0'
-      >
-        <Wrapper
-          width='100%'
-          gap='0.125rem'
-          direction='column'
-          background='#FAFAFA'
-          alignItems='center'
-          justifyContent='center'
-          paddingTop='0.75rem'
-          padding='0.75rem'
-          border='1px solid #E7EAEB'
-        >
-          <Text
-            fontWeight='500'
-            fontSize='0.875rem'
-            textAlign='center'
-            color='#98A3AA'
+  }) =>
+    useMemo(
+      () => (
+        <>
+          <Wrapper
+            gap='0.5rem'
+            width='100%'
+            direction='row'
+            background={expired ? '#FFEFEE' : '#EDF0FF'}
+            justifyContent='center'
+            borderRadius='0.25rem'
+            paddingTop='0.75rem'
+            alignItems='center'
+            margin='0.75rem 0'
+            padding='0.75rem'
           >
-            <p>{t('issueDate')}</p>
-          </Text>
-          <Text
-            fontWeight='600'
-            fontSize='0.875rem'
-            textAlign='center'
-            color='#1B1B1B'
+            <Checkmark
+              width='15px'
+              height='15px'
+              fill={expired ? '#FD6157' : brandTheme || theme.primary}
+            />
+            <Text
+              fontWeight='600'
+              fontSize='0.875rem'
+              color={expired ? '#FD6157' : brandTheme || theme.primary}
+            >
+              <p>{title}</p>
+            </Text>
+          </Wrapper>
+          <Wrapper
+            width='100%'
+            direction='row'
+            gap='0.75rem'
+            margin='0 0 0.75rem 0'
           >
-            <p>{issueDate}</p>
-          </Text>
-        </Wrapper>
-        <Wrapper
-          width='100%'
-          gap='0.125rem'
-          direction='column'
-          background='#FAFAFA'
-          alignItems='center'
-          justifyContent='center'
-          paddingTop='0.75rem'
-          padding='0.75rem'
-          border='1px solid #E7EAEB'
-        >
-          <Text
-            fontWeight='500'
-            fontSize='0.875rem'
-            textAlign='center'
-            color='#98A3AA'
-          >
-            <p>{t('expirationDate')}</p>
-          </Text>
-          <Text
-            fontWeight='600'
-            fontSize='0.875rem'
-            textAlign='center'
-            color='#1B1B1B'
-          >
-            <p>{expiryDate}</p>
-          </Text>
-        </Wrapper>
-      </Wrapper>
-    </>
-  );
+            <Wrapper
+              width='100%'
+              gap='0.125rem'
+              direction='column'
+              background='#FAFAFA'
+              alignItems='center'
+              justifyContent='center'
+              paddingTop='0.75rem'
+              padding='0.75rem'
+              border='1px solid #E7EAEB'
+            >
+              <Text
+                fontWeight='500'
+                fontSize='0.875rem'
+                textAlign='center'
+                color='#98A3AA'
+              >
+                <p>{t('issueDate')}</p>
+              </Text>
+              <Text
+                fontWeight='600'
+                fontSize='0.875rem'
+                textAlign='center'
+                color='#1B1B1B'
+              >
+                <p>{issueDate}</p>
+              </Text>
+            </Wrapper>
+            <Wrapper
+              width='100%'
+              gap='0.125rem'
+              direction='column'
+              background='#FAFAFA'
+              alignItems='center'
+              justifyContent='center'
+              paddingTop='0.75rem'
+              padding='0.75rem'
+              border='1px solid #E7EAEB'
+            >
+              <Text
+                fontWeight='500'
+                fontSize='0.875rem'
+                textAlign='center'
+                color='#98A3AA'
+              >
+                <p>{t('expirationDate')}</p>
+              </Text>
+              <Text
+                fontWeight='600'
+                fontSize='0.875rem'
+                textAlign='center'
+                color='#1B1B1B'
+              >
+                <p>{expiryDate}</p>
+              </Text>
+            </Wrapper>
+          </Wrapper>
+        </>
+      ),
+      [title, issueDate, expiryDate, expired]
+    );
 
   if (loading) {
     return (

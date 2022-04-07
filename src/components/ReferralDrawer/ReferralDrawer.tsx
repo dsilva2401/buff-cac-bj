@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from 'context/global/GlobalContext';
@@ -23,12 +23,12 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
   drawerTitle,
   referralData,
 }) => {
-  const { logEvent } = useGlobal();
+  const { brandTheme, logEvent } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.referralDrawer',
   });
 
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     const shareData = {
       title: referralData?.url,
       text: t('shareText'),
@@ -41,7 +41,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
     } catch (err) {
       if (resultPara) resultPara.textContent = 'Error: ' + err;
     }
-  };
+  }, [t, referralData]);
 
   return (
     <ModuleWrapper drawerTitle={drawerTitle}>
@@ -77,11 +77,14 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
             });
           }}
         >
-          <Button variant='light'>{t('copyLinkButton')}</Button>
+          <Button variant='light' brandTheme={brandTheme}>
+            {t('copyLinkButton')}
+          </Button>
         </CopyToClipboard>
         <Button
           variant='light'
           id='shareButton'
+          brandTheme={brandTheme}
           onClick={() => {
             handleShare();
             logEvent({

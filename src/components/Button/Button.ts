@@ -67,10 +67,10 @@ const Button = styled.button<ButtonProps>`
   }
 
   svg {
-    position: absolute;
-    border-radius: 50%;
+    position: ${(props) => (props.inlineIcon ? 'relative' : 'absolute')};
     ${(props) =>
       props.iconRight ? `right: 1rem;` : props.inlineIcon ? '' : `left: 1rem;`};
+    border-radius: 50%;
   }
 
   &:active {

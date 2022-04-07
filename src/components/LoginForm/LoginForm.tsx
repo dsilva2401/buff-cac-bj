@@ -54,10 +54,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
     success,
   } = useMagicLinkHandler(username);
 
-  const validateEmail = (value: string) => {
+  const validateEmail = useCallback((value: string) => {
     if (validator.isEmail(value)) setEmailValidated(true);
     else setEmailValidated(false);
-  };
+  }, []);
 
   const handleUsernameChanged = (value: string) => {
     setUsername(value);

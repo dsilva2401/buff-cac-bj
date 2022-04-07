@@ -6,6 +6,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import SuccessDrawer from 'components/SuccessDrawer';
 import Wrapper from 'components/Wrapper';
+import { Animated } from 'react-animated-css';
 
 type RegistrationDrawerProps = {
   closePage(): void;
@@ -68,10 +69,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         warrantyId,
         tag: slug,
       }).then(() => {
-        setSuccessDrawer(true);
-        setTimeout(() => {
-          setSuccessDrawer(false);
-        }, 3000);
+        setSuccessDrawer(false);
       });
     };
 
@@ -114,13 +112,14 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     user,
   ]);
 
-  useEffect(() => {
-    if (successDrawer) {
-      setTimeout(() => {
-        setSuccessDrawer(false);
-      }, 3000);
-    }
-  }, [successDrawer]);
+  // We will try to refactor this on a later release
+  // useEffect(() => {
+  //   if (successDrawer) {
+  //     setTimeout(() => {
+  //       setSuccessDrawer(false);
+  //     }, 3000);
+  //   }
+  // }, [successDrawer]);
 
   if (!user || !currentModule.registrationRequired) {
     return children;
@@ -141,6 +140,17 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   const translationToUse = warrantyData ? t : registrationTranslation;
 
+  if (successDrawer) {
+    return (
+      <SuccessDrawer
+        isOpen={true}
+        title={translationToUse('successDrawer.title')}
+        description={translationToUse('successDrawer.description')}
+        close={closeSuccess}
+      />
+    );
+  }
+
   if (showPersonalDetailsForm) {
     return (
       <PersonalDetails
@@ -152,17 +162,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     );
   }
 
-  return (
-    <>
-      <SuccessDrawer
-        isOpen={successDrawer}
-        title={translationToUse('successDrawer.title')}
-        description={translationToUse('successDrawer.description')}
-        close={closeSuccess}
-      />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default RegistrationDrawer;

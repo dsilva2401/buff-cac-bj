@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RoutesHashMap } from 'routes';
 import { useGlobal } from 'context/global/GlobalContext';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
@@ -8,12 +8,17 @@ import Wrapper from 'components/Wrapper';
 const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const { user, authFetched } = useGlobal();
 
-  if (!authFetched) {
-    return (
+  const loadingIndicator = useMemo(
+    () => (
       <Wrapper height='100vh' paddingTop='5rem'>
         <LoadingIndicator />
       </Wrapper>
-    );
+    ),
+    []
+  );
+
+  if (!authFetched) {
+    return loadingIndicator;
   }
   if (user) {
     return <Route {...props} />;

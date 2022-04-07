@@ -1,9 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { theme } from 'styles/theme';
-import { useTranslation } from 'react-i18next';
+import { ReactComponent as ShoppingBag } from 'assets/icons/svg/shopping-bag.svg';
 import { useGlobal } from 'context/global/GlobalContext';
+import { useTranslation } from 'react-i18next';
+import { theme } from 'styles/theme';
+import {
+  ShoppingModuleType,
+  VariantDetails,
+} from '../../types/ProductDetailsType';
+import '../../../node_modules/slick-carousel/slick/slick.css';
+import '../../../node_modules/slick-carousel/slick/slick-theme.css';
 import QuantityController from 'components/QuantityController';
 import placeholder from 'assets/images/png/placeholder.png';
+import ProgressiveImage from 'react-progressive-image';
 import SuccessDrawer from 'components/SuccessDrawer';
 import ModuleWrapper from 'components/ModuleWrapper';
 import SelectInput from 'components/SelectInput';
@@ -12,17 +20,6 @@ import Button from 'components/Button';
 import Image from 'components/Image';
 import Text from 'components/Text';
 import hash from 'object-hash';
-import ProgressiveImage from 'react-progressive-image';
-import '../../../node_modules/slick-carousel/slick/slick-theme.css';
-import '../../../node_modules/slick-carousel/slick/slick.css';
-import {
-  ShoppingModuleType,
-  VariantDetails,
-} from '../../types/ProductDetailsType';
-import ShoppingBag from 'assets/images/png/shopping-bag.png';
-import Badge from 'components/Badge';
-import { getTextWidth } from 'utils/canvas';
-import { Typography } from '@material-ui/core';
 
 type ShopDrawerProps = {
   data: ShoppingModuleType;
@@ -53,7 +50,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     keyPrefix: 'drawers.shopDrawer',
   });
 
-  const getCostText = () => {
+  const getCostText = useCallback(() => {
     return `(${(
       parseFloat(
         !data.isDiscountAvailable
@@ -66,7 +63,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })})`;
-  };
+  }, [chosenOption, selectedQuantity, data.isDiscountAvailable]);
 
   useEffect(() => {
     if (defaultVariantDetails.options) {
@@ -281,7 +278,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   )}
                 </Wrapper>
               </Wrapper>
-              {isValidCombo ? (
+              {isValidCombo && (
                 <Wrapper>
                   <QuantityController
                     value={String(selectedQuantity)}
@@ -289,7 +286,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                     limit={chosenOption.inventoryQuantity}
                   />
                 </Wrapper>
-              ) : null}
+              )}
             </Wrapper>
           </Wrapper>
           <Wrapper
@@ -325,32 +322,44 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
           >
             {isValidCombo ? (
               <Button
+                inlineIcon
                 variant='dark'
                 brandTheme={brandTheme}
                 onClick={handleCheckout}
                 disabled={!isValidCombo}
                 alignItems='flex-end'
               >
-                <Badge
-                  variant='light'
-                  width='28px'
-                  height='28px'
-                  fontSize='0.8rem'
-                  brandTheme={brandTheme}
-                  background={ShoppingBag}
-                >
-                  {selectedQuantity}
-                </Badge>
-                &nbsp;&nbsp; {t('checkoutButton.callToAction')} &nbsp;
-                <p
+                <div
                   style={{
-                    position: 'absolute',
-                    left: `calc(50% + 45px)`,
-                    color: theme.button.secondary,
+                    position: 'relative',
+                    height: '24px',
                   }}
                 >
-                  {selectedQuantity > 0 && getCostText()}
-                </p>
+                  <ShoppingBag width={24} />
+                  <label
+                    style={{
+                      display: 'flex',
+                      position: 'absolute',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: brandTheme,
+                      fontSize: '0.7rem',
+                      fontWeight: 'bold',
+                      width: '24px',
+                      zIndex: 99,
+                      left: '0',
+                      top: '5px',
+                    }}
+                  >
+                    {selectedQuantity}
+                  </label>
+                </div>
+                {t('checkoutButton.callToAction')}
+                {selectedQuantity > 0 && (
+                  <label style={{ color: theme.button.secondary }}>
+                    {getCostText()}
+                  </label>
+                )}
               </Button>
             ) : (
               <Text fontSize='1rem' fontWeight='600'>

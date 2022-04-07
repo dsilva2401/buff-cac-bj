@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
@@ -124,21 +130,21 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     appZoom,
   ]);
 
-  const handleDrawerClose = () => {
+  const handleDrawerClose = useCallback(() => {
     setPosition({ ...position, y: bottomHeight });
     setMainDrawerOpen(false);
-  };
+  }, [position, setPosition, bottomHeight, setMainDrawerOpen]);
 
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     setIsControlled(false);
-  };
+  }, []);
 
   const handleDrag = (e: DraggableEvent, data: DraggableData) => {
     setPosition({ ...position, y: data.y });
     setDeltaPosition(data.deltaY);
   };
 
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     setIsControlled(true);
     if (deltaPosition > 0) {
       setPosition({ ...position, y: bottomHeight });
@@ -149,7 +155,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setPosition({ ...position, y: topHeight });
       }
     }
-  };
+  }, [topHeight, bottomHeight, deltaPosition, position, setPosition]);
 
   const validateSocials = (socials: SocialsType) => {
     return socials?.email ||
@@ -160,6 +166,65 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       ? true
       : false;
   };
+
+  const drawerFooter = useMemo(() => {
+    return (
+      <DrawerFooter>
+        {socials?.phone && (
+          <DrawerIconLink href={`tel:+${socials.phone}`}>
+            <Image src={phoneCallIcon} alt='phone-icon' />
+          </DrawerIconLink>
+        )}
+        {socials?.email && (
+          <DrawerIconLink href={`mailto:${socials?.email}`}>
+            <Image src={emailIcon} alt='email-icon' />
+          </DrawerIconLink>
+        )}
+        {socials?.twitter && (
+          <DrawerIconLink
+            href={
+              socials?.twitter.includes('https://') ||
+              socials?.twitter.includes('http://')
+                ? socials?.twitter
+                : `https://${socials?.twitter}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Image src={twitterIcon} alt='twitter-icon' />
+          </DrawerIconLink>
+        )}
+        {socials?.instagram && (
+          <DrawerIconLink
+            href={
+              socials?.instagram.includes('https://') ||
+              socials?.instagram.includes('http://')
+                ? socials?.instagram
+                : `https://${socials?.instagram}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Image src={instagramIcon} alt='instagram-icon' />
+          </DrawerIconLink>
+        )}
+        {socials?.facebook && (
+          <DrawerIconLink
+            href={
+              socials?.facebook.includes('https://') ||
+              socials?.facebook.includes('http://')
+                ? socials?.facebook
+                : `https://${socials?.facebook}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Image src={facebookIcon} alt='facebook-icon' />
+          </DrawerIconLink>
+        )}
+      </DrawerFooter>
+    );
+  }, [socials]);
 
   return (
     <>
@@ -313,62 +378,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </Wrapper>
                 ))}
             </DrawerBody>
-            {!isChildOpen && validateSocials(socials) && (
-              <DrawerFooter>
-                {socials?.phone && (
-                  <DrawerIconLink href={`tel:+${socials.phone}`}>
-                    <Image src={phoneCallIcon} alt='phone-icon' />
-                  </DrawerIconLink>
-                )}
-                {socials?.email && (
-                  <DrawerIconLink href={`mailto:${socials?.email}`}>
-                    <Image src={emailIcon} alt='email-icon' />
-                  </DrawerIconLink>
-                )}
-                {socials?.twitter && (
-                  <DrawerIconLink
-                    href={
-                      socials?.twitter.includes('https://') ||
-                      socials?.twitter.includes('http://')
-                        ? socials?.twitter
-                        : `https://${socials?.twitter}`
-                    }
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image src={twitterIcon} alt='twitter-icon' />
-                  </DrawerIconLink>
-                )}
-                {socials?.instagram && (
-                  <DrawerIconLink
-                    href={
-                      socials?.instagram.includes('https://') ||
-                      socials?.instagram.includes('http://')
-                        ? socials?.instagram
-                        : `https://${socials?.instagram}`
-                    }
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image src={instagramIcon} alt='instagram-icon' />
-                  </DrawerIconLink>
-                )}
-                {socials?.facebook && (
-                  <DrawerIconLink
-                    href={
-                      socials?.facebook.includes('https://') ||
-                      socials?.facebook.includes('http://')
-                        ? socials?.facebook
-                        : `https://${socials?.facebook}`
-                    }
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <Image src={facebookIcon} alt='facebook-icon' />
-                  </DrawerIconLink>
-                )}
-              </DrawerFooter>
-            )}
+            {!isChildOpen && validateSocials(socials) && drawerFooter}
           </Wrapper>
         </Drawer>
       </Draggable>
