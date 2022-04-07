@@ -296,9 +296,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                     </Wrapper>
                     <Text fontSize='0.75rem'>
                       <p>
-                        To extend protection or file a claim, click the account
-                        activation link that was sent to your email from
-                        Mulberry. You can also reach out to Mulberry support{' '}
+                        {t('mulberryTable.description.explanationText')}{' '}
                         <span
                           style={{
                             color: brandTheme || theme.primary,
@@ -308,7 +306,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                             window.open('mailto:help@getmulberry.com')
                           }
                         >
-                          here
+                          {t('mulberryTable.description.linkText')}
                         </span>
                         .
                       </p>

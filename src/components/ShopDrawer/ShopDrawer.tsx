@@ -172,7 +172,9 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           overflow='auto'
           before={{
             content: data.isDiscountAvailable
-              ? `You are saving ${data.discountPercentage!}% with Brij`
+              ? `${t('savingBanner.pre')}${' '}${data.discountPercentage!}${t(
+                  'savingBanner.post'
+                )}`
               : '',
             width: 'auto',
             height: 'auto',

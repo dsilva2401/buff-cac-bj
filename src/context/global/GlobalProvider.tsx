@@ -84,14 +84,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [collectionDetails, getCollection] = useCollection(token);
   const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
+  const pathname: string = window.location.pathname;
+
   useEffect(() => {
     let pathCheck: boolean = false;
-    if (window.location.pathname.includes(`c/${slug}`)) pathCheck = true;
+    if (pathname.includes(`c/${slug}`)) pathCheck = true;
     setBrandTheme(
       (pathCheck && localStorage.getItem('accentColor')) || theme.primary
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productDetails, window.location.pathname, slug]);
+  }, [productDetails, pathname, slug]);
 
   const onActivateWarrantySuccess = useCallback(() => {
     reFetchProduct();
@@ -164,7 +165,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     const SCAN_MAP_TIME_THRESHOLD: number = 86400000; // 24 hours
     if (payload.event === 'USER_SCAN_A_TAG') {
       let scanTime: string = new Date().toString();
-      let scanSlug: string = payload.data.replace('https://v2.brij.it/c/', '');
+      let scanSlug: string = payload.data;
 
       // Get product map from localstorage
       let scanMap: Map<string, string> | null;
@@ -176,7 +177,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
       // Purge older than threshold entries
       for (let [key, value] of scanMap) {
-        console.log(key, value);
         if (
           new Date().getTime() - new Date(value).getTime() >
           SCAN_MAP_TIME_THRESHOLD

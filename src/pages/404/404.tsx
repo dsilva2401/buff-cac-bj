@@ -11,7 +11,7 @@ import PageHeader from 'components/PageHeader';
 import IconButton from 'components/IconButton';
 import brijLogo from 'assets/logos/svg/brij-colored.svg';
 import background from 'assets/icons/svg/404-background.svg';
-import externalLink from 'assets/icons/svg/external-link.svg';
+import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
 
 const FourZeroFour: React.FC = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'fourZeroFour' });
@@ -70,14 +70,15 @@ const FourZeroFour: React.FC = () => {
             <h3>{t('message')}</h3>
             <Button
               squared
+              iconRight
               width='190px'
               variant='light'
               onClick={() => window.open(t('learnMoreLink'), '_blank')}
             >
-              <Text padding='0 0.5rem 0 0' color={theme.primary}>
+              <Text padding='0 1.25rem 0 0' color={theme.primary}>
                 <p>{t('learnMoreButton')}</p>
               </Text>
-              <Image src={externalLink} alt='external-link' />
+              <ExternalLink fill={theme.primary} />
             </Button>
           </Wrapper>
         </Wrapper>

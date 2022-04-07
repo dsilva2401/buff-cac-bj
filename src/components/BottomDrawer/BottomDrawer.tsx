@@ -21,6 +21,7 @@ import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Image from 'components/Image';
+import Text from 'components/Text';
 import {
   Drawer,
   DragBar,
@@ -54,6 +55,7 @@ type SocialsType =
 
 type BottomDrawerProps = {
   title: string | undefined;
+  subtitle: string | undefined;
   children: React.ReactNode;
   isChildOpen: boolean;
   closeChild: () => void;
@@ -69,6 +71,7 @@ type BottomDrawerProps = {
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
   title,
+  subtitle,
   children,
   isChildOpen,
   closeChild,
@@ -258,31 +261,38 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               isDrawerOpen={mainDrawerOpen}
               isChildOpen={isChildOpen}
             >
-              {!isChildOpen && (
-                <Wrapper
-                  justifyContent='space-between'
-                  alignItems='center'
-                  width='100%'
-                >
-                  <Wrapper width='65%'>
-                    {title && (
-                      <LinesEllipsis
-                        trimRight
-                        maxLine='2'
-                        text={title}
-                        ellipsis='...'
-                        basedOn='letters'
-                        style={{
-                          fontSize: '1rem',
-                          fontWeight: '600',
-                          lineHeight: '20px',
-                        }}
-                      />
-                    )}
+              <Wrapper direction='column' width='100%'>
+                {!isChildOpen && (
+                  <Wrapper
+                    justifyContent='space-between'
+                    alignItems='center'
+                    width='100%'
+                  >
+                    <Wrapper width='65%'>
+                      {title && (
+                        <LinesEllipsis
+                          trimRight
+                          maxLine='1'
+                          text={title}
+                          ellipsis='...'
+                          basedOn='words'
+                          style={{
+                            fontSize: '1rem',
+                            fontWeight: '600',
+                            lineHeight: '20px',
+                          }}
+                        />
+                      )}
+                    </Wrapper>
+                    {mainDrawerOpen ? null : leadInformation}
                   </Wrapper>
-                  {mainDrawerOpen ? null : leadInformation}
-                </Wrapper>
-              )}
+                )}
+                {subtitle && (
+                  <Text fontSize='0.75rem' color='#636369'>
+                    <p>{subtitle}</p>
+                  </Text>
+                )}
+              </Wrapper>
             </DrawerHeader>
             {mainDrawerOpen && !disableModalDismiss && (
               <DrawerClose

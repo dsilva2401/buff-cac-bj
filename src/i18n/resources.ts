@@ -121,6 +121,13 @@ export const resources = {
             title: 'Warranty Activated!',
             description: 'Check your email for details',
           },
+          mulberryTable: {
+            description: {
+              explanationText:
+                'To extend protection or file a claim, click the account activation link that was sent to your email from Mulberry. You can also reach out to Mulberry support',
+              linkText: 'here',
+            },
+          },
         },
         referralDrawer: {
           copyLinkButton: 'Copy link',
@@ -144,7 +151,7 @@ export const resources = {
             showLess: 'Less',
           },
           savingBanner: {
-            pre: "You're saving ",
+            pre: 'You are saving',
             post: '% with Brij',
           },
           checkoutButton: {

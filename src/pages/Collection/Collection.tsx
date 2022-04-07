@@ -29,6 +29,11 @@ type BrandCollectionType = {
   items: ProductDetailsType[];
 };
 
+const regexExp =
+  '^https://' +
+  process.env.REACT_APP_SCAN_VERIFICATION +
+  '[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$';
+
 const Collection: React.FC = () => {
   const [sortedCollection, setSortedCollection] = useState<
     BrandCollectionType[]
@@ -44,12 +49,11 @@ const Collection: React.FC = () => {
 
   useEffect(() => {
     const validateUrl = (url: string) => {
-      const regex = new RegExp(
-        '^https://v2.brij.it/c/[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$'
-      );
+      const regex = new RegExp(regexExp);
       return regex.test(url);
     };
     if (scanResult) {
+      console.log('Scan Result: ', scanResult);
       if (validateUrl(scanResult.toString())) {
         window.open(scanResult, '_blank');
         showToast({
@@ -59,7 +63,7 @@ const Collection: React.FC = () => {
         logEvent({
           eventType: 'ENGAGEMENTS',
           event: 'USER_SCAN_A_TAG',
-          data: scanResult,
+          data: scanResult.slice(scanResult.length - 4),
         });
       } else if (!validateUrl(scanResult.toString())) {
         showToast({
@@ -183,7 +187,7 @@ const Collection: React.FC = () => {
               margin='3rem 0'
             >
               <QrReader
-                delay={500}
+                delay={50}
                 onError={() =>
                   showToast({ message: t('scanErrorMessage'), type: 'error' })
                 }

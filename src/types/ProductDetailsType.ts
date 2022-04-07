@@ -18,6 +18,8 @@ export interface Product {
   ageGateEnabled: boolean;
   // date on which the product was registered
   registeredDate: string;
+  // subtitle for bottom drawer
+  subtitle: string;
   // defines the type of tag
   tagType: string;
   // product description for shopping drawer

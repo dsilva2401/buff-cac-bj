@@ -27,8 +27,8 @@ import externalLink from 'assets/icons/svg/external-link.svg';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ProgressiveImage from 'react-progressive-image';
 import useElementSize from 'hooks/useElementSize';
-import Wrapper from 'components/Wrapper';
 import useHeights from 'hooks/useHeights';
+import Wrapper from 'components/Wrapper';
 import {
   LinkModuleType,
   ModuleInfoType,
@@ -38,7 +38,6 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
-import parfum from 'assets/images/png/parfum.png';
 
 type UrlParam = {
   id: string;
@@ -130,6 +129,16 @@ const ProductDetails: React.FC = () => {
   //   onSuccess,
   //   onError,
   // });
+
+  useEffect(() => {
+    if (id && details) {
+      logEvent({
+        eventType: 'ENGAGEMENTS',
+        event: 'USER_SCAN_A_TAG',
+        data: id,
+      });
+    }
+  }, [id, details, logEvent]);
 
   useEffect(() => {
     if (id) {
@@ -651,6 +660,7 @@ const ProductDetails: React.FC = () => {
       </Wrapper>
       <BottomDrawer
         title={pageTitle}
+        subtitle={details?.product?.subtitle}
         buttons={buttonsArray}
         socials={details?.brand?.social}
         isChildOpen={isDrawerPageOpen}
