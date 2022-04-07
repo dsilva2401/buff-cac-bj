@@ -63,8 +63,9 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
     ).toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
-      maximumSignificantDigits: 3,
-    })}.00)`;
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })})`;
   };
 
   useEffect(() => {
@@ -238,24 +239,26 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                         textDecoration='line-through'
                       >
                         <p>
-                          {parseInt(chosenOption.price).toLocaleString(
+                          {parseFloat(chosenOption.price).toLocaleString(
                             'en-US',
                             {
                               style: 'currency',
                               currency: 'USD',
-                              maximumSignificantDigits: 3,
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
                             }
                           )}
                         </p>
                       </Text>
                       <Text fontSize='0.9rem' fontWeight='600'>
                         <p>
-                          {parseInt(
+                          {parseFloat(
                             chosenOption.discountedPrice!
                           ).toLocaleString('en-US', {
                             style: 'currency',
                             currency: 'USD',
-                            maximumSignificantDigits: 3,
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
                           })}
                         </p>
                       </Text>
@@ -264,11 +267,15 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({ data, closePage }) => {
                   {isValidCombo && !data.isDiscountAvailable && (
                     <Text fontSize='0.9rem' fontWeight='600'>
                       <p>
-                        {parseInt(chosenOption.price).toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                          maximumSignificantDigits: 3,
-                        })}
+                        {parseFloat(chosenOption.price).toLocaleString(
+                          'en-US',
+                          {
+                            style: 'currency',
+                            currency: 'USD',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}
                       </p>
                     </Text>
                   )}
