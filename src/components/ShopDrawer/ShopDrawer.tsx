@@ -60,7 +60,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   });
 
   const getCostText = useCallback(() => {
-    return `(${(
+    return `${(
       parseFloat(
         !data.isDiscountAvailable
           ? chosenOption.price
@@ -71,7 +71,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
       currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    })})`;
+    })}`;
   }, [chosenOption, selectedQuantity, data.isDiscountAvailable]);
 
   useEffect(() => {
@@ -413,7 +413,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                       {selectedQuantity}
                     </label>
                   </div>
-                  {t('checkoutButton.callToAction')}
+                  {t('checkoutButton.callToAction')} &#8226;{' '}
                   {selectedQuantity > 0 && (
                     <label style={{ color: theme.button.secondary }}>
                       {getCostText()}
