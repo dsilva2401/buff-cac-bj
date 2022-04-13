@@ -272,10 +272,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       {title && (
                         <LinesEllipsis
                           trimRight
-                          maxLine='1'
                           text={title}
-                          ellipsis='...'
+                          maxLine={subtitle ? '1' : '2'}
                           basedOn='words'
+                          ellipsis='...'
                           style={{
                             fontSize: '1rem',
                             fontWeight: '600',
