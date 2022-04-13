@@ -6,7 +6,6 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import SuccessDrawer from 'components/SuccessDrawer';
 import Wrapper from 'components/Wrapper';
-import { Animated } from 'react-animated-css';
 
 type RegistrationDrawerProps = {
   closePage(): void;

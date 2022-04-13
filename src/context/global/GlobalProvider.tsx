@@ -86,6 +86,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   const pathname: string = window.location.pathname;
 
+  const onBackButtonEvent = () => {
+    setBrandTheme(localStorage.getItem('accentColor') || theme.primary);
+  };
+  useEffect(() => {
+    window.addEventListener('popstate', onBackButtonEvent);
+    return () => {
+      window.removeEventListener('popstate', onBackButtonEvent);
+    };
+  }, [onBackButtonEvent]);
   useEffect(() => {
     let pathCheck: boolean = false;
     if (pathname.includes(`c/${slug}`)) pathCheck = true;
