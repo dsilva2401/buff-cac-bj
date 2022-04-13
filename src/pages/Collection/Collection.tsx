@@ -30,7 +30,6 @@ type BrandCollectionType = {
 };
 
 const regexExp =
-  '^https://' +
   process.env.REACT_APP_SCAN_VERIFICATION +
   '[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$';
 
@@ -53,9 +52,8 @@ const Collection: React.FC = () => {
       return regex.test(url);
     };
     if (scanResult) {
-      console.log('Scan Result: ', scanResult);
       if (validateUrl(scanResult.toString())) {
-        window.open(scanResult, '_blank');
+        window.open(scanResult, '_self');
         showToast({
           message: t('scanSuccessMessage'),
           type: 'success',
