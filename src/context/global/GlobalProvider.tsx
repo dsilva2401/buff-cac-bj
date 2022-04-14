@@ -246,6 +246,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
           });
         }
       }
+    } else {
+      return _logEvent({
+        ...payload,
+        user: user?.uid,
+        location: userLocation,
+        product: productDetails?.product.id,
+        tag: productDetails?.tag.slug,
+        brand: productDetails?.brand.id,
+      });
     }
   };
 
