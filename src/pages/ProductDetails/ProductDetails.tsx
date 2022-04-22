@@ -240,6 +240,7 @@ const ProductDetails: React.FC = () => {
               eventType: 'ENGAGEMENTS',
               event: 'MODULE_CLICKED',
               moduleType: module.type,
+              moduleId: module.id,
             });
           },
           isHighlight: x === 0,

@@ -58,7 +58,10 @@ export type GlobalContextProps = {
   retractDrawer: boolean;
   setRetractDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   logEvent: (
-    payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
+    payload: Pick<
+      EventPayload,
+      'event' | 'eventType' | 'moduleType' | 'moduleId' | 'data'
+    >
   ) => Promise<any> | undefined;
   magicAction: MAGIC_ACTION;
   setMagicAction: (magicAction: MAGIC_ACTION) => void;

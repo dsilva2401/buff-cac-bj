@@ -27,6 +27,7 @@ export type EventPayload = {
   event: EventName;
   eventType: EventType;
   moduleType?: string;
+  moduleId?: string;
   data?: any;
 
   // Added automatically

@@ -167,7 +167,10 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const _logEvent = useLogEvent();
 
   const logEvent = (
-    payload: Pick<EventPayload, 'event' | 'eventType' | 'moduleType' | 'data'>
+    payload: Pick<
+      EventPayload,
+      'event' | 'eventType' | 'moduleType' | 'moduleId' | 'data'
+    >
   ) => {
     const LAST_SCAN_INTERVAL_THRESHOLD: number = 3600000; // 1 hour
     const SCAN_MAP_ENTRIES_THRESHOLD: number = 100; // 100 entries

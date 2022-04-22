@@ -366,9 +366,9 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               gap='1rem'
               margin='0 0 1rem 0'
             >
-              {allOptions?.map((optionItem) => (
+              {allOptions?.map((optionItem, index) => (
                 <SelectInput
-                  key={optionItem.name}
+                  key={`${optionItem.name}-${index}`}
                   id={optionItem.name}
                   label={optionItem.name}
                   options={optionItem.values}
