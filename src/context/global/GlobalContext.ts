@@ -24,9 +24,9 @@ export type GlobalContextProps = {
   setBrandTheme: React.Dispatch<React.SetStateAction<string>>;
   appZoom: number;
   setAppZoom: React.Dispatch<React.SetStateAction<number>>;
-  previewEvent: any;
-  setPreviewEvent: React.Dispatch<React.SetStateAction<any>>;
-  previewAuthenticated: any;
+  previewEvent: MessageEvent | null;
+  setPreviewEvent: React.Dispatch<React.SetStateAction<MessageEvent | null>>;
+  previewAuthenticated: boolean;
   setPreviewAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   userLocation: UserLocationType;
   setUserLocation: React.Dispatch<React.SetStateAction<UserLocationType>>;
@@ -52,7 +52,7 @@ export type GlobalContextProps = {
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   getCollection: () => void;
-  authFetched: Boolean;
+  authFetched: boolean;
   getPersonalDetails: () => void;
   token: string | null;
   retractDrawer: boolean;
@@ -77,7 +77,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setBrandTheme: () => {},
   appZoom: 1,
   setAppZoom: () => {},
-  previewEvent: {},
+  previewEvent: null,
   setPreviewEvent: () => {},
   previewAuthenticated: false,
   setPreviewAuthenticated: () => {},

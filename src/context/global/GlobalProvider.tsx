@@ -56,7 +56,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [slug, setSlug] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [appZoom, setAppZoom] = useState(1);
-  const [previewEvent, setPreviewEvent] = useState({});
+  const [previewEvent, setPreviewEvent] = useState<MessageEvent | null>(null);
   const [previewAuthenticated, setPreviewAuthenticated] = useState(false);
   const [magicAction, setMagicAction] = useState<MAGIC_ACTION>(
     MAGIC_ACTION.REDIRECT
@@ -143,7 +143,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     if (window) {
       window.addEventListener(
         'message',
-        (event) => {
+        (event: MessageEvent) => {
           setPreviewEvent({ ...event.data });
           if (event && event.data && event.data.type === 'enablePreview') {
             setIsPreviewMode(true);
