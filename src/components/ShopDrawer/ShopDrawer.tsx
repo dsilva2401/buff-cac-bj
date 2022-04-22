@@ -26,12 +26,14 @@ type ShopDrawerProps = {
   data: ShoppingModuleType;
   productDescription?: string;
   closePage(): void;
+  minimizeBranding?: boolean;
 };
 
 const ShopDrawer: React.FC<ShopDrawerProps> = ({
   data,
   closePage,
   productDescription,
+  minimizeBranding,
 }) => {
   const {
     allOptions,
@@ -170,23 +172,31 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           justifyContent='flex-start'
           alignItems='center'
           overflow='auto'
-          before={{
-            content: data.isDiscountAvailable
-              ? `${t('savingBanner.pre')}${' '}${data.discountPercentage!}${t(
-                  'savingBanner.post'
-                )}`
-              : '',
-            width: 'auto',
-            height: 'auto',
-            padding: '1rem 1.5rem 0.4rem 1.5rem',
-            position: 'absolute',
-            color: '#fff',
-            top: '-1px',
-            background: brandTheme || theme.primary,
-            fontSize: '0.8rem',
-            borderRadius: '0 0 15px 15px',
-          }}
         >
+          <Wrapper
+            position='absolute'
+            top='-1px'
+            width='auto'
+            height='auto'
+            borderRadius='0 0 15px 15px'
+            paddingTop='1rem'
+            padding='0.4rem 1.5rem'
+            background={brandTheme || theme.primary}
+          >
+            <Text fontSize='0.8rem' color='#FFFFFF'>
+              <p>
+                {data.isDiscountAvailable
+                  ? `${t(
+                      'savingBanner.pre'
+                    )}${' '}${data.discountPercentage!}${t(
+                      minimizeBranding
+                        ? 'savingBanner.postWithoutBranding'
+                        : 'savingBanner.postWithBranding'
+                    )}`
+                  : ''}
+              </p>
+            </Text>
+          </Wrapper>
           <Wrapper
             width='100%'
             justifyContent='space-between'

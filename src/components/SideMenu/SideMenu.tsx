@@ -12,6 +12,7 @@ import { ReactComponent as LoadingIndicator } from 'assets/icons/svg/loading-sma
 import { ReactComponent as External } from 'assets/icons/svg/external.svg';
 import { ReactComponent as Logout } from 'assets/icons/svg/log-out.svg';
 import { ReactComponent as Profile } from 'assets/icons/svg/person.svg';
+import poweredByLogo from 'assets/images/svg/powered-by.svg';
 import brijLogo from 'assets/logos/svg/brij.svg';
 import DrawerMask from 'components/DrawerMask';
 import Image from 'components/Image';
@@ -149,7 +150,21 @@ const SideMenu: React.FC = () => {
             )}
           </nav>
           <span>
-            <Image width='auto' src={brijLogo} alt='brij-logo' />
+            {window.location.pathname === `/c/${slug}` && (
+              <Image
+                width='111px'
+                src={poweredByLogo}
+                alt='powered-by'
+                padding='10px 8px 0 0'
+              />
+            )}
+            <Image
+              width={
+                window.location.pathname === `/c/${slug}` ? '48px' : 'auto'
+              }
+              src={brijLogo}
+              alt='brij-logo'
+            />
           </span>
         </div>
       </Menu>

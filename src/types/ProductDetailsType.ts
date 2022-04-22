@@ -193,6 +193,7 @@ export type ProductDetailsType = {
     customAccentColor?: string;
     customBgColor?: string;
     registrationDetails?: string;
+    minimizeBranding: boolean;
     social: {
       // @manoj: Check individually e.g. if socialPhoneNumberEnable is true, set phone to socialPhoneNumber
       // Otherwise, set phone is undefined. Similarly for others

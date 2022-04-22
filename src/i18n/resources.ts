@@ -151,8 +151,9 @@ export const resources = {
             showLess: 'Less',
           },
           savingBanner: {
-            pre: 'You are saving',
-            post: '% with Brij',
+            pre: "You're saving",
+            postWithBranding: '% with Brij',
+            postWithoutBranding: '%',
           },
           checkoutButton: {
             callToAction: 'Checkout',

@@ -536,6 +536,7 @@ const ProductDetails: React.FC = () => {
               <ShopDrawer
                 data={data}
                 closePage={closeDrawerPage}
+                minimizeBranding={details.brand.minimizeBranding}
                 productDescription={details.product.productDescription}
               />
             );
