@@ -29,6 +29,7 @@ function usePrevious<T>(value: T) {
 const SideMenu: React.FC = () => {
   const {
     productDetails: details,
+    setSlug,
     slug,
     user,
     isMenuOpen,
@@ -62,6 +63,7 @@ const SideMenu: React.FC = () => {
 
   const handleLogoutButtonClicked = useCallback(() => {
     if (error !== '') setError('');
+    setSlug(null);
     setLoading(true);
     signOut(auth)
       .then(() => {

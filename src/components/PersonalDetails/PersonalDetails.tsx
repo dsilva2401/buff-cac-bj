@@ -2,6 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { useGlobal } from 'context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { RoutesHashMap } from 'routes';
 import { useAPI } from 'utils/api';
 import Text from 'components/Text';
 import Input from 'components/Input';
@@ -29,6 +31,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
 
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
   const { brandTheme, getPersonalDetails } = useGlobal();
+  const location = useLocation();
 
   const onSuccess = useCallback(() => {
     getPersonalDetails();
@@ -65,11 +68,15 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       height='100%'
       direction='column'
       justifyContent='flex-start'
-      padding='2rem 0.25rem'
       alignItems='center'
       overflow='auto'
       margin='0 0 4rem'
       gap='0.5rem'
+      padding={
+        location.pathname === RoutesHashMap.Login.path
+          ? '2rem 1rem'
+          : '2rem 0.25rem'
+      }
     >
       <Text
         fontSize='1rem'
