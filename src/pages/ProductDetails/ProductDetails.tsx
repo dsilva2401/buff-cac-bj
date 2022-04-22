@@ -85,6 +85,7 @@ const ProductDetails: React.FC = () => {
     magicPayload,
     toggleAgegateDisplay,
     brandTheme,
+    collapsedDrawerHeight,
   } = useGlobal();
 
   const { id } = useParams<UrlParam>();
@@ -620,22 +621,19 @@ const ProductDetails: React.FC = () => {
             ) : (
               <Wrapper
                 width='100%'
-                height='100%'
+                height={`${window.innerHeight}px`}
+                padding={`0 0 ${collapsedDrawerHeight + 40}px 0`}
                 background={details.brand.customBgColor || 'white'}
               >
                 <Animated isVisible animationIn='fadeIn' animationOut='fadeIn'>
                   <Image
                     src={src}
                     alt={details?.product?.name}
-                    position='absolute'
-                    width='100vw'
+                    position='relative'
+                    width='100%'
                     margin='auto'
                     objectFit='cover'
-                    style={{
-                      minHeight: '80vh',
-                      // height: '100%',
-                      // paddingBottom: `${collapsedDrawerHeight + 40}px`,
-                    }}
+                    style={{ minHeight: '100%' }}
                   />
                 </Animated>
               </Wrapper>
