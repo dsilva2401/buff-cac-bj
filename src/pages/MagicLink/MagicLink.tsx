@@ -1,5 +1,6 @@
 import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
+import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from 'context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
 import {
@@ -7,6 +8,7 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
 } from 'firebase/auth';
+import useFirebaseError from 'hooks/useFirebaseError';
 import qs from 'query-string';
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -23,6 +25,8 @@ const MagicLink = () => {
   } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
+
+  const getFirebaseError = useFirebaseError();
 
   const auth = getAuth();
   const location = useLocation();
@@ -92,7 +96,12 @@ const MagicLink = () => {
           setUser(userCredentials.user);
         })
         .catch((error) => {
-          console.log(error);
+          showToast({
+            message: getFirebaseError(error.code),
+            type: 'error',
+          });
+
+          history.push(RoutesHashMap.Login.path);
         });
     }
   }, [auth, email, setUser]);

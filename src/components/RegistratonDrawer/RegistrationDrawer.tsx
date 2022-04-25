@@ -6,6 +6,17 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import SuccessDrawer from 'components/SuccessDrawer';
 import Wrapper from 'components/Wrapper';
+import { showToast } from 'components/Toast/Toast';
+import Button from 'components/Button';
+import HtmlWrapper from 'components/HtmlWrapper';
+import Text from 'components/Text';
+import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
+
+enum PageType {
+  CURRENT_MODULE = 'CURRENT_MODULE',
+  PERSONAL_DETAILS_FORM = 'PERSONAL_DETAILS_FORM',
+  PRE_REGISTER = 'PRE_REGISTER',
+}
 
 type RegistrationDrawerProps = {
   closePage(): void;
@@ -17,17 +28,26 @@ type RegistrationDrawerProps = {
   isNewUser: boolean;
   onUserUpdate: () => void;
   setDisableModalDismiss: (dismissModal: boolean) => void;
+  alreadySignedIn: boolean;
+  registrationData: any;
+  html: string | undefined | null;
+  brandName?: string;
+  showMulberryTerms?: boolean;
 };
 
-const canRegister = (product: Product) => {
-  if (
-    (product?.tagType === 'unit' && product?.registered) ||
-    product?.registeredToCurrentUser
-  ) {
-    return false;
+const getSuccessTitle = (
+  registrationType: string = RegistrationType.REGISTER
+): string => {
+  switch (registrationType) {
+    case RegistrationType.REGISTER:
+      return 'Product Registered!';
+    case RegistrationType.SIGNUP:
+      return "You're Signed Up";
+    case RegistrationType.ACTIVATE:
+      return 'Warranty Activated!';
   }
 
-  return true;
+  return 'Product Registered!';
 };
 
 const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
@@ -40,14 +60,20 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   isNewUser,
   onUserUpdate,
   setDisableModalDismiss,
+  alreadySignedIn,
+  registrationData,
+  html,
+  brandName,
+  showMulberryTerms,
 }) => {
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(
-    canRegister(product)
+  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
+  const [pageToShow, setPageToShow] = useState<PageType>(
+    PageType.CURRENT_MODULE
   );
-  const [showPersonalDetailsForm, togglePersonalDetailsForm] =
-    useState<boolean>(isNewUser);
+  // temprarory loading to handle initial loading while checking if product can be registered
+  const [tempLoading, setTempLoading] = useState<boolean>(true);
 
-  const { loading, activateWarranty, slug, user, registerProduct } =
+  const { loading, activateWarranty, slug, user, registerProduct, brandTheme } =
     useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
@@ -57,111 +83,230 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     keyPrefix: 'drawers.registrationDrawer',
   });
 
+  const { t: authDrawerTranslation } = useTranslation('translation', {
+    keyPrefix: 'drawers.authDrawer',
+  });
+
   const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);
     closePage();
   }, [closePage]);
 
-  useEffect(() => {
-    const checkAndActivateWarranty = async () => {
-      activateWarranty({
-        warrantyId,
-        tag: slug,
-      }).then(() => {
-        setSuccessDrawer(false);
-      });
-    };
-
-    const checkAndRegisterProduct = async () => {
-      registerProduct().then(() => {
+  const checkAndActivateWarranty = useCallback(async () => {
+    activateWarranty({
+      warrantyId,
+      tag: slug,
+    })
+      .then(() => {
         setSuccessDrawer(true);
-        setTimeout(() => {
-          setSuccessDrawer(false);
-        }, 3000);
-      });
-    };
+      })
+      .catch(async (error: any) => {
+        const errorResponse: any = await error.json();
+        showToast({ message: errorResponse.error, type: 'error' });
+        closePage();
+      })
+      .finally(() => setTempLoading(false));
+  }, [activateWarranty, warrantyId, slug, closePage]);
 
-    if (user && currentModule?.registrationRequired && canRegister(product)) {
-      if (warrantyData) {
-        checkAndActivateWarranty();
-      } else {
-        checkAndRegisterProduct();
-      }
+  const checkAndRegisterProduct = useCallback(async () => {
+    registerProduct()
+      .then(() => {
+        setSuccessDrawer(true);
+      })
+      .catch(async (error: any) => {
+        const errorResponse: any = await error.json();
+        showToast({ message: errorResponse.error, type: 'error' });
+        closePage();
+      })
+      .finally(() => setTempLoading(false));
+  }, [registerProduct, closePage]);
+
+  // register or activate the warranty
+  const register = useCallback(() => {
+    setTempLoading(true);
+
+    if (warrantyData) {
+      checkAndActivateWarranty();
+    } else {
+      checkAndRegisterProduct();
     }
-  }, [
-    slug,
-    warrantyId,
-    activateWarranty,
-    product,
-    warrantyData,
-    user,
-    currentModule,
-    registerProduct,
-  ]);
+  }, [warrantyData, checkAndActivateWarranty, checkAndRegisterProduct]);
+
+  // call register if
+  // registration is Required in order to view the module
+  // if the product is not registered to the user
+  // if user just signedin
+  useEffect(() => {
+    if (!product || !currentModule) {
+      return;
+    }
+
+    if (
+      currentModule.registrationRequired &&
+      !product.registeredToCurrentUser &&
+      !alreadySignedIn
+    ) {
+      register();
+    } else {
+      setTempLoading(false);
+    }
+  }, [currentModule, product, register, alreadySignedIn, user]);
+
+  useEffect(() => {
+    // if a new user start registering the product
+    // set the page to personal details form
+    // user will see this once registration is over
+    if (isNewUser) {
+      setPageToShow(PageType.PERSONAL_DETAILS_FORM);
+      return;
+    }
+
+    if (
+      !currentModule?.registrationRequired ||
+      product.registeredToCurrentUser
+    ) {
+      setPageToShow(PageType.CURRENT_MODULE);
+      return;
+    }
+
+    if (alreadySignedIn) {
+      setPageToShow(PageType.PRE_REGISTER);
+      return;
+    }
+  }, [isNewUser, product, alreadySignedIn, register, currentModule]);
 
   useEffect(() => {
     // only update disableModal when user is loggedIn
-    if (user && currentModule.registrationRequired) {
+    if (user && currentModule?.registrationRequired) {
       setDisableModalDismiss(successDrawer);
     }
-  }, [
-    successDrawer,
-    currentModule.registrationRequired,
-    setDisableModalDismiss,
-    user,
-  ]);
+  }, [successDrawer, currentModule, setDisableModalDismiss, user]);
 
-  // We will try to refactor this on a later release
-  // useEffect(() => {
-  //   if (successDrawer) {
-  //     setTimeout(() => {
-  //       setSuccessDrawer(false);
-  //     }, 3000);
-  //   }
-  // }, [successDrawer]);
-
-  if (!user || !currentModule.registrationRequired) {
-    return children;
-  }
-
-  if (loading && !successDrawer) {
-    return (
-      <Wrapper
-        justifyContent='center'
-        alignItems='center'
-        height='100%'
-        width='100%'
-      >
-        <LoadingIndicator />
-      </Wrapper>
-    );
-  }
+  useEffect(() => {
+    // close success animation after 3 seconds
+    if (successDrawer) {
+      setTimeout(() => {
+        setSuccessDrawer(false);
+      }, 3000);
+    }
+  }, [successDrawer]);
 
   const translationToUse = warrantyData ? t : registrationTranslation;
 
-  if (successDrawer) {
-    return (
+  const renderPage = useCallback(() => {
+    switch (pageToShow) {
+      case PageType.CURRENT_MODULE:
+        return children;
+      case PageType.PERSONAL_DETAILS_FORM:
+        return (
+          <PersonalDetails
+            onPersonalDetailsUpdate={() => {
+              setPageToShow(PageType.CURRENT_MODULE);
+              onUserUpdate();
+            }}
+          />
+        );
+      case PageType.PRE_REGISTER:
+        return (
+          <Wrapper
+            width='100%'
+            direction='column'
+            justifyContent='flex-start'
+            alignItems='center'
+            gap='1.2rem'
+            overflow='auto'
+            margin='3.75rem 0'
+          >
+            {html && (
+              <HtmlWrapper
+                gap='1rem'
+                width='100%'
+                padding='0 1rem'
+                direction='column'
+                alignItems='center'
+                justifyContent='center'
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            )}
+            <Wrapper
+              padding='0 1rem'
+              style={{ borderTop: '2px solid #E7EAEB' }}
+            >
+              <Text
+                margin='1rem 0 0 0'
+                fontSize='0.625rem'
+                textAlign='left'
+                color='#414149'
+              >
+                <p>
+                  {authDrawerTranslation('termsAndconditions.part1')}
+                  {brandName}
+                  {authDrawerTranslation('termsAndconditions.part2')}
+                  {showMulberryTerms
+                    ? authDrawerTranslation(
+                        'termsAndconditions.mulberryAndBrijBrand'
+                      )
+                    : authDrawerTranslation('termsAndconditions.brijBrand')}
+                  <a
+                    target='_blank'
+                    rel='noreferrer'
+                    href='https://brij.it/terms'
+                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                  >
+                    {authDrawerTranslation('termsAndconditions.link')}
+                  </a>
+                </p>
+              </Text>
+            </Wrapper>
+            <Button variant='dark' brandTheme={brandTheme} onClick={register}>
+              {getRegisterText(registrationData?.registrationType)}
+            </Button>
+          </Wrapper>
+        );
+    }
+  }, [
+    onUserUpdate,
+    register,
+    registrationData,
+    authDrawerTranslation,
+    brandName,
+    brandTheme,
+    children,
+    html,
+    pageToShow,
+    showMulberryTerms,
+  ]);
+
+  return (
+    <>
+      {
+        // we need to show the loadingIndicator for both loading & tempLoading to avoid rendering PersonalDetails at the initial render
+        (loading || tempLoading) && (
+          <Wrapper
+            justifyContent='center'
+            alignItems='center'
+            height='100%'
+            width='100%'
+          >
+            <LoadingIndicator />
+          </Wrapper>
+        )
+      }
       <SuccessDrawer
-        isOpen={true}
-        title={translationToUse('successDrawer.title')}
-        description={translationToUse('successDrawer.description')}
+        isOpen={successDrawer}
+        title={
+          registrationData?.confirmationHeader ||
+          getSuccessTitle(registrationData?.registrationType)
+        }
+        description={
+          registrationData?.confirmationText ||
+          translationToUse('successDrawer.description')
+        }
         close={closeSuccess}
       />
-    );
-  }
-
-  if (showPersonalDetailsForm) {
-    return (
-      <PersonalDetails
-        onPersonalDetailsUpdate={() => {
-          togglePersonalDetailsForm(false);
-          onUserUpdate();
-        }}
-      />
-    );
-  }
-
-  return <>{children}</>;
+      {renderPage()}
+    </>
+  );
 };
 
 export default RegistrationDrawer;

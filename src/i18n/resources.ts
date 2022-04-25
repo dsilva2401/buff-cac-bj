@@ -26,6 +26,7 @@ export const resources = {
         'auth/invalid-credential-or-provider-id': 'Invalid credentials',
         'auth/unauthorized-domain':
           'You are accessing the website from a non secure domain.',
+        'auth/invalid-action-code': 'The code is invalid or expired',
       },
       magicLink: {
         linkSentToastMessage: 'Check your email to get sign in link',

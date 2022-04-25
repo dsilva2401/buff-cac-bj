@@ -81,10 +81,13 @@ export function useAPI<T>(
           return response;
         } else if (res.status === 400 && !isPreviewMode) {
           window.location.href = `${window.location.protocol}//${window.location.host}/app/404`;
+        } else {
+          throw res;
         }
-      } catch (e) {
+      } catch (e: any) {
         setLoading(false);
-        onError(JSON.stringify(e));
+        onError(e);
+        throw e;
       }
     },
     [

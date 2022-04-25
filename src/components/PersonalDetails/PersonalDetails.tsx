@@ -4,8 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { RoutesHashMap } from 'routes';
 import { useAPI } from 'utils/api';
 import Text from 'components/Text';
 import Input from 'components/Input';
@@ -71,12 +69,6 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
-      padding={
-        location.pathname === RoutesHashMap.Login.path ||
-        location.pathname === ''
-          ? '0 1.25rem'
-          : '0 0.25rem'
-      }
       overflow='auto'
       margin='0 0 4rem'
       gap='0.5rem'

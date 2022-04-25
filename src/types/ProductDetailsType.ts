@@ -1,3 +1,5 @@
+import { RegistrationType } from 'utils/getRegisterText';
+
 export type PossibleModulesType =
   | 'WARRANTY_MODULE'
   | 'CUSTOM_MODULE'
@@ -172,6 +174,9 @@ export type ProductDetailsType = {
 
   registration: {
     registrationText: string;
+    registrationType: RegistrationType;
+    confirmationText: string;
+    confirmationHeader: string;
   };
 
   warrantyInformation: {

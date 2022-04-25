@@ -18,12 +18,14 @@ interface SocialLoginProps {
   setLoading: (loading: boolean) => void;
   onSuccess: () => void;
   isDrawer?: boolean;
+  buttonPrefix?: string;
 }
 
 const SocialLogin: React.FC<SocialLoginProps> = ({
   setLoading,
   onSuccess,
   isDrawer,
+  buttonPrefix,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'socialLogin' });
 
@@ -76,7 +78,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         onClick={() => handleSocialAuth(ProviderName.Google)}
       >
         <GoogleLogo />
-        {isDrawer ? t('registerGoogleButton') : t('continueGoogleButton')}
+        {isDrawer ? `${buttonPrefix} with Google` : t('continueGoogleButton')}
       </Button>
       <Button
         variant='light'
@@ -84,7 +86,9 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         onClick={() => handleSocialAuth(ProviderName.Facebook)}
       >
         <FacebookLogo />
-        {isDrawer ? t('registerFacebookButton') : t('continueFacebookButton')}
+        {isDrawer
+          ? `${buttonPrefix} with Facebook`
+          : t('continueFacebookButton')}
       </Button>
     </Wrapper>
   );

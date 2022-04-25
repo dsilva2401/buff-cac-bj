@@ -88,6 +88,11 @@ const ProductDetails: React.FC = () => {
     collapsedDrawerHeight,
   } = useGlobal();
 
+  // by default we keep alreadySignedIn true
+  // because even if the user was not signed in
+  // authdrawer open event will set the alreadySignedIn to false
+  const [alreadySignedIn, setAlreadySignIn] = useState<boolean>(true);
+
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
 
@@ -486,6 +491,7 @@ const ProductDetails: React.FC = () => {
             <Wrapper
               width='100%'
               direction='column'
+              height='100%'
               transition={animateTable ? '0.3s' : '0'}
               style={{
                 transform: !showCoverageTable
@@ -499,6 +505,11 @@ const ProductDetails: React.FC = () => {
                 animated={!!mulberry}
                 showMulberryTerms={!!mulberry}
                 onAuthComplete={onAuthComplete}
+                onAuthOpen={() => {
+                  // If the authdrawer was open that implies
+                  // the user was not signed in before
+                  setAlreadySignIn(false);
+                }}
               />
             </Wrapper>
           </Wrapper>
@@ -558,6 +569,11 @@ const ProductDetails: React.FC = () => {
           isNewUser={isNewUser}
           onUserUpdate={() => setNewUser(false)}
           setDisableModalDismiss={setDisableModalDismiss}
+          alreadySignedIn={alreadySignedIn}
+          registrationData={details?.registration}
+          brandName={details?.brand?.name}
+          html={mulberry ? null : details?.registration?.registrationText}
+          showMulberryTerms={!!mulberry}
         >
           {renderOtherModules()}
         </RegistratonDrawer>
@@ -578,6 +594,7 @@ const ProductDetails: React.FC = () => {
     height,
     tableRef,
     onAuthComplete,
+    alreadySignedIn,
   ]);
 
   const logo = useCallback(

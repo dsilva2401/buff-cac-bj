@@ -21,6 +21,7 @@ import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
+import { getRegisterText } from 'utils/getRegisterText';
 
 interface LoginFormProps {
   isDrawer?: boolean;
@@ -40,11 +41,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
     useState<boolean>(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { retractDrawer, brandTheme } = useGlobal();
+  const { retractDrawer, brandTheme, productDetails } = useGlobal();
   const [inputWrapperRef, { width }] = useElementSize();
   const getErrorMessage = useFirebaseError();
   const location = useLocation();
   const auth = getAuth();
+
+  const registrationType = productDetails?.registration?.registrationType;
 
   // get magic link header
   const {
@@ -92,9 +95,19 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const handleLogin = async () => {
     setLoading(true);
     if (error !== '') setError('');
-    getToken({
-      email: username,
-    });
+    try {
+      await getToken({
+        email: username,
+      });
+    } catch (e) {
+      // catch error when user exist in firebase but not in our db
+      showToast({
+        message: 'Not able to verify the login details',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (showPersonalDetailsForm) {
@@ -151,6 +164,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             isDrawer={isDrawer}
             setLoading={setLoading}
             onSuccess={onLogin}
+            buttonPrefix={getRegisterText(registrationType)}
           />
           <Wrapper
             direction='column'
@@ -205,7 +219,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 ) : (
                   <EmailLogo />
                 )}
-                {isDrawer ? t('registerWithEmail') : t('continueWithEmail')}
+                {isDrawer
+                  ? `${getRegisterText(registrationType)} with Email`
+                  : t('continueWithEmail')}
               </Button>
             )}
           </Wrapper>

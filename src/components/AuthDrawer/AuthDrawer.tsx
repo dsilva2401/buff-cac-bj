@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
@@ -15,6 +15,7 @@ interface AuthDrawerProps {
   animated?: boolean;
   brandName?: string;
   showMulberryTerms?: boolean;
+  onAuthOpen?: () => void;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
@@ -23,6 +24,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   animated,
   brandName,
   showMulberryTerms,
+  onAuthOpen,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -30,6 +32,13 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
     keyPrefix: 'drawers.authDrawer',
   });
   const { retractDrawer } = useGlobal();
+
+  // call on auth open
+  useEffect(() => {
+    if (onAuthOpen) {
+      onAuthOpen();
+    }
+  }, [onAuthOpen]);
 
   const onSuccess = useCallback(
     (isNewUser?: boolean) => {
@@ -44,6 +53,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   }, [onSuccess]);
 
   if (loading) return <LoadingIndicator />;
+
   return (
     <Wrapper
       width='100%'
