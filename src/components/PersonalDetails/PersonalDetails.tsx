@@ -1,6 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { RoutesHashMap } from 'routes';
-import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
@@ -72,11 +70,6 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
       overflow='auto'
       margin='0 0 4rem'
       gap='0.5rem'
-      padding={
-        location.pathname === RoutesHashMap.Login.path
-          ? '2rem 1rem'
-          : '2rem 0.25rem'
-      }
     >
       <Text
         fontSize='1rem'
