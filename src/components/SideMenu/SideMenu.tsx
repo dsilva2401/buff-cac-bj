@@ -17,6 +17,7 @@ import brijLogo from 'assets/logos/svg/brij.svg';
 import DrawerMask from 'components/DrawerMask';
 import Image from 'components/Image';
 import Menu from './styles';
+import { useAPI } from 'utils/api';
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
@@ -37,7 +38,11 @@ const SideMenu: React.FC = () => {
     setIsMenuOpen,
     logEvent,
     brandTheme,
+    token,
   } = useGlobal();
+
+  console.log(token, 'token');
+
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
   const previousUser = usePrevious(user);
   const location = useLocation();
@@ -77,6 +82,27 @@ const SideMenu: React.FC = () => {
     setIsMenuOpen(false);
   }, [setIsMenuOpen, auth, error, t]);
 
+  const redirectToCollection = useCallback(() => {
+    history.push(RoutesHashMap.Collection.path);
+    setIsMenuOpen(false);
+  }, [history]);
+
+  const onRemoveProductError = (error: any) => {
+    showToast({ message: error.message, type: 'error' });
+    setIsMenuOpen(false);
+  };
+
+  const [removeProduct] = useAPI({
+    endpoint: 'user/remove_product',
+    method: 'DELETE',
+    onSuccess: redirectToCollection,
+    onError: onRemoveProductError,
+  });
+
+  // Assuming if the product is registered to the user it should be in user collection
+  // In the future maybe decrease the payload size of collection API call and match collection items
+  const showRemoveProductButton = details?.product?.registeredToCurrentUser;
+
   return (
     <>
       <DrawerMask
@@ -110,6 +136,17 @@ const SideMenu: React.FC = () => {
                 <Collection />
               </Link>
             ) : null}
+            {showRemoveProductButton && (
+              <p
+                onClick={() =>
+                  removeProduct({
+                    tag: slug,
+                  })
+                }
+              >
+                Remove Product
+              </p>
+            )}
             {window.location.pathname === `/c/${slug}` &&
               details?.brand?.website && (
                 <a
