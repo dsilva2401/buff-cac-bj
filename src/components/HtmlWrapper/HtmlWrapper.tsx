@@ -4,6 +4,28 @@ import Wrapper from 'components/Wrapper';
 const HtmlWrapper = styled(Wrapper)`
   position: relative;
   animation: fade-in 0.6s ease-in-out forwards;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+  hr {
+    width: 100%;
+    height: 1px;
+    background: #98a3aa;
+    margin: 6px 0;
+  }
+  pre {
+    font-family: monospace;
+  }
+  .fr-box.fr-basic .fr-element p {
+    margin: 0px 0 !important;
+  }
+
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -12,23 +34,22 @@ const HtmlWrapper = styled(Wrapper)`
       opacity: 1;
     }
   }
-  hr {
-    width: 100%;
-    height: 1px;
-    background: #98a3aa;
-    margin: 6px 0;
-  }
-  ul {
-    padding-left: 1.25rem;
-  }
-  ul {
-    padding-left: 1.25rem;
-  }
+  ul,
+  ol {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
+    padding-left: 1.5rem;
+    strong {
+      color: #98a3aa;
+      margin: 0;
+      padding: 0;
+    }
   & .iframe-wrapper {
     position: relative;
     width: 100%;
     padding-bottom: 56.25%;
-    border-radius: 1.5rem;
+    border-radius: 10px;
     height: 0;
   }
   & .ql-video {
@@ -37,7 +58,7 @@ const HtmlWrapper = styled(Wrapper)`
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 10px;
   }
   & .ql-align-right {
     text-align: right;
@@ -66,7 +87,6 @@ const HtmlWrapper = styled(Wrapper)`
     margin: 20px auto 0;
     height: 52px;
     background: #0a0b0a;
-    border-radius: 50px;
     text-decoration: none !important;
   }
   p {
@@ -74,15 +94,13 @@ const HtmlWrapper = styled(Wrapper)`
     line-height: 18px;
     margin: 0;
     padding: 0;
-    strong {
-      color: #98a3aa;
-      margin: 0;
-      padding: 0;
-    }
   }
-  img {
-    margin: 12px 0px;
-    border-radius: 12px;
+  .fr-rounded {
+    margin: 4px 0px;
+    border-radius: 10px;
+  }
+  .fr-shadow {
+    box-shadow: 10px 10px 5px 0px #cccccc !important;
   }
 `;
 
