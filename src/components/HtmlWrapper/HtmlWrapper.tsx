@@ -12,6 +12,12 @@ const HtmlWrapper = styled(Wrapper)`
       opacity: 1;
     }
   }
+  hr {
+    width: 100%;
+    height: 1px;
+    background: #98a3aa;
+    margin: 6px 0;
+  }
   ul {
     padding-left: 1.25rem;
   }
