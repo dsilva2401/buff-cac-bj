@@ -48,7 +48,9 @@
     "start-rc-client": "REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false react-scripts start",
     "start-staging-client-windows": "react-scripts start",
     "format": "prettier --write \"src/**/*.ts\" && prettier --write \"src/**/*.tsx\"",
-    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\""
+    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\"",
+    "update-functional-test-states": "node test/functional/prepare.js",
+    "test:functional": "npx mocha -t 30000 --reporter spec test/index.js"
   },
   "eslintConfig": {
     "extends": [
@@ -96,8 +98,13 @@
     "@types/styled-components": "^5.1.13",
     "@types/uuid": "^8.3.1",
     "@types/validator": "^13.7.1",
+    "chai": "^4.3.6",
+    "image-hash": "^5.0.2",
+    "mocha": "^9.2.2",
+    "puppeteer": "^13.6.0",
     "react-app-rewired": "^2.1.8",
     "react-lines-ellipsis": "^0.15.0",
+    "string-similarity": "^4.0.4",
     "ts-loader": "8.2.0"
   },
   "prettier": {
