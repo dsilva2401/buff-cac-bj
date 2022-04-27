@@ -8,7 +8,7 @@ on:
 
 jobs:
   installDependencies:
-    name: Install Dependencies
+    name: Functional test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -22,10 +22,10 @@ jobs:
       env:
         PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
       run: |
-        npm install
+        sh -c 'cd test && npm install'
     - name: Test Code
       uses: mujo-code/puppeteer-headful@v2
       env:
         CI: 'true'
       with:
-        args: npm test
+        args: npm test:functional
