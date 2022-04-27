@@ -28,4 +28,4 @@ jobs:
       env:
         CI: 'true'
       with:
-        args: npm test:functional
+        args: npm run test:functional
