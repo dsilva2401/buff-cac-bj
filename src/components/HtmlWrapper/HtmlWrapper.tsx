@@ -22,8 +22,52 @@ const HtmlWrapper = styled(Wrapper)`
   pre {
     font-family: monospace;
   }
-  .fr-box.fr-basic .fr-element p {
+  & .fr-box.fr-basic .fr-element p {
     margin: 0px 0 !important;
+  }
+  & .fr-size-large {
+    cursor: pointer;
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    color: #ffffff !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto 0;
+    height: 52px;
+    background: #0a0b0a;
+    text-decoration: none !important;
+  }
+  & .fr-text-spaced {
+    letter-spacing: 0.1em;
+  }
+  & .fr-text-uppercase {
+    text-transform: uppercase;
+  }
+  & .fr-text-bordered {
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 8px 0px;
+  }
+  & .fr-text-gray {
+    color: #7d7d7d;
+    margin: 0 !important;
+    padding: 0;
+  }
+  & .fr-rounded {
+    margin: 4px 0px;
+    border-radius: 10px;
+  }
+  & .fr-shadow {
+    box-shadow: 10px 10px 5px 0px #cccccc !important;
+  }
+  & .fr-emoticon {
+    width: 24px;
+    height: 24px;
+    padding: 0 7px;
+    position: relative;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
   }
 
   @keyframes fade-in {
@@ -45,6 +89,7 @@ const HtmlWrapper = styled(Wrapper)`
       margin: 0;
       padding: 0;
     }
+  }
   & .iframe-wrapper {
     position: relative;
     width: 100%;
@@ -78,6 +123,7 @@ const HtmlWrapper = styled(Wrapper)`
   }
   & .ql-size-large {
     cursor: pointer;
+    border-radius: 26px;
     font-weight: 500 !important;
     font-size: 18px !important;
     color: #ffffff !important;
@@ -91,16 +137,9 @@ const HtmlWrapper = styled(Wrapper)`
   }
   p {
     font-size: 12px;
-    line-height: 18px;
+    line-height: auto;
     margin: 0;
     padding: 0;
-  }
-  .fr-rounded {
-    margin: 4px 0px;
-    border-radius: 10px;
-  }
-  .fr-shadow {
-    box-shadow: 10px 10px 5px 0px #cccccc !important;
   }
 `;
 
