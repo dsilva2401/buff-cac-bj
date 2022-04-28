@@ -41,6 +41,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     defaultVariantDetails,
     isProductLevel,
     discountCode,
+    isDiscountAvailable,
   } = data;
 
   const [successDrawer, setSuccessDrawer] = useState(false);
@@ -52,8 +53,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   );
 
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-
+  const [selectedQuantity, setSelectedQuantity] = useState(0);
   const [expandDescription, toggleExpandDescription] = useState<boolean>(false);
   const [contentRef, { height }] = useElementSize();
   const { logEvent, brandTheme } = useGlobal();
@@ -93,7 +93,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     if (variant) {
       setIsValidCombo(true);
       setChosenOption(variant);
-      setSelectedQuantity(1);
+      setSelectedQuantity(variant.inventoryQuantity > 0 ? 1 : 0);
     } else {
       if (isProductLevel) {
         setIsValidCombo(true);
@@ -109,13 +109,13 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
 
   const modifyUrlToIncludeQuantity = useCallback(
     (link: string, quantity: number) => {
-      if (discountCode) {
+      if (isDiscountAvailable) {
         return link.concat(
-          `%26items[][quantity]=${quantity}%26return_to=/checkout?discount=${discountCode}`
+          `%26items[][quantity]=${quantity}%26attributes[where-from]=Brij%26return_to=/checkout?discount=${discountCode}`
         );
       } else {
         return link.concat(
-          `%26items[][quantity]=${quantity}%26return_to=/checkout`
+          `%26items[][quantity]=${quantity}%26attributes[where-from]=Brij%26return_to=/checkout`
         );
       }
     },
@@ -173,37 +173,36 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           alignItems='center'
           overflow='auto'
         >
-          <Wrapper
-            position='absolute'
-            top='-1px'
-            width='auto'
-            height='auto'
-            borderRadius='0 0 15px 15px'
-            paddingTop='1rem'
-            padding='0.4rem 1.5rem'
-            background={brandTheme || theme.primary}
-          >
-            <Text fontSize='0.8rem' color='#FFFFFF'>
-              <p>
-                {data.isDiscountAvailable
-                  ? `${t(
-                      'savingBanner.pre'
-                    )}${' '}${data.discountPercentage!}${t(
-                      minimizeBranding
-                        ? 'savingBanner.postWithoutBranding'
-                        : 'savingBanner.postWithBranding'
-                    )}`
-                  : ''}
-              </p>
-            </Text>
-          </Wrapper>
+          {data.isDiscountAvailable && (
+            <Wrapper
+              position='absolute'
+              top='-1px'
+              width='auto'
+              height='auto'
+              borderRadius='0 0 15px 15px'
+              paddingTop='1rem'
+              padding='0.4rem 1.5rem'
+              background={brandTheme || theme.primary}
+            >
+              <Text fontSize='0.8rem' color='#FFFFFF'>
+                <p>
+                  {t('savingBanner.pre')} {data.discountPercentage!}
+                  {t(
+                    minimizeBranding
+                      ? 'savingBanner.postWithoutBranding'
+                      : 'savingBanner.postWithBranding'
+                  )}
+                </p>
+              </Text>
+            </Wrapper>
+          )}
           <Wrapper
             width='100%'
             justifyContent='space-between'
             alignItems='center'
             minHeight='200px'
             gap='0.5rem'
-            margin='4rem 0 0 0'
+            margin='3rem 0 0 0'
           >
             <ProgressiveImage
               src={chosenOption.image}
@@ -302,8 +301,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               {isValidCombo && (
                 <Wrapper>
                   <QuantityController
-                    value={String(selectedQuantity)}
                     onChange={handleQuantity}
+                    value={String(selectedQuantity)}
                     limit={chosenOption.inventoryQuantity}
                   />
                 </Wrapper>
@@ -312,8 +311,10 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           </Wrapper>
           {productDescription && (
             <Wrapper
+              width='100%'
               overflow='hidden'
               transition='0.3s'
+              position='relative'
               padding='0 0 1rem 0'
               style={{ height: expandDescription ? height + 16 : '70px' }}
             >
@@ -327,7 +328,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                   color='#414149'
                   fontSize='0.75rem'
                   ref={contentRef}
-                  style={{ whiteSpace: 'pre-line' }}
+                  style={{ whiteSpace: 'pre-line', maxWidth: '100%' }}
                 >
                   <p>{productDescription}</p>
                 </Text>
@@ -342,7 +343,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                       boxShadow: '-10px 1px 8px 0px rgba(256,256,256,1)',
                       position: 'absolute',
                       cursor: 'pointer',
-                      bottom: expandDescription ? -16 : 0,
+                      bottom: 0,
                       right: 0,
                     }}
                     onClick={() => toggleExpandDescription(!expandDescription)}
@@ -395,7 +396,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                   variant='dark'
                   brandTheme={brandTheme}
                   onClick={handleCheckout}
-                  disabled={!isValidCombo}
+                  disabled={!isValidCombo || selectedQuantity < 1}
                   alignItems='flex-end'
                 >
                   <div
@@ -411,23 +412,30 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                         position: 'absolute',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: brandTheme,
                         fontSize: '0.7rem',
                         fontWeight: 'bold',
                         width: '24px',
                         zIndex: 99,
                         left: '0',
                         top: '5px',
+                        color:
+                          !isValidCombo || selectedQuantity < 1
+                            ? '#ccc'
+                            : brandTheme,
                       }}
                     >
                       {selectedQuantity}
                     </label>
                   </div>
-                  {t('checkoutButton.callToAction')} &#8226;{' '}
+                  {t('checkoutButton.callToAction')}
                   {selectedQuantity > 0 && (
-                    <label style={{ color: theme.button.secondary }}>
-                      {getCostText()}
-                    </label>
+                    <>
+                      {' '}
+                      &#8226;{' '}
+                      <label style={{ color: theme.button.secondary }}>
+                        {getCostText()}
+                      </label>
+                    </>
                   )}
                 </Button>
               ) : (

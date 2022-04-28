@@ -58,7 +58,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
       />
       <ControllerButton
         theme={brandTheme || theme.primary}
-        disabled={limit ? Number(value) >= limit : false}
+        disabled={Number(value) === limit ? true : false}
         onClick={() => changeQuantity(value, 'sum')}
       >
         <Plus />

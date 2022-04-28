@@ -93,6 +93,7 @@ const HtmlWrapper = styled(Wrapper)`
   & .iframe-wrapper {
     position: relative;
     width: 100%;
+    height: 0;
     padding-bottom: 56.25%;
     border-radius: 10px;
     height: 0;
