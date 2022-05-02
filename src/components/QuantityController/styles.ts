@@ -19,6 +19,7 @@ export const NumberInput = styled.input`
     font-size: 1rem;
     font-weight: 600;
     color: #000;
+    opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   }
 `;
 

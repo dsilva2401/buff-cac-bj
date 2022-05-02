@@ -46,10 +46,6 @@ export const RoutesHashMap: RoutesType = {
     path: (id: string = ':id') => `/c/${id}`,
     component: <ProductDetails />,
   },
-  ProductDetailsLegacy: {
-    path: (id: string = ':id') => `/*/${id}`,
-    component: <ProductDetails />,
-  },
   Landing: {
     path: '/app/l/:brandname',
     component: <Landing />,

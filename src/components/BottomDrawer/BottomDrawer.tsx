@@ -387,7 +387,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     <DragZone id='draggable' style={{ zIndex: 99 }} />
                     <div
                       id='not-draggable'
-                      style={{ width: '100%', overflow: 'auto' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
+                      }}
                     >
                       {children}
                     </div>

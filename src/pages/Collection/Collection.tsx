@@ -29,8 +29,7 @@ type BrandCollectionType = {
   items: ProductDetailsType[];
 };
 
-const regexExp =
-  process.env.REACT_APP_SCAN_VERIFICATION +
+const regexExp = process.env.REACT_APP_SCAN_VERIFICATION + 
   '[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$';
 
 const Collection: React.FC = () => {

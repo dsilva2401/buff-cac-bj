@@ -641,7 +641,7 @@ const ProductDetails: React.FC = () => {
             ) : (
               <Wrapper
                 width='100%'
-                height={`${window.innerHeight / appZoom }px`}
+                height={`${window.innerHeight / appZoom}px`}
                 padding={`0 0 ${collapsedDrawerHeight + 40}px 0`}
                 background={details.brand.customBgColor || 'white'}
               >

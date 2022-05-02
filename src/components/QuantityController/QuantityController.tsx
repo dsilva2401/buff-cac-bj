@@ -55,6 +55,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
         type='number'
         value={value}
         onChange={({ target: { value } }) => changeQuantity(value)}
+        disabled={Number(value) === limit || Number(value) <= 0 ? true : false}
       />
       <ControllerButton
         theme={brandTheme || theme.primary}
