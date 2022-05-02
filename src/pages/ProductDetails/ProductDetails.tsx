@@ -373,7 +373,9 @@ const ProductDetails: React.FC = () => {
             width='100%'
             direction='column'
             transition='0.3s'
-            height={showCoverageTable ? '100%' : `calc(100% - ${height}px)`}
+            height={
+              showCoverageTable ? '100%' : `calc(100% - ${height - 100}px)`
+            }
           >
             {mulberry && (
               <Wrapper
