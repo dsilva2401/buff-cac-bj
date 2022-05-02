@@ -93,7 +93,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     if (variant) {
       setIsValidCombo(true);
       setChosenOption(variant);
-      setSelectedQuantity(variant.inventoryQuantity > 0 ? 1 : 0);
+      // setSelectedQuantity(variant.inventoryQuantity > 0 ? 1 : 0);
+      setSelectedQuantity(1);
     } else {
       if (isProductLevel) {
         setIsValidCombo(true);
@@ -303,7 +304,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                   <QuantityController
                     onChange={handleQuantity}
                     value={String(selectedQuantity)}
-                    limit={chosenOption.inventoryQuantity}
+                    // limit={chosenOption.inventoryQuantity}
                   />
                 </Wrapper>
               )}
