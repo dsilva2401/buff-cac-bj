@@ -1,0 +1,29 @@
+# Add 'repo' label to any root file changes
+repo:
+- '*'
+
+# Add 'test' label to any change to *.spec.js files within the source dir
+test:
+- src/**/*.spec.*
+
+# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+source:
+- any: ['src/**/*', '!src/docs/*']
+
+context:
+- any: ['src/context/*.ts']
+
+components:
+- any: ['src/components/*.ts']
+
+pages:
+- any: ['src/pages/*.ts']
+
+firebase:
+- any: ['src/firebase/*.ts']
+
+hooks:
+- any: ['src/hooks/*.ts']
+
+routes:
+- any: ['src/routes/*.ts']
