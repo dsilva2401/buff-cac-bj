@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",
+    "cross-env": "^7.0.3",
     "dateformat": "^5.0.3",
     "firebase": "^9.5.0",
     "husky": "4",
@@ -44,9 +45,20 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+<<<<<<< HEAD
     "start-staging-client": "REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
     "start-rc-client": "REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
+    "start-staging-client-windows": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/  react-scripts start",
+    "start-rc-client-windows": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/  react-scripts start",
     "start-staging-client-windows": "react-scripts start",
+    "format": "prettier --write \"src/**/*.ts\" && prettier --write \"src/**/*.tsx\"",
+    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\""
+=======
+    "start-staging-client": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false react-scripts start",
+    "start-rc-client": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false react-scripts start",
+    "start-staging-client-windows": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false react-scripts start",
+    "start-rc-client-windows": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false react-scripts start",
+>>>>>>> 4178b0f (update start scrips for client app)
     "format": "prettier --write \"src/**/*.ts\" && prettier --write \"src/**/*.tsx\"",
     "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\""
   },
