@@ -61,8 +61,8 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       justifyContent='flex-start'
       alignItems='center'
       gap='1.2rem'
-      overflow='auto'
-      margin={animated ? '1.5rem 0' : '3.75rem 0'}
+      height='100%'
+      margin={animated ? '1.5rem 0 0 0' : '3.75rem 0 0 0'}
     >
       {html && (
         <HtmlWrapper

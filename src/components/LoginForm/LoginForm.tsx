@@ -121,7 +121,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
-      overflow='hidden'
       paddingTop={
         location.pathname === RoutesHashMap.Login.path ||
         location.pathname === ''

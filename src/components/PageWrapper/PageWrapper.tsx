@@ -8,6 +8,7 @@ const PageWrapper = styled(Wrapper)`
   left: 0;
   width: 100%;
   height: 100%;
+  max-height: 100vh;
   overflow: hidden;
   @media (min-width: 1024px) {
     max-width: ${window.innerHeight * 0.46}px;

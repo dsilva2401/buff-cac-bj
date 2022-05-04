@@ -6,6 +6,7 @@ type ButtonProps = {
   warning?: boolean;
   squared?: boolean;
   width?: string;
+  disabled?: boolean;
   iconRight?: boolean;
   inlineIcon?: boolean;
   transition?: string;

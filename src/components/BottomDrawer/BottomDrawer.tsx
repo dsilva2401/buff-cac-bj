@@ -13,6 +13,7 @@ import phoneCallIcon from 'assets/icons/svg/social-phone-call.svg';
 import instagramIcon from 'assets/icons/svg/social-instagram.svg';
 import facebookIcon from 'assets/icons/svg/social-facebook.svg';
 import twitterIcon from 'assets/icons/svg/social-twitter.svg';
+import tiktokIcon from 'assets/icons/svg/social-tiktok.svg';
 import emailIcon from 'assets/icons/svg/social-email.svg';
 import useElementSize from 'hooks/useElementSize';
 import LinesEllipsis from 'react-lines-ellipsis';
@@ -50,6 +51,7 @@ type SocialsType =
       twitter?: string | undefined;
       instagram?: string | undefined;
       facebook?: string | undefined;
+      tiktok?: string | undefined;
     }
   | undefined;
 
@@ -165,12 +167,14 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       socials?.facebook ||
       socials?.instagram ||
       socials?.phone ||
-      socials?.twitter
+      socials?.twitter ||
+      socials?.tiktok
       ? true
       : false;
   };
 
   const drawerFooter = useMemo(() => {
+    console.log('Socials: ', socials);
     return (
       <DrawerFooter>
         {socials?.phone && (
@@ -181,6 +185,20 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         {socials?.email && (
           <DrawerIconLink href={`mailto:${socials?.email}`}>
             <Image src={emailIcon} alt='email-icon' />
+          </DrawerIconLink>
+        )}
+        {socials?.tiktok && (
+          <DrawerIconLink
+            href={
+              socials?.tiktok.includes('https://') ||
+              socials?.tiktok.includes('http://')
+                ? socials?.tiktok
+                : `https://${socials?.tiktok}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Image src={tiktokIcon} alt='tiktok-icon' />
           </DrawerIconLink>
         )}
         {socials?.twitter && (
@@ -268,29 +286,37 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     alignItems='center'
                     width='100%'
                   >
-                    <Wrapper width='65%'>
+                    <Wrapper
+                      gap='2px'
+                      width='65%'
+                      height='100%'
+                      alignSelf={subtitle ? 'flex-end' : 'center'}
+                      justifyContent='space-between'
+                      direction='column'
+                    >
                       {title && (
                         <LinesEllipsis
                           trimRight
-                          text={title}
-                          maxLine={subtitle ? '1' : '2'}
+                          text={title ? title : ''}
+                          maxLine={subtitle ? 1 : 2}
                           basedOn='words'
                           ellipsis='...'
                           style={{
+                            width: '100%',
                             fontSize: '1rem',
                             fontWeight: '600',
                             lineHeight: '20px',
                           }}
                         />
                       )}
+                      {subtitle && (
+                        <Text fontSize='0.75rem' color='#636369'>
+                          <p>{subtitle}</p>
+                        </Text>
+                      )}
                     </Wrapper>
                     {mainDrawerOpen ? null : leadInformation}
                   </Wrapper>
-                )}
-                {subtitle && (
-                  <Text fontSize='0.75rem' color='#636369'>
-                    <p>{subtitle}</p>
-                  </Text>
                 )}
               </Wrapper>
             </DrawerHeader>
@@ -361,7 +387,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     <DragZone id='draggable' style={{ zIndex: 99 }} />
                     <div
                       id='not-draggable'
-                      style={{ width: '100%', overflow: 'auto' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        overflow: 'auto',
+                      }}
                     >
                       {children}
                     </div>

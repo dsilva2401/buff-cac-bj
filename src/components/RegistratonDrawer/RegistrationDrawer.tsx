@@ -215,7 +215,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
             alignItems='center'
             gap='1.2rem'
             overflow='auto'
-            margin='3.75rem 0'
+            margin='3.75rem 0 0 0'
           >
             {html && (
               <HtmlWrapper

@@ -25,16 +25,17 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
       switch (operation) {
         case 'sum':
           currValue = Number(value) + 1;
-          if (limit && currValue <= limit) {
-            onChange(currValue.toString());
-          }
+          onChange(currValue.toString());
+          // if (limit && currValue <= limit) {
+          //   onChange(currValue.toString());
+          // }
           break;
         case 'subtract':
           currValue = Number(value) - 1;
-
-          if (currValue >= 1) {
-            onChange(currValue.toString());
-          }
+          onChange(currValue.toString());
+          // if (currValue >= 1) {
+          //   onChange(currValue.toString());
+          // }
           break;
       }
     } else {
@@ -55,10 +56,13 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
         type='number'
         value={value}
         onChange={({ target: { value } }) => changeQuantity(value)}
+        // disabled={Number(value) === limit || Number(value) <= 0 ? true : false}
+        disabled={false}
       />
       <ControllerButton
         theme={brandTheme || theme.primary}
-        disabled={limit ? Number(value) >= limit : false}
+        // disabled={Number(value) === limit || Number(value) <= 0 ? true : false}
+        disabled={false}
         onClick={() => changeQuantity(value, 'sum')}
       >
         <Plus />

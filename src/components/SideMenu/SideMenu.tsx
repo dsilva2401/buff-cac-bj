@@ -12,6 +12,7 @@ import { ReactComponent as LoadingIndicator } from 'assets/icons/svg/loading-sma
 import { ReactComponent as External } from 'assets/icons/svg/external.svg';
 import { ReactComponent as Logout } from 'assets/icons/svg/log-out.svg';
 import { ReactComponent as Profile } from 'assets/icons/svg/person.svg';
+import { ReactComponent as Trash } from 'assets/icons/svg/trash.svg';
 import poweredByLogo from 'assets/images/svg/powered-by.svg';
 import brijLogo from 'assets/logos/svg/brij.svg';
 import DrawerMask from 'components/DrawerMask';
@@ -84,8 +85,15 @@ const SideMenu: React.FC = () => {
 
   const redirectToCollection = useCallback(() => {
     history.push(RoutesHashMap.Collection.path);
+    showToast({
+      message: `${
+        details?.product?.name || slug
+      } has been removed from your collection.`,
+      type: 'success',
+    });
+    setSlug(null);
     setIsMenuOpen(false);
-  }, [history]);
+  }, [history, setIsMenuOpen, setSlug, details?.product?.name, slug]);
 
   const onRemoveProductError = (error: any) => {
     showToast({ message: error.message, type: 'error' });
@@ -101,7 +109,9 @@ const SideMenu: React.FC = () => {
 
   // Assuming if the product is registered to the user it should be in user collection
   // In the future maybe decrease the payload size of collection API call and match collection items
-  const showRemoveProductButton = details?.product?.registeredToCurrentUser;
+  const showRemoveProductButton =
+    details?.product?.registeredToCurrentUser &&
+    window.location.pathname === `/c/${slug}`;
 
   return (
     <>
@@ -145,6 +155,7 @@ const SideMenu: React.FC = () => {
                 }
               >
                 Remove Product
+                <Trash />
               </p>
             )}
             {window.location.pathname === `/c/${slug}` &&

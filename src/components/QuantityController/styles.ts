@@ -19,6 +19,7 @@ export const NumberInput = styled.input`
     font-size: 1rem;
     font-weight: 600;
     color: #000;
+    opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   }
 `;
 
@@ -37,7 +38,7 @@ export const ControllerButton = styled.button<ControllerButtonProps>`
   border: 1px solid ${(props) => (props.disabled ? '#e7eaeb' : props.theme)};
   background-color: ${(props) => (props.disabled ? '#e7eaeb' : props.theme)};
   transition: all 0.3s ease;
-
+  cursor: pointer;
   svg {
     path {
       fill: ${(props) => (props.disabled ? '#b1b1b1' : '#fff')};
