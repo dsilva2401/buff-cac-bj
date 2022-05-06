@@ -11,7 +11,7 @@ import {
   FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
 } from 'firebase/auth';
 
 interface SocialLoginProps {
@@ -49,7 +49,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
           provider = new GoogleAuthProvider();
       }
 
-      signInWithPopup(auth, provider)
+      signInWithRedirect(auth, provider)
         .then((user) => {
           onSuccess();
         })

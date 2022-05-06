@@ -63,8 +63,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   }, []);
 
   const handleUsernameChanged = (value: string) => {
-    setUsername(value);
-    validateEmail(value);
+    setUsername(value.trim());
+    validateEmail(value.trim());
   };
 
   const onSuccess = useCallback(
@@ -190,6 +190,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     ? t('emailInputPlaceholder')
                     : t('emailInputFilledPlaceholder')
                 }
+                type='email'
                 onChange={(value) => handleUsernameChanged(value)}
               />
             </Wrapper>

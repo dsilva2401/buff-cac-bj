@@ -6,6 +6,7 @@ type EditInputProps = {
   value: string | undefined;
   onChange: (value: string) => void;
   width?: number;
+  type?: string;
 };
 
 const SearchInput: React.FC<EditInputProps> = ({
@@ -13,6 +14,7 @@ const SearchInput: React.FC<EditInputProps> = ({
   placeholder,
   onChange,
   width,
+  type = 'text',
 }: EditInputProps) => {
   const [isFocused, setIsFocused] = useState(true);
 
@@ -28,7 +30,7 @@ const SearchInput: React.FC<EditInputProps> = ({
     <InputWrapper isFocused={isFocused} width={`${width}px`}>
       <InputPlaceholder isFocused={isFocused}>{placeholder}</InputPlaceholder>
       <input
-        type='text'
+        type={type}
         width='100%'
         value={value}
         onFocus={() => setIsFocused(true)}
