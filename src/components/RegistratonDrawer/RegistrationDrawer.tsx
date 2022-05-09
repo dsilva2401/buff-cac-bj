@@ -73,8 +73,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // temprarory loading to handle initial loading while checking if product can be registered
   const [tempLoading, setTempLoading] = useState<boolean>(true);
 
-  const { loading, activateWarranty, slug, user, registerProduct, brandTheme } =
-    useGlobal();
+  const { loading, user, registerProduct, brandTheme } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
@@ -92,10 +91,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     closePage();
   }, [closePage]);
 
-  const checkAndActivateWarranty = useCallback(async () => {
-    activateWarranty({
+  const checkAndRegisterProduct = useCallback(async () => {
+    registerProduct({
       warrantyId,
-      tag: slug,
     })
       .then(() => {
         setSuccessDrawer(true);
@@ -106,31 +104,13 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         closePage();
       })
       .finally(() => setTempLoading(false));
-  }, [activateWarranty, warrantyId, slug, closePage]);
-
-  const checkAndRegisterProduct = useCallback(async () => {
-    registerProduct()
-      .then(() => {
-        setSuccessDrawer(true);
-      })
-      .catch(async (error: any) => {
-        const errorResponse: any = await error.json();
-        showToast({ message: errorResponse.error, type: 'error' });
-        closePage();
-      })
-      .finally(() => setTempLoading(false));
-  }, [registerProduct, closePage]);
+  }, [registerProduct, warrantyId, closePage]);
 
   // register or activate the warranty
   const register = useCallback(() => {
     setTempLoading(true);
-
-    if (warrantyData) {
-      checkAndActivateWarranty();
-    } else {
-      checkAndRegisterProduct();
-    }
-  }, [warrantyData, checkAndActivateWarranty, checkAndRegisterProduct]);
+    checkAndRegisterProduct();
+  }, [checkAndRegisterProduct]);
 
   // call register if
   // registration is Required in order to view the module

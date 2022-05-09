@@ -103,24 +103,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     );
   }, [productDetails, pathname, slug]);
 
-  const onActivateWarrantySuccess = useCallback(() => {
-    reFetchProduct();
-  }, [reFetchProduct]);
-
-  const onActivateWarrantyError = useCallback((error) => {
-    console.log(error);
-  }, []);
-
-  const [activateWarranty] = useAPI(
-    {
-      method: 'POST',
-      endpoint: 'products/activateWarranty',
-      onSuccess: onActivateWarrantySuccess,
-      onError: onActivateWarrantyError,
-    },
-    token
-  );
-
   const onRegisterProductSuccess = useCallback(() => {
     reFetchProduct();
   }, [reFetchProduct]);
@@ -285,7 +267,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         user,
         productDetails,
         loading: productLoading,
-        activateWarranty,
         registerProduct,
         slug,
         setSlug,
