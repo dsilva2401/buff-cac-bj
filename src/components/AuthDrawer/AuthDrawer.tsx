@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
@@ -110,7 +111,11 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           </Text>
         </Wrapper>
       </Animated>
-      {authScreenToRender}
+      <GoogleReCaptchaProvider
+        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+      >
+        {authScreenToRender}
+      </GoogleReCaptchaProvider>
     </Wrapper>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { theme } from 'styles/theme';
 import { RoutesHashMap } from 'routes';
 import { Animated } from 'react-animated-css';
@@ -22,7 +23,7 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
 import { getRegisterText } from 'utils/getRegisterText';
-
+import useRecaptchaV3 from 'hooks/useRecaptchaV3';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -34,7 +35,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const [emailRegistration, toggleEmailRegistration] = useState<boolean>(false);
   const [emailValidated, setEmailValidated] = useState<boolean>(false);
+  const [showRecaptcha, setShowRecaptcha] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isHuman, setHuman] = useState<boolean>(true);
   const [username, setUsername] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
@@ -43,9 +46,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const { retractDrawer, brandTheme, productDetails } = useGlobal();
   const [inputWrapperRef, { width }] = useElementSize();
+  const isVerified = useRecaptchaV3();
   const getErrorMessage = useFirebaseError();
   const location = useLocation();
   const auth = getAuth();
+
+  // sync isVerified with isHuman
+  useEffect(() => {
+    // if user is not verified show backup recaptcha
+    if (!isVerified) {
+      setShowRecaptcha(true);
+    }
+
+    setHuman(isVerified);
+  }, [isVerified]);
 
   const registrationType = productDetails?.registration?.registrationType;
 
@@ -92,23 +106,34 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const [getToken] = useLoginToken(onSuccess);
 
-  const handleLogin = async () => {
-    setLoading(true);
-    if (error !== '') setError('');
-    try {
-      await getToken({
-        email: username,
-      });
-    } catch (e) {
-      // catch error when user exist in firebase but not in our db
+  const onRecaptchaSuccess = useCallback(() => {
+    setHuman(true);
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    if (!isHuman)
       showToast({
-        message: 'Not able to verify the login details',
+        message: 'Please complete Recpatcha verification',
         type: 'error',
       });
-    } finally {
-      setLoading(false);
+    else {
+      setLoading(true);
+      if (error !== '') setError('');
+      try {
+        await getToken({
+          email: username,
+        });
+      } catch (e) {
+        // catch error when user exist in firebase but not in our db
+        showToast({
+          message: 'Not able to verify the login details',
+          type: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+  }, [isHuman, getToken, error, username]);
 
   if (showPersonalDetailsForm) {
     return <PersonalDetails onPersonalDetailsUpdate={onLogin} />;
@@ -163,6 +188,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             isDrawer={isDrawer}
             setLoading={setLoading}
             onSuccess={onLogin}
+            isHuman={isHuman}
             buttonPrefix={getRegisterText(registrationType)}
           />
           <Wrapper
@@ -225,6 +251,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
               </Button>
             )}
           </Wrapper>
+          {showRecaptcha ? (
+            <ReCAPTCHA
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY_v2 as string}
+              onChange={onRecaptchaSuccess}
+            />
+          ) : null}
           <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
             <Text fontSize='0.7rem' textDecoration='unset'>
               <span>{magicLinkError}</span>

@@ -18,6 +18,7 @@ interface SocialLoginProps {
   setLoading: (loading: boolean) => void;
   onSuccess: () => void;
   isDrawer?: boolean;
+  isHuman: boolean;
   buttonPrefix?: string;
 }
 
@@ -25,6 +26,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
   setLoading,
   onSuccess,
   isDrawer,
+  isHuman,
   buttonPrefix,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'socialLogin' });
@@ -34,34 +36,39 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
 
   const handleSocialAuth = useCallback(
     (providerName: ProviderName) => {
-      setLoading(true);
+      if (!isHuman)
+        showToast({
+          message: 'Please complete Recpatcha verification',
+          type: 'error',
+        });
+      else {
+        setLoading(true);
+        let provider = null;
+        switch (providerName) {
+          case ProviderName.Facebook:
+            provider = new FacebookAuthProvider();
+            break;
+          case ProviderName.Google:
+            provider = new GoogleAuthProvider();
+            break;
+          default:
+            provider = new GoogleAuthProvider();
+        }
 
-      let provider = null;
-
-      switch (providerName) {
-        case ProviderName.Facebook:
-          provider = new FacebookAuthProvider();
-          break;
-        case ProviderName.Google:
-          provider = new GoogleAuthProvider();
-          break;
-        default:
-          provider = new GoogleAuthProvider();
+        signInWithRedirect(auth, provider)
+          .then((user) => {
+            onSuccess();
+          })
+          .catch((error) => {
+            showToast({
+              message: getFirebaseError(error.code),
+              type: 'error',
+            });
+          })
+          .finally(() => setLoading(false));
       }
-
-      signInWithRedirect(auth, provider)
-        .then((user) => {
-          onSuccess();
-        })
-        .catch((error) => {
-          showToast({
-            message: getFirebaseError(error.code),
-            type: 'error',
-          });
-        })
-        .finally(() => setLoading(false));
     },
-    [auth, onSuccess, getFirebaseError, setLoading]
+    [auth, onSuccess, getFirebaseError, setLoading, isHuman]
   );
 
   return (

@@ -39,10 +39,7 @@ const SideMenu: React.FC = () => {
     setIsMenuOpen,
     logEvent,
     brandTheme,
-    token,
   } = useGlobal();
-
-  console.log(token, 'token');
 
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
   const previousUser = usePrevious(user);

@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { ReactComponent as BrijLogo } from 'assets/logos/svg/brij-colored.svg';
 import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,11 @@ const Login: React.FC = () => {
           logo={logo}
           actionButton={menuButton}
         />
-        <LoginForm onLogin={onLogin} />
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+        >
+          <LoginForm onLogin={onLogin} />
+        </GoogleReCaptchaProvider>
       </Wrapper>
     </>
   );

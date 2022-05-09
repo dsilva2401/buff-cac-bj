@@ -15,6 +15,7 @@ export const resources = {
         emailInputPlaceholder: 'Enter email...',
         emailInputFilledPlaceholder: 'Email',
         signUpLink: 'Sign up!',
+        recaptchaVerificationFailed: 'Recaptcha Verification Failed',
       },
       firebaseErrors: {
         'auth/invalid-email': 'Please provie a valid email',
