@@ -85,23 +85,27 @@ const Landing: React.FC = () => {
           </Wrapper>
 
           <Wrapper
-            gap='8%'
             zIndex={3}
             width='100%'
-            height='100%'
-            paddingTop='6rem'
-            padding='1.125rem'
-            direction='column'
+            gap='1.625rem'
+            margin='6rem 0 0 0'
+            padding='0 1.125rem 1.125rem 1.125rem'
             position='relative'
-            alignItems='flex-start'
-            justifyContent='center'
+            direction='column'
+            overflow='scroll'
           >
             <LandingHtmlWrapper
+              style={{ marginTop: 'auto' }}
               dangerouslySetInnerHTML={{
                 __html: pageData[0]?.brand[0]?.details,
               }}
             />
-            <Wrapper width='100%' direction='column' gap='0.75rem'>
+            <Wrapper
+              width='100%'
+              direction='column'
+              margin='0 0 auto 0'
+              gap='0.75rem'
+            >
               {pageData[0]?.links?.map((node) => (
                 <Button
                   key={node.title}

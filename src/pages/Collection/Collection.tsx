@@ -29,9 +29,7 @@ type BrandCollectionType = {
   items: ProductDetailsType[];
 };
 
-const regexExp =
-  process.env.REACT_APP_SCAN_VERIFICATION +
-  '[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$';
+const regexExp = process.env.REACT_APP_SCAN_VERIFICATION + '[a-zA-Z0-9]+';
 
 const Collection: React.FC = () => {
   const [sortedCollection, setSortedCollection] = useState<
@@ -174,53 +172,51 @@ const Collection: React.FC = () => {
         />
         {loading ? (
           <LoadingIndicator />
-        ) : sortedCollection?.length > 0 ? (
-          scanMode ? (
-            <Wrapper
-              direction='column'
-              width='100%'
-              alignSelf='flex-start'
-              justifyContent='center'
-              padding='0 1.25rem'
-              margin='3rem 0'
-            >
-              <QrReader
-                delay={50}
-                onError={() =>
-                  showToast({ message: t('scanErrorMessage'), type: 'error' })
+        ) : scanMode ? (
+          <Wrapper
+            direction='column'
+            width='100%'
+            alignSelf='flex-start'
+            justifyContent='center'
+            padding='0 1.25rem'
+            margin='3rem 0'
+          >
+            <QrReader
+              delay={50}
+              onError={() =>
+                showToast({ message: t('scanErrorMessage'), type: 'error' })
+              }
+              onScan={(data) => {
+                if (data) {
+                  toggleScanMode(false);
+                  setScanResult(data);
                 }
-                onScan={(data) => {
-                  if (data) {
-                    toggleScanMode(false);
-                    setScanResult(data);
-                  }
-                }}
-              />
-            </Wrapper>
-          ) : (
-            <Wrapper
-              width='100%'
-              height='100%'
-              direction='column'
-              justifyContent='flex-start'
-              padding='0 1.25rem'
-              margin='2.25rem 0 7.5rem 0'
-              alignItems='flex-start'
-            >
-              {sortedCollection.map((item) => (
-                <Wrapper width='100%' key={item.brand} direction='column'>
-                  <Wrapper width='100%' justifyContent='flex-start'>
-                    <Text fontSize='1rem' fontWeight='600'>
-                      <h2>
-                        {item.brand} ({item.items.length})
-                      </h2>
-                    </Text>
-                  </Wrapper>
-                  {renderCollection(item.items)}
+              }}
+            />
+          </Wrapper>
+        ) : sortedCollection?.length > 0 ? (
+          <Wrapper
+            width='100%'
+            height='100%'
+            direction='column'
+            justifyContent='flex-start'
+            padding='0 1.25rem'
+            margin='2.25rem 0 7.5rem 0'
+            alignItems='flex-start'
+          >
+            {sortedCollection.map((item) => (
+              <Wrapper width='100%' key={item.brand} direction='column'>
+                <Wrapper width='100%' justifyContent='flex-start'>
+                  <Text fontSize='1rem' fontWeight='600'>
+                    <h2>
+                      {item.brand} ({item.items.length})
+                    </h2>
+                  </Text>
                 </Wrapper>
-              ))}
-            </Wrapper>
-          )
+                {renderCollection(item.items)}
+              </Wrapper>
+            ))}
+          </Wrapper>
         ) : (
           <Wrapper
             width='100%'
@@ -233,31 +229,33 @@ const Collection: React.FC = () => {
             <h4>{t('emptyCollectionMessage')}</h4>
           </Wrapper>
         )}
-        <Wrapper
-          width='170px'
-          direction='column'
-          justifyContent='center'
-          alignItems='center'
-          alignSelf='center'
-          position='fixed'
-          bottom='2.5rem'
-          margin='auto'
-        >
-          {scanMode ? (
-            <IconButton
-              variant='dark'
-              iconName='close-light'
-              onClick={() => toggleScanMode(false)}
-            />
-          ) : (
-            <Button variant='dark' onClick={() => toggleScanMode(!scanMode)}>
-              <ScanIcon />
-              <Text color='#FFFFFF' padding='0 0 0 1.5rem'>
-                <p>{t('scanCodeButton')}</p>
-              </Text>
-            </Button>
-          )}
-        </Wrapper>
+        {!loading && (
+          <Wrapper
+            width='170px'
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
+            alignSelf='center'
+            position='fixed'
+            bottom='2.5rem'
+            margin='auto'
+          >
+            {scanMode ? (
+              <IconButton
+                variant='dark'
+                iconName='close-light'
+                onClick={() => toggleScanMode(false)}
+              />
+            ) : (
+              <Button variant='dark' onClick={() => toggleScanMode(!scanMode)}>
+                <ScanIcon />
+                <Text color='#FFFFFF' padding='0 0 0 1.5rem'>
+                  <p>{t('scanCodeButton')}</p>
+                </Text>
+              </Button>
+            )}
+          </Wrapper>
+        )}
       </Wrapper>
     </>
   );

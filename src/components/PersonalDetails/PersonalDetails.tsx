@@ -62,7 +62,6 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   return (
     <Wrapper
       width='100%'
-      height='100%'
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
