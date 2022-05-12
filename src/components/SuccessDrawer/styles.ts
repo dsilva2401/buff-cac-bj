@@ -22,7 +22,7 @@ export const Drawer = styled.div<DrawerType>`
   background-color: ${(props) => props.brandTheme || theme.primary};
   z-index: 5;
   transition: transform 0.3s ease;
-  transform: ${(props) => (props.isOpen ? 'translateY(-1000px)' : 'none')};
+  transform: ${(props) => (props.isOpen ? 'translateY(-1001px)' : 'none')};
 
   span {
     width: 25%;
