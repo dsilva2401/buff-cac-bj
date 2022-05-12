@@ -67,11 +67,24 @@ const Button = styled.button<ButtonProps>`
     text-decoration: none;
   }
 
+  @media only screen and (max-width: 340px) {
+    font-size: 0.8rem;
+  }
+
+  @media only screen and (max-width: 290px) {
+    font-size: 0.7rem;
+  }
+
   svg {
     position: ${(props) => (props.inlineIcon ? 'relative' : 'absolute')};
     ${(props) =>
       props.iconRight ? `right: 1rem;` : props.inlineIcon ? '' : `left: 1rem;`};
     border-radius: 50%;
+
+    @media only screen and (max-width: 340px) {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &:active {
