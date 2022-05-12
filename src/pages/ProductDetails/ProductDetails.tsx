@@ -553,6 +553,7 @@ const ProductDetails: React.FC = () => {
                 closePage={closeDrawerPage}
                 minimizeBranding={details.brand.minimizeBranding}
                 productDescription={details.product.productDescription}
+                brand={details?.brand}
               />
             );
           default:

@@ -4,6 +4,7 @@ import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { theme } from 'styles/theme';
 import {
+  ProductDetailsType,
   ShoppingModuleType,
   VariantDetails,
 } from '../../types/ProductDetailsType';
@@ -27,6 +28,14 @@ type ShopDrawerProps = {
   productDescription?: string;
   closePage(): void;
   minimizeBranding?: boolean;
+  brand: ProductDetailsType['brand'];
+};
+
+const findAndReplaceQuantity = (
+  checkoutUri: string,
+  quantity: number
+): string => {
+  return checkoutUri.replace('quantity_placeholder', quantity.toString());
 };
 
 const ShopDrawer: React.FC<ShopDrawerProps> = ({
@@ -34,6 +43,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   closePage,
   productDescription,
   minimizeBranding,
+  brand,
 }) => {
   const {
     allOptions,
@@ -41,7 +51,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     defaultVariantDetails,
     isProductLevel,
     discountCode,
-    isDiscountAvailable,
   } = data;
 
   const [successDrawer, setSuccessDrawer] = useState(false);
@@ -110,15 +119,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
 
   const modifyUrlToIncludeQuantity = useCallback(
     (link: string, quantity: number) => {
-      if (isDiscountAvailable) {
-        return link.concat(
-          `%26items[][quantity]=${quantity}%26attributes[where-from]=Brij%26return_to=/checkout?discount=${discountCode}`
-        );
-      } else {
-        return link.concat(
-          `%26items[][quantity]=${quantity}%26attributes[where-from]=Brij%26return_to=/checkout`
-        );
-      }
+      return findAndReplaceQuantity(link, quantity);
     },
     [discountCode]
   );
