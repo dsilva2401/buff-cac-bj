@@ -136,7 +136,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
   }, [isHuman, getToken, error, username]);
 
   if (showPersonalDetailsForm) {
-    return <PersonalDetails onPersonalDetailsUpdate={onLogin} />;
+    return (
+      <Wrapper direction='column' width='100%' height='100%' padding='1.25rem'>
+        <PersonalDetails onPersonalDetailsUpdate={onLogin} />
+      </Wrapper>
+    );
   }
 
   return (
