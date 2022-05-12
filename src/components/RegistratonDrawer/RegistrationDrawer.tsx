@@ -199,12 +199,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
           >
             {html && (
               <HtmlWrapper
-                gap='1rem'
                 width='100%'
                 padding='0 1rem'
                 direction='column'
-                alignItems='center'
-                justifyContent='center'
                 dangerouslySetInnerHTML={{ __html: html }}
               />
             )}
