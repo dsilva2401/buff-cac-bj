@@ -1,18 +1,18 @@
-import { useCallback } from 'react';
-import { ProviderName } from 'types/Auth';
-import { useTranslation } from 'react-i18next';
-import { showToast } from 'components/Toast/Toast';
 import { ReactComponent as FacebookLogo } from 'assets/logos/svg/facebook.svg';
 import { ReactComponent as GoogleLogo } from 'assets/logos/svg/google.svg';
-import useFirebaseError from 'hooks/useFirebaseError';
-import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
+import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
 import {
   FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
-  signInWithRedirect,
+  signInWithPopup,
 } from 'firebase/auth';
+import useFirebaseError from 'hooks/useFirebaseError';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ProviderName } from 'types/Auth';
 
 interface SocialLoginProps {
   setLoading: (loading: boolean) => void;
@@ -55,7 +55,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
             provider = new GoogleAuthProvider();
         }
 
-        signInWithRedirect(auth, provider)
+        signInWithPopup(auth, provider)
           .then((user) => {
             onSuccess();
           })

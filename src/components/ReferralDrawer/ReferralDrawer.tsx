@@ -1,18 +1,18 @@
-import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { showToast } from 'components/Toast/Toast';
-import { useGlobal } from 'context/global/GlobalContext';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { ReferralModuleType } from 'types/ProductDetailsType';
 import placeholder from 'assets/images/png/qr-placeholder.png';
-import ProgressiveImage from 'react-progressive-image';
-import ModuleWrapper from 'components/ModuleWrapper';
-import HtmlWrapper from 'components/HtmlWrapper';
-import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
+import HtmlWrapper from 'components/HtmlWrapper';
 import Image from 'components/Image';
 import Input from 'components/Input';
+import ModuleWrapper from 'components/ModuleWrapper';
 import Text from 'components/Text';
+import { showToast } from 'components/Toast/Toast';
+import Wrapper from 'components/Wrapper';
+import { useGlobal } from 'context/global/GlobalContext';
+import React, { useCallback } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useTranslation } from 'react-i18next';
+import ProgressiveImage from 'react-progressive-image';
+import { ReferralModuleType } from 'types/ProductDetailsType';
 
 type ReferralDrawerProps = {
   drawerTitle: string;
@@ -70,11 +70,13 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
               message: t('copyLinkToastMessage'),
               type: 'success',
             });
-            logEvent({
-              eventType: 'ENGAGEMENTS',
-              event: 'REFERRAL_LINK_COPIED',
-              data: referralData,
-            });
+            // TODO: Uncomment this when we implement this module
+            // and change event to MODULE_CLICKED
+            // logEvent({
+            //   eventType: 'ENGAGEMENTS',
+            //   event: 'REFERRAL_LINK_COPIED',
+            //   data: referralData,
+            // });
           }}
         >
           <Button variant='light' brandTheme={brandTheme}>
@@ -87,11 +89,13 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
           brandTheme={brandTheme}
           onClick={() => {
             handleShare();
-            logEvent({
-              eventType: 'ENGAGEMENTS',
-              event: 'SEND_A_REFERRAL_LINK',
-              data: referralData,
-            });
+            // TODO: Uncomment this when we use referral module
+            // Use MODULE_CLICKED as event type
+            // logEvent({
+            //   eventType: 'ENGAGEMENTS',
+            //   event: 'SEND_A_REFERRAL_LINK',
+            //   data: referralData,
+            // });
           }}
         >
           {t('shareLinkButton')}

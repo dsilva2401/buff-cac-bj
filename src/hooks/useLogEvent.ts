@@ -3,24 +3,22 @@ import { UserLocationType } from 'context/global/GlobalContext';
 import { useCallback } from 'react';
 import { useAPI } from 'utils/api';
 
-export type EventType = 'ENGAGEMENTS' | 'CONVERSION_RATES' | 'REVENUE';
+export type EventType = 'ENGAGEMENTS' | 'CONVERSION_RATES';
 export type EventName =
+  // when unique scan a tag after certain time range, eventType: ENGAGEMENTS
   | 'USER_SCAN_A_TAG'
+  // user registers a tag, eventType: ENGAGEMENTS
   | 'USER_REGISTER'
-  | 'REGISTRATIONS'
+  // when user activates warranty, eventType: ENGAGEMENTS
+  | 'WARRANTY_ACTIVATED'
+  // all website visits, eventType ENGAGEMENTS
   | 'WEBSITE_VISITS'
-  | 'REVENUE_GENERATED'
-  | 'REDIRECTED_TO_YOUR_WEBSITE'
-  | 'REDIRECTED_TO_ANOTHER_PAGE'
-  | 'FLAGS_AN_ITEM_AS_LOST_OR_STOLEN'
-  | 'HAS_A_LOST_ITEM_FOUND'
+  // when user clicks on product in collection, eventType: ENGAGEMENTS
   | 'VIEW_PRODUCT_INFO'
-  | 'SEND_A_REFERRAL_LINK'
-  | 'RECEIVES_A_REFERRAL_COUPON'
-  | 'WATCHES_AN_EMBEDDED_VIDEO'
+  // all module clicked along with moduleId, eventType: ENGAGEMENTS
   | 'MODULE_CLICKED'
-  | 'SHOPPING_CHECK_OUT'
-  | 'REFERRAL_LINK_COPIED';
+  // when user clicks on checkout button, eventType: ENGAGEMENTS
+  | 'SHOPPING_CHECK_OUT';
 
 export type EventPayload = {
   // Provided by event call
