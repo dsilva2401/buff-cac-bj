@@ -90,6 +90,26 @@ const HtmlWrapper = styled(Wrapper)`
       padding: 0;
     }
   }
+  .fr-video {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    border-radius: 10px;
+    display: block;
+
+    video,
+    iframe {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 10px;
+    }
+  }
   & .iframe-wrapper {
     position: relative;
     width: 100%;

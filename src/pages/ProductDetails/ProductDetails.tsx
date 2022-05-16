@@ -78,6 +78,7 @@ const ProductDetails: React.FC = () => {
     previewEvent,
     isPreviewMode,
     previewAuthenticated,
+    setPreviewAuthenticated,
     logEvent,
     retractDrawer,
     setMagicAction,
@@ -198,8 +199,10 @@ const ProductDetails: React.FC = () => {
   ]);
 
   useEffect(() => {
-    details?.product?.ageGateEnabled && toggleAgegateDisplay(true);
-  }, [details, toggleAgegateDisplay]);
+    if (!isPreviewMode) {
+      details?.product?.ageGateEnabled && toggleAgegateDisplay(true);
+    }
+  }, [details, toggleAgegateDisplay, isPreviewMode]);
 
   useEffect(() => {
     if (details?.brand?.customAccentColor)
@@ -338,11 +341,18 @@ const ProductDetails: React.FC = () => {
     }
   }, [leadModule, details]);
 
-  const onAuthComplete = useCallback((isNewUser?: boolean) => {
-    setNewUser(isNewUser as boolean);
-    setShowAuthPage(false);
-    setDisableModalDismiss(false);
-  }, []);
+  const onAuthComplete = useCallback(
+    (isNewUser?: boolean) => {
+      if (!isPreviewMode) {
+        setNewUser(isNewUser as boolean);
+      } else {
+        setPreviewAuthenticated(true);
+      }
+      setShowAuthPage(false);
+      setDisableModalDismiss(false);
+    },
+    [isPreviewMode]
+  );
 
   const renderDrawerPage = useCallback(() => {
     if (details) {

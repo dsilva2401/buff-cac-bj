@@ -62,6 +62,7 @@ type WrapperProps = {
   after?: PseudoElement;
   responsiveImg?: boolean;
   transition?: string;
+  isPreviewMode?: boolean;
 };
 
 const Wrapper = styled.div<WrapperProps>`

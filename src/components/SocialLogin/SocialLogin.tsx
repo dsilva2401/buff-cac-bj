@@ -13,6 +13,7 @@ import useFirebaseError from 'hooks/useFirebaseError';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProviderName } from 'types/Auth';
+import { useGlobal } from '../../context/global/GlobalContext';
 
 interface SocialLoginProps {
   setLoading: (loading: boolean) => void;
@@ -33,6 +34,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
 
   const auth = getAuth();
   const getFirebaseError = useFirebaseError();
+  const { isPreviewMode } = useGlobal();
 
   const handleSocialAuth = useCallback(
     (providerName: ProviderName) => {
@@ -43,6 +45,13 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         });
       else {
         setLoading(true);
+        if (isPreviewMode) {
+          setTimeout(() => {
+            setLoading(false);
+            onSuccess();
+          }, 100);
+          return;
+        }
         let provider = null;
         switch (providerName) {
           case ProviderName.Facebook:

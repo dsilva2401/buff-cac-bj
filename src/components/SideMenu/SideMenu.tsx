@@ -39,6 +39,7 @@ const SideMenu: React.FC = () => {
     setIsMenuOpen,
     logEvent,
     brandTheme,
+    isPreviewMode,
   } = useGlobal();
 
   const { t } = useTranslation('translation', { keyPrefix: 'sideMenu' });
@@ -53,9 +54,11 @@ const SideMenu: React.FC = () => {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        setSignedIn(true);
-      } else setSignedIn(false);
+      if (!isPreviewMode) {
+        if (user) {
+          setSignedIn(true);
+        } else setSignedIn(false);
+      }
     });
   }, [auth]);
 
@@ -186,7 +189,7 @@ const SideMenu: React.FC = () => {
               </p>
             ) : (
               <Link
-                to={RoutesHashMap.Login.path}
+                to={isPreviewMode ? `/c/${slug}` : RoutesHashMap.Login.path}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('signIn')}

@@ -4,11 +4,12 @@ import { theme } from 'styles/theme';
 type DrawerType = {
   isOpen?: boolean;
   brandTheme?: string;
+  appZoom?: number;
 };
 
 export const Drawer = styled.div<DrawerType>`
   width: 101%;
-  height: 100vh;
+  height: ${(props) => `calc(100vh / ${props.appZoom})`};
   position: absolute;
   padding: 30% 3rem 50%;
   top: 1000px;

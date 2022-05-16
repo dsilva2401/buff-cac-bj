@@ -15,6 +15,7 @@ import {
   WithLastLocationProps,
 } from 'react-router-last-location';
 import './style.css';
+import { useGlobal } from '../context/global/GlobalContext';
 interface RoutesType {
   [key: string]: any;
 }
@@ -69,6 +70,7 @@ const getTransition = (path: string, lastLocation: string) => {
 
 const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
   const location = useLocation();
+  const { isPreviewMode } = useGlobal();
 
   const getCurrentTransition = useCallback(() => {
     return getTransition(
@@ -94,13 +96,17 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
             if (routeObject.protected) {
               return (
                 <ProtectedRoute exact path={path} key={routeKey}>
-                  <PageWrapper>{routeObject.component}</PageWrapper>
+                  <PageWrapper isPreviewMode={isPreviewMode}>
+                    {routeObject.component}
+                  </PageWrapper>
                 </ProtectedRoute>
               );
             }
             return (
               <Route exact path={path} key={routeKey}>
-                <PageWrapper>{routeObject.component}</PageWrapper>
+                <PageWrapper isPreviewMode={isPreviewMode}>
+                  {routeObject.component}
+                </PageWrapper>
               </Route>
             );
           })}

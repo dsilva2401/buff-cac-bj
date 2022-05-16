@@ -44,7 +44,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
     useState<boolean>(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { retractDrawer, brandTheme, productDetails } = useGlobal();
+  const { retractDrawer, brandTheme, productDetails, isPreviewMode } =
+    useGlobal();
   const [inputWrapperRef, { width }] = useElementSize();
   const isVerified = useRecaptchaV3();
   const getErrorMessage = useFirebaseError();
@@ -118,6 +119,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
       });
     else {
       setLoading(true);
+      if (isPreviewMode) {
+        onLogin(false);
+        return;
+      }
+
       if (error !== '') setError('');
       try {
         await getToken({
@@ -133,7 +139,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         setLoading(false);
       }
     }
-  }, [isHuman, getToken, error, username]);
+  }, [isHuman, getToken, error, username, isPreviewMode]);
 
   if (showPersonalDetailsForm) {
     return (

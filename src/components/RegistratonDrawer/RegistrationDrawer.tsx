@@ -73,7 +73,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // temprarory loading to handle initial loading while checking if product can be registered
   const [tempLoading, setTempLoading] = useState<boolean>(true);
 
-  const { loading, user, registerProduct, brandTheme } = useGlobal();
+  const { loading, user, registerProduct, brandTheme, isPreviewMode } =
+    useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
@@ -109,8 +110,15 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // register or activate the warranty
   const register = useCallback(() => {
     setTempLoading(true);
-    checkAndRegisterProduct();
-  }, [checkAndRegisterProduct]);
+    setSuccessDrawer(true);
+    if (isPreviewMode) {
+      setTimeout(() => {
+        setTempLoading(false);
+      }, 200);
+    } else {
+      checkAndRegisterProduct();
+    }
+  }, [checkAndRegisterProduct, isPreviewMode]);
 
   // call register if
   // registration is Required in order to view the module
@@ -169,6 +177,16 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         setSuccessDrawer(false);
       }, 3000);
     }
+  }, [successDrawer]);
+
+  useEffect(() => {
+    try {
+      if (successDrawer) {
+        setTimeout(() => {
+          window.parent.postMessage({ type: 'userRegistered' }, '*');
+        }, 3000);
+      }
+    } catch (e) {}
   }, [successDrawer]);
 
   const translationToUse = warrantyData ? t : registrationTranslation;

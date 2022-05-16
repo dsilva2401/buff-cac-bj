@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   GlobalContext,
   PageStateType,
+  useGlobal,
   UserLocationType,
 } from './GlobalContext';
 import { useAPI } from 'utils/api';
@@ -22,15 +23,18 @@ const useUser = () => {
   const [authFetched, setAuthFetched] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [personalDetails, getPersonalDetails, token] = usePersonalDetails(user);
+  const { isPreviewMode } = useGlobal();
 
   useEffect(() => {
     const auth = getAuth();
     auth.onAuthStateChanged(async (user) => {
-      if (user) setUser(user);
-      else setUser(null);
-      setAuthFetched(true);
+      if (!isPreviewMode) {
+        if (user) setUser(user);
+        else setUser(null);
+        setAuthFetched(true);
+      }
     });
-  }, [setAuthFetched, setUser]);
+  }, [setAuthFetched, setUser, isPreviewMode]);
 
   return {
     user,
@@ -66,6 +70,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [brandTheme, setBrandTheme] = useState<string>(
     localStorage.getItem('accentColor') || theme.primary
   );
+  const [signedIn, setSignedIn] = useState<boolean>(false);
 
   const {
     user,
@@ -129,7 +134,19 @@ export const GlobalProvider: React.FC = ({ children }) => {
           setPreviewEvent({ ...event.data });
           if (event && event.data && event.data.type === 'enablePreview') {
             setIsPreviewMode(true);
+            setSignedIn(false);
+            setUser(null);
             setAppZoom(event.data.zoom);
+            let style = document.getElementById('setZoomStyleForDropdowns');
+            if (!style) {
+              style = document.createElement('style');
+            }
+            style.setAttribute('id', 'setZoomStyleForDropdowns');
+            style.innerText =
+              '.MuiPopover-root{zoom: ' +
+              event.data.zoom +
+              '; } .MuiPaper-root { left: 7% !important}';
+            window.document.body.appendChild(style);
           }
           if (event && event.data && event.data.type === 'setAuthState') {
             setPreviewAuthenticated(event.data.data);
@@ -139,6 +156,15 @@ export const GlobalProvider: React.FC = ({ children }) => {
       );
     }
   }, []);
+
+  useEffect(() => {
+    try {
+      window.parent.postMessage(
+        { type: 'setAuthState', data: previewAuthenticated },
+        '*'
+      );
+    } catch (e) {}
+  }, [previewAuthenticated]);
 
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
