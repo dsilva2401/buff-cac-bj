@@ -24,6 +24,7 @@ import Text from 'components/Text';
 import validator from 'validator';
 import { getRegisterText } from 'utils/getRegisterText';
 import useRecaptchaV3 from 'hooks/useRecaptchaV3';
+import { toast } from 'react-toastify';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -109,6 +110,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const onRecaptchaSuccess = useCallback(() => {
     setHuman(true);
+    // dismiss all toast
+    toast.dismiss();
   }, []);
 
   const handleLogin = useCallback(async () => {
@@ -198,7 +201,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             isDrawer={isDrawer}
             setLoading={setLoading}
             onSuccess={onLogin}
-            isHuman={isHuman}
             buttonPrefix={getRegisterText(registrationType)}
           />
           <Wrapper
@@ -231,6 +233,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
               />
             </Wrapper>
           </Wrapper>
+          {showRecaptcha && emailRegistration ? (
+            <ReCAPTCHA
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY_v2 as string}
+              onChange={onRecaptchaSuccess}
+            />
+          ) : null}
           <Wrapper width='100%' justifyContent='center' alignItems='center'>
             {loading || magicLinkLoading ? (
               <LoadingIndicator />
@@ -261,12 +269,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
               </Button>
             )}
           </Wrapper>
-          {showRecaptcha ? (
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_RECAPTCHA_KEY_v2 as string}
-              onChange={onRecaptchaSuccess}
-            />
-          ) : null}
           <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
             <Text fontSize='0.7rem' textDecoration='unset'>
               <span>{magicLinkError}</span>
