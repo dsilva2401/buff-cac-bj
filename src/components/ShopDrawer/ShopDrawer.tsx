@@ -301,13 +301,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                 </Wrapper>
               </Wrapper>
               {isValidCombo && (
-                <Wrapper>
-                  <QuantityController
-                    onChange={handleQuantity}
-                    value={String(selectedQuantity)}
-                    // limit={chosenOption.inventoryQuantity}
-                  />
-                </Wrapper>
+                <QuantityController
+                  onChange={handleQuantity}
+                  value={String(selectedQuantity)}
+                  // limit={chosenOption.inventoryQuantity}
+                />
               )}
             </Wrapper>
           </Wrapper>
