@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 export const NumberInput = styled.input`
-  width: 70px;
-  padding: 0.3rem 0.8rem;
+  width: 100%;
+  max-width: 70px;
+  min-width: 22px;
+  padding: 0.3rem 0;
   border-radius: 30px;
 
   border: 1px solid #e7eaeb;
@@ -30,6 +32,8 @@ type ControllerButtonProps = {
 
 export const ControllerButton = styled.button<ControllerButtonProps>`
   width: 40px;
+  max-width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 50%;
   display: flex;

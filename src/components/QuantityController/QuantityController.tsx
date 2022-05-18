@@ -44,7 +44,7 @@ const QuantityController: React.FC<QuantityControllerProps> = ({
   };
 
   return (
-    <Wrapper gap='0.3rem'>
+    <Wrapper gap='0.3rem' justifyContent='flex-start'>
       <ControllerButton
         theme={brandTheme || theme.primary}
         disabled={Number(value) <= 1 ? true : false}
