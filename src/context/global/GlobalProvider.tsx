@@ -28,7 +28,13 @@ const useUser = () => {
   useEffect(() => {
     const auth = getAuth();
     auth.onAuthStateChanged(async (user) => {
-      if (!isPreviewMode) {
+      // document.location.href is a hack until we find a better solution
+      // because this code runs even before we get a chance to set isPreviewMode.
+      // maybe because firebase store user information in localStorage and triggers this very quickly.
+      if (
+        !isPreviewMode &&
+        document.location.href.split('/').pop() !== '1234'
+      ) {
         if (user) setUser(user);
         else setUser(null);
         setAuthFetched(true);

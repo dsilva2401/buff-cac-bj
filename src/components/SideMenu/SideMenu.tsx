@@ -54,7 +54,13 @@ const SideMenu: React.FC = () => {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      if (!isPreviewMode) {
+      // document.location.href is a hack until we find a better solution
+      // because this code runs even before we get a chance to set isPreviewMode.
+      // maybe because firebase store user information in localStorage and triggers this very quickly.
+      if (
+        !isPreviewMode &&
+        document.location.href.split('/').pop() !== '1234'
+      ) {
         if (user) {
           setSignedIn(true);
         } else setSignedIn(false);
