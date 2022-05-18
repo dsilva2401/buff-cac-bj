@@ -11,9 +11,7 @@ const PageWrapper = styled(Wrapper)`
   max-height: 100vh;
   overflow: hidden;
   @media (min-width: 1024px) {
-    max-width: ${window.innerHeight < 680
-      ? window.innerHeight * (9 / 16)
-      : window.innerHeight * (9 / 19.5)}px;
+    max-width: ${window.innerHeight * (9 / 16)}px;
     max-height: ${window.innerHeight}px;
   }
 `;
