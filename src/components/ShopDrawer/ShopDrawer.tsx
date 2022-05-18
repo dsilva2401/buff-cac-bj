@@ -375,7 +375,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                   id={optionItem.name}
                   label={optionItem.name}
                   options={optionItem.values}
-                  isSuccess={successDrawer}
                   onChange={(value) =>
                     updateOption((prev) => ({
                       ...prev,

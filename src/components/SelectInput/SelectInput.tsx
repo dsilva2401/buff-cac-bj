@@ -5,7 +5,6 @@ type SelectInputProps = {
   id: string;
   options: string[];
   label: string;
-  isSuccess: boolean;
   selected?: string;
   onChange: (value: string) => void;
 };
@@ -14,7 +13,6 @@ const SelectInput: React.FC<SelectInputProps> = ({
   id,
   options,
   label,
-  isSuccess,
   onChange,
   selected,
 }) => {
