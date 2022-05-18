@@ -15,7 +15,7 @@ const PageWrapper = styled(Wrapper)<PageWrapperProps>`
   max-height: ${(props) => (props.isPreviewMode ? 'unset' : '100vh')};
   overflow: hidden;
   @media (min-width: 1024px) {
-    max-width: ${window.innerHeight * 0.46}px;
+    max-width: ${window.innerHeight * (9 / 16)}px;
     max-height: ${window.innerHeight}px;
   }
 `;
