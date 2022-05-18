@@ -110,8 +110,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // register or activate the warranty
   const register = useCallback(() => {
     setTempLoading(true);
-    setSuccessDrawer(true);
     if (isPreviewMode) {
+      setSuccessDrawer(true);
       setTimeout(() => {
         setTempLoading(false);
       }, 200);
