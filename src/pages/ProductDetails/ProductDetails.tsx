@@ -217,21 +217,8 @@ const ProductDetails: React.FC = () => {
         if (details?.modules[x]?.locked) {
           setSignInRedirect(`/c/${id}`);
         }
-        let title: string;
-        switch (details.modules[x].type) {
-          case 'WARRANTY_MODULE':
-            const moduleInfo = details.modules[x]
-              .moduleInfo as WarrantyModuleType;
-            title = moduleInfo?.activated
-              ? 'View Warranty'
-              : 'Activate Warranty';
-            break;
-          default:
-            title = details.modules[x].title;
-            break;
-        }
         let buttonObject: ButtonType = {
-          title,
+          title: details.modules[x].title,
           onClick: () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
