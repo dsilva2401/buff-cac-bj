@@ -5,6 +5,7 @@ import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.s
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
 import { useParams } from 'react-router';
 import { Position } from 'types/Misc';
@@ -60,6 +61,9 @@ const ProductDetails: React.FC = () => {
   const [isNewUser, setNewUser] = useState<boolean>(false);
   const { topHeight, bottomHeight } = useHeights();
   const { appZoom } = useGlobal();
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'productDetails',
+  });
 
   const [position, setPosition] = useState<Position>({
     x: 0,
@@ -217,8 +221,21 @@ const ProductDetails: React.FC = () => {
         if (details?.modules[x]?.locked) {
           setSignInRedirect(`/c/${id}`);
         }
+        let title: string = details.modules[x].title;
+        switch (details.modules[x].type) {
+          case 'WARRANTY_MODULE':
+            const moduleInfo = details.modules[x]
+              .moduleInfo as WarrantyModuleType;
+            title = moduleInfo?.activated
+              ? t('viewWarranty')
+              : details.modules[x].title;
+            break;
+          default:
+            title = details.modules[x].title;
+            break;
+        }
         let buttonObject: ButtonType = {
-          title: details.modules[x].title,
+          title,
           onClick: () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
