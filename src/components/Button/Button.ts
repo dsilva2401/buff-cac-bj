@@ -75,6 +75,10 @@ const Button = styled.button<ButtonProps>`
     font-size: 0.7rem;
   }
 
+  @media only screen and (min-width: 1024px) {
+    font-size: 0.8rem;
+  }
+
   svg {
     position: ${(props) => (props.inlineIcon ? 'relative' : 'absolute')};
     ${(props) =>
@@ -84,6 +88,11 @@ const Button = styled.button<ButtonProps>`
     @media only screen and (max-width: 340px) {
       width: 16px;
       height: 16px;
+    }
+
+    @media only screen and (min-width: 1024px) {
+      width: 18px;
+      height: 18px;
     }
   }
 
