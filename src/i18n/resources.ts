@@ -35,6 +35,7 @@ export const resources = {
         redirecting: 'Redirecting...',
       },
       productDetails: {
+        viewWarranty: 'View Warranty',
         ageGate: {
           title: 'Confirm your age',
           subtitle: 'Are you 21 or older?',
