@@ -4,6 +4,8 @@ import Wrapper from 'components/Wrapper';
 const HtmlWrapper = styled(Wrapper)`
   position: relative;
   animation: fade-in 0.6s ease-in-out forwards;
+  word-break: break-word;
+  white-space: pre-wrap;
 
   iframe {
     position: absolute;
