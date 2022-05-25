@@ -7,6 +7,8 @@ function useProductDetails(
   token: string | null = null,
   previewEvent: any
 ): [ProductDetailsType | null, () => Promise<any>, boolean] {
+  const [productLoading, setProductLoading] = useState<boolean>(false);
+
   const [productDetails, setProductDetails] =
     useState<ProductDetailsType | null>(null);
 
@@ -32,14 +34,20 @@ function useProductDetails(
       modules: [...moduleCopy],
       leadModule,
     });
+
+    setProductLoading(false);
   }, []);
 
-  const onError = useCallback((error) => {
-    console.log('ERROR CODE: ', error.code);
-    console.log('ERROR MSG: ', error.message);
-  }, []);
+  const onError = useCallback(
+    (error) => {
+      if (error.name !== 'AbortError') {
+        setProductLoading(false);
+      }
+    },
+    [setProductLoading]
+  );
 
-  const [getProduct, loading, controller] = useAPI(
+  const [getProduct, _, controller] = useAPI(
     {
       method: 'GET',
       endpoint: `products/${slug}`,
@@ -53,6 +61,7 @@ function useProductDetails(
     if (slug) {
       controller && controller.abort();
       getProduct();
+      setProductLoading(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, slug, getProduct]);
@@ -63,7 +72,7 @@ function useProductDetails(
     }
   }, [previewEvent, onSuccess]);
 
-  return [productDetails, getProduct, loading];
+  return [productDetails, getProduct, productLoading];
 }
 
 export default useProductDetails;

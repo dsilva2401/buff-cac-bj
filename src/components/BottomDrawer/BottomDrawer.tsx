@@ -174,7 +174,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   };
 
   const drawerFooter = useMemo(() => {
-    console.log('Socials: ', socials);
     return (
       <DrawerFooter>
         {socials?.phone && (

@@ -39,6 +39,8 @@ import {
   ShoppingModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import ProductHeroImage from './ProductHeroImage';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 type UrlParam = {
   id: string;
@@ -91,7 +93,7 @@ const ProductDetails: React.FC = () => {
     magicPayload,
     toggleAgegateDisplay,
     brandTheme,
-    collapsedDrawerHeight,
+    loading,
   } = useGlobal();
 
   // by default we keep alreadySignedIn true
@@ -134,13 +136,6 @@ const ProductDetails: React.FC = () => {
     },
     [details, currentPage, setMagicAction, setMagicPayload]
   );
-
-  // const [updateUser, addToLoading] = useAPI<any>({
-  //   endpoint: 'auth/update',
-  //   method: 'PUT',
-  //   onSuccess,
-  //   onError,
-  // });
 
   useEffect(() => {
     if (id && details) {
@@ -646,69 +641,58 @@ const ProductDetails: React.FC = () => {
           <title>{details?.brand?.name} by Brij</title>
         </Helmet>
       )}
-      {details?.product?.image && (
-        <ProgressiveImage src={details?.product?.image} placeholder=''>
-          {(src: string, loading: boolean) => {
-            return loading ? (
-              <Wrapper
-                width='100%'
-                height='100%'
-                background={details.brand.customBgColor || 'white'}
-              />
-            ) : (
-              <Wrapper
-                width='100%'
-                height={`${window.innerHeight / appZoom}px`}
-                padding={`0 0 ${collapsedDrawerHeight + 40}px 0`}
-                background={details.brand.customBgColor || 'white'}
-              >
-                <Animated isVisible animationIn='fadeIn' animationOut='fadeIn'>
-                  <Image
-                    src={src}
-                    alt={details?.product?.name}
-                    position='relative'
-                    width='100%'
-                    margin='auto'
-                    objectFit='cover'
-                    style={{ minHeight: '100%' }}
-                  />
-                </Animated>
-              </Wrapper>
-            );
-          }}
-        </ProgressiveImage>
+      {loading ? (
+        <>
+          <ProductHeroImage />
+          <Wrapper
+            width='100%'
+            height='100%'
+            direction='column'
+            justifyContent='space-between'
+            overflow='auto'
+            position='relative'
+          >
+            <LoadingIndicator />
+          </Wrapper>
+        </>
+      ) : (
+        <>
+          <ProductHeroImage />
+          <Wrapper
+            width='100%'
+            height='100%'
+            direction='column'
+            justifyContent='space-between'
+            overflow='auto'
+            position='relative'
+          >
+            <PageHeader
+              logo={logo(details?.brand?.image ?? '')}
+              actionButton={menuButton}
+              border={false}
+              transparent
+            />
+          </Wrapper>
+        </>
       )}
-      <Wrapper
-        width='100%'
-        height='100%'
-        direction='column'
-        justifyContent='space-between'
-        overflow='auto'
-        position='relative'
-      >
-        <PageHeader
-          logo={logo(details?.brand?.image ?? '')}
-          actionButton={menuButton}
-          border={false}
-          transparent
-        />
-      </Wrapper>
-      <BottomDrawer
-        title={pageTitle}
-        subtitle={details?.product?.subtitle}
-        buttons={buttonsArray}
-        socials={details?.brand?.social}
-        isChildOpen={isDrawerPageOpen}
-        closeChild={closeDrawerPage}
-        leadInformation={leadInformation}
-        disableModalDismiss={disableModalDismiss}
-        mainDrawerOpen={mainDrawerOpen}
-        setMainDrawerOpen={setMainDrawerOpen}
-        position={position}
-        setPosition={setPosition}
-      >
-        {renderDrawerPage()}
-      </BottomDrawer>
+      {details?.modules?.length && (
+        <BottomDrawer
+          title={pageTitle}
+          subtitle={details?.product?.subtitle}
+          buttons={buttonsArray}
+          socials={details?.brand?.social}
+          isChildOpen={isDrawerPageOpen}
+          closeChild={closeDrawerPage}
+          leadInformation={leadInformation}
+          disableModalDismiss={disableModalDismiss}
+          mainDrawerOpen={mainDrawerOpen}
+          setMainDrawerOpen={setMainDrawerOpen}
+          position={position}
+          setPosition={setPosition}
+        >
+          {renderDrawerPage()}
+        </BottomDrawer>
+      )}
     </>
   );
 };
