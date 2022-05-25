@@ -50,28 +50,18 @@ const Collection: React.FC = () => {
       return regex.test(url);
     };
     if (scanResult) {
+      showToast({
+        message: t('scanSuccessMessage'),
+        type: 'success',
+      });
       if (validateUrl(scanResult.toString())) {
-        window.open(scanResult, '_self');
-        showToast({
-          message: t('scanSuccessMessage'),
-          type: 'success',
-        });
         logEvent({
           eventType: 'ENGAGEMENTS',
           event: 'USER_SCAN_A_TAG',
           data: scanResult.slice(scanResult.length - 4),
         });
-      } else if (!validateUrl(scanResult.toString())) {
-        showToast({
-          message: t('invalidScanMessage'),
-          type: 'error',
-        });
-      } else {
-        showToast({
-          message: t('scanErrorMessage'),
-          type: 'error',
-        });
       }
+      window.open(scanResult, '_self');
       setScanResult('');
     }
   }, [scanResult, logEvent, t]);
