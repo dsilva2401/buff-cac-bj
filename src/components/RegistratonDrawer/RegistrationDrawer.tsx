@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
+import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
 import { ModuleInfoType, Product } from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
-import { useTranslation } from 'react-i18next';
-import LoadingIndicator from 'components/LoadingIndicator';
-import PersonalDetails from 'components/PersonalDetails';
-import SuccessDrawer from 'components/SuccessDrawer';
-import Wrapper from 'components/Wrapper';
 import { showToast } from 'components/Toast/Toast';
-import Button from 'components/Button';
+import { useTranslation } from 'react-i18next';
+import SuccessDrawer from 'components/SuccessDrawer';
+import PersonalDetails from 'components/PersonalDetails';
+import LoadingIndicator from 'components/LoadingIndicator';
 import HtmlWrapper from 'components/HtmlWrapper';
+import Wrapper from 'components/Wrapper';
+import Button from 'components/Button';
 import Text from 'components/Text';
-import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
 import { useAPI } from 'utils/api';
 
 enum PageType {

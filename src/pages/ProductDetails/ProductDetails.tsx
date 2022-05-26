@@ -413,6 +413,7 @@ const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
     if (details) {
       const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
+      let moduleTitle: string | undefined = module?.title;
       let mulberry: WarrantyModuleType['mulberry'] | null = null;
       if (module?.moduleInfo) {
         const warrantyModuleInfo = module?.moduleInfo as WarrantyModuleType;
@@ -439,6 +440,24 @@ const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
               showCoverageTable ? '100%' : `calc(100% - ${height - 100}px)`
             }
           >
+            <Wrapper
+              width='100%'
+              left='0'
+              top='0'
+              zIndex={1}
+              minHeight='4rem'
+              position='fixed'
+              borderRadius='26px'
+              background='#FFFFFF'
+            >
+              <Text
+                fontSize='1rem'
+                fontWeight='600'
+                margin='1.25rem 4rem 1.25rem 1.75rem'
+              >
+                <h1>{moduleTitle}</h1>
+              </Text>
+            </Wrapper>
             {mulberry && (
               <Wrapper
                 gap='1rem'

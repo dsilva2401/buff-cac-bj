@@ -52,7 +52,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       {html && (
         <HtmlWrapper
           width='100%'
-          padding='0 1rem'
+          padding='0 0.75rem'
           direction='column'
           dangerouslySetInnerHTML={{ __html: html }}
         />
