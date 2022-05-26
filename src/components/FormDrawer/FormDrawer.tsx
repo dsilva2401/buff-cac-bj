@@ -1,6 +1,5 @@
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
-import { FormProvider } from '../../context';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
 import FormStepper from './components/FormStepper';
 import {
@@ -24,6 +23,8 @@ import FromStepWrapper from './FromStepWrapper';
 
 type Props = {
   data: FormDetailModel[];
+  setIsFormNavigation: React.Dispatch<React.SetStateAction<boolean>>;
+  isFormNavigation: boolean;
 };
 
 type initNames = {
@@ -36,10 +37,9 @@ export interface FormMatchParams {
 }
 
 const FormDrawer = (props: Props) => {
-  const [setRedirect] = useState(false);
   const { params } = useRouteMatch<FormMatchParams>();
   const { currentStep, setCurrentStep, setFormData } = useFormContext();
-  const { data } = props;
+  const { data, setIsFormNavigation, isFormNavigation } = props;
   // const { active, brand, content, enabled, formDetails, name, title, type } = props.data;
   const route = useHistory();
   const location = useLocation();
@@ -47,6 +47,12 @@ const FormDrawer = (props: Props) => {
   useEffect(() => {
     if (!location.pathname.includes(`form/step`)) {
       route.push(`/c/${id}/form/step/1`);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isFormNavigation) {
+      setIsFormNavigation(true);
     }
   }, []);
 

@@ -55,13 +55,13 @@ const getWarrantyModule = (details: ProductDetailsType) => {
     (module: ModuleInfoType) => module?.type === 'WARRANTY_MODULE'
   );
 };
-
 interface Props {
-  isFormNavigation?: boolean;
+  navToForm?: boolean;
 }
 
-const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
+const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
+  const [isFormNavigation, setIsFormNavigation] = useState(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
@@ -113,17 +113,27 @@ const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
 
-  const closeDrawerPage = useCallback((closeDrawer = false) => {
-    setCurrentPage(null);
-    setNewUser(false);
-    toggleAnimateTable(false);
-    setIsDrawerPageOpen(false);
-    if (closeDrawer && isFormNavigation) {
-      setTimeout(() => {
-        history.replace(`/c/${id}`);
-      }, 0);
+  const closeDrawerPage = useCallback(
+    (closeDrawer = false) => {
+      setCurrentPage(null);
+      setNewUser(false);
+      toggleAnimateTable(false);
+      setIsDrawerPageOpen(false);
+      if (closeDrawer && isFormNavigation) {
+        setIsFormNavigation(false);
+        setTimeout(() => {
+          history.replace(`/c/${id}`);
+        }, 0);
+      }
+    },
+    [isFormNavigation]
+  );
+
+  useEffect(() => {
+    if (navToForm) {
+      setIsFormNavigation(navToForm);
     }
-  }, []);
+  }, [navToForm]);
 
   useEffect(() => {
     // for enabling back button to correct path and form module.
@@ -640,7 +650,13 @@ const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
           case 'FORMS_MODULE':
             const dataForm = details?.modules[currentPage as number]
               ?.moduleInfo as FormDetailModel[];
-            return <FormDrawer data={dataForm} />;
+            return (
+              <FormDrawer
+                isFormNavigation={isFormNavigation}
+                setIsFormNavigation={setIsFormNavigation}
+                data={dataForm}
+              />
+            );
           default:
             return null;
         }

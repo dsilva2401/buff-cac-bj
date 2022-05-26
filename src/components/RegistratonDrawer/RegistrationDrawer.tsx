@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
-import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
 import { ModuleInfoType, Product } from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';

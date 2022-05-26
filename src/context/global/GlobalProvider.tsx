@@ -159,7 +159,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         { type: 'setAuthState', data: previewAuthenticated },
         '*'
       );
-    } catch (e) { }
+    } catch (e) {}
   }, [previewAuthenticated]);
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
           if (
             timestamp &&
             new Date().getTime() - new Date(timestamp).getTime() >
-            LAST_SCAN_INTERVAL_THRESHOLD
+              LAST_SCAN_INTERVAL_THRESHOLD
           ) {
             // update entry with new timestamp and log the event
             scanMap.set(scanSlug, scanTime);

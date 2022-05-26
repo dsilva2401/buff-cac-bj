@@ -1,6 +1,5 @@
 import RadioButtons from 'components/RadioButtons';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
-import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel } from 'types/FormTypes';
 import { FormikProps } from 'formik';

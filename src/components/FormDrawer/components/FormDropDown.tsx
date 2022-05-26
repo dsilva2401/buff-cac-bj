@@ -3,7 +3,6 @@ import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
 import { FormikProps } from 'formik';
-import { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel } from 'types/FormTypes';
 import { FormMatchParams } from '../FormDrawer';

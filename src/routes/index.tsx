@@ -49,7 +49,7 @@ export const RoutesHashMap: RoutesType = {
     exact: true,
   },
   ProductDetails: {
-    path: '/c/:id',
+    path: (id: string = ':id') => `/c/${id}`,
     component: <ProductDetails />,
     exact: false,
   },
@@ -130,7 +130,7 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
                   key={routeKey}
                   render={() => (
                     <PageWrapper isPreviewMode={isPreviewMode}>
-                      <ProductDetails isFormNavigation={true}></ProductDetails>
+                      <ProductDetails navToForm={true}></ProductDetails>
                     </PageWrapper>
                   )}
                 />
