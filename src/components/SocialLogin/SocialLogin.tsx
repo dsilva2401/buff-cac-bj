@@ -1,13 +1,12 @@
 import { ReactComponent as FacebookLogo } from 'assets/logos/svg/facebook.svg';
 import { ReactComponent as GoogleLogo } from 'assets/logos/svg/google.svg';
 import Button from 'components/Button';
-import { showToast } from 'components/Toast/Toast';
 import Wrapper from 'components/Wrapper';
 import {
   FacebookAuthProvider,
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
 } from 'firebase/auth';
 import useFirebaseError from 'hooks/useFirebaseError';
 import { useCallback } from 'react';
@@ -32,11 +31,12 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
 
   const auth = getAuth();
   const getFirebaseError = useFirebaseError();
-  const { isPreviewMode } = useGlobal();
+  const { isPreviewMode, productModule } = useGlobal();
 
   const handleSocialAuth = useCallback(
     (providerName: ProviderName) => {
       setLoading(true);
+
       if (isPreviewMode) {
         setTimeout(() => {
           setLoading(false);
@@ -56,19 +56,17 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
           provider = new GoogleAuthProvider();
       }
 
-      signInWithPopup(auth, provider)
-        .then((user) => {
-          onSuccess();
-        })
-        .catch((error) => {
-          showToast({
-            message: getFirebaseError(error.code),
-            type: 'error',
-          });
-        })
-        .finally(() => setLoading(false));
+      localStorage.setItem('currentProductModuleId', productModule);
+      signInWithRedirect(auth, provider);
     },
-    [auth, onSuccess, getFirebaseError, setLoading]
+    [
+      auth,
+      onSuccess,
+      getFirebaseError,
+      setLoading,
+      productModule,
+      isPreviewMode,
+    ]
   );
 
   return (

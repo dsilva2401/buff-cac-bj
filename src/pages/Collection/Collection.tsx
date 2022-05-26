@@ -23,6 +23,7 @@ import PageHeader from 'components/PageHeader';
 import LoadingIndicator from 'components/LoadingIndicator';
 import ProductImage from './ProductImage';
 import QrReader from 'react-qr-reader';
+import { getRedirectResult, getAuth } from 'firebase/auth';
 
 type BrandCollectionType = {
   brand: string;

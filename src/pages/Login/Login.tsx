@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { ReactComponent as BrijLogo } from 'assets/logos/svg/brij-colored.svg';
 import { useGlobal } from 'context/global/GlobalContext';
@@ -11,9 +11,11 @@ import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import LoginForm from 'components/LoginForm';
 import Wrapper from 'components/Wrapper';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 const Login: React.FC = () => {
-  const { setIsMenuOpen } = useGlobal();
+  const { setIsMenuOpen, user, authFetched } = useGlobal();
+  const [isNewUser, setNewUser] = useState<boolean>(false);
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
   const history = useHistory();
 
@@ -32,9 +34,29 @@ const Login: React.FC = () => {
     [setIsMenuOpen]
   );
 
+  const loadingIndicator = useMemo(
+    () => (
+      <Wrapper height='100vh' width='100%'>
+        <LoadingIndicator />
+      </Wrapper>
+    ),
+    []
+  );
+
   const onLogin = useCallback(() => {
     history.push(RoutesHashMap.Collection.path);
   }, [history]);
+
+  useEffect(() => {
+    if (!isNewUser && user) {
+      history.push(RoutesHashMap.Collection.path);
+    }
+  }, [history, user, isNewUser]);
+
+  // show until auth is fetched
+  if (!authFetched) {
+    return loadingIndicator;
+  }
 
   return (
     <>
@@ -49,6 +71,7 @@ const Login: React.FC = () => {
         alignItems='center'
         position='relative'
         overflow='auto'
+        onClick={() => setNewUser(true)}
       >
         <PageHeader
           border

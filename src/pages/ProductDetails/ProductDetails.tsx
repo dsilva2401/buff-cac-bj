@@ -94,12 +94,10 @@ const ProductDetails: React.FC = () => {
     toggleAgegateDisplay,
     brandTheme,
     loading,
+    setProductModule,
+    alreadySignedIn,
+    setAlreadySignIn,
   } = useGlobal();
-
-  // by default we keep alreadySignedIn true
-  // because even if the user was not signed in
-  // authdrawer open event will set the alreadySignedIn to false
-  const [alreadySignedIn, setAlreadySignIn] = useState<boolean>(true);
 
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
@@ -168,6 +166,7 @@ const ProductDetails: React.FC = () => {
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage]);
 
+  // automatically open module upon redirect
   useEffect(() => {
     if (
       magicAction === MAGIC_ACTION.OPEN_MODULE &&
@@ -175,13 +174,15 @@ const ProductDetails: React.FC = () => {
       details?.modules?.length
     ) {
       const { moduleId } = magicPayload;
+
       const moduleIndex = details?.modules?.findIndex(
         (moduleDetail) => moduleDetail.id === moduleId
       );
+
       if (moduleIndex !== -1) {
-        changeDrawerPage(moduleIndex);
-        setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
+        setPosition({ x: 0, y: topHeight });
+        changeDrawerPage(moduleIndex);
       }
 
       setMagicAction(MAGIC_ACTION.REDIRECT);
@@ -234,6 +235,7 @@ const ProductDetails: React.FC = () => {
           onClick: () => {
             const module = details?.modules[x];
             setShowAuthPage(module?.locked);
+            setProductModule(module.id);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
               window.open(
@@ -273,7 +275,15 @@ const ProductDetails: React.FC = () => {
       }
     }
     return buttons;
-  }, [changeDrawerPage, id, details, setSignInRedirect, logEvent, brandTheme]);
+  }, [
+    changeDrawerPage,
+    id,
+    details,
+    setSignInRedirect,
+    logEvent,
+    brandTheme,
+    setProductModule,
+  ]);
 
   const leadModule: any = useMemo(() => {
     return details?.leadModule || {};
@@ -373,10 +383,7 @@ const ProductDetails: React.FC = () => {
         }
       }
 
-      if (
-        (showAuthPage || module?.locked) &&
-        (!isPreviewMode || !previewAuthenticated)
-      ) {
+      if (showAuthPage && (!isPreviewMode || !previewAuthenticated)) {
         return (
           <Wrapper
             width='100%'
@@ -608,6 +615,7 @@ const ProductDetails: React.FC = () => {
     tableRef,
     onAuthComplete,
     alreadySignedIn,
+    setAlreadySignIn,
   ]);
 
   const logo = useCallback(

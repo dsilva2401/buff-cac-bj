@@ -27,8 +27,6 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   showMulberryTerms,
   onAuthOpen,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
@@ -40,20 +38,6 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       onAuthOpen();
     }
   }, [onAuthOpen]);
-
-  const onSuccess = useCallback(
-    (isNewUser?: boolean) => {
-      onAuthComplete(isNewUser);
-      setLoading(true);
-    },
-    [onAuthComplete]
-  );
-
-  const authScreenToRender = useMemo(() => {
-    return <LoginForm isDrawer onLogin={onSuccess} />;
-  }, [onSuccess]);
-
-  if (loading) return <LoadingIndicator />;
 
   return (
     <Wrapper
@@ -111,7 +95,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       <GoogleReCaptchaProvider
         reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
       >
-        {authScreenToRender}
+        <LoginForm isDrawer onLogin={onAuthComplete} />
       </GoogleReCaptchaProvider>
     </Wrapper>
   );

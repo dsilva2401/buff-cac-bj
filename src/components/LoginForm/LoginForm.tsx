@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
+  onPersonalDetails?: () => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({

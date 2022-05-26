@@ -77,6 +77,12 @@ export const GlobalProvider: React.FC = ({ children }) => {
     localStorage.getItem('accentColor') || theme.primary
   );
   const [signedIn, setSignedIn] = useState<boolean>(false);
+  const [productModule, setProductModule] = useState<string>('');
+
+  // by default we keep alreadySignedIn true
+  // because even if the user was not signed in
+  // authdrawer open event will set the alreadySignedIn to false
+  const [alreadySignedIn, setAlreadySignIn] = useState<boolean>(true);
 
   const {
     user,
@@ -100,12 +106,14 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const onBackButtonEvent = () => {
     setBrandTheme(localStorage.getItem('accentColor') || theme.primary);
   };
+
   useEffect(() => {
     window.addEventListener('popstate', onBackButtonEvent);
     return () => {
       window.removeEventListener('popstate', onBackButtonEvent);
     };
   }, [onBackButtonEvent]);
+
   useEffect(() => {
     let pathCheck: boolean = false;
     if (pathname.includes(`c/${slug}`)) pathCheck = true;
@@ -113,24 +121,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
       (pathCheck && localStorage.getItem('accentColor')) || theme.primary
     );
   }, [productDetails, pathname, slug]);
-
-  const onRegisterProductSuccess = useCallback(() => {
-    reFetchProduct();
-  }, [reFetchProduct]);
-
-  const onRegisterProductError = useCallback((error) => {
-    console.log(error);
-  }, []);
-
-  const [registerProduct] = useAPI(
-    {
-      method: 'POST',
-      endpoint: `products/register/${slug}`,
-      onSuccess: onRegisterProductSuccess,
-      onError: onRegisterProductError,
-    },
-    token
-  );
 
   useEffect(() => {
     if (window) {
@@ -299,7 +289,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         user,
         productDetails,
         loading: productLoading,
-        registerProduct,
         slug,
         setSlug,
         setUser,
@@ -320,6 +309,11 @@ export const GlobalProvider: React.FC = ({ children }) => {
         toggleAgegateDisplay,
         collapsedDrawerHeight,
         setCollapsedDrawerHeight,
+        productModule,
+        setProductModule,
+        alreadySignedIn,
+        setAlreadySignIn,
+        reFetchProduct,
       }}
     >
       {children}

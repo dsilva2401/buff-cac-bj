@@ -22,6 +22,7 @@ const MagicLink = () => {
     setSignInRedirect,
     setMagicPayload,
     setMagicAction,
+    setAlreadySignIn,
   } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
@@ -65,6 +66,7 @@ const MagicLink = () => {
 
       switch (action) {
         case MAGIC_ACTION.OPEN_MODULE: {
+          setAlreadySignIn(false);
           const productLink = RoutesHashMap.ProductDetails.path(productSlug);
           history.push(productLink);
           break;
@@ -73,6 +75,7 @@ const MagicLink = () => {
         default: {
           // let link = signInRedirect || RoutesHashMap.Collection.path;
           // SUSH: Temp. change to route to collection. Need to undo and fix
+
           const link = RoutesHashMap.Collection.path;
           history.push(link);
         }

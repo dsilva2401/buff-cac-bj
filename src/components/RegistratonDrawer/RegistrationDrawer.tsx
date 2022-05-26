@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import HtmlWrapper from 'components/HtmlWrapper';
 import Text from 'components/Text';
 import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
+import { useAPI } from 'utils/api';
 
 enum PageType {
   CURRENT_MODULE = 'CURRENT_MODULE',
@@ -72,9 +73,18 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   );
   // temprarory loading to handle initial loading while checking if product can be registered
   const [tempLoading, setTempLoading] = useState<boolean>(true);
+  const [productRegisterCallMade, setProductRegisterCallMade] =
+    useState<boolean>(false);
 
-  const { loading, user, registerProduct, brandTheme, isPreviewMode } =
-    useGlobal();
+  const {
+    loading,
+    user,
+    token,
+    reFetchProduct,
+    brandTheme,
+    slug,
+    isPreviewMode,
+  } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.warrantyDrawer',
   });
@@ -86,6 +96,24 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   const { t: authDrawerTranslation } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
+
+  const onRegisterProductSuccess = useCallback(() => {
+    reFetchProduct();
+  }, [reFetchProduct]);
+
+  const onRegisterProductError = useCallback((error) => {
+    console.log(error);
+  }, []);
+
+  const [registerProduct] = useAPI(
+    {
+      method: 'POST',
+      endpoint: `products/register/${slug}`,
+      onSuccess: onRegisterProductSuccess,
+      onError: onRegisterProductError,
+    },
+    token
+  );
 
   const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);
@@ -125,20 +153,21 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // if the product is not registered to the user
   // if user just signedin
   useEffect(() => {
-    if (!product || !currentModule) {
+    if (!currentModule || !token || productRegisterCallMade) {
       return;
     }
 
     if (
       currentModule.registrationRequired &&
-      !product.registeredToCurrentUser &&
-      !alreadySignedIn
+      !alreadySignedIn &&
+      !product.registeredToCurrentUser
     ) {
       register();
+      setProductRegisterCallMade(true);
     } else {
       setTempLoading(false);
     }
-  }, [currentModule, product, register, alreadySignedIn, user]);
+  }, [currentModule, product, register, alreadySignedIn, token]);
 
   useEffect(() => {
     // if a new user start registering the product
@@ -276,7 +305,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     <>
       {
         // we need to show the loadingIndicator for both loading & tempLoading to avoid rendering PersonalDetails at the initial render
-        (loading || tempLoading) && (
+        loading || tempLoading ? (
           <Wrapper
             justifyContent='center'
             alignItems='center'
@@ -285,6 +314,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
           >
             <LoadingIndicator />
           </Wrapper>
+        ) : (
+          renderPage()
         )
       }
       <SuccessDrawer
@@ -299,7 +330,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         }
         close={closeSuccess}
       />
-      {renderPage()}
     </>
   );
 };

@@ -6,7 +6,7 @@ function useProductDetails(
   slug: string | null,
   token: string | null = null,
   previewEvent: any
-): [ProductDetailsType | null, () => Promise<any>, boolean] {
+): [ProductDetailsType | null, () => void, boolean] {
   const [productLoading, setProductLoading] = useState<boolean>(false);
 
   const [productDetails, setProductDetails] =
@@ -57,14 +57,18 @@ function useProductDetails(
     token
   );
 
+  const getProductWithLoading = useCallback(() => {
+    getProduct();
+    setProductLoading(true);
+  }, [getProduct]);
+
   useEffect(() => {
     if (slug) {
       controller && controller.abort();
-      getProduct();
-      setProductLoading(true);
+      getProductWithLoading();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, slug, getProduct]);
+  }, [token, slug, getProductWithLoading]);
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'product') {
@@ -72,7 +76,7 @@ function useProductDetails(
     }
   }, [previewEvent, onSuccess]);
 
-  return [productDetails, getProduct, productLoading];
+  return [productDetails, getProductWithLoading, productLoading];
 }
 
 export default useProductDetails;

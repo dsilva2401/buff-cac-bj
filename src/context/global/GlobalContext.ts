@@ -39,7 +39,7 @@ export type GlobalContextProps = {
   personalDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
   collectionDetails: ProductDetailsType[];
-  registerProduct: ({ warrantyId }: { warrantyId: string }) => Promise<void>;
+  reFetchProduct: () => void;
   loading: boolean;
   slug: string | null;
   setSlug: React.Dispatch<React.SetStateAction<string | null>>;
@@ -64,6 +64,10 @@ export type GlobalContextProps = {
   toggleAgegateDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   collapsedDrawerHeight: number;
   setCollapsedDrawerHeight: React.Dispatch<React.SetStateAction<number>>;
+  productModule: string;
+  setProductModule: React.Dispatch<React.SetStateAction<string>>;
+  alreadySignedIn: boolean;
+  setAlreadySignIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -90,7 +94,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   productDetails: null,
   collectionDetails: [],
   loading: false,
-  registerProduct: () => new Promise((res, rej) => res()),
+  reFetchProduct: () => {},
   slug: null,
   setSlug: () => {},
   setUser: () => {},
@@ -109,6 +113,10 @@ export const GlobalContext = createContext<GlobalContextProps>({
   toggleAgegateDisplay: () => {},
   collapsedDrawerHeight: 0,
   setCollapsedDrawerHeight: () => {},
+  productModule: '',
+  setProductModule: () => {},
+  alreadySignedIn: true,
+  setAlreadySignIn: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);
