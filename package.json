@@ -8,6 +8,7 @@
     "cross-env": "^7.0.3",
     "dateformat": "^5.0.3",
     "firebase": "^9.5.0",
+    "formik": "^2.2.9",
     "husky": "4",
     "i18next": "^21.3.2",
     "object-hash": "^2.2.0",
@@ -21,6 +22,7 @@
     "react-device-detect": "^2.1.2",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.4",
+    "react-error-overlay": "6.0.9",
     "react-google-recaptcha": "^2.1.0",
     "react-google-recaptcha-v3": "^1.9.7",
     "react-helmet": "^6.1.0",
@@ -45,10 +47,11 @@
     "typescript": "^4.1.2",
     "uuid": "^8.3.2",
     "validator": "^13.7.0",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "yup": "^0.32.11"
   },
   "scripts": {
-    "start-staging-client": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
+    "start-staging-client": "cross-env port=3001 REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
     "start-rc-client": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
     "start-staging-client-windows": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
     "start-rc-client-windows": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
@@ -121,6 +124,7 @@
   },
   "resolutions": {
     "@types/react": "<18.0.0",
-    "@types/react-dom": "<18.0.0"
+    "@types/react-dom": "<18.0.0",
+    "react-error-overlay": "6.0.9"
   }
 }

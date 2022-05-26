@@ -24,32 +24,39 @@ export const RoutesHashMap: RoutesType = {
   Login: {
     path: '/app/login',
     component: <Login />,
+    exact: true,
   },
   MagicLink: {
     path: '/app/magic-link',
     component: <MagicLink />,
+    exact: true,
   },
   FourZeroFour: {
     path: '/app/404',
     component: <FourZeroFour />,
+    exact: true,
   },
   Collection: {
     path: '/app/collection',
     component: <Collection />,
     protected: true,
+    exact: true,
   },
   Profile: {
     path: '/app/profile',
     component: <Profile />,
     protected: true,
+    exact: true,
   },
   ProductDetails: {
-    path: (id: string = ':id') => `/c/${id}`,
+    path: '/c/:id',
     component: <ProductDetails />,
+    exact: false,
   },
   Landing: {
     path: '/app/l/:brandname',
     component: <Landing />,
+    exact: true,
   },
 };
 
@@ -79,11 +86,19 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
     );
   }, [location.pathname, lastLocation]);
 
+  const getLocationKey = () => {
+    // don't rerender on a nested route.
+    if (location.pathname.includes('/c/')) {
+      return `products`;
+    }
+    return location.key;
+  };
+
   return (
     <TransitionGroup>
       <CSSTransition
         timeout={300}
-        key={location.key}
+        key={getLocationKey()}
         classNames={getCurrentTransition()}
       >
         <Switch location={location}>
@@ -95,20 +110,45 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
                 : RoutesHashMap[routeKey].path;
             if (routeObject.protected) {
               return (
-                <ProtectedRoute exact path={path} key={routeKey}>
-                  <PageWrapper isPreviewMode={isPreviewMode}>
-                    {routeObject.component}
-                  </PageWrapper>
-                </ProtectedRoute>
+                <ProtectedRoute
+                  exact
+                  path={path}
+                  key={routeKey}
+                  render={() => (
+                    <PageWrapper isPreviewMode={isPreviewMode}>
+                      {routeObject.component}
+                    </PageWrapper>
+                  )}
+                />
               );
             }
-            return (
-              <Route exact path={path} key={routeKey}>
-                <PageWrapper isPreviewMode={isPreviewMode}>
-                  {routeObject.component}
-                </PageWrapper>
-              </Route>
-            );
+            if (location.pathname.includes('form/step')) {
+              return (
+                <Route
+                  exact={routeObject.exact}
+                  path={path}
+                  key={routeKey}
+                  render={() => (
+                    <PageWrapper isPreviewMode={isPreviewMode}>
+                      <ProductDetails isFormNavigation={true}></ProductDetails>
+                    </PageWrapper>
+                  )}
+                />
+              );
+            } else {
+              return (
+                <Route
+                  exact={routeObject.exact}
+                  path={path}
+                  key={routeKey}
+                  render={() => (
+                    <PageWrapper isPreviewMode={isPreviewMode}>
+                      {routeObject.component}
+                    </PageWrapper>
+                  )}
+                />
+              );
+            }
           })}
           <Route>
             <PageWrapper>

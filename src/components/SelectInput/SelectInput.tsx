@@ -5,6 +5,9 @@ type SelectInputProps = {
   id: string;
   options: string[];
   label: string;
+  name?: string;
+  noInitValue?: boolean;
+  placeholder?: string;
   selected?: string;
   onChange: (value: string) => void;
 };
@@ -13,6 +16,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
   id,
   options,
   label,
+  name = '',
+  placeholder = '',
+  noInitValue = false,
   onChange,
   selected,
 }) => {
@@ -20,8 +26,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
     <SelectWrapper fullWidth>
       <Label id={id}>{label}</Label>
       <Select
+        name={name}
+        placeholder={placeholder}
         labelId={selected ?? options[0]}
-        value={selected ?? options[0]}
+        value={
+          selected !== null || selected !== undefined ? selected : options[0]
+        }
         onChange={({ target: { value } }) => {
           onChange(String(value));
         }}
@@ -33,8 +43,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
           getContentAnchorEl: null,
         }}
       >
-        {options.map((option) => {
-          return <Option value={option}>{option}</Option>;
+        {options.map((option, idx) => {
+          return (
+            <Option key={idx} value={option}>
+              {option}
+            </Option>
+          );
         })}
       </Select>
     </SelectWrapper>

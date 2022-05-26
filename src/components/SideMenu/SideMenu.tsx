@@ -87,7 +87,7 @@ const SideMenu: React.FC = () => {
         showToast({ message: error.message, type: 'error' });
       });
     setIsMenuOpen(false);
-  }, [setIsMenuOpen, auth, error, t]);
+  }, [setIsMenuOpen, auth, error, t, setSlug]);
 
   const redirectToCollection = useCallback(() => {
     history.push(RoutesHashMap.Collection.path);

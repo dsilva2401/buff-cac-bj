@@ -60,7 +60,7 @@ type BottomDrawerProps = {
   subtitle: string | undefined;
   children: React.ReactNode;
   isChildOpen: boolean;
-  closeChild: () => void;
+  closeChild: (closeDrawer?: boolean) => void;
   buttons: ButtonType[] | null;
   socials: SocialsType;
   leadInformation?: React.ReactNode;
@@ -323,7 +323,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               <DrawerClose
                 onClick={() => {
                   if (isChildOpen) {
-                    closeChild();
+                    closeChild(true);
                     if (retractDrawer) handleDrawerClose();
                   } else {
                     setPageState(null);

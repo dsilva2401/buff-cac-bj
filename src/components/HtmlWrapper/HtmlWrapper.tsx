@@ -6,7 +6,6 @@ const HtmlWrapper = styled(Wrapper)`
   animation: fade-in 0.6s ease-in-out forwards;
   word-break: break-word;
   white-space: pre-wrap;
-
   iframe {
     position: absolute;
     top: 0;
@@ -15,6 +14,7 @@ const HtmlWrapper = styled(Wrapper)`
     height: 100%;
     border-radius: 10px;
   }
+
   hr {
     width: 100%;
     height: 1px;

@@ -1,4 +1,5 @@
 import { RegistrationType } from 'utils/getRegisterText';
+import { FormDetailModel } from './FormTypes';
 
 export type PossibleModulesType =
   | 'WARRANTY_MODULE'
@@ -6,7 +7,8 @@ export type PossibleModulesType =
   | 'LINK_MODULE'
   | 'SHOPPING_MODULE'
   | 'REGISTRATION_MODULE'
-  | 'REFERRAL_MODULE';
+  | 'REFERRAL_MODULE'
+  | 'FORMS_MODULE';
 
 export interface Product {
   id: string;
@@ -51,6 +53,7 @@ export type ModuleInfoType = {
     | WarrantyModuleType
     | ShoppingModuleType
     | ReferralModuleType
+    | FormDetailModel[]
     | null;
 };
 

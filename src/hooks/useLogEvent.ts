@@ -39,9 +39,7 @@ export type EventPayload = {
 };
 
 const useLogEvent = () => {
-  const onSuccess = useCallback((event: any) => {
-    console.log(`Event logged => ${JSON.stringify(event)}`);
-  }, []);
+  const onSuccess = useCallback((event: any) => {}, []);
 
   const onError = useCallback((error: any) => {
     showToast({ message: error?.message, type: 'error' });

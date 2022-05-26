@@ -18,22 +18,18 @@ import DataTable from 'components/DataTable';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import AuthDrawer from 'components/AuthDrawer';
-import ShopDrawer from 'components/ShopDrawer';
 import HtmlWrapper from 'components/HtmlWrapper';
 import BottomDrawer from 'components/BottomDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import ReferralDrawer from 'components/ReferralDrawer';
 import RegistratonDrawer from 'components/RegistratonDrawer';
 import externalLink from 'assets/icons/svg/external-link.svg';
-import WarrantyDrawer from 'components/WarrantyDrawer';
 import ProgressiveImage from 'react-progressive-image';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
 import {
+  CustomModuleType,
   LinkModuleType,
   ModuleInfoType,
-  CustomModuleType,
   ProductDetailsType,
   ReferralModuleType,
   ShoppingModuleType,
@@ -41,6 +37,14 @@ import {
 } from '../../types/ProductDetailsType';
 import ProductHeroImage from './ProductHeroImage';
 import LoadingIndicator from 'components/LoadingIndicator';
+import FormDrawer from 'components/FormDrawer';
+import { useHistory, useLocation } from 'react-router-dom';
+import CustomDrawer from 'components/CustomDrawer';
+import WarrantyDrawer from 'components/WarrantyDrawer';
+import ReferralDrawer from 'components/ReferralDrawer';
+import ShopDrawer from 'components/ShopDrawer';
+import { FormDetailModel } from 'types/FormTypes';
+import { FormProvider } from 'context/FormDrawerContext/FormDrawerProvider';
 
 type UrlParam = {
   id: string;
@@ -52,7 +56,11 @@ const getWarrantyModule = (details: ProductDetailsType) => {
   );
 };
 
-const ProductDetails: React.FC = () => {
+interface Props {
+  isFormNavigation?: boolean;
+}
+
+const ProductDetails: React.FC<Props> = ({ isFormNavigation = false }) => {
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
@@ -66,6 +74,8 @@ const ProductDetails: React.FC = () => {
   const { t } = useTranslation('translation', {
     keyPrefix: 'productDetails',
   });
+  const history = useHistory();
+  const location = useLocation();
 
   const [position, setPosition] = useState<Position>({
     x: 0,
@@ -103,12 +113,24 @@ const ProductDetails: React.FC = () => {
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
 
-  const closeDrawerPage = useCallback(() => {
+  const closeDrawerPage = useCallback((closeDrawer = false) => {
     setCurrentPage(null);
     setNewUser(false);
     toggleAnimateTable(false);
     setIsDrawerPageOpen(false);
+    if (closeDrawer && isFormNavigation) {
+      setTimeout(() => {
+        history.replace(`/c/${id}`);
+      }, 0);
+    }
   }, []);
+
+  useEffect(() => {
+    // for enabling back button to correct path and form module.
+    if (location.pathname === `/c/${id}`) {
+      closeDrawerPage();
+    }
+  }, [location.pathname, closeDrawerPage, id]);
 
   const changeDrawerPage = useCallback(
     (index) => {
@@ -133,7 +155,7 @@ const ProductDetails: React.FC = () => {
         setPageTitle(details?.modules[index].title);
       }
     },
-    [details, currentPage, setMagicAction, setMagicPayload]
+    [details, currentPage, setMagicPayload, setMagicAction]
   );
 
   useEffect(() => {
@@ -169,6 +191,21 @@ const ProductDetails: React.FC = () => {
 
   // automatically open module upon redirect
   useEffect(() => {
+    if (isFormNavigation && details?.modules?.length) {
+      //find
+      const moduleIndex = details?.modules.findIndex(
+        (module) => module.type === 'FORMS_MODULE'
+      );
+      if (moduleIndex >= 0) {
+        setMagicAction(MAGIC_ACTION.OPEN_MODULE);
+        changeDrawerPage(moduleIndex);
+        setPosition({ x: 0, y: topHeight });
+        setMainDrawerOpen(true);
+      }
+    }
+  }, [isFormNavigation, details, topHeight, changeDrawerPage, setMagicAction]);
+
+  useEffect(() => {
     if (
       magicAction === MAGIC_ACTION.OPEN_MODULE &&
       user &&
@@ -179,11 +216,10 @@ const ProductDetails: React.FC = () => {
       const moduleIndex = details?.modules?.findIndex(
         (moduleDetail) => moduleDetail.id === moduleId
       );
-
       if (moduleIndex !== -1) {
-        setMainDrawerOpen(true);
-        setPosition({ x: 0, y: topHeight });
         changeDrawerPage(moduleIndex);
+        setPosition({ x: 0, y: topHeight });
+        setMainDrawerOpen(true);
       }
 
       setMagicAction(MAGIC_ACTION.REDIRECT);
@@ -213,13 +249,20 @@ const ProductDetails: React.FC = () => {
     else localStorage.setItem('accentColor', '');
   }, [details]);
 
-  let buttonsArray = useMemo(() => {
-    let buttons: ButtonType[] = [];
+  useEffect(() => {
     if (details) {
       for (let x = 0; x < details?.modules?.length; x++) {
         if (details?.modules[x]?.locked) {
           setSignInRedirect(`/c/${id}`);
         }
+      }
+    }
+  }, [details, setSignInRedirect, id]);
+
+  let buttonsArray = useCallback(() => {
+    let buttons: ButtonType[] = [];
+    if (details) {
+      for (let x = 0; x < details?.modules?.length; x++) {
         let title: string = details.modules[x].title;
         switch (details.modules[x].type) {
           case 'WARRANTY_MODULE':
@@ -363,7 +406,7 @@ const ProductDetails: React.FC = () => {
       setShowAuthPage(false);
       setDisableModalDismiss(false);
     },
-    [isPreviewMode]
+    [isPreviewMode, setPreviewAuthenticated]
   );
 
   const renderDrawerPage = useCallback(() => {
@@ -575,6 +618,10 @@ const ProductDetails: React.FC = () => {
                 brand={details?.brand}
               />
             );
+          case 'FORMS_MODULE':
+            const dataForm = details?.modules[currentPage as number]
+              ?.moduleInfo as FormDetailModel[];
+            return <FormDrawer data={dataForm} />;
           default:
             return null;
         }
@@ -598,7 +645,7 @@ const ProductDetails: React.FC = () => {
           html={mulberry ? null : details?.registration?.registrationText}
           showMulberryTerms={!!mulberry}
         >
-          {renderOtherModules()}
+          <FormProvider>{renderOtherModules()}</FormProvider>
         </RegistratonDrawer>
       );
     }
@@ -626,22 +673,14 @@ const ProductDetails: React.FC = () => {
     []
   );
 
-  const handleOpenMenuClicked = useCallback(
-    () => setIsMenuOpen(true),
-    [setIsMenuOpen]
-  );
-
-  const menuButton = useMemo(
-    () => (
-      <Wrapper width='100%' justifyContent='flex-end'>
-        <IconButton
-          variant='dark'
-          iconName='menu'
-          onClick={handleOpenMenuClicked}
-        />
-      </Wrapper>
-    ),
-    [handleOpenMenuClicked]
+  const menuButton = () => (
+    <Wrapper width='100%' justifyContent='flex-end'>
+      <IconButton
+        variant='dark'
+        iconName='menu'
+        onClick={() => setIsMenuOpen(true)}
+      />
+    </Wrapper>
   );
 
   return (
@@ -679,7 +718,7 @@ const ProductDetails: React.FC = () => {
           >
             <PageHeader
               logo={logo(details?.brand?.image ?? '')}
-              actionButton={menuButton}
+              actionButton={menuButton()}
               border={false}
               transparent
             />
@@ -690,7 +729,7 @@ const ProductDetails: React.FC = () => {
         <BottomDrawer
           title={pageTitle}
           subtitle={details?.product?.subtitle}
-          buttons={buttonsArray}
+          buttons={buttonsArray()}
           socials={details?.brand?.social}
           isChildOpen={isDrawerPageOpen}
           closeChild={closeDrawerPage}

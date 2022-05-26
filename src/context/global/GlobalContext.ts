@@ -57,9 +57,9 @@ export type GlobalContextProps = {
     >
   ) => Promise<any> | undefined;
   magicAction: MAGIC_ACTION;
-  setMagicAction: (magicAction: MAGIC_ACTION) => void;
+  setMagicAction: React.Dispatch<React.SetStateAction<MAGIC_ACTION>>;
   magicPayload: any;
-  setMagicPayload: (payload: any) => void;
+  setMagicPayload: React.Dispatch<React.SetStateAction<any>>;
   agegateDisplay: boolean;
   toggleAgegateDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   collapsedDrawerHeight: number;
@@ -106,9 +106,9 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setRetractDrawer: () => {},
   logEvent: () => new Promise((res, rej) => {}),
   magicAction: MAGIC_ACTION.REDIRECT,
-  setMagicAction: (magicAction: MAGIC_ACTION) => {},
+  setMagicAction: () => {},
   magicPayload: {},
-  setMagicPayload: (payload: any) => {},
+  setMagicPayload: () => {},
   agegateDisplay: false,
   toggleAgegateDisplay: () => {},
   collapsedDrawerHeight: 0,

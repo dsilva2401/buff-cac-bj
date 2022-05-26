@@ -107,7 +107,7 @@ const MagicLink = () => {
           history.push(RoutesHashMap.Login.path);
         });
     }
-  }, [auth, email, setUser]);
+  }, [auth, email, setUser, getFirebaseError, history]);
 
   if (showPersonalDetailsForm) {
     return <PersonalDetails onPersonalDetailsUpdate={redirectUser} />;

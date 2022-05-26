@@ -20,7 +20,8 @@ export default createGlobalStyle`
     position: fixed;
     
     body {
-      overflow: auto;
+      // double check this before push.
+      overflow: hidden;
       height: 100%;
       position: relative;
     }

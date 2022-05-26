@@ -121,7 +121,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     (link: string, quantity: number) => {
       return findAndReplaceQuantity(link, quantity);
     },
-    [discountCode]
+    [discountCode, data.isDiscountAvailable]
   );
 
   const handleCheckout = useCallback(() => {
