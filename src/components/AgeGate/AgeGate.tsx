@@ -15,12 +15,14 @@ const AgeGate: React.FC = () => {
 
   return (
     <Animated
-      isVisible={agegateDisplay}
       animationIn='slideInUp'
       animationOut='slideOutDown'
       animationInDuration={400}
       animationOutDuration={0}
       animationInDelay={300}
+      isVisible={
+        agegateDisplay && localStorage.getItem('ageGateChecked') !== 'true'
+      }
       style={{
         zIndex: 9999,
         width: '100%',
@@ -74,7 +76,10 @@ const AgeGate: React.FC = () => {
         <Button
           variant='dark'
           brandTheme={brandTheme}
-          onClick={() => toggleAgegateDisplay(false)}
+          onClick={() => {
+            toggleAgegateDisplay(false);
+            localStorage.setItem('ageGateChecked', JSON.stringify(true));
+          }}
         >
           {t('confirmationButton')}
         </Button>

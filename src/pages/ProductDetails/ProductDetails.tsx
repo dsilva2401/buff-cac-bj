@@ -91,6 +91,7 @@ const ProductDetails: React.FC = () => {
     setMagicPayload,
     magicAction,
     magicPayload,
+    agegateDisplay,
     toggleAgegateDisplay,
     brandTheme,
     loading,
@@ -200,9 +201,11 @@ const ProductDetails: React.FC = () => {
 
   useEffect(() => {
     if (!isPreviewMode) {
-      details?.product?.ageGateEnabled && toggleAgegateDisplay(true);
+      details?.product?.ageGateEnabled &&
+        !agegateDisplay &&
+        toggleAgegateDisplay(true);
     }
-  }, [details, toggleAgegateDisplay, isPreviewMode]);
+  }, [details, agegateDisplay, toggleAgegateDisplay, isPreviewMode]);
 
   useEffect(() => {
     if (details?.brand?.customAccentColor)
