@@ -153,7 +153,11 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // if the product is not registered to the user
   // if user just signedin
   useEffect(() => {
-    if (!currentModule || !token || productRegisterCallMade) {
+    if (
+      !currentModule ||
+      (currentModule.registrationRequired && !token) ||
+      productRegisterCallMade
+    ) {
       return;
     }
 
