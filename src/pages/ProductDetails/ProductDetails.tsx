@@ -155,8 +155,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         moduleId: newModule?.id,
       });
 
-      if (currentPage) {
-        const moduleType = details?.modules[currentPage]?.type;
+      if (index) {
+        const moduleType = details?.modules[index]?.type;
         setIsDrawerPageOpen(moduleType !== 'LINK_MODULE');
         if (moduleType !== 'LINK_MODULE')
           setPageTitle(details?.modules[index].title);
@@ -230,9 +230,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         changeDrawerPage(moduleIndex);
         setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
+        setMagicAction(MAGIC_ACTION.REDIRECT);
       }
-
-      setMagicAction(MAGIC_ACTION.REDIRECT);
     }
   }, [
     magicPayload,
