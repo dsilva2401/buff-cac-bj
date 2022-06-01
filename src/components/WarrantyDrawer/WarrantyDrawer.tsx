@@ -48,11 +48,13 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
     issueDate,
     expiryDate,
     expired,
+    lifetime,
   }: {
     title: string;
     issueDate: string;
     expiryDate: string;
     expired: boolean;
+    lifetime?: boolean;
   }) =>
     useMemo(
       () => (
@@ -141,7 +143,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 textAlign='center'
                 color='#1B1B1B'
               >
-                <p>{expiryDate}</p>
+                <p>{lifetime ? 'Lifetime' : expiryDate}</p>
               </Text>
             </Wrapper>
           </Wrapper>
@@ -328,11 +330,13 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           >
             <WarrantyInfo
               title={
-                validateDate(
-                  new Date(
-                    dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
-                  )
-                )
+                warrantyData.duration.value === 'LIFETIME'
+                  ? t('warrantyHeading')
+                  : validateDate(
+                      new Date(
+                        dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
+                      )
+                    )
                   ? t('expiredWarrantyHeading')
                   : t('warrantyHeading')
               }
@@ -341,11 +345,16 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 warrantyData.expirationDate,
                 'mmmm d, yyyy'
               )}
-              expired={validateDate(
-                new Date(
-                  dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
-                )
-              )}
+              expired={
+                warrantyData.duration.value === 'LIFETIME'
+                  ? false
+                  : validateDate(
+                      new Date(
+                        dateFormat(warrantyData.expirationDate, 'mmmm d, yyyy')
+                      )
+                    )
+              }
+              lifetime={warrantyData.duration.value === 'LIFETIME'}
             />
           </Wrapper>
         </ModuleWrapper>
