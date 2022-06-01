@@ -110,7 +110,12 @@ const Landing: React.FC = () => {
                 <Button
                   key={node.title}
                   variant='light'
-                  onClick={() => window.open(node.url, '_blank')}
+                  onClick={() =>
+                    node.url.includes('https://') ||
+                    node.url.includes('http://')
+                      ? window.open(node.url, '_self')
+                      : window.open(`https://${node.url}`, '_self')
+                  }
                   style={{ border: '1px solid #1C3965' }}
                 >
                   <Text color='#1C3965' fontWeight='600'>
