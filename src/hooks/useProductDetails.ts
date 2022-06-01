@@ -12,7 +12,7 @@ function useProductDetails(
   const [productDetails, setProductDetails] =
     useState<ProductDetailsType | null>(null);
 
-  const onSuccess = useCallback((productDetails) => {
+  const onSuccess = (productDetails: any) => {
     const { product, modules } = productDetails;
 
     // if the product is already registered to some user don't show activate warranty
@@ -28,6 +28,10 @@ function useProductDetails(
         (module) => module.type !== 'WARRANTY_MODULE'
       );
     }
+    // set to undefined if no token.
+    if (!token) {
+      productDetails.product.registeredToCurrentUser = undefined;
+    }
 
     setProductDetails({
       ...productDetails,
@@ -36,7 +40,7 @@ function useProductDetails(
     });
 
     setProductLoading(false);
-  }, []);
+  };
 
   const onError = useCallback(
     (error) => {
@@ -57,10 +61,10 @@ function useProductDetails(
     token
   );
 
-  const getProductWithLoading = useCallback(() => {
+  const getProductWithLoading = () => {
     getProduct();
     setProductLoading(true);
-  }, [getProduct]);
+  };
 
   useEffect(() => {
     if (slug) {
@@ -68,7 +72,7 @@ function useProductDetails(
       getProductWithLoading();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, slug, getProductWithLoading]);
+  }, [token, slug]);
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'product') {
