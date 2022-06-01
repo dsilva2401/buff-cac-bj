@@ -90,13 +90,12 @@ const Profile: React.FC<PersonalDetailsProps> = ({
           alignItems='center'
           overflow='auto'
           padding='2rem 1rem'
-          gap='1.2rem'
         >
           <Wrapper
             width='100%'
             alignItems='center'
             direction='column'
-            margin='2rem 0'
+            paddingTop='2rem'
             gap='1.2rem'
           >
             <Wrapper
