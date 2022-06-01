@@ -773,6 +773,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           setMainDrawerOpen={setMainDrawerOpen}
           position={position}
           setPosition={setPosition}
+          autoDeploy={details?.modules[0].autoDeploy}
         >
           {renderDrawerPage()}
         </BottomDrawer>

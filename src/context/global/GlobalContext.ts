@@ -64,6 +64,8 @@ export type GlobalContextProps = {
   toggleAgegateDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   collapsedDrawerHeight: number;
   setCollapsedDrawerHeight: React.Dispatch<React.SetStateAction<number>>;
+  autoDeployTriggered: boolean;
+  setAutoDeployTriggered: React.Dispatch<React.SetStateAction<boolean>>;
   productModule: string;
   setProductModule: React.Dispatch<React.SetStateAction<string>>;
   alreadySignedIn: boolean;
@@ -113,6 +115,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   toggleAgegateDisplay: () => {},
   collapsedDrawerHeight: 0,
   setCollapsedDrawerHeight: () => {},
+  autoDeployTriggered: false,
+  setAutoDeployTriggered: () => {},
   productModule: '',
   setProductModule: () => {},
   alreadySignedIn: true,

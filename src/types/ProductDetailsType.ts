@@ -43,6 +43,8 @@ export type ModuleInfoType = {
   // isLeadModule: boolean;
   // this is action field from the actual module data. All modules will have an action field that refers to name shown in title. We call it title as it is title displayed
   title: string;
+  // this indicates if the lead module should open automatically on page load
+  autoDeploy: boolean;
   // this indicates whether we need an actual login to unlock this module
   locked: boolean;
   registrationRequired: boolean;

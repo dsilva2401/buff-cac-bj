@@ -4,7 +4,9 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from 'react';
+import { Position } from 'types/Misc';
 import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
@@ -33,7 +35,6 @@ import {
   DrawerIconLink,
   DragZone,
 } from './styles';
-import { Position } from 'types/Misc';
 
 export type ButtonType = {
   title: any | undefined;
@@ -69,6 +70,7 @@ type BottomDrawerProps = {
   mainDrawerOpen: boolean;
   position: Position;
   setPosition: (position: Position) => void;
+  autoDeploy: boolean | undefined;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -85,7 +87,13 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   mainDrawerOpen,
   position,
   setPosition,
+  autoDeploy,
 }) => {
+  const [deltaPosition, setDeltaPosition] = useState<number>(0);
+  const [isControlled, setIsControlled] = useState<boolean>(true);
+  const leadModuleButtonRef = useRef<HTMLButtonElement>(null);
+  const [collapsedDrawerRef, { height }] = useElementSize();
+  const { topHeight, bottomHeight } = useHeights();
   const {
     setPageState,
     retractDrawer,
@@ -94,10 +102,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     brandTheme,
     isPreviewMode,
     setCollapsedDrawerHeight,
+    autoDeployTriggered,
+    setAutoDeployTriggered,
   } = useGlobal();
-
-  const { topHeight, bottomHeight } = useHeights();
-  const [collapsedDrawerRef, { height }] = useElementSize();
 
   useEffect(() => {
     if (height) setCollapsedDrawerHeight(height);
@@ -113,9 +120,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChildOpen, topHeight, bottomHeight, isPreviewMode, appZoom]);
-
-  const [deltaPosition, setDeltaPosition] = useState<number>(0);
-  const [isControlled, setIsControlled] = useState<boolean>(true);
 
   useEffect(() => {
     if (position.y === topHeight) {
@@ -172,6 +176,17 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       ? true
       : false;
   };
+
+  useEffect(() => {
+    if (autoDeploy && buttons && buttons.length > 0) {
+      setTimeout(() => {
+        !autoDeployTriggered &&
+          leadModuleButtonRef.current &&
+          leadModuleButtonRef.current.click();
+        setAutoDeployTriggered(true);
+      }, 500);
+    }
+  }, [buttons, leadModuleButtonRef.current]);
 
   const drawerFooter = useMemo(() => {
     return (
@@ -348,6 +363,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     return (
                       button.isHighlight && (
                         <Button
+                          ref={leadModuleButtonRef}
                           key={button.title}
                           brandTheme={brandTheme}
                           variant='dark'

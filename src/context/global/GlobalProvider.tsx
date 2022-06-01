@@ -76,6 +76,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [brandTheme, setBrandTheme] = useState<string>(
     localStorage.getItem('accentColor') || theme.primary
   );
+  const [autoDeployTriggered, setAutoDeployTriggered] =
+    React.useState<boolean>(false);
   const [signedIn, setSignedIn] = useState<boolean>(false);
   const [productModule, setProductModule] = useState<string>('');
 
@@ -107,6 +109,9 @@ export const GlobalProvider: React.FC = ({ children }) => {
     setBrandTheme(localStorage.getItem('accentColor') || theme.primary);
   };
 
+  useEffect(() => {
+    if (slug) setAutoDeployTriggered(false);
+  }, [slug]);
   useEffect(() => {
     window.addEventListener('popstate', onBackButtonEvent);
     return () => {
@@ -309,6 +314,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         toggleAgegateDisplay,
         collapsedDrawerHeight,
         setCollapsedDrawerHeight,
+        autoDeployTriggered,
+        setAutoDeployTriggered,
         productModule,
         setProductModule,
         alreadySignedIn,
