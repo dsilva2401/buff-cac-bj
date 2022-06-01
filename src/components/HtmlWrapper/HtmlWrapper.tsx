@@ -14,6 +14,9 @@ const HtmlWrapper = styled(Wrapper)`
     height: 100%;
     border-radius: 10px;
   }
+  video {
+    background: #000;
+  }
 
   hr {
     width: 100%;
