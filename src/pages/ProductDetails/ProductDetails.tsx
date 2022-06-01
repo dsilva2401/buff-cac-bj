@@ -640,7 +640,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             return (
               <ShopDrawer
                 data={data}
-                closePage={closeDrawerPage}
                 minimizeBranding={details.brand.minimizeBranding}
                 productDescription={details.product.productDescription}
                 brand={details?.brand}

@@ -12,7 +12,7 @@ export const Drawer = styled.div<DrawerType>`
   height: ${(props) => `calc(100vh / ${props.appZoom})`};
   position: absolute;
   padding: 30% 3rem 50%;
-  top: 1000px;
+  top: 9999px;
   left: 0;
   border-radius: 26px 26px 0px 0px;
   display: flex;
@@ -23,7 +23,7 @@ export const Drawer = styled.div<DrawerType>`
   background-color: ${(props) => props.brandTheme || theme.primary};
   z-index: 5;
   transition: transform 0.3s ease;
-  transform: ${(props) => (props.isOpen ? 'translateY(-1001px)' : 'none')};
+  transform: ${(props) => (props.isOpen ? 'translateY(-10000px)' : 'none')};
 
   span {
     width: 25%;
