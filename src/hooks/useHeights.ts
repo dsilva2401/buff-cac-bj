@@ -1,4 +1,4 @@
-import { isBrowser } from 'react-device-detect';
+import { isBrowser, isMobile } from 'react-device-detect';
 import { useGlobal } from 'context/global/GlobalContext';
 
 const useHeights = () => {
@@ -7,7 +7,7 @@ const useHeights = () => {
   const topHeight = 0;
   let bottomHeight: number;
   let margin = 290;
-  if (isBrowser || isPreviewMode) {
+  if (isBrowser || isMobile || isPreviewMode) {
     if (window.innerHeight < 700) margin = 340;
     else if (window.innerHeight >= 700 && window.innerHeight < 800)
       margin = 350;
