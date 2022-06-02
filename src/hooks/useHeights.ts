@@ -1,4 +1,4 @@
-import { isBrowser, isMobile } from 'react-device-detect';
+import { isBrowser, isMobile, isIOS, isFirefox } from 'react-device-detect';
 import { useGlobal } from 'context/global/GlobalContext';
 
 const useHeights = () => {
@@ -17,6 +17,8 @@ const useHeights = () => {
       margin = 390;
     else if (window.innerHeight >= 1000) margin = window.innerHeight * 0.4;
   }
+
+  if (isIOS && !isPreviewMode && !isFirefox) margin = margin - 60;
 
   if (isPreviewMode) {
     bottomHeight = window.innerHeight / appZoom - 290;
