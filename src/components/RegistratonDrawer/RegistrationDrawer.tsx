@@ -153,6 +153,10 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // if the product is not registered to the user
   // if user just signedin
   useEffect(() => {
+    if (isPreviewMode) {
+      setTempLoading(false);
+    }
+
     if (
       !currentModule ||
       (currentModule.registrationRequired && !token) ||

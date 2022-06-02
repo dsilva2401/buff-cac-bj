@@ -193,9 +193,15 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   useEffect(() => {
     const event = previewEvent;
     if (event && event.type === 'changeDrawerPage') {
+      const newModule = details?.modules[event.data];
+      if (newModule) {
+        setShowAuthPage(newModule?.locked);
+      }
       changeDrawerPage(event.data);
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage();
+    } else if (event && event.type === 'setAuthState') {
+      setShowAuthPage(!event.data);
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage]);
 

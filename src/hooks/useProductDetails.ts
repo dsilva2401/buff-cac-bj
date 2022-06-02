@@ -76,7 +76,9 @@ function useProductDetails(
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'product') {
-      onSuccess(previewEvent.productDetails);
+      setTimeout(() => {
+        onSuccess(previewEvent.productDetails);
+      });
     }
   }, [previewEvent, onSuccess]);
 
