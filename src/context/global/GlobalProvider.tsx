@@ -160,12 +160,14 @@ export const GlobalProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     try {
-      window.parent.postMessage(
-        { type: 'setAuthState', data: previewAuthenticated },
-        '*'
-      );
+      if (isPreviewMode) {
+        window.parent.postMessage(
+          { type: 'setAuthState', data: previewAuthenticated },
+          '*'
+        );
+      }
     } catch (e) {}
-  }, [previewAuthenticated]);
+  }, [previewAuthenticated, isPreviewMode]);
 
   useEffect(() => {
     localStorage.setItem('signInRedirect', signInRedirect);
