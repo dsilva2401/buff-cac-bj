@@ -225,13 +225,13 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   useEffect(() => {
     try {
-      if (successDrawer) {
+      if (successDrawer && isPreviewMode) {
         setTimeout(() => {
           window.parent.postMessage({ type: 'userRegistered' }, '*');
         }, 3000);
       }
     } catch (e) {}
-  }, [successDrawer]);
+  }, [successDrawer, isPreviewMode]);
 
   const translationToUse = warrantyData ? t : registrationTranslation;
 
