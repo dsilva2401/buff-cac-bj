@@ -31,7 +31,11 @@ const useMagicLinkHandler = (
     const payloadEncodedString = encodeURIComponent(payload);
 
     const actionCodeSettings = {
-      url: `${window.location.protocol}//${window.location.host}/app/magic-link?email=${email}&isNewUser=${isNewUser}&action=${magicAction}&productSlug=${slug}&payload=${payloadEncodedString}`,
+      url: `${window.location.protocol}//${
+        window.location.host
+      }/app/magic-link?email=${encodeURIComponent(
+        email
+      )}&isNewUser=${isNewUser}&action=${magicAction}&productSlug=${slug}&payload=${payloadEncodedString}`,
       handleCodeInApp: true,
     };
 
