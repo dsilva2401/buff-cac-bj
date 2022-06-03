@@ -166,6 +166,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     }
 
     if (product.registeredToCurrentUser === undefined) {
+      if (!currentModule.registrationRequired) {
+        setTempLoading(false);
+      }
       return;
     }
 
