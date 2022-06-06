@@ -536,13 +536,13 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                     />
                   </Wrapper>
                   <Wrapper overflow='hidden'>
-                    <Wrapper paddingTop='1px'>
+                    <Wrapper padding='1px 0 0 0'>
                       <Wrapper
                         ref={tableRef}
                         height='100%'
                         gap='0.5rem'
                         transition='0.3s'
-                        paddingTop='2rem'
+                        padding='2rem 0 0 0'
                         direction='column'
                         style={{
                           transform: showCoverageTable

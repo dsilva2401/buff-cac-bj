@@ -42,7 +42,6 @@ const AgeGate: React.FC = () => {
         position='relative'
         direction='column'
         padding='1.25rem'
-        paddingTop='1.25rem'
         alignItems='center'
         justifyContent='center'
       >

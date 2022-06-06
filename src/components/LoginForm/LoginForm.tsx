@@ -160,10 +160,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
-      paddingTop={
+      padding={
         location.pathname === RoutesHashMap.Login.path ||
         location.pathname === ''
-          ? '2rem'
+          ? '2rem 0 0 0'
           : '0'
       }
     >
@@ -219,7 +219,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               ref={inputWrapperRef}
               alignItems='stretch'
               position='relative'
-              paddingTop='2px'
+              padding='2px 0 0 0'
             >
               <EditInput
                 width={width}

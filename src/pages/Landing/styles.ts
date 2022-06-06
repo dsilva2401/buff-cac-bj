@@ -8,22 +8,26 @@ export const LandingHtmlWrapper = styled.div<LandingHtmlWrapperProps>`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  span,
+  padding: 1.875rem 2rem;
+  text-align: center;
   h1,
   h2,
   h3,
   h4,
   h5,
-  h6,
-  label {
-    color: #1c3965;
-    opacity: 0.9;
+  h6 {
+    font-size: 32px;
+    line-height: 44px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: #243762;
+    margin-bottom: 0.75rem;
   }
+  label,
+  span,
   p {
-    opacity: 0.9;
-    color: #1c3965;
-    font-size: 18px;
+    color: #243762;
+    font-size: 14px;
   }
   strong {
     color: #000000;

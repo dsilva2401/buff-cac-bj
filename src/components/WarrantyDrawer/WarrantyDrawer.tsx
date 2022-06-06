@@ -66,7 +66,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
             background={expired ? '#FFEFEE' : '#EDF0FF'}
             justifyContent='center'
             borderRadius='0.25rem'
-            paddingTop='0.75rem'
             alignItems='center'
             margin='0.75rem 0'
             padding='0.75rem'
@@ -97,7 +96,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
               background='#FAFAFA'
               alignItems='center'
               justifyContent='center'
-              paddingTop='0.75rem'
               padding='0.75rem'
               border='1px solid #E7EAEB'
             >
@@ -125,7 +123,6 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
               background='#FAFAFA'
               alignItems='center'
               justifyContent='center'
-              paddingTop='0.75rem'
               padding='0.75rem'
               border='1px solid #E7EAEB'
             >
@@ -252,13 +249,13 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 />
               </Wrapper>
               <Wrapper overflow='hidden' margin='0 0 1.25rem 0'>
-                <Wrapper paddingTop='1px'>
+                <Wrapper padding='1px 0 0 0'>
                   <Wrapper
                     ref={tableRef}
                     height='100%'
                     gap='0.5rem'
                     transition='0.3s'
-                    paddingTop='2rem'
+                    padding='2rem 0 0 0'
                     direction='column'
                     style={{
                       transform: showCoverageTable

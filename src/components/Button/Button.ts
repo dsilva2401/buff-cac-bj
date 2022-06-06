@@ -6,6 +6,7 @@ type ButtonProps = {
   warning?: boolean;
   squared?: boolean;
   width?: string;
+  margin?: string;
   disabled?: boolean;
   iconRight?: boolean;
   inlineIcon?: boolean;
@@ -34,6 +35,7 @@ const Button = styled.button<ButtonProps>`
   padding-left: ${(props) => (props.paddingLeft ? props.paddingLeft : '')};
   cursor: pointer;
   margin-top: ${(props) => (props.marginTop ? props.marginTop : '')};
+  margin: ${(props) => (props.margin ? props.margin : '0')};
   transition: ${(props) =>
     props.transition ? props.transition : 'all 0.3s ease'};
   width: ${(props) => (props.width ? props.width : '100%')};

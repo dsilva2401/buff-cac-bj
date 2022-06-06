@@ -155,8 +155,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
             width='auto'
             height='auto'
             borderRadius='0 0 15px 15px'
-            paddingTop='1rem'
-            padding='0.4rem 1.5rem'
+            padding='1rem 1.5rem 0.4rem 1.5rem'
             background={brandTheme || theme.primary}
           >
             <Text fontSize='0.8rem' color='#FFFFFF'>

@@ -27,7 +27,6 @@ type WrapperProps = {
   minHeight?: string;
   margin?: string;
   padding?: string;
-  paddingTop?: string;
   position?: string;
   zIndex?: number;
   top?: string;
@@ -74,7 +73,6 @@ const StepWrapper = styled.div<WrapperProps>`
   min-height: ${(props) => (props.minHeight ? props.minHeight : 'unset')};
   margin: ${(props) => (props.margin ? props.margin : 'unset')};
   padding: ${(props) => (props.padding ? props.padding : 'unset')};
-  padding-top: ${(props) => (props.paddingTop ? props.paddingTop : 'unset')};
   position: ${(props) => (props.position ? props.position : 'inherit')};
   z-index: ${(props) => (props.zIndex ? props.zIndex : 'unset')};
   top: ${(props) => (props.top ? props.top : 'unset')};

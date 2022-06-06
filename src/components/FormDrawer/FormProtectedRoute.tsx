@@ -10,7 +10,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
 
   const loadingIndicator = useMemo(
     () => (
-      <Wrapper height='100vh' paddingTop='5rem'>
+      <Wrapper height='100vh' padding='5rem 0 0 0'>
         <LoadingIndicator />
       </Wrapper>
     ),
