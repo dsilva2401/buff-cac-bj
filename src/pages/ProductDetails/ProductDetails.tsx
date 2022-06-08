@@ -414,7 +414,9 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               <span>Warranty</span>
             </Text>
             <Text fontSize='0.7rem' fontWeight='600'>
-              <span>{`${period} ${duration?.label}`}</span>
+              <span>{`${duration?.label !== 'Lifetime' ? period : ''} ${
+                duration?.label
+              }`}</span>
             </Text>
           </Wrapper>
         );
