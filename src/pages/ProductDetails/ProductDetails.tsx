@@ -274,6 +274,18 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     }
   }, [details, setSignInRedirect, id]);
 
+  const getWarrantyDrawerTitle = () => {
+    let title: string = '';
+    if (details && currentPage !== null) {
+      const moduleInfo = details.modules[currentPage]
+        .moduleInfo as WarrantyModuleType;
+      title = moduleInfo?.activated
+        ? t('viewWarranty')
+        : details?.modules[currentPage].title;
+    }
+    return title;
+  };
+
   let buttonsArray = useCallback(() => {
     let buttons: ButtonType[] = [];
     if (details) {
@@ -628,7 +640,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             return (
               <WarrantyDrawer
                 closePage={closeDrawerPage}
-                drawerTitle={details?.modules[currentPage as number]?.title}
+                drawerTitle={getWarrantyDrawerTitle()}
                 warrantyData={module?.moduleInfo as WarrantyModuleType}
                 warrantyId={module?.id}
               />
