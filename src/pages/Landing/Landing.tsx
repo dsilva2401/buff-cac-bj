@@ -88,7 +88,7 @@ const Landing: React.FC = () => {
                 }
                 style={{ background: '#243762' }}
               >
-                <Text color='#FFFFFF' fontWeight='600'>
+                <Text color='#FFFFFF' fontWeight='600' textAlign='center'>
                   <p>{node.title}</p>
                 </Text>
               </Button>
