@@ -359,6 +359,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   ref={collapsedDrawerRef}
                   margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
                 >
+                  {buttons?.length === 0 && isPreviewMode && (
+                    <Button
+                      key='call-to-action'
+                      brandTheme={brandTheme}
+                      variant='dark'
+                    >
+                      Call to Action
+                    </Button>
+                  )}
                   {buttons?.map((button) => {
                     return (
                       button.isHighlight && (
