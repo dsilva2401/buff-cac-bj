@@ -5,10 +5,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ReactComponent as ScanIcon } from 'assets/icons/svg/scan-code.svg';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ProductDetailsType } from 'types/ProductDetailsType';
-import { showToast } from 'components/Toast/Toast';
+import { getRedirectResult, getAuth } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { GlobalContext } from 'context';
@@ -16,29 +15,22 @@ import { RoutesHashMap } from 'routes';
 import { Helmet } from 'react-helmet';
 import Text from 'components/Text';
 import Grid from 'components/Grid';
-import Button from 'components/Button';
 import Wrapper from 'components/Wrapper';
 import IconButton from 'components/IconButton';
 import PageHeader from 'components/PageHeader';
 import LoadingIndicator from 'components/LoadingIndicator';
 import ProductImage from './ProductImage';
-import QrReader from 'react-qr-reader';
-import { getRedirectResult, getAuth } from 'firebase/auth';
 
 type BrandCollectionType = {
   brand: string;
   items: ProductDetailsType[];
 };
 
-const regexExp = process.env.REACT_APP_SCAN_VERIFICATION + '[a-zA-Z0-9]+';
-
 const Collection: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [sortedCollection, setSortedCollection] = useState<
     BrandCollectionType[]
   >([]);
-  const [scanMode, toggleScanMode] = useState<boolean>(false);
-  const [scanResult, setScanResult] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
 
   const { t } = useTranslation('translation', { keyPrefix: 'collection' });
   const { setIsMenuOpen, logEvent } = useContext(GlobalContext);
@@ -46,33 +38,8 @@ const Collection: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const validateUrl = (url: string) => {
-      const regex = new RegExp(regexExp);
-      return regex.test(url);
-    };
-    if (scanResult) {
-      showToast({
-        message: t('scanSuccessMessage'),
-        type: 'success',
-      });
-      if (validateUrl(scanResult.toString())) {
-        logEvent({
-          eventType: 'ENGAGEMENTS',
-          event: 'USER_SCAN_A_TAG',
-          data: scanResult.slice(scanResult.length - 4),
-        });
-      }
-      window.open(scanResult, '_self');
-      setScanResult('');
-    }
-  }, [scanResult, logEvent, t]);
-
-  useEffect(() => {
     const fetchCollection = async () => {
-      if (!token) {
-        return;
-      }
-
+      if (!token) return;
       setLoading(true);
       await getCollection();
       setLoading(false);
@@ -155,7 +122,6 @@ const Collection: React.FC = () => {
         direction='column'
         justifyContent='flex-start'
         position='relative'
-        overflow='auto'
       >
         <PageHeader
           title={t('collectionPageTitle')}
@@ -163,36 +129,12 @@ const Collection: React.FC = () => {
         />
         {loading ? (
           <LoadingIndicator />
-        ) : scanMode ? (
-          <Wrapper
-            direction='column'
-            width='100%'
-            alignSelf='flex-start'
-            justifyContent='center'
-            padding='0 1.25rem'
-            margin='3rem 0'
-          >
-            <QrReader
-              delay={50}
-              onError={() =>
-                showToast({ message: t('scanErrorMessage'), type: 'error' })
-              }
-              onScan={(data) => {
-                if (data) {
-                  toggleScanMode(false);
-                  setScanResult(data);
-                }
-              }}
-            />
-          </Wrapper>
         ) : sortedCollection?.length > 0 ? (
           <Wrapper
             width='100%'
-            height='100%'
             direction='column'
             justifyContent='flex-start'
-            padding='0 1.25rem'
-            margin='2.25rem 0 7.5rem 0'
+            padding='2.25rem 1.25rem'
             alignItems='flex-start'
           >
             {sortedCollection.map((item) => (
@@ -218,33 +160,6 @@ const Collection: React.FC = () => {
             alignItems='center'
           >
             <h4>{t('emptyCollectionMessage')}</h4>
-          </Wrapper>
-        )}
-        {!loading && (
-          <Wrapper
-            width='170px'
-            direction='column'
-            justifyContent='center'
-            alignItems='center'
-            alignSelf='center'
-            position='fixed'
-            bottom='2.5rem'
-            margin='auto'
-          >
-            {scanMode ? (
-              <IconButton
-                variant='dark'
-                iconName='close-light'
-                onClick={() => toggleScanMode(false)}
-              />
-            ) : (
-              <Button variant='dark' onClick={() => toggleScanMode(!scanMode)}>
-                <ScanIcon />
-                <Text color='#FFFFFF' padding='0 0 0 1.5rem'>
-                  <p>{t('scanCodeButton')}</p>
-                </Text>
-              </Button>
-            )}
           </Wrapper>
         )}
       </Wrapper>

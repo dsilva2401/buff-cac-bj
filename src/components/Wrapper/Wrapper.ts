@@ -71,7 +71,6 @@ const Wrapper = styled.div<WrapperProps>`
   min-height: ${(props) => (props.minHeight ? props.minHeight : 'unset')};
   margin: ${(props) => (props.margin ? props.margin : 'unset')};
   padding: ${(props) => (props.padding ? props.padding : 'unset')};
-
   position: ${(props) => (props.position ? props.position : 'inherit')};
   z-index: ${(props) => (props.zIndex ? props.zIndex : 'unset')};
   top: ${(props) => (props.top ? props.top : 'unset')};
