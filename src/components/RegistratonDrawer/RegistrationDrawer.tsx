@@ -1,28 +1,33 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
-import { ModuleInfoType, Product } from '../../types/ProductDetailsType';
+import {
+  ModuleInfoType,
+  Product,
+  WarrantyModuleType,
+} from '../../types/ProductDetailsType';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
 import SuccessDrawer from 'components/SuccessDrawer';
 import PersonalDetails from 'components/PersonalDetails';
-import LoadingIndicator from 'components/LoadingIndicator';
 import HtmlWrapper from 'components/HtmlWrapper';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import { useAPI } from 'utils/api';
+import dayjs, { ManipulateType } from 'dayjs';
 
 enum PageType {
   CURRENT_MODULE = 'CURRENT_MODULE',
   PERSONAL_DETAILS_FORM = 'PERSONAL_DETAILS_FORM',
   PRE_REGISTER = 'PRE_REGISTER',
+  NONE = 'NONE',
 }
 
 type RegistrationDrawerProps = {
   closePage(): void;
   warrantyId: string;
-  warrantyData?: ModuleInfoType;
+  warrantyData?: WarrantyModuleType | any;
   children: React.ReactElement<any, any> | null;
   product: Product;
   currentModule: ModuleInfoType;
@@ -51,6 +56,39 @@ const getSuccessTitle = (
   return 'Product Registered!';
 };
 
+const useRegisterProduct = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const { slug, reFetchProduct, token } = useGlobal();
+
+  const [registerProduct] = useAPI(
+    {
+      method: 'POST',
+      endpoint: `products/register/${slug}`,
+    },
+    token
+  );
+
+  const registerProductAndFetch = useCallback(
+    async (warrantyId: string) => {
+      setLoading(true);
+
+      try {
+        await registerProduct({ warrantyId });
+        reFetchProduct();
+        return;
+      } catch (error) {
+        throw error;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [registerProduct]
+  );
+
+  return { registerProductAndFetch, loading };
+};
+
 const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   closePage,
   warrantyData,
@@ -68,96 +106,121 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   showMulberryTerms,
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
-  const [pageToShow, setPageToShow] = useState<PageType>(
-    PageType.CURRENT_MODULE
-  );
-  // temprarory loading to handle initial loading while checking if product can be registered
-  const [tempLoading, setTempLoading] = useState<boolean>(true);
+  const [waitingForToken, setWaitingForToken] = useState<boolean>(false);
+  const [pageToShow, setPageToShow] = useState<PageType>(PageType.NONE);
   const [productRegisterCallMade, setProductRegisterCallMade] =
     useState<boolean>(false);
 
   const {
-    loading,
     user,
     token,
-    reFetchProduct,
     brandTheme,
-    slug,
     isPreviewMode,
+    setProductDetails,
+    productDetails,
   } = useGlobal();
 
   const { t: authDrawerTranslation } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
 
-  const onRegisterProductError = useCallback((error) => {
-    console.log(error);
-  }, []);
-
-  const [registerProduct] = useAPI(
-    {
-      method: 'POST',
-      endpoint: `products/register/${slug}`,
-      onSuccess: reFetchProduct,
-      onError: onRegisterProductError,
-    },
-    token
-  );
-
   const closeSuccess = useCallback(() => {
     setSuccessDrawer(false);
     closePage();
   }, [closePage]);
 
+  const { registerProductAndFetch, loading: registerProductLoading } =
+    useRegisterProduct();
+
   const checkAndRegisterProduct = useCallback(async () => {
-    registerProduct({
-      warrantyId,
-    })
-      .then(() => {
-        setSuccessDrawer(true);
-      })
-      .catch(async (error: any) => {
-        const errorResponse: any = await error.json();
-        showToast({ message: errorResponse.error, type: 'error' });
-        closePage();
-      })
-      .finally(() => setTempLoading(false));
-  }, [registerProduct, warrantyId, closePage]);
+    try {
+      await registerProductAndFetch(warrantyId);
+
+      if (!warrantyData) {
+        return;
+      }
+
+      const { period, duration } = warrantyData.moduleInfo;
+
+      const purchaseDate = Date.now();
+      const expirationDate = dayjs()
+        .add(period, duration?.value?.toLowerCase() as ManipulateType)
+        .valueOf();
+
+      const modules =
+        productDetails?.modules?.map((module: any) => {
+          if (module.id === warrantyId) {
+            return {
+              ...module,
+              moduleInfo: {
+                ...module.moduleInfo,
+                purchaseDate,
+                expirationDate,
+                activated: true,
+              },
+            };
+          }
+
+          return module;
+        }) || [];
+
+      setProductDetails({
+        ...productDetails,
+        product: { ...productDetails?.product, registeredToCurrentUser: true },
+        modules,
+      });
+    } catch (error: any) {
+      const errorResponse: any = await error.json();
+      showToast({ message: errorResponse.error, type: 'error' });
+      closePage();
+    }
+  }, [
+    registerProductAndFetch,
+    warrantyId,
+    warrantyData,
+    closePage,
+    productDetails,
+    setProductDetails,
+  ]);
 
   // register or activate the warranty
   const register = useCallback(() => {
-    setTempLoading(true);
+    if (productRegisterCallMade) {
+      return;
+    }
+
+    setSuccessDrawer(true);
+    setProductRegisterCallMade(true);
     if (isPreviewMode) {
       setSuccessDrawer(true);
-      setTimeout(() => {
-        setTempLoading(false);
-      }, 200);
     } else {
       checkAndRegisterProduct();
     }
-  }, [checkAndRegisterProduct, isPreviewMode]);
+  }, [checkAndRegisterProduct, isPreviewMode, productRegisterCallMade]);
+
+  useEffect(() => {
+    // if it's a new user call register
+    if (isNewUser && !productRegisterCallMade) {
+      setWaitingForToken(true);
+      setSuccessDrawer(true);
+
+      if (token) {
+        register();
+        setWaitingForToken(false);
+      }
+    }
+  }, [isNewUser, register, token]);
 
   // call register if
   // registration is Required in order to view the module
   // if the product is not registered to the user
   // if user just signedin
   useEffect(() => {
-    if (isPreviewMode) {
-      setTempLoading(false);
-    }
-
-    if (
-      !currentModule ||
-      (currentModule.registrationRequired && !token) ||
-      productRegisterCallMade
-    ) {
+    if (!currentModule || (currentModule.registrationRequired && !token)) {
       return;
     }
 
     if (product.registeredToCurrentUser === undefined) {
-      if (!currentModule.registrationRequired) {
-        setTempLoading(false);
-      }
       return;
     }
 
@@ -167,18 +230,19 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
       !product.registeredToCurrentUser
     ) {
       register();
-      setProductRegisterCallMade(true);
-    } else {
-      setTempLoading(false);
     }
-  }, [currentModule, product, register, alreadySignedIn, token]);
+  }, [currentModule, product, register, alreadySignedIn, token, isNewUser]);
 
   useEffect(() => {
     // if a new user start registering the product
     // set the page to personal details form
     // user will see this once registration is over
     if (isNewUser) {
-      setPageToShow(PageType.PERSONAL_DETAILS_FORM);
+      if (product.registeredToCurrentUser) {
+        setPageToShow(PageType.PERSONAL_DETAILS_FORM);
+      } else {
+        setPageToShow(PageType.NONE);
+      }
       return;
     }
 
@@ -204,15 +268,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   }, [successDrawer, currentModule, setDisableModalDismiss, user]);
 
   useEffect(() => {
-    // close success animation after 3 seconds
-    if (successDrawer) {
-      setTimeout(() => {
-        setSuccessDrawer(false);
-      }, 3000);
-    }
-  }, [successDrawer]);
-
-  useEffect(() => {
     try {
       if (successDrawer && isPreviewMode) {
         setTimeout(() => {
@@ -224,6 +279,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   const renderPage = useCallback(() => {
     switch (pageToShow) {
+      case PageType.NONE:
+        return null;
       case PageType.CURRENT_MODULE:
         return children;
       case PageType.PERSONAL_DETAILS_FORM:
@@ -306,23 +363,10 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   return (
     <>
-      {
-        // we need to show the loadingIndicator for both loading & tempLoading to avoid rendering PersonalDetails at the initial render
-        loading || tempLoading ? (
-          <Wrapper
-            justifyContent='center'
-            alignItems='center'
-            height='100%'
-            width='100%'
-          >
-            <LoadingIndicator />
-          </Wrapper>
-        ) : (
-          renderPage()
-        )
-      }
       <SuccessDrawer
         isOpen={successDrawer}
+        loading={waitingForToken || registerProductLoading}
+        onCompleteAnimation={() => setSuccessDrawer(false)}
         title={
           registrationData?.confirmationHeader ||
           getSuccessTitle(registrationData?.registrationType)
@@ -330,6 +374,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         description={registrationData?.confirmationText}
         close={closeSuccess}
       />
+      {renderPage()}
     </>
   );
 };

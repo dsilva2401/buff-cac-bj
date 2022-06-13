@@ -95,11 +95,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
     token,
   } = useUser();
 
-  const [productDetails, reFetchProduct, productLoading] = useProductDetails(
-    slug,
-    token,
-    previewEvent
-  );
+  const [productDetails, reFetchProduct, productLoading, setProductDetails] =
+    useProductDetails(slug, token, previewEvent);
   const [collectionDetails, getCollection] = useCollection(token);
   const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
@@ -323,6 +320,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         alreadySignedIn,
         setAlreadySignIn,
         reFetchProduct,
+        setProductDetails,
       }}
     >
       {children}

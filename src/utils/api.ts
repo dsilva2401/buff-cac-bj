@@ -4,8 +4,8 @@ import { useCallback, useState } from 'react';
 interface APIpayload {
   method: string;
   endpoint: string;
-  onSuccess: (response: any) => any;
-  onError: (error: string) => any;
+  onSuccess?: (response: any) => any;
+  onError?: (error: string) => any;
 }
 
 type UseAPIVars<T> = [(data?: T) => Promise<any>, boolean, AbortController];
@@ -77,7 +77,7 @@ export function useAPI<T>(
         if (res.status >= 200 && res.status < 400) {
           const response = await res.json();
           setLoading(false);
-          onSuccess(response);
+          onSuccess && onSuccess(response);
           return response;
         } else if (res.status === 400 && !isPreviewMode) {
           window.location.href = `${window.location.protocol}//${window.location.host}/app/404`;
@@ -86,7 +86,7 @@ export function useAPI<T>(
         }
       } catch (e: any) {
         setLoading(false);
-        onError(e);
+        onError && onError(e);
         throw e;
       }
     },

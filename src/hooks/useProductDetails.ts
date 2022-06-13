@@ -6,7 +6,12 @@ function useProductDetails(
   slug: string | null,
   token: string | null = null,
   previewEvent: any
-): [ProductDetailsType | null, () => void, boolean] {
+): [
+  ProductDetailsType | null,
+  () => void,
+  boolean,
+  React.Dispatch<React.SetStateAction<ProductDetailsType | null>>
+] {
   const [productLoading, setProductLoading] = useState<boolean>(false);
 
   const [productDetails, setProductDetails] =
@@ -65,8 +70,8 @@ function useProductDetails(
   );
 
   const getProductWithLoading = useCallback(() => {
-    getProduct();
     setProductLoading(true);
+    return getProduct();
   }, [getProduct, setProductLoading]);
 
   useEffect(() => {
@@ -85,7 +90,12 @@ function useProductDetails(
     }
   }, [previewEvent, onSuccess]);
 
-  return [productDetails, getProductWithLoading, productLoading];
+  return [
+    productDetails,
+    getProductWithLoading,
+    productLoading,
+    setProductDetails,
+  ];
 }
 
 export default useProductDetails;

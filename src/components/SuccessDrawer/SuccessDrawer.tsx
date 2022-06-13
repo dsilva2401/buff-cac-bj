@@ -10,6 +10,8 @@ type SuccessDrawerProps = {
   title: string;
   description: string;
   close(): void;
+  loading: boolean;
+  onCompleteAnimation: () => void;
 };
 
 const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
@@ -17,6 +19,8 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
   title,
   description,
   close,
+  loading,
+  onCompleteAnimation,
 }) => {
   const { brandTheme, appZoom } = useGlobal();
   return (
@@ -30,7 +34,16 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
       <Drawer brandTheme={brandTheme} isOpen={isOpen} appZoom={appZoom}>
         {isOpen && (
           <>
-            <CheckAnimation isDrawerOpen={isOpen} />
+            <CheckAnimation
+              onComplete={onCompleteAnimation}
+              loading={loading}
+              isDrawerOpen={isOpen}
+            />
+          </>
+        )}
+
+        {loading ? null : (
+          <>
             <Text
               fontSize='2rem'
               fontWeight='700'

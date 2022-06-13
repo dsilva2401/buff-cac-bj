@@ -70,6 +70,7 @@ export type GlobalContextProps = {
   setProductModule: React.Dispatch<React.SetStateAction<string>>;
   alreadySignedIn: boolean;
   setAlreadySignIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setProductDetails: React.Dispatch<React.SetStateAction<any | null>>;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -121,6 +122,7 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setProductModule: () => {},
   alreadySignedIn: true,
   setAlreadySignIn: () => {},
+  setProductDetails: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);
