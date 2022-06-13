@@ -13,9 +13,18 @@ type TextProps = {
   margin?: string;
   height?: string;
   cursor?: string;
+  wrapperWidth?: string;
+  whiteSpace?: string;
+  overflow?: string;
+  textOverflow?: string;
 };
 
 const Text = styled.div<TextProps>`
+  width: ${(props) => (props.wrapperWidth ? props.wrapperWidth : 'inherit')};
+  white-space: ${(props) => (props.whiteSpace ? props.whiteSpace : 'inherit')};
+  overflow: ${(props) => (props.overflow ? props.overflow : 'inherit')};
+  text-overflow: ${(props) =>
+    props.textOverflow ? props.textOverflow : 'inherit'};
   & {
     height: ${(props) => (props.height ? props.height : 'auto')};
   }

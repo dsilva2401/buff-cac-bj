@@ -675,11 +675,25 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             const dataForm = details?.modules[currentPage as number]
               ?.moduleInfo as FormDetailModel[];
             return (
-              <FormDrawer
-                isFormNavigation={isFormNavigation}
-                setIsFormNavigation={setIsFormNavigation}
-                data={dataForm}
-              />
+              <Wrapper height='100%'>
+                <Wrapper width='100%' position='absolute' top='10px'>
+                  <Text
+                    wrapperWidth='80%'
+                    whiteSpace='nowrap'
+                    overflow='hidden'
+                    textOverflow='ellipsis'
+                    fontSize='1.2rem'
+                    fontWeight='bold'
+                    padding='12px'
+                  >
+                    <span>
+                      {' '}
+                      {details?.modules[currentPage as number].title}
+                    </span>
+                  </Text>
+                </Wrapper>
+                <FormDrawer data={dataForm} />
+              </Wrapper>
             );
           default:
             return null;

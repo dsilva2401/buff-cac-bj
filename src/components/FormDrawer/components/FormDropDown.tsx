@@ -3,21 +3,39 @@ import Text from 'components/Text';
 import Wrapper from 'components/Wrapper';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
 import { FormikProps } from 'formik';
+import { useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel } from 'types/FormTypes';
 import { FormMatchParams } from '../FormDrawer';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 
 type Props = {
-  module?: string[];
   formRef: FormikProps<any> | null;
   name: string;
   formData: FormDetailModel;
 };
 
 const FormDropDown = (props: Props) => {
-  const { formRef, name, module, formData } = props;
-  const { setCurrentStep } = useFormContext();
-  const { params } = useRouteMatch<FormMatchParams>();
+  const { formRef, name, formData } = props;
+
+  const formikDropDown = useFormik({
+    initialValues: {
+      dropDown: '',
+    },
+    onSubmit: () => {},
+  });
+
+  useEffect(() => {
+    if (formRef && !formRef.values[name] && formData.isRequired) {
+      formRef.validateField(name);
+    }
+
+    if (formRef && formRef.values[name] && !formikDropDown.values.dropDown) {
+      formikDropDown.setFieldValue('dropDown', formRef.values[name]);
+      formRef.validateField(name);
+    }
+  }, [formRef?.values[name]]);
 
   return (
     <Wrapper width='100%'>
@@ -34,26 +52,31 @@ const FormDropDown = (props: Props) => {
           <Text
             color='#000000'
             textAlign='left'
-            fontSize='1.2rem'
+            fontSize='1.4rem'
             fontWeight='bold'
           >
             <span>{formData.text}</span>
           </Text>
         </Wrapper>
-        {formRef && (
-          <SelectInput
-            id='hello'
-            selected={formRef.values[name]}
-            label='click to select'
-            onChange={(value) => {
-              formRef.handleChange(name)(value);
-            }}
-            options={formData.options.map((value) => value.text)}
-            key='23'
-            placeholder='click to select'
-            noInitValue={true}
-          ></SelectInput>
-        )}
+        <Wrapper margin='24px 0 0 0' width='100%'>
+          {formRef && formRef.values[name] !== undefined && (
+            <SelectInput
+              id='drop-down'
+              selected={formRef.values[name]}
+              label='click to select'
+              onChange={async (value) => {
+                await formikDropDown.setValues({ dropDown: value }, true);
+                if (formikDropDown.isValid) {
+                  await formRef.setFieldValue(name, value);
+                  formRef.validateForm();
+                }
+              }}
+              options={formData.options.map((value) => value.text)}
+              placeholder='click to select'
+              noInitValue={true}
+            ></SelectInput>
+          )}
+        </Wrapper>
       </Wrapper>
     </Wrapper>
   );

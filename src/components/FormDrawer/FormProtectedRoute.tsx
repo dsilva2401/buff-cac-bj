@@ -1,12 +1,21 @@
 import React, { useCallback, useMemo } from 'react';
 import { useGlobal } from 'context/global/GlobalContext';
-import { Redirect, Route, RouteProps } from 'react-router-dom';
+import { Redirect, Route, RouteProps, useRouteMatch } from 'react-router-dom';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Wrapper from 'components/Wrapper';
 import { RoutesHashMap } from 'routes';
 
-const ProtectedRoute: React.FC<RouteProps> = (props) => {
+interface totalSteps {
+  totalSteps: number;
+}
+export interface FormMatchParams {
+  id: string;
+  stepId: string;
+}
+
+const ProtectedRoute: React.FC<totalSteps & RouteProps> = (props) => {
   const { productDetails } = useGlobal();
+  const { params } = useRouteMatch<FormMatchParams>();
 
   const loadingIndicator = useMemo(
     () => (
@@ -18,11 +27,8 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
   );
 
   const checkForFormModule = useCallback((): boolean => {
-    // if (productDetails) {
-    //     // check if form module is enabled.
-    //     return false;
-    // } else {
-    //     return false;
+    // TODO step id isn't present here so let's get it and make sure we don't go over steps.
+    // if (parseInt(params.stepId, 10) <= props.totalSteps) {
     // }
     return true;
   }, [productDetails]);

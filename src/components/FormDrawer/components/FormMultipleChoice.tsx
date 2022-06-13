@@ -1,28 +1,74 @@
 import RadioButtons from 'components/RadioButtons';
-import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
-import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel } from 'types/FormTypes';
 import { FormikProps } from 'formik';
-import { FormMatchParams } from '../FormDrawer';
+import Wrapper from 'components/Wrapper';
+import Text from 'components/Text';
+import { useEffect } from 'react';
+import LoadingIndicator from 'components/LoadingIndicator';
+import { useFormik } from 'formik';
 
 type Props = {
   formData: FormDetailModel;
   formRef: FormikProps<any> | null;
+  name: string;
 };
 
 const FormMultipleChoice = (props: Props) => {
-  const { formData, formRef } = props;
-  const { setCurrentStep, currentStep } = useFormContext();
-  const { params } = useRouteMatch<FormMatchParams>();
+  const { formData, formRef, name } = props;
   const optionsArr = formData.options.map((value) => value.text);
-  const defaultOption = formData.options.filter((value) => value.isDefault);
-  return (
-    formRef && (
-      <RadioButtons
-        defaultValue={formRef.values[currentStep]}
-        options={optionsArr}
-      />
-    )
+
+  const formikMultipleChoice = useFormik({
+    initialValues: {
+      multipleChoice: '',
+    },
+    onSubmit: () => {},
+  });
+
+  useEffect(() => {
+    if (formRef && !formRef.values[name] && formData.isRequired) {
+      formRef.validateField(name);
+    }
+
+    if (formRef && formRef.values[name]) {
+      formikMultipleChoice.setFieldValue(
+        'multipleChoice',
+        formRef.values[name]
+      );
+      formikMultipleChoice.validateForm();
+      formRef.validateForm();
+    }
+  }, [formRef?.values[name]]);
+  return formRef && formRef.values[name] !== undefined ? (
+    <Wrapper justifyContent='flex-start' direction='column' width='100%'>
+      <Text
+        color='#000000'
+        textAlign='left'
+        fontSize='1.4rem !important'
+        fontWeight='bold'
+      >
+        <span>{formData.text}</span>
+      </Text>
+      <Wrapper
+        margin='24px 0 0 0'
+        alignItems='center'
+        justifyContent='flex-start'
+      >
+        <RadioButtons
+          name='multipleChoice'
+          defaultValue={formikMultipleChoice.values.multipleChoice}
+          options={optionsArr}
+          onChange={async (value, e) => {
+            await formikMultipleChoice.handleChange(e);
+            if (formikMultipleChoice.isValid) {
+              await formRef.setFieldValue(name, value);
+              formRef.validateForm();
+            }
+          }}
+        />
+      </Wrapper>
+    </Wrapper>
+  ) : (
+    <LoadingIndicator />
   );
 };
 

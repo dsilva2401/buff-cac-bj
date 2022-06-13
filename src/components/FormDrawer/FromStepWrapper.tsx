@@ -15,6 +15,7 @@ const FromStepWrapper = (props: Props) => {
       setCurrentStep(parseInt(params.stepId, 10));
     }
   }, []);
+
   return <>{props.children}</>;
 };
 

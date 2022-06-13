@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { InputWrapper, InputPlaceholder } from './styles';
 
-type EditInputProps = {
+type EditTextAreaProps = {
   placeholder: string;
   value: string | undefined;
-  onChange: (value: string) => void;
+  name: string;
+  onChange: (value: string, e: ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur?: (value: string) => void;
+  onFocus?: () => void;
   width?: number;
-  type?: string;
+  rows?: number;
 };
 
-const SearchInput: React.FC<EditInputProps> = ({
+const SearchInput: React.FC<EditTextAreaProps> = ({
   value,
   placeholder,
   onChange,
   width,
+  name,
   onBlur = (value) => {},
-  type = 'text',
-}: EditInputProps) => {
+  onFocus = () => {},
+  rows = 2,
+}: EditTextAreaProps) => {
   const [isFocused, setIsFocused] = useState(true);
 
   useEffect(() => {
@@ -30,19 +34,22 @@ const SearchInput: React.FC<EditInputProps> = ({
 
   return (
     <InputWrapper isFocused={isFocused} width={`${width}px`}>
-      <InputPlaceholder isFocused={isFocused}>{placeholder}</InputPlaceholder>
-      <input
-        type={type}
-        width='100%'
+      <textarea
+        rows={rows}
+        name={name}
         value={value}
-        onFocus={() => setIsFocused(true)}
+        placeholder={placeholder}
+        onFocus={() => {
+          setIsFocused(true);
+          onFocus();
+        }}
         onBlur={() => {
           !value && setIsFocused(false);
           if (value !== undefined) {
             onBlur(value);
           }
         }}
-        onChange={({ target: { value } }) => onChange(value)}
+        onChange={(e) => onChange(e.target.value, e)}
       />
     </InputWrapper>
   );
