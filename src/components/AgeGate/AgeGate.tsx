@@ -13,28 +13,19 @@ const AgeGate: React.FC = () => {
     keyPrefix: 'productDetails.ageGate',
   });
 
-  return (
-    <Animated
-      animationIn='slideInUp'
-      animationOut='slideOutDown'
-      animationInDuration={400}
-      animationOutDuration={0}
-      animationInDelay={300}
-      isVisible={
-        agegateDisplay && localStorage.getItem('ageGateChecked') !== 'true'
-      }
-      style={{
-        zIndex: 9999,
-        width: '100%',
-        height: '100vh',
-        padding: '2rem',
-        position: 'absolute',
-        background: 'rgba(256, 256, 256, 1)',
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
+  return agegateDisplay && localStorage.getItem('ageGateChecked') !== 'true' ? (
+    <Wrapper
+      zIndex={9999}
+      width='100%'
+      height='100vh'
+      padding='2rem'
+      direction='column'
+      alignItems='center'
+      justifyContent='center'
+      background='white'
+      position='fixed'
+      left='0'
+      top='0'
     >
       <Wrapper
         width='100%'
@@ -106,8 +97,8 @@ const AgeGate: React.FC = () => {
           </Text>
         </Animated>
       </Wrapper>
-    </Animated>
-  );
+    </Wrapper>
+  ) : null;
 };
 
 export default AgeGate;
