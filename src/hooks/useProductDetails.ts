@@ -12,35 +12,38 @@ function useProductDetails(
   const [productDetails, setProductDetails] =
     useState<ProductDetailsType | null>(null);
 
-  const onSuccess = (productDetails: any) => {
-    const { product, modules } = productDetails;
+  const onSuccess = useCallback(
+    (productDetails: any) => {
+      const { product, modules } = productDetails;
 
-    // if the product is already registered to some user don't show activate warranty
-    const leadModule = modules[0];
-    let moduleCopy = [...modules];
+      // if the product is already registered to some user don't show activate warranty
+      const leadModule = modules[0];
+      let moduleCopy = [...modules];
 
-    if (
-      !product.registeredToCurrentUser &&
-      product.registered &&
-      product.tagType === 'Unit'
-    ) {
-      moduleCopy = moduleCopy.filter(
-        (module) => module.type !== 'WARRANTY_MODULE'
-      );
-    }
-    // set to undefined if no token.
-    if (!token) {
-      productDetails.product.registeredToCurrentUser = undefined;
-    }
+      if (
+        !product.registeredToCurrentUser &&
+        product.registered &&
+        product.tagType === 'Unit'
+      ) {
+        moduleCopy = moduleCopy.filter(
+          (module) => module.type !== 'WARRANTY_MODULE'
+        );
+      }
+      // set to undefined if no token.
+      if (!token) {
+        productDetails.product.registeredToCurrentUser = undefined;
+      }
 
-    setProductDetails({
-      ...productDetails,
-      modules: [...moduleCopy],
-      leadModule,
-    });
+      setProductDetails({
+        ...productDetails,
+        modules: [...moduleCopy],
+        leadModule,
+      });
 
-    setProductLoading(false);
-  };
+      setProductLoading(false);
+    },
+    [token]
+  );
 
   const onError = useCallback(
     (error) => {
@@ -61,10 +64,10 @@ function useProductDetails(
     token
   );
 
-  const getProductWithLoading = () => {
+  const getProductWithLoading = useCallback(() => {
     getProduct();
     setProductLoading(true);
-  };
+  }, [getProduct, setProductLoading]);
 
   useEffect(() => {
     if (slug) {

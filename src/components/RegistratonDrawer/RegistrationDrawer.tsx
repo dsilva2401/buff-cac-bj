@@ -90,10 +90,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     keyPrefix: 'drawers.authDrawer',
   });
 
-  const onRegisterProductSuccess = useCallback(() => {
-    reFetchProduct();
-  }, [reFetchProduct]);
-
   const onRegisterProductError = useCallback((error) => {
     console.log(error);
   }, []);
@@ -102,7 +98,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     {
       method: 'POST',
       endpoint: `products/register/${slug}`,
-      onSuccess: onRegisterProductSuccess,
+      onSuccess: reFetchProduct,
       onError: onRegisterProductError,
     },
     token
