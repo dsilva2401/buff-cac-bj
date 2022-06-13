@@ -15,14 +15,15 @@ export const Label = styled(InputLabel)`
     position: absolute;
     transform: translate(1.875rem, 2.375rem) scale(1);
     font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
+    font-size: 0.875rem;
     background: transparent;
+    padding: 0;
   }
   &.MuiInputLabel-shrink {
-    transform: translate(1.8rem, 0.625rem) scale(0.75);
+    transform: translate(1.5rem, 0.7rem) scale(0.75);
     transform-origin: top left;
-    padding: 0 4px;
     background-color: #ffffff;
+    padding: 0 4px;
   }
 `;
 
@@ -37,7 +38,6 @@ export const Select = styled(SelectMaterial)`
   width: 100%;
   position: relative;
   z-index: 1;
-  background-color: #ffffff;
   &::after {
     display: none;
   }
@@ -46,9 +46,14 @@ export const Select = styled(SelectMaterial)`
   }
   .MuiSelect-select {
     width: 100%;
-    background-color: #ffffff;
+    background: ${(props) =>
+      props.open || props.value ? '#ffffff' : '#f4f4f4'};
     border: 3px solid #f4f4f4;
-    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    height: 52px;
+    font-size: 0.875rem;
     border-radius: 30px;
     &:focus {
       background: #ffffff;

@@ -145,6 +145,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
         height='100%'
         direction='column'
         justifyContent='flex-start'
+        padding='0 0 1rem 0'
         alignItems='center'
         overflow='auto'
       >
@@ -175,7 +176,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           justifyContent='space-between'
           alignItems='center'
           minHeight='200px'
-          gap='0.5rem'
           margin='3rem 0 0 0'
         >
           <ProgressiveImage src={chosenOption.image} placeholder={placeholder}>
@@ -200,24 +200,19 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
             height='100%'
             direction='column'
             justifyContent='center'
-            padding='0rem 0.5rem'
-            gap='1rem'
+            padding='0 0.5rem'
           >
-            <Wrapper width='100%' direction='column' gap='0.1rem'>
+            <Wrapper width='100%' direction='column' margin='0 0 1rem 0'>
               <Text
                 color='#98A3AA'
                 fontSize='0.75rem'
                 fontWeight='bold'
+                margin='0 0 0.1rem 0'
                 textDecoration='line-through'
               >
                 {chosenOption.name}
               </Text>
-              <Wrapper
-                direction='row'
-                width='max-content'
-                alignItems='center'
-                gap='0.4rem'
-              >
+              <Wrapper direction='row' width='max-content' alignItems='center'>
                 {isValidCombo && data.isDiscountAvailable && (
                   <>
                     <Text
@@ -238,7 +233,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                         )}
                       </p>
                     </Text>
-                    <Text fontSize='0.9rem' fontWeight='600'>
+                    <Text
+                      fontSize='0.9rem'
+                      fontWeight='600'
+                      padding='0 0 0 0.4rem'
+                    >
                       <p>
                         {parseFloat(
                           chosenOption.discountedPrice!
@@ -287,7 +286,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
             <Wrapper
               position='relative'
               direction='column'
-              gap='0.5rem'
               overflow={expandDescription ? 'visible' : 'hidden'}
             >
               <Text
@@ -301,11 +299,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               {height > 54 && (
                 <Text
                   fontSize='0.75rem'
-                  color='#4B6EFA'
+                  color={brandTheme || theme.primary}
                   style={{
                     display: 'block',
-                    textDecoration: 'underline',
                     background: '#FFFFFF',
+                    textDecoration: 'underline',
                     boxShadow: '-10px 1px 8px 0px rgba(256,256,256,1)',
                     position: 'absolute',
                     cursor: 'pointer',
@@ -330,7 +328,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
             direction='column'
             justifyContent='flex-start'
             alignItems='center'
-            gap='1rem'
             margin='0 0 1rem 0'
           >
             {allOptions?.map((optionItem, index) => (
@@ -339,13 +336,13 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                 id={optionItem.name}
                 label={optionItem.name}
                 options={optionItem.values}
+                selected={option[optionItem.name]}
                 onChange={(value) =>
                   updateOption((prev) => ({
                     ...prev,
                     [optionItem.name]: String(value),
                   }))
                 }
-                selected={option[optionItem.name]}
               />
             ))}
           </Wrapper>
@@ -363,6 +360,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                 onClick={handleCheckout}
                 disabled={!isValidCombo || selectedQuantity < 1}
                 alignItems='flex-end'
+                style={{ fontSize: '1rem' }}
               >
                 <div
                   style={{
@@ -371,33 +369,40 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                   }}
                 >
                   <ShoppingBag width={24} />
-                  <label
-                    style={{
-                      display: 'flex',
-                      position: 'absolute',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.7rem',
-                      fontWeight: 'bold',
-                      width: '24px',
-                      zIndex: 99,
-                      left: '0',
-                      top: '5px',
-                      color:
-                        !isValidCombo || selectedQuantity < 1
-                          ? '#ccc'
-                          : brandTheme,
-                    }}
-                  >
-                    {selectedQuantity}
-                  </label>
+                  {!Number.isNaN(selectedQuantity) && (
+                    <label
+                      style={{
+                        display: 'flex',
+                        position: 'absolute',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                        width: '24px',
+                        zIndex: 99,
+                        left: '0',
+                        top: '5px',
+                        fontSize: '0.7rem',
+                        color:
+                          !isValidCombo || selectedQuantity < 1
+                            ? '#ccc'
+                            : brandTheme,
+                      }}
+                    >
+                      {selectedQuantity}
+                    </label>
+                  )}
                 </div>
                 {t('checkoutButton.callToAction')}
                 {selectedQuantity > 0 && (
                   <>
                     {' '}
                     &#8226;{' '}
-                    <label style={{ color: theme.button.secondary }}>
+                    <label
+                      style={{
+                        color: theme.button.secondary,
+                        fontSize: '1rem',
+                      }}
+                    >
                       {getCostText()}
                     </label>
                   </>
