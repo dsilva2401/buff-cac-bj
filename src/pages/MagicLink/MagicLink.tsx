@@ -23,6 +23,7 @@ const MagicLink = () => {
     setMagicPayload,
     setMagicAction,
     setAlreadySignIn,
+    setRegisteringProduct,
   } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
@@ -67,6 +68,7 @@ const MagicLink = () => {
       switch (action) {
         case MAGIC_ACTION.OPEN_MODULE: {
           setAlreadySignIn(false);
+          setRegisteringProduct(true);
           const productLink = RoutesHashMap.ProductDetails.path(productSlug);
           history.push(productLink);
           break;

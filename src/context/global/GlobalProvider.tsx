@@ -58,6 +58,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
     localStorage.getItem('signInRedirect') || ''
   );
   const [retractDrawer, setRetractDrawer] = useState<boolean>(false);
+  const [registeringProduct, setRegisteringProduct] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<UserLocationType>({
     latitude: 0,
     longitude: 0,
@@ -321,6 +322,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setAlreadySignIn,
         reFetchProduct,
         setProductDetails,
+        setRegisteringProduct,
+        registeringProduct,
       }}
     >
       {children}

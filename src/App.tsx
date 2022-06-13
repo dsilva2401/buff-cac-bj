@@ -21,6 +21,7 @@ export default function App() {
     setMagicAction,
     setAlreadySignIn,
     user: existingUser,
+    setRegisteringProduct,
   } = useGlobal();
 
   useLayoutEffect(() => {
@@ -42,6 +43,7 @@ export default function App() {
           setMagicAction(MAGIC_ACTION.OPEN_MODULE);
           setMagicPayload({ moduleId: moduleId });
           setAlreadySignIn(false);
+          setRegisteringProduct(true);
         }
       }
     });
@@ -52,6 +54,7 @@ export default function App() {
     setAlreadySignIn,
     setUser,
     existingUser,
+    setRegisteringProduct,
   ]);
 
   if (isBrowser) {

@@ -798,23 +798,26 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           </Wrapper>
         </>
       )}
-      <BottomDrawer
-        title={pageTitle}
-        subtitle={details?.product?.subtitle}
-        buttons={buttonsArray()}
-        socials={details?.brand?.social}
-        isChildOpen={isDrawerPageOpen}
-        closeChild={closeDrawerPage}
-        leadInformation={leadInformation}
-        disableModalDismiss={disableModalDismiss}
-        mainDrawerOpen={mainDrawerOpen}
-        setMainDrawerOpen={setMainDrawerOpen}
-        position={position}
-        setPosition={setPosition}
-        autoDeploy={details?.modules[0]?.autoDeploy}
-      >
-        {renderDrawerPage()}
-      </BottomDrawer>
+      {details?.modules?.length && (
+        <BottomDrawer
+          title={pageTitle}
+          subtitle={details?.product?.subtitle}
+          buttons={buttonsArray()}
+          socials={details?.brand?.social}
+          isChildOpen={isDrawerPageOpen}
+          closeChild={closeDrawerPage}
+          leadInformation={leadInformation}
+          disableModalDismiss={disableModalDismiss}
+          mainDrawerOpen={mainDrawerOpen}
+          setMainDrawerOpen={setMainDrawerOpen}
+          position={position}
+          setPosition={setPosition}
+          autoDeploy={details?.modules[0].autoDeploy}
+          product={details?.product}
+        >
+          {renderDrawerPage()}
+        </BottomDrawer>
+      )}
     </>
   );
 };

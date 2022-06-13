@@ -35,6 +35,7 @@ import {
   DrawerIconLink,
   DragZone,
 } from './styles';
+import { Product } from 'types/ProductDetailsType';
 
 export type ButtonType = {
   title: any | undefined;
@@ -71,6 +72,7 @@ type BottomDrawerProps = {
   position: Position;
   setPosition: (position: Position) => void;
   autoDeploy: boolean | undefined;
+  product?: Product;
 };
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -88,6 +90,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   position,
   setPosition,
   autoDeploy,
+  product,
 }) => {
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
@@ -104,6 +107,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     setCollapsedDrawerHeight,
     autoDeployTriggered,
     setAutoDeployTriggered,
+    authFetched,
+    registeringProduct,
   } = useGlobal();
 
   useEffect(() => {
@@ -178,6 +183,18 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   };
 
   useEffect(() => {
+    if (!authFetched) {
+      return;
+    }
+
+    if (registeringProduct) {
+      return;
+    }
+
+    if (product?.registeredToCurrentUser) {
+      return;
+    }
+
     if (autoDeploy && buttons && buttons.length > 0) {
       setTimeout(() => {
         !autoDeployTriggered &&
@@ -186,7 +203,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setAutoDeployTriggered(true);
       }, 500);
     }
-  }, [buttons, leadModuleButtonRef.current]);
+  }, [buttons, leadModuleButtonRef.current, product, registeringProduct]);
 
   const drawerFooter = useMemo(() => {
     return (

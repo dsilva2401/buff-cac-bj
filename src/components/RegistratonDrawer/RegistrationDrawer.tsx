@@ -106,6 +106,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   showMulberryTerms,
 }) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
+  const [productRegistered, setProductRegistered] = useState<boolean>(false);
   const [waitingForToken, setWaitingForToken] = useState<boolean>(false);
   const [pageToShow, setPageToShow] = useState<PageType>(PageType.NONE);
   const [productRegisterCallMade, setProductRegisterCallMade] =
@@ -169,6 +170,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         product: { ...productDetails?.product, registeredToCurrentUser: true },
         modules,
       });
+
+      setProductRegistered(true);
     } catch (error: any) {
       const errorResponse: any = await error.json();
       showToast({ message: errorResponse.error, type: 'error' });
@@ -181,6 +184,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     closePage,
     productDetails,
     setProductDetails,
+    isNewUser,
   ]);
 
   // register or activate the warranty
@@ -209,7 +213,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         setWaitingForToken(false);
       }
     }
-  }, [isNewUser, register, token]);
+  }, [isNewUser, register, token, productRegisterCallMade]);
 
   // call register if
   // registration is Required in order to view the module
@@ -234,11 +238,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   }, [currentModule, product, register, alreadySignedIn, token, isNewUser]);
 
   useEffect(() => {
-    // if a new user start registering the product
-    // set the page to personal details form
-    // user will see this once registration is over
     if (isNewUser) {
-      if (product.registeredToCurrentUser) {
+      if (product.registeredToCurrentUser || productRegistered) {
         setPageToShow(PageType.PERSONAL_DETAILS_FORM);
       } else {
         setPageToShow(PageType.NONE);
@@ -258,7 +259,14 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
       setPageToShow(PageType.PRE_REGISTER);
       return;
     }
-  }, [isNewUser, product, alreadySignedIn, register, currentModule]);
+  }, [
+    isNewUser,
+    product,
+    alreadySignedIn,
+    register,
+    currentModule,
+    productRegistered,
+  ]);
 
   useEffect(() => {
     // only update disableModal when user is loggedIn
