@@ -229,6 +229,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
       case PageType.PERSONAL_DETAILS_FORM:
         return (
           <PersonalDetails
+            saveToShopify={true}
             onPersonalDetailsUpdate={() => {
               setPageToShow(PageType.CURRENT_MODULE);
               onUserUpdate();

@@ -9,6 +9,7 @@ import Button from 'components/Button';
 import LoadingIndicator from 'components/LoadingIndicator';
 import InputMask from 'react-input-mask';
 import Wrapper from 'components/Wrapper';
+import { UserStruct } from 'types/User';
 
 interface UserUpdatePayload {
   firstName: string;
@@ -18,22 +19,55 @@ interface UserUpdatePayload {
 
 interface PersonalDetailsProps {
   onPersonalDetailsUpdate?: () => void;
+  saveToShopify?: boolean;
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({
   onPersonalDetailsUpdate = () => {},
+  saveToShopify,
 }) => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const { t } = useTranslation('translation', { keyPrefix: 'personalDetails' });
-  const { brandTheme, getPersonalDetails } = useGlobal();
+  const { brandTheme, getPersonalDetails, personalDetails, slug } = useGlobal();
 
-  const onSuccess = useCallback(() => {
-    getPersonalDetails();
-    onPersonalDetailsUpdate();
-  }, [onPersonalDetailsUpdate, getPersonalDetails]);
+  const [updateShopify] = useAPI<any>({
+    method: 'POST',
+    endpoint: 'integrations/shopify/create_or_update_customer',
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  const onSuccess = useCallback(
+    (userDetails: UserStruct) => {
+      getPersonalDetails();
+
+      if (saveToShopify) {
+        const { username, profile } = userDetails;
+
+        updateShopify({
+          slug,
+          userId: personalDetails?._id,
+          userDetails: {
+            username,
+            profile,
+          },
+        });
+      }
+
+      onPersonalDetailsUpdate();
+    },
+    [
+      onPersonalDetailsUpdate,
+      getPersonalDetails,
+      updateShopify,
+      slug,
+      personalDetails,
+      saveToShopify,
+    ]
+  );
 
   const [updateUser, loading] = useAPI<UserUpdatePayload>({
     method: 'PUT',
