@@ -6,19 +6,20 @@ import { getAuth, signOut } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { RoutesHashMap } from 'routes';
-import { ReactComponent as Close } from 'assets/icons/svg/close-white.svg';
-import { ReactComponent as Collection } from 'assets/icons/svg/collection.svg';
+import { useAPI } from 'utils/api';
 import { ReactComponent as LoadingIndicator } from 'assets/icons/svg/loading-small.svg';
+import { ReactComponent as Collection } from 'assets/icons/svg/collection.svg';
+import { ReactComponent as Close } from 'assets/icons/svg/close-white.svg';
 import { ReactComponent as External } from 'assets/icons/svg/external.svg';
 import { ReactComponent as Logout } from 'assets/icons/svg/log-out.svg';
 import { ReactComponent as Profile } from 'assets/icons/svg/person.svg';
+import { ReactComponent as LogIn } from 'assets/icons/svg/log-in.svg';
 import { ReactComponent as Trash } from 'assets/icons/svg/trash.svg';
 import poweredByLogo from 'assets/images/svg/powered-by.svg';
 import brijLogo from 'assets/logos/svg/brij.svg';
 import DrawerMask from 'components/DrawerMask';
 import Image from 'components/Image';
 import Menu from './styles';
-import { useAPI } from 'utils/api';
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
@@ -199,7 +200,7 @@ const SideMenu: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('signIn')}
-                <Logout />
+                <LogIn />
               </Link>
             )}
           </nav>
