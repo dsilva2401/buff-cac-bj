@@ -85,13 +85,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     slug,
     isPreviewMode,
   } = useGlobal();
-  const { t } = useTranslation('translation', {
-    keyPrefix: 'drawers.warrantyDrawer',
-  });
-
-  const { t: registrationTranslation } = useTranslation('translation', {
-    keyPrefix: 'drawers.registrationDrawer',
-  });
 
   const { t: authDrawerTranslation } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
@@ -233,8 +226,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     } catch (e) {}
   }, [successDrawer, isPreviewMode]);
 
-  const translationToUse = warrantyData ? t : registrationTranslation;
-
   const renderPage = useCallback(() => {
     switch (pageToShow) {
       case PageType.CURRENT_MODULE:
@@ -339,10 +330,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
           registrationData?.confirmationHeader ||
           getSuccessTitle(registrationData?.registrationType)
         }
-        description={
-          registrationData?.confirmationText ||
-          translationToUse('successDrawer.description')
-        }
+        description={registrationData?.confirmationText}
         close={closeSuccess}
       />
     </>
