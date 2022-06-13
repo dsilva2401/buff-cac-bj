@@ -65,12 +65,11 @@ const Login: React.FC = () => {
       </Helmet>
       <Wrapper
         width='100%'
-        height='100%'
+        height='max-content'
         direction='column'
-        justifyContent='space-between'
+        justifyContent='flex-start'
         alignItems='center'
         position='relative'
-        overflow='auto'
         onClick={() => setNewUser(true)}
       >
         <PageHeader

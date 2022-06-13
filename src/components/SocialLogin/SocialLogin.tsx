@@ -75,20 +75,20 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       direction='column'
       justifyContent='center'
       alignItems='center'
-      gap='0.5rem'
     >
       <Button
         variant='light'
-        style={{ border: '0', color: '#000000' }}
+        margin='0.5rem 0'
         onClick={() => handleSocialAuth(ProviderName.Google)}
+        style={{ border: '1px solid #636369', color: '#000000' }}
       >
         <GoogleLogo />
         {isDrawer ? `${buttonPrefix} with Google` : t('continueGoogleButton')}
       </Button>
       <Button
         variant='light'
-        style={{ border: '0', color: '#000000' }}
         onClick={() => handleSocialAuth(ProviderName.Facebook)}
+        style={{ border: '1px solid #636369', color: '#000000' }}
       >
         <FacebookLogo />
         {isDrawer

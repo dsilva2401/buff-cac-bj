@@ -1,19 +1,21 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { theme } from 'styles/theme';
+import { toast } from 'react-toastify';
 import { RoutesHashMap } from 'routes';
 import { Animated } from 'react-animated-css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
+import { getRegisterText } from 'utils/getRegisterText';
 import { useGlobal } from 'context/global/GlobalContext';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { ReactComponent as EmailLogo } from 'assets/logos/svg/email.svg';
-import { ReactComponent as EmailLogoPrimary } from 'assets/logos/svg/email-primary.svg';
+import { ReactComponent as EmailLogoAlternate } from 'assets/logos/svg/email-alternate.svg';
 import useMagicLinkHandler from 'hooks/useMagicLinkHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PersonalDetails from 'components/PersonalDetails';
 import useFirebaseError from 'hooks/useFirebaseError';
+import useRecaptchaV3 from 'hooks/useRecaptchaV3';
 import useElementSize from 'hooks/useElementSize';
 import SocialLogin from 'components/SocialLogin';
 import useLoginToken from 'hooks/useLoginToken';
@@ -22,9 +24,6 @@ import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
-import { getRegisterText } from 'utils/getRegisterText';
-import useRecaptchaV3 from 'hooks/useRecaptchaV3';
-import { toast } from 'react-toastify';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -42,6 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const [isHuman, setHuman] = useState<boolean>(true);
   const [username, setUsername] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [emailSent, setEmailSent] = useState<boolean>(false);
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
 
@@ -63,6 +63,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
     setHuman(isVerified);
   }, [isVerified]);
+
+  useEffect(() => {
+    if (!emailValidated) setEmailSent(false);
+  }, [emailValidated]);
 
   const registrationType = productDetails?.registration?.registrationType;
 
@@ -116,12 +120,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
   }, []);
 
   const handleLogin = useCallback(async () => {
-    if (!isHuman)
+    if (!isHuman) {
       showToast({
         message: 'Please complete Recpatcha verification',
         type: 'error',
       });
-    else {
+      return;
+    } else if (!emailValidated) {
+      showToast({ type: 'error', message: 'Invalid Email' });
+      return;
+    } else {
       setLoading(true);
       if (isPreviewMode) {
         onLogin(false);
@@ -141,6 +149,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         });
       } finally {
         setLoading(false);
+        setEmailSent(true);
       }
     }
   }, [isHuman, getToken, error, username, isPreviewMode]);
@@ -156,14 +165,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   return (
     <Wrapper
       width='100%'
-      height='100%'
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
       padding={
         location.pathname === RoutesHashMap.Login.path ||
         location.pathname === ''
-          ? '2rem 0 0 0'
+          ? '1.5rem 0.75rem'
           : '0'
       }
     >
@@ -193,33 +201,25 @@ const LoginForm: React.FC<LoginFormProps> = ({
           direction='column'
           justifyContent='flex-start'
           alignItems='center'
-          padding='0 1rem'
-          gap='0.5rem'
+          padding='0 0.5rem'
           overflow='hidden'
-          height='auto'
         >
-          <SocialLogin
-            isDrawer={isDrawer}
-            setLoading={setLoading}
-            onSuccess={onLogin}
-            buttonPrefix={getRegisterText(registrationType)}
-          />
           <Wrapper
             direction='column'
             width='100%'
-            justifyContent='center'
-            alignItems='center'
-            overflow='hidden'
+            justifyContent='flex-start'
+            alignItems='flex-start'
             transition='0.2s'
-            height={emailRegistration ? '60px' : '0px'}
-            margin={emailRegistration ? '0' : '-0.5rem 0 0 0'}
+            overflow='hidden'
+            padding='0.25rem 0 0 0'
+            margin='0 0 0.25rem 0'
+            height={emailRegistration ? '58px' : '0px'}
           >
             <Wrapper
               width='100%'
               ref={inputWrapperRef}
               alignItems='stretch'
               position='relative'
-              padding='2px 0 0 0'
             >
               <EditInput
                 width={width}
@@ -245,31 +245,65 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <LoadingIndicator />
             ) : (
               <Button
-                variant='light'
-                transition='0s'
+                variant={emailRegistration ? 'dark' : 'light'}
+                transition='0.2s'
                 brandTheme={brandTheme}
+                disabled={emailRegistration && !emailValidated}
+                margin={emailValidated ? '1px 0' : '0'}
                 style={
-                  !emailRegistration ? { border: '0', color: '#000000' } : {}
+                  !emailRegistration
+                    ? { border: '1px solid #636369', color: '#000000' }
+                    : {}
                 }
-                onClick={() => {
-                  emailValidated
+                onClick={() =>
+                  emailRegistration
                     ? handleLogin()
-                    : emailRegistration
-                    ? showToast({ type: 'error', message: 'Invalid Email' })
-                    : toggleEmailRegistration(!emailRegistration);
-                }}
+                    : toggleEmailRegistration(true)
+                }
               >
                 {emailRegistration ? (
-                  <EmailLogoPrimary fill={brandTheme || theme.primary} />
+                  <EmailLogoAlternate fill={emailValidated ? brandTheme : ''} />
                 ) : (
                   <EmailLogo />
                 )}
-                {isDrawer
-                  ? `${getRegisterText(registrationType)} with Email`
+                {emailSent && emailRegistration
+                  ? t('checkYourEmail')
+                  : emailRegistration
+                  ? t(emailValidated ? 'activateWithEmail' : 'enterEmailAbove')
+                  : isDrawer
+                  ? `${getRegisterText(registrationType)} ${t('withEmail')}`
                   : t('continueWithEmail')}
               </Button>
             )}
           </Wrapper>
+          {emailRegistration ? (
+            <button
+              type='button'
+              onClick={() => toggleEmailRegistration(false)}
+              style={{
+                height: '52px',
+                width: '100%',
+                textAlign: 'center',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                letterSpacing: '0.3px',
+                margin: '0.5rem 0 0 0',
+                fontWeight: 'bold',
+                transition: '02s',
+                borderRadius: '5rem',
+                background: 'transparent',
+              }}
+            >
+              {t('useDifferentOption')}
+            </button>
+          ) : (
+            <SocialLogin
+              isDrawer={isDrawer}
+              setLoading={setLoading}
+              onSuccess={onLogin}
+              buttonPrefix={getRegisterText(registrationType)}
+            />
+          )}
           <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
             <Text fontSize='0.7rem' textDecoration='unset'>
               <span>{magicLinkError}</span>

@@ -10,8 +10,13 @@ export const resources = {
       signIn: {
         pageTitle: 'Sign In to Brij',
         pageHeaderTitle: 'Sign In',
+        enterEmailAbove: 'Enter email above',
         registerWithEmail: 'Register with Email',
+        withEmail: ' with Email',
+        useDifferentOption: 'Use a Different Option',
         continueWithEmail: 'Continue with Email',
+        activateWithEmail: 'Activate with Email',
+        checkYourEmail: 'Check your email',
         emailInputPlaceholder: 'Enter email...',
         emailInputFilledPlaceholder: 'Email',
         signUpLink: 'Sign up!',
@@ -92,6 +97,8 @@ export const resources = {
             brijBrand: " Brij's ",
             mulberryAndBrijBrand: " mulberry & Brij's ",
             link: 'Terms & Conditions',
+            part3: ' For help or questions email ',
+            helpEmail: 'help@brij.it',
           },
         },
         registrationDrawer: {

@@ -22,7 +22,6 @@ import HtmlWrapper from 'components/HtmlWrapper';
 import BottomDrawer from 'components/BottomDrawer';
 import RegistratonDrawer from 'components/RegistratonDrawer';
 import externalLink from 'assets/icons/svg/external-link.svg';
-import ProgressiveImage from 'react-progressive-image';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
@@ -614,6 +613,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             >
               <AuthDrawer
                 brandName={details?.brand?.name}
+                productName={details?.product?.name}
                 html={mulberry ? null : details?.registration?.registrationText}
                 animated={!!mulberry}
                 showMulberryTerms={!!mulberry}

@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { useGlobal } from 'context/global/GlobalContext';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useGlobal } from 'context/global/GlobalContext';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Animated } from 'react-animated-css';
-import LoginForm from 'components/LoginForm';
 import HtmlWrapper from 'components/HtmlWrapper';
-import LoadingIndicator from 'components/LoadingIndicator';
+import LoginForm from 'components/LoginForm';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 
@@ -14,6 +13,7 @@ interface AuthDrawerProps {
   html: string | undefined | null;
   margin?: string;
   animated?: boolean;
+  productName?: string;
   brandName?: string;
   showMulberryTerms?: boolean;
   onAuthOpen?: () => void;
@@ -24,13 +24,14 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   html,
   animated,
   brandName,
+  productName,
   showMulberryTerms,
   onAuthOpen,
 }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
-  const { retractDrawer } = useGlobal();
+  const { retractDrawer, slug } = useGlobal();
 
   // call on auth open
   useEffect(() => {
@@ -45,8 +46,8 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
-      gap='1.2rem'
       height='100%'
+      padding='0 0 2rem 0'
       margin={animated ? '1.5rem 0 0 0' : '3.75rem 0 0 0'}
     >
       {html && (
@@ -57,6 +58,17 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           dangerouslySetInnerHTML={{ __html: html }}
         />
       )}
+      <Wrapper
+        width='calc(100% - 24px)'
+        height='2px'
+        background='#E7EAEB'
+        margin='1rem 0'
+      />
+      <GoogleReCaptchaProvider
+        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+      >
+        <LoginForm isDrawer onLogin={onAuthComplete} />
+      </GoogleReCaptchaProvider>
       <Animated
         animationIn='slideInRight'
         animationOut='slideOutLeft'
@@ -66,13 +78,8 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         isVisible={true}
         style={{ width: '100%' }}
       >
-        <Wrapper padding='0 1rem' style={{ borderTop: '2px solid #E7EAEB' }}>
-          <Text
-            margin='1rem 0 0 0'
-            fontSize='0.625rem'
-            textAlign='left'
-            color='#414149'
-          >
+        <Wrapper padding='0.5rem 1rem'>
+          <Text fontSize='0.625rem' textAlign='left' color='#414149'>
             <p>
               {t('termsAndconditions.part1')}
               {brandName}
@@ -88,15 +95,19 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
               >
                 {t('termsAndconditions.link')}
               </a>
+              {t('termsAndconditions.part3')}
+              <a
+                target='_blank'
+                rel='noreferrer'
+                href={`mailto:help@brij.it?subject=Help with ${brandName} ${productName} (${slug})`}
+                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              >
+                {t('termsAndconditions.helpEmail')}
+              </a>
             </p>
           </Text>
         </Wrapper>
       </Animated>
-      <GoogleReCaptchaProvider
-        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
-      >
-        <LoginForm isDrawer onLogin={onAuthComplete} />
-      </GoogleReCaptchaProvider>
     </Wrapper>
   );
 };
