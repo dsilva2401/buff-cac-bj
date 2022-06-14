@@ -12,7 +12,6 @@ type ButtonProps = {
   inlineIcon?: boolean;
   transition?: string;
   brandTheme?: string;
-  marginTop?: string;
   alignItems?: string;
   paddingLeft?: string;
 };
@@ -34,7 +33,6 @@ const Button = styled.button<ButtonProps>`
   padding: 0.9rem 0;
   padding-left: ${(props) => (props.paddingLeft ? props.paddingLeft : '')};
   cursor: pointer;
-  margin-top: ${(props) => (props.marginTop ? props.marginTop : '')};
   margin: ${(props) => (props.margin ? props.margin : '0')};
   transition: ${(props) =>
     props.transition ? props.transition : 'all 0.3s ease'};

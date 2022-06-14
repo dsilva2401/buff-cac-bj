@@ -50,7 +50,6 @@ const WarrantyInfo = ({
   return (
     <>
       <Wrapper
-        gap='0.5rem'
         width='100%'
         direction='row'
         background={expired ? '#FFEFEE' : '#EDF0FF'}
@@ -67,7 +66,10 @@ const WarrantyInfo = ({
         />
         <Text
           fontWeight='600'
+          textAlign='center'
           fontSize='0.875rem'
+          padding='0 0.5rem'
+          wrapperWidth='max-content'
           color={expired ? '#FD6157' : brandTheme || theme.primary}
         >
           <p>{title}</p>

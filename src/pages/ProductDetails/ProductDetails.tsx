@@ -69,7 +69,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
   const [isNewUser, setNewUser] = useState<boolean>(false);
   const { topHeight, bottomHeight } = useHeights();
-  const { appZoom } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'productDetails',
   });
@@ -372,7 +371,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
 
         if (!discountedPrice) {
           return (
-            <Text fontSize='1rem' fontWeight='600'>
+            <Text fontSize='1rem' fontWeight='600' wrapperWidth='max-content'>
               <span>{`$${price}`}</span>
             </Text>
           );
@@ -380,10 +379,15 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
 
         return (
           <Wrapper direction='column' alignItems='flex-end'>
-            <Text textDecoration='line-through' fontSize='0.8rem' color='grey'>
+            <Text
+              textDecoration='line-through'
+              wrapperWidth='max-content'
+              fontSize='0.8rem'
+              color='grey'
+            >
               <span>{`$${price}`}</span>
             </Text>
-            <Text fontSize='1rem' fontWeight='600'>
+            <Text fontSize='1rem' fontWeight='600' wrapperWidth='max-content'>
               <span>{`$${discountedPrice}`}</span>
             </Text>
           </Wrapper>
@@ -524,6 +528,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                       fontSize='1rem'
                       fontWeight='600'
                       color='#202029'
+                      textAlign='center'
                       textDecoration='underline'
                     >
                       <span>View Details</span>
@@ -798,26 +803,24 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           </Wrapper>
         </>
       )}
-      {details?.modules?.length && (
-        <BottomDrawer
-          title={pageTitle}
-          subtitle={details?.product?.subtitle}
-          buttons={buttonsArray()}
-          socials={details?.brand?.social}
-          isChildOpen={isDrawerPageOpen}
-          closeChild={closeDrawerPage}
-          leadInformation={leadInformation}
-          disableModalDismiss={disableModalDismiss}
-          mainDrawerOpen={mainDrawerOpen}
-          setMainDrawerOpen={setMainDrawerOpen}
-          position={position}
-          setPosition={setPosition}
-          autoDeploy={details?.modules[0].autoDeploy}
-          product={details?.product}
-        >
-          {renderDrawerPage()}
-        </BottomDrawer>
-      )}
+      <BottomDrawer
+        title={pageTitle}
+        subtitle={details?.product?.subtitle}
+        buttons={buttonsArray()}
+        socials={details?.brand?.social}
+        isChildOpen={isDrawerPageOpen}
+        closeChild={closeDrawerPage}
+        leadInformation={leadInformation}
+        disableModalDismiss={disableModalDismiss}
+        mainDrawerOpen={mainDrawerOpen}
+        setMainDrawerOpen={setMainDrawerOpen}
+        position={position}
+        setPosition={setPosition}
+        autoDeploy={details?.modules[0]?.autoDeploy}
+        product={details?.product}
+      >
+        {renderDrawerPage()}
+      </BottomDrawer>
     </>
   );
 };

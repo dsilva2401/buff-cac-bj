@@ -105,7 +105,7 @@ const Profile: React.FC<PersonalDetailsProps> = ({
               margin='0 0 1.25rem 0'
             >
               <Avatar>
-                <Text color={theme.primary} fontSize='3rem'>
+                <Text color={theme.primary} fontSize='3rem' textAlign='center'>
                   <h1>
                     {firstName && lastName
                       ? getNameInitials(firstName + ' ' + lastName)

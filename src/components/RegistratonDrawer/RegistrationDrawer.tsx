@@ -5,17 +5,17 @@ import {
   Product,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { useAPI } from 'utils/api';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
-import SuccessDrawer from 'components/SuccessDrawer';
+import dayjs, { ManipulateType } from 'dayjs';
 import PersonalDetails from 'components/PersonalDetails';
+import SuccessDrawer from 'components/SuccessDrawer';
 import HtmlWrapper from 'components/HtmlWrapper';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
-import { useAPI } from 'utils/api';
-import dayjs, { ManipulateType } from 'dayjs';
 
 enum PageType {
   CURRENT_MODULE = 'CURRENT_MODULE',
@@ -114,6 +114,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   const {
     user,
+    slug,
     token,
     brandTheme,
     isPreviewMode,
@@ -347,6 +348,17 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
                   >
                     {authDrawerTranslation('termsAndconditions.link')}
                   </a>
+                  {'.'}
+                  {authDrawerTranslation('termsAndconditions.part3')}
+                  <a
+                    target='_blank'
+                    rel='noreferrer'
+                    href={`mailto:help@brij.it?subject=Help with ${brandName} ${product.name} (${slug})`}
+                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                  >
+                    {authDrawerTranslation('termsAndconditions.helpEmail')}
+                  </a>
+                  {'.'}
                 </p>
               </Text>
             </Wrapper>

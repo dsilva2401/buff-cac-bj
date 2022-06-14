@@ -95,6 +95,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
               >
                 {t('termsAndconditions.link')}
               </a>
+              {'.'}
               {t('termsAndconditions.part3')}
               <a
                 target='_blank'
@@ -104,6 +105,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
               >
                 {t('termsAndconditions.helpEmail')}
               </a>
+              {'.'}
             </p>
           </Text>
         </Wrapper>

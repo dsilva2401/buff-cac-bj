@@ -172,7 +172,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
             <Button
               variant='light'
               brandTheme={brandTheme}
-              marginTop='0.75rem'
+              margin='0.75rem 0 0 0'
               onClick={onPersonalDetailsUpdate}
             >
               {t('skip')}
