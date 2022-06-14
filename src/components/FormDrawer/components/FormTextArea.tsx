@@ -67,7 +67,7 @@ const FormTextArea = (props: Props) => {
         <span>{formData.text}</span>
       </Text>
       {/* This is actually a text area!! */}
-      <Wrapper margin='24px 0 0 0 '>
+      <Wrapper direction='column' margin='24px 0 0 0 '>
         <EditTextArea
           name='textArea'
           rows={4}

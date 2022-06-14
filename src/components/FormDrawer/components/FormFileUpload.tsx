@@ -67,7 +67,7 @@ const FormFileUpload = (props: Props) => {
         setSelectedFile(formRef.values[name]);
       }
       formikFileUpload.validateForm();
-      formRef.validateForm();
+      formRef.validateField(name);
     }
   }, [formRef?.values[name]]);
   return formRef && formRef.values[name] !== undefined ? (

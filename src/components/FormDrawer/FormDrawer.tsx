@@ -84,12 +84,16 @@ const FormDrawer = (props: Props) => {
             if (value.isRequired) {
               validationObject[`${value.type}${idx + 1}`] =
                 Yup.string().required();
+            } else {
+              validationObject[`${value.type}${idx + 1}`] = Yup.string();
             }
             break;
           case FormDetailTypesEnum.MULTIPLE_CHOICE:
             if (value.isRequired) {
               validationObject[`${value.type}${idx + 1}`] =
                 Yup.string().required();
+            } else {
+              validationObject[`${value.type}${idx + 1}`] = Yup.string();
             }
             break;
           case FormDetailTypesEnum.TEXT:
@@ -98,16 +102,22 @@ const FormDrawer = (props: Props) => {
                 .min(2)
                 .max(600)
                 .required();
+            } else {
+              validationObject[`${value.type}${idx + 1}`] = Yup.string();
             }
             break;
           case FormDetailTypesEnum.CHECKBOX:
             if (value.isRequired) {
               validationObject[`${value.type}${idx + 1}`] = Yup.array().min(1);
+            } else {
+              validationObject[`${value.type}${idx + 1}`] = Yup.array();
             }
             break;
           case FormDetailTypesEnum.FILE:
             if (value.isRequired) {
               validationObject[`${value.type}${idx + 1}`] = Yup.array().min(1);
+            } else {
+              validationObject[`${value.type}${idx + 1}`] = Yup.array();
             }
             break;
           default:
@@ -119,12 +129,27 @@ const FormDrawer = (props: Props) => {
     }
   }, [data]);
 
+  const convertFilesToArrayForLocalStorage = () => {
+    let valuesPersisted = { ...formik.current?.values };
+    for (let i = 1; i < data.length; i++) {
+      let currentFormModule = data[i - 1];
+      if (currentFormModule.type === FormDetailTypesEnum.FILE) {
+        valuesPersisted[`file-upload${i}`] = [];
+      }
+    }
+    return valuesPersisted;
+  };
+
   const handleNextBtnClicked = () => {
     if (currentStep !== data.length) {
       route.push(`/c/${id}/form/step/${currentStep + 1}`);
       setCurrentStep(currentStep + 1);
     }
-    localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+
+    localStorage.setItem(
+      'brij-form',
+      JSON.stringify(convertFilesToArrayForLocalStorage())
+    );
   };
 
   const handleBackBtnClicked = () => {
@@ -132,7 +157,11 @@ const FormDrawer = (props: Props) => {
       route.push(`/c/${id}/form/step/${currentStep - 1}`);
       setCurrentStep(currentStep - 1);
     }
-    localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+
+    localStorage.setItem(
+      'brij-form',
+      JSON.stringify(convertFilesToArrayForLocalStorage())
+    );
   };
 
   const renderComponentRoutes = (stepId: string, formik: FormikProps<any>) => {

@@ -47,15 +47,17 @@ const UploadInput: React.FC<UploadInputProps> = ({
                 <Text fontSize='1rem' margin='0 0 10px 0px'>
                   <span>{file.name}</span>
                 </Text>
-                <Image
-                  height='105px'
-                  width='110px !important'
-                  src={
-                    !regexPDFExtension.test(file.name)
-                      ? placeholder
-                      : URL.createObjectURL(file)
-                  }
-                ></Image>
+                {file && (
+                  <Image
+                    height='105px'
+                    width='110px !important'
+                    src={
+                      regexPDFExtension.test(file.name)
+                        ? placeholder
+                        : URL.createObjectURL(file)
+                    }
+                  ></Image>
+                )}
               </Wrapper>
             );
           })}
