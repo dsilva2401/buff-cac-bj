@@ -47,8 +47,9 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
       justifyContent='flex-start'
       alignItems='center'
       height='100%'
-      padding='0 0 2rem 0'
-      margin={animated ? '1.5rem 0 0 0' : '3.75rem 0 0 0'}
+      padding={animated ? '1.5rem 0 2rem 0' : '0 0 2rem 0'}
+      margin={animated ? '1rem 0 0 0' : '3.75rem 0 0 0'}
+      style={{ borderTop: animated ? '2px solid #E7EAEB' : '0' }}
     >
       {html && (
         <HtmlWrapper
@@ -58,12 +59,14 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
           dangerouslySetInnerHTML={{ __html: html }}
         />
       )}
-      <Wrapper
-        width='calc(100% - 24px)'
-        height='2px'
-        background='#E7EAEB'
-        margin='1rem 0'
-      />
+      {!animated && (
+        <Wrapper
+          width='calc(100% - 24px)'
+          height='2px'
+          background='#E7EAEB'
+          margin='1rem 0'
+        />
+      )}
       <GoogleReCaptchaProvider
         reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
       >

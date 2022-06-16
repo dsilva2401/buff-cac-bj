@@ -508,6 +508,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                   <HtmlWrapper
                     width='100%'
                     padding='1rem 0'
+                    margin='4rem 0 0 0'
                     direction='column'
                     dangerouslySetInnerHTML={{
                       __html: details?.registration?.registrationText,
@@ -529,6 +530,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                       fontWeight='600'
                       color='#202029'
                       textAlign='center'
+                      wrapperWidth='max-content'
                       textDecoration='underline'
                     >
                       <span>View Details</span>
@@ -543,7 +545,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                     />
                   </Wrapper>
                   <Wrapper overflow='hidden'>
-                    <Wrapper padding='1px 0 0 0'>
+                    <Wrapper padding='1px 0 0 0' margin='auto'>
                       <Wrapper
                         ref={tableRef}
                         height='100%'
