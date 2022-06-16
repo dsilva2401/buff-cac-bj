@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import { Position } from 'types/Misc';
+import { Product } from 'types/ProductDetailsType';
 import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
@@ -35,7 +36,6 @@ import {
   DrawerIconLink,
   DragZone,
 } from './styles';
-import { Product } from 'types/ProductDetailsType';
 
 export type ButtonType = {
   title: any | undefined;
@@ -203,7 +203,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         setAutoDeployTriggered(true);
       }, 500);
     }
-  }, [buttons, leadModuleButtonRef.current, product, registeringProduct]);
+  }, [
+    buttons,
+    product,
+    autoDeploy,
+    authFetched,
+    registeringProduct,
+    autoDeployTriggered,
+    setAutoDeployTriggered,
+  ]);
 
   const drawerFooter = useMemo(() => {
     return (

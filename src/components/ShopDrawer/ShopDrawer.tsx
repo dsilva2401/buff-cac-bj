@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ShoppingBag } from 'assets/icons/svg/shopping-bag.svg';
+import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import { useGlobal } from 'context/global/GlobalContext';
 import { useTranslation } from 'react-i18next';
 import { theme } from 'styles/theme';
@@ -7,6 +8,7 @@ import {
   ProductDetailsType,
   ShoppingModuleType,
   VariantDetails,
+  AllOptionsType,
 } from '../../types/ProductDetailsType';
 import '../../../node_modules/slick-carousel/slick/slick.css';
 import '../../../node_modules/slick-carousel/slick/slick-theme.css';
@@ -40,7 +42,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   data,
   productDescription,
   minimizeBranding,
-  brand,
 }) => {
   const {
     allOptions,
@@ -60,6 +61,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
   const [selectedQuantity, setSelectedQuantity] = useState(0);
   const [expandDescription, toggleExpandDescription] = useState<boolean>(false);
+  const [filteredOptions, setFilteredOptions] = useState<any>([]);
   const [contentRef, { height }] = useElementSize();
   const { logEvent, brandTheme } = useGlobal();
   const { t } = useTranslation('translation', {
@@ -108,6 +110,59 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
       }
     }
   }, [option, variantDetails, isProductLevel]);
+
+  useEffect(() => {
+    const filterItems = (
+      allPropertiesList: (string | null)[],
+      options: AllOptionsType[]
+    ) => {
+      let nonNullPropertyIndexes: any = [];
+      for (let x = 0; x < allPropertiesList.length; x++)
+        if (allPropertiesList[x] !== null) nonNullPropertyIndexes.push(x);
+      if (nonNullPropertyIndexes.length === 0) return options;
+
+      let filtered = JSON.parse(JSON.stringify(options));
+      for (let x = 0; x < filtered.length; x++) filtered[x].values = [];
+
+      let variantDetails: VariantDetails[] | undefined = data.variantDetails;
+      for (let x = 0; x < nonNullPropertyIndexes.length; x++) {
+        let newVariantDetails: VariantDetails[] = [];
+        variantDetails?.forEach((variant: any) => {
+          if (
+            variant.options[options[nonNullPropertyIndexes[x]]?.name] ===
+              allPropertiesList[nonNullPropertyIndexes[x]] &&
+            variant.inventoryQuantity > 0
+          )
+            newVariantDetails.push(variant);
+        });
+        variantDetails = newVariantDetails;
+      }
+
+      if (variantDetails !== undefined) {
+        for (let x = 0; x < variantDetails.length; x++)
+          populateOptions(filtered, variantDetails[x]);
+      }
+      return filtered;
+    };
+    if (data && data !== undefined && allOptions) {
+      const options = JSON.parse(JSON.stringify(allOptions));
+      const choosenOptions: (string | null)[] = [null, null, null];
+      for (let x = 0; x < options.length; x++) {
+        if (options[x].name in option) {
+          choosenOptions[x] = option[options[x].name].valueOf() || null;
+        }
+      }
+      setFilteredOptions(filterItems(choosenOptions, allOptions));
+    }
+  }, [option]);
+
+  const populateOptions = (filtered: any, variant: any) => {
+    for (let x = 0; x < filtered.length; x++) {
+      if (!filtered[x].values.includes(variant.options[filtered[x].name])) {
+        filtered[x].values.push(variant.options[filtered[x].name]);
+      }
+    }
+  };
 
   const handleQuantity = useCallback((value: string) => {
     setSelectedQuantity(parseInt(value));
@@ -213,7 +268,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                 {chosenOption.name}
               </Text>
               <Wrapper direction='row' width='max-content' alignItems='center'>
-                {isValidCombo && data.isDiscountAvailable && (
+                {data.isDiscountAvailable && (
                   <>
                     <Text
                       color='#98A3AA'
@@ -251,7 +306,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                     </Text>
                   </>
                 )}
-                {isValidCombo && !data.isDiscountAvailable && (
+                {!data.isDiscountAvailable && (
                   <Text fontSize='0.9rem' fontWeight='600'>
                     <p>
                       {parseFloat(chosenOption.price).toLocaleString('en-US', {
@@ -265,13 +320,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                 )}
               </Wrapper>
             </Wrapper>
-            {isValidCombo && (
-              <QuantityController
-                onChange={handleQuantity}
-                value={String(selectedQuantity)}
-                // limit={chosenOption.inventoryQuantity}
-              />
-            )}
+            <QuantityController
+              onChange={handleQuantity}
+              value={String(selectedQuantity)}
+              // limit={chosenOption.inventoryQuantity}
+            />
           </Wrapper>
         </Wrapper>
         {productDescription && (
@@ -323,102 +376,123 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           </Wrapper>
         )}
         <Wrapper width='100%' direction='column' transition='0.3s'>
+          {allOptions && filteredOptions && (
+            <Wrapper
+              width='100%'
+              direction='column'
+              justifyContent='flex-start'
+              alignItems='center'
+              margin='0 0 1rem 0'
+            >
+              {allOptions.map((optionItem: any, index: any) => {
+                return (
+                  <Wrapper position='relative' width='100%'>
+                    {option[optionItem.name] && (
+                      <Wrapper
+                        height='38px'
+                        width='38px'
+                        padding='13px'
+                        alignItems='center'
+                        justifyContent='center'
+                        position='absolute'
+                        top='23px'
+                        right='17px'
+                        background='#FFFFFF'
+                        zIndex={10}
+                        onClick={() =>
+                          updateOption((prev) => ({
+                            ...prev,
+                            [optionItem.name]: '',
+                          }))
+                        }
+                      >
+                        <Close />
+                      </Wrapper>
+                    )}
+                    <SelectInput
+                      key={`${optionItem.name}-${index}`}
+                      id={optionItem.name}
+                      label={optionItem.name}
+                      selected={option[optionItem.name] || ''}
+                      options={
+                        filteredOptions[index]?.values &&
+                        filteredOptions[index]?.values?.length > 0
+                          ? filteredOptions[index]?.values
+                          : optionItem.values
+                      }
+                      onChange={(value) =>
+                        updateOption((prev) => ({
+                          ...prev,
+                          [optionItem.name]: String(value),
+                        }))
+                      }
+                    />
+                  </Wrapper>
+                );
+              })}
+            </Wrapper>
+          )}
           <Wrapper
             width='100%'
             direction='column'
             justifyContent='flex-start'
             alignItems='center'
-            margin='0 0 1rem 0'
           >
-            {allOptions?.map((optionItem, index) => (
-              <SelectInput
-                key={`${optionItem.name}-${index}`}
-                id={optionItem.name}
-                label={optionItem.name}
-                options={optionItem.values}
-                selected={option[optionItem.name]}
-                onChange={(value) =>
-                  updateOption((prev) => ({
-                    ...prev,
-                    [optionItem.name]: String(value),
-                  }))
-                }
-              />
-            ))}
-          </Wrapper>
-          <Wrapper
-            width='100%'
-            direction='column'
-            justifyContent='flex-start'
-            alignItems='center'
-          >
-            {isValidCombo ? (
-              <Button
-                inlineIcon
-                variant='dark'
-                brandTheme={brandTheme}
-                onClick={handleCheckout}
-                disabled={!isValidCombo || selectedQuantity < 1}
-                alignItems='flex-end'
-                style={{ fontSize: '1rem' }}
+            <Button
+              inlineIcon
+              variant='dark'
+              brandTheme={brandTheme}
+              onClick={handleCheckout}
+              disabled={!isValidCombo || selectedQuantity < 1}
+              alignItems='flex-end'
+              style={{ fontSize: '1rem' }}
+            >
+              <div
+                style={{
+                  position: 'relative',
+                  height: '24px',
+                }}
               >
-                <div
-                  style={{
-                    position: 'relative',
-                    height: '24px',
-                  }}
-                >
-                  <ShoppingBag width={24} />
-                  {!Number.isNaN(selectedQuantity) && (
-                    <label
-                      style={{
-                        display: 'flex',
-                        position: 'absolute',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 'bold',
-                        width: '24px',
-                        zIndex: 99,
-                        left: '0',
-                        top: '5px',
-                        fontSize: '0.7rem',
-                        color:
-                          !isValidCombo || selectedQuantity < 1
-                            ? '#ccc'
-                            : brandTheme,
-                      }}
-                    >
-                      {selectedQuantity}
-                    </label>
-                  )}
-                </div>
-                {t('checkoutButton.callToAction')}
-                {selectedQuantity > 0 && (
-                  <>
-                    {' '}
-                    &#8226;{' '}
-                    <label
-                      style={{
-                        color: theme.button.secondary,
-                        fontSize: '1rem',
-                      }}
-                    >
-                      {getCostText()}
-                    </label>
-                  </>
+                <ShoppingBag width={24} />
+                {!Number.isNaN(selectedQuantity) && (
+                  <label
+                    style={{
+                      display: 'flex',
+                      position: 'absolute',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      width: '24px',
+                      zIndex: 99,
+                      left: '0',
+                      top: '5px',
+                      fontSize: '0.7rem',
+                      color:
+                        !isValidCombo || selectedQuantity < 1
+                          ? '#ccc'
+                          : brandTheme,
+                    }}
+                  >
+                    {selectedQuantity}
+                  </label>
                 )}
-              </Button>
-            ) : (
-              <Text fontSize='1rem' fontWeight='600'>
-                <p>
-                  {isValidCombo === null
-                    ? t('checkoutHint.chooseOptions')
-                    : isValidCombo === false
-                    ? t('checkoutHint.comboUnavailable')
-                    : ''}
-                </p>
-              </Text>
-            )}
+              </div>
+              {t('checkoutButton.callToAction')}
+              {selectedQuantity > 0 && (
+                <>
+                  {' '}
+                  &#8226;{' '}
+                  <label
+                    style={{
+                      color: theme.button.secondary,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    {getCostText()}
+                  </label>
+                </>
+              )}
+            </Button>
           </Wrapper>
         </Wrapper>
       </Wrapper>

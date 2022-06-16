@@ -13,7 +13,7 @@ export const Label = styled(InputLabel)`
     top: 0;
     left: 0;
     position: absolute;
-    transform: translate(1.875rem, 2.375rem) scale(1);
+    transform: translate(1.8rem, 2.2rem) scale(1);
     font-family: 'Poppins', sans-serif;
     font-size: 0.875rem;
     background: transparent;
@@ -52,7 +52,7 @@ export const Select = styled(SelectMaterial)`
     display: flex;
     align-items: center;
     padding: 0 1.5rem;
-    height: 52px;
+    height: 46px;
     font-size: 0.875rem;
     border-radius: 30px;
     &:focus {
