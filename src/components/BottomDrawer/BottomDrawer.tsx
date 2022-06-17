@@ -386,6 +386,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 >
                   {buttons?.length === 0 && isPreviewMode && (
                     <Button
+                      className='expand-main-module-btn'
                       key='call-to-action'
                       brandTheme={brandTheme}
                       variant='dark'
@@ -397,6 +398,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     return (
                       button.isHighlight && (
                         <Button
+                          className='expand-main-module-btn'
                           ref={leadModuleButtonRef}
                           key={button.title}
                           brandTheme={brandTheme}
@@ -419,6 +421,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                     );
                   })}
                   <Button
+                    className='expand-options-btn'
                     variant='light'
                     brandTheme={brandTheme}
                     onClick={() => {
@@ -449,6 +452,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <Wrapper width='100%' direction='column' gap='1rem'>
                     {buttons?.map((button) => (
                       <Button
+                        className={
+                          button.isHighlight
+                            ? 'expand-main-module-btn'
+                            : 'expand-submodule-btn'
+                        }
                         key={button.title}
                         brandTheme={brandTheme}
                         variant={button.isHighlight ? 'dark' : 'light'}

@@ -77,6 +77,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       alignItems='center'
     >
       <Button
+        className='register-btn google'
         variant='light'
         margin='0.5rem 0'
         onClick={() => handleSocialAuth(ProviderName.Google)}
@@ -86,6 +87,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         {isDrawer ? `${buttonPrefix} with Google` : t('continueGoogleButton')}
       </Button>
       <Button
+        className='register-btn facebook'
         variant='light'
         onClick={() => handleSocialAuth(ProviderName.Facebook)}
         style={{ border: '1px solid #636369', color: '#000000' }}

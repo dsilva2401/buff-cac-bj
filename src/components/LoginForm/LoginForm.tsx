@@ -245,6 +245,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
               <LoadingIndicator />
             ) : (
               <Button
+                className={
+                  !!emailRegistration && !!emailValidated
+                    ? 'register-btn email'
+                    : ''
+                }
                 variant={emailRegistration ? 'dark' : 'light'}
                 transition='0.2s'
                 brandTheme={brandTheme}
