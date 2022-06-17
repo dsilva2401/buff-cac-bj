@@ -5,6 +5,7 @@ import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.s
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
 import { useParams } from 'react-router';
@@ -21,7 +22,6 @@ import AuthDrawer from 'components/AuthDrawer';
 import HtmlWrapper from 'components/HtmlWrapper';
 import BottomDrawer from 'components/BottomDrawer';
 import RegistratonDrawer from 'components/RegistratonDrawer';
-import externalLink from 'assets/icons/svg/external-link.svg';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
@@ -37,7 +37,6 @@ import {
 import ProductHeroImage from './ProductHeroImage';
 import LoadingIndicator from 'components/LoadingIndicator';
 import FormDrawer from 'components/FormDrawer';
-import { useHistory, useLocation } from 'react-router-dom';
 import CustomDrawer from 'components/CustomDrawer';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
@@ -576,16 +575,14 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                             window.open(mulberry?.policyTermsUrl, '_blank')
                           }
                         >
-                          <Image
-                            width='0.875rem'
-                            src={externalLink}
-                            margin='-0.05rem 0.25rem 0 0'
-                            alt='external-link'
+                          <ExternalLink
+                            fill={brandTheme || theme.primary}
+                            style={{ margin: '-0.05rem 0.25rem 0 0' }}
                           />
                           <Text
                             fontSize='0.75rem'
                             fontWeight='500'
-                            color={theme.primary}
+                            color={brandTheme || theme.primary}
                           >
                             <p>See full terms</p>
                           </Text>

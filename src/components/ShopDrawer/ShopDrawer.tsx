@@ -201,6 +201,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
         direction='column'
         justifyContent='flex-start'
         padding='0 0 1rem 0'
+        position='relative'
         alignItems='center'
         overflow='auto'
       >
@@ -344,12 +345,11 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               <Text
                 color='#414149'
                 fontSize='0.75rem'
-                ref={contentRef}
                 style={{ whiteSpace: 'pre-line', maxWidth: '100%' }}
               >
-                <p>{productDescription}</p>
+                <p ref={contentRef}>{productDescription}</p>
               </Text>
-              {height > 54 && (
+              {height > 50 && (
                 <Text
                   fontSize='0.75rem'
                   color={brandTheme || theme.primary}

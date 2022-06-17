@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ReactComponent as Warning } from 'assets/icons/svg/warning.svg';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as Checkmark } from 'assets/icons/svg/checkmark.svg';
 import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
@@ -59,11 +60,15 @@ const WarrantyInfo = ({
         margin='0.75rem 0'
         padding='0.75rem'
       >
-        <Checkmark
-          width='15px'
-          height='15px'
-          fill={expired ? '#FD6157' : brandTheme || theme.primary}
-        />
+        {expired ? (
+          <Warning width='15px' height='15px' fill='#FD6157' />
+        ) : (
+          <Checkmark
+            width='15px'
+            height='15px'
+            fill={brandTheme || theme.primary}
+          />
+        )}
         <Text
           fontWeight='600'
           textAlign='center'
@@ -180,7 +185,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
         />
         {warrantyData?.mulberry && (
-          <Wrapper width='100%' direction='column'>
+          <Wrapper width='100%' direction='column' padding='0 0 1rem 0'>
             <WarrantyInfo
               title={
                 validateDate(
@@ -210,6 +215,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                   )
                 )
               )}
+              brandTheme={brandTheme}
             />
             <Wrapper
               width='100%'
@@ -226,6 +232,8 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                 fontSize='1rem'
                 fontWeight='600'
                 color='#202029'
+                textAlign='center'
+                wrapperWidth='max-content'
                 textDecoration='underline'
               >
                 <span>{t('viewDetails')}</span>
@@ -272,9 +280,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
                   >
                     <ExternalLink
                       fill={brandTheme || theme.primary}
-                      style={{
-                        margin: '-0.05rem 0.25rem 0 0',
-                      }}
+                      style={{ margin: '-0.05rem 0.25rem 0 0' }}
                     />
                     <Text
                       fontSize='0.75rem'
