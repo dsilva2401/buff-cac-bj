@@ -59,7 +59,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   );
 
   const [isValidCombo, setIsValidCombo] = useState<boolean | null>(true);
-  const [selectedQuantity, setSelectedQuantity] = useState(0);
+  const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [expandDescription, toggleExpandDescription] = useState<boolean>(false);
   const [filteredOptions, setFilteredOptions] = useState<any>([]);
   const [contentRef, { height }] = useElementSize();
@@ -91,7 +91,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
       setChosenOption(variant);
       // setSelectedQuantity(variant.inventoryQuantity > 0 ? 1 : 0);
       setSelectedQuantity(1);
-    } else {
+    } else if (allOptions) {
       if (isProductLevel) {
         setIsValidCombo(true);
       } else {
@@ -341,12 +341,14 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               {height > 50 && (
                 <Text
                   fontSize='0.75rem'
+                  padding='0 0 0 0.5rem'
                   color={brandTheme || theme.primary}
                   style={{
                     display: 'block',
                     background: '#FFFFFF',
                     textDecoration: 'underline',
                     boxShadow: '-10px 1px 8px 0px rgba(256,256,256,1)',
+                    lineHeight: '0.8rem',
                     position: 'absolute',
                     cursor: 'pointer',
                     bottom: 0,
@@ -451,10 +453,10 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: 'bold',
-                      width: '24px',
+                      width: '100%',
+                      margin: 'auto',
                       zIndex: 99,
-                      left: '0',
-                      top: '5px',
+                      top: '3.5px',
                       fontSize: '0.7rem',
                       color:
                         !isValidCombo || selectedQuantity < 1
