@@ -84,17 +84,6 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   }, [chosenOption, selectedQuantity, data.isDiscountAvailable]);
 
   useEffect(() => {
-    if (defaultVariantDetails.options) {
-      const optionObj: any = {};
-      Object.keys(defaultVariantDetails.options).forEach((key) => {
-        optionObj[key] = defaultVariantDetails.options![key];
-      });
-      updateOption({ ...optionObj });
-    }
-    setChosenOption(defaultVariantDetails);
-  }, [defaultVariantDetails]);
-
-  useEffect(() => {
     const objHash = hash(option);
     const variant = variantDetails?.find((item) => item.objectHash === objHash);
     if (variant) {

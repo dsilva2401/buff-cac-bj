@@ -499,8 +499,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                 <Animated
                   animationIn='slideInRight'
                   animationOut='slideOutLeft'
-                  animationInDuration={retractDrawer ? 0 : 300}
-                  animationOutDuration={retractDrawer ? 0 : 300}
+                  animationInDuration={retractDrawer ? 0 : 200}
+                  animationOutDuration={retractDrawer ? 0 : 200}
                   animationInDelay={retractDrawer ? 200 : 0}
                   isVisible={true}
                 >

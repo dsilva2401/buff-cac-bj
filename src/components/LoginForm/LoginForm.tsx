@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
 import { RoutesHashMap } from 'routes';
-import { Animated } from 'react-animated-css';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { showToast } from 'components/Toast/Toast';
@@ -86,6 +85,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const handleUsernameChanged = (value: string) => {
     setUsername(value.trim());
     validateEmail(value.trim());
+    setEmailSent(false);
   };
 
   const onSuccess = useCallback(
@@ -100,12 +100,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
               togglePersonalDetailsForm(true);
             } else {
               onLogin(true);
+              setLoading(false);
             }
           })
           .catch((error) => {
             showToast({ message: getErrorMessage(error.code), type: 'error' });
-          })
-          .finally(() => setLoading(false));
+          });
       }
     },
     [handleMagicLink, auth, isDrawer, onLogin, getErrorMessage]
@@ -148,7 +148,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           type: 'error',
         });
       } finally {
-        setLoading(false);
         setEmailSent(true);
       }
     }
@@ -162,165 +161,152 @@ const LoginForm: React.FC<LoginFormProps> = ({
     );
   }
 
+  const getRegisterButtonText = () => {
+    if (emailRegistration) {
+      if (emailSent) return t('checkYourEmail');
+      if (isDrawer) {
+        if (emailValidated)
+          return `${getRegisterText(registrationType)} ${t('withEmail')}`;
+        else return t('enterEmailAbove');
+      } else {
+        return t(emailValidated ? 'continueWithEmail' : 'enterEmailAbove');
+      }
+    } else {
+      if (isDrawer)
+        return `${getRegisterText(registrationType)} ${t('withEmail')}`;
+      else return t('continueWithEmail');
+    }
+  };
+
   return (
     <Wrapper
       width='100%'
       direction='column'
       justifyContent='flex-start'
       alignItems='center'
+      overflow='hidden'
       padding={
         location.pathname === RoutesHashMap.Login.path ||
         location.pathname === ''
-          ? '1.5rem 0.75rem'
-          : '0'
+          ? '1.5rem 1.25rem'
+          : '0 0.5rem'
       }
     >
-      <Animated
-        animationIn='slideInRight'
-        animationOut='slideOutLeft'
-        animationInDuration={
-          location.pathname === RoutesHashMap.Login.path || retractDrawer
-            ? 0
-            : 300
-        }
-        animationOutDuration={
-          location.pathname === RoutesHashMap.Login.path || retractDrawer
-            ? 0
-            : 300
-        }
-        animationInDelay={
-          location.pathname !== RoutesHashMap.Login.path && retractDrawer
-            ? 200
-            : 0
-        }
-        animateOnMount
-        isVisible={true}
-        style={{ width: '100%' }}
+      <Wrapper
+        direction='column'
+        width='100%'
+        justifyContent='flex-start'
+        alignItems='flex-start'
+        transition='0.2s'
+        overflow='hidden'
+        padding={emailRegistration ? '0.25rem 0 0 0' : '0'}
+        margin='0 0 0.25rem 0'
+        height={emailRegistration ? '58px' : '0px'}
       >
         <Wrapper
-          direction='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          padding='0 0.5rem'
-          overflow='hidden'
+          width='100%'
+          ref={inputWrapperRef}
+          alignItems='stretch'
+          position='relative'
         >
-          <Wrapper
-            direction='column'
-            width='100%'
-            justifyContent='flex-start'
-            alignItems='flex-start'
-            transition='0.2s'
-            overflow='hidden'
-            padding='0.25rem 0 0 0'
-            margin='0 0 0.25rem 0'
-            height={emailRegistration ? '58px' : '0px'}
-          >
-            <Wrapper
-              width='100%'
-              ref={inputWrapperRef}
-              alignItems='stretch'
-              position='relative'
-            >
-              <EditInput
-                width={width}
-                value={username}
-                placeholder={
-                  username === ''
-                    ? t('emailInputPlaceholder')
-                    : t('emailInputFilledPlaceholder')
-                }
-                type='email'
-                onChange={(value) => handleUsernameChanged(value)}
-              />
-            </Wrapper>
-          </Wrapper>
-          {showRecaptcha && emailRegistration ? (
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_RECAPTCHA_KEY_v2 as string}
-              onChange={onRecaptchaSuccess}
-            />
-          ) : null}
-          <Wrapper width='100%' justifyContent='center' alignItems='center'>
-            {loading || magicLinkLoading ? (
-              <LoadingIndicator />
-            ) : (
-              <Button
-                className={
-                  !!emailRegistration && !!emailValidated
-                    ? 'register-btn email'
-                    : ''
-                }
-                variant={emailRegistration ? 'dark' : 'light'}
-                transition='0.2s'
-                brandTheme={brandTheme}
-                disabled={emailRegistration && !emailValidated}
-                margin={emailValidated ? '1px 0' : '0'}
-                style={
-                  !emailRegistration
-                    ? { border: '1px solid #636369', color: '#000000' }
-                    : {}
-                }
-                onClick={() =>
-                  emailRegistration
-                    ? handleLogin()
-                    : toggleEmailRegistration(true)
-                }
-              >
-                {emailRegistration ? (
-                  <EmailLogoAlternate fill={emailValidated ? brandTheme : ''} />
-                ) : (
-                  <EmailLogo />
-                )}
-                {emailSent && emailRegistration
-                  ? t('checkYourEmail')
-                  : emailRegistration
-                  ? t(emailValidated ? 'activateWithEmail' : 'enterEmailAbove')
-                  : isDrawer
-                  ? `${getRegisterText(registrationType)} ${t('withEmail')}`
-                  : t('continueWithEmail')}
-              </Button>
-            )}
-          </Wrapper>
-          {emailRegistration ? (
-            <button
-              type='button'
-              onClick={() => toggleEmailRegistration(false)}
-              style={{
-                height: '52px',
-                width: '100%',
-                textAlign: 'center',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-                letterSpacing: '0.3px',
-                margin: '0.5rem 0 0 0',
-                fontWeight: 'bold',
-                transition: '02s',
-                borderRadius: '5rem',
-                background: 'transparent',
-              }}
-            >
-              {t('useDifferentOption')}
-            </button>
-          ) : (
-            <SocialLogin
-              isDrawer={isDrawer}
-              setLoading={setLoading}
-              onSuccess={onLogin}
-              buttonPrefix={getRegisterText(registrationType)}
-            />
-          )}
-          <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
-            <Text fontSize='0.7rem' textDecoration='unset'>
-              <span>{magicLinkError}</span>
-            </Text>
-          </Wrapper>
-          <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
-            <Text fontSize='0.7rem' textDecoration='unset'>
-              <span>{success}</span>
-            </Text>
-          </Wrapper>
+          <EditInput
+            width={width}
+            value={username}
+            placeholder={
+              username === ''
+                ? t('emailInputPlaceholder')
+                : t('emailInputFilledPlaceholder')
+            }
+            type='email'
+            onChange={(value) => handleUsernameChanged(value)}
+          />
         </Wrapper>
-      </Animated>
+      </Wrapper>
+      {showRecaptcha && emailRegistration ? (
+        <ReCAPTCHA
+          sitekey={process.env.REACT_APP_RECAPTCHA_KEY_v2 as string}
+          onChange={onRecaptchaSuccess}
+        />
+      ) : null}
+      <Wrapper
+        width='100%'
+        height='56px'
+        justifyContent='center'
+        alignItems='center'
+        overflow='visible'
+      >
+        {loading || magicLinkLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <Button
+            className={
+              !!emailRegistration && !!emailValidated
+                ? 'register-btn email'
+                : ''
+            }
+            variant={emailRegistration ? 'dark' : 'light'}
+            transition='0.2s'
+            brandTheme={brandTheme}
+            disabled={
+              (emailRegistration && emailSent) ||
+              (emailRegistration && !emailValidated)
+            }
+            style={
+              !emailRegistration
+                ? { border: '1px solid #636369', color: '#000000' }
+                : {}
+            }
+            onClick={() =>
+              emailRegistration ? handleLogin() : toggleEmailRegistration(true)
+            }
+          >
+            {emailRegistration ? (
+              <EmailLogoAlternate fill={emailValidated ? brandTheme : ''} />
+            ) : (
+              <EmailLogo />
+            )}
+            {getRegisterButtonText()}
+          </Button>
+        )}
+      </Wrapper>
+      {emailRegistration ? (
+        <button
+          type='button'
+          onClick={() => toggleEmailRegistration(false)}
+          style={{
+            height: '52px',
+            width: '100%',
+            textAlign: 'center',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            letterSpacing: '0.3px',
+            margin: '0.5rem 0 0 0',
+            fontWeight: 'bold',
+            transition: '02s',
+            borderRadius: '5rem',
+            background: 'transparent',
+          }}
+        >
+          {t('useDifferentOption')}
+        </button>
+      ) : (
+        <SocialLogin
+          isDrawer={isDrawer}
+          setLoading={setLoading}
+          onSuccess={onLogin}
+          buttonPrefix={getRegisterText(registrationType)}
+        />
+      )}
+      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+        <Text fontSize='0.7rem' textDecoration='unset'>
+          <span>{magicLinkError}</span>
+        </Text>
+      </Wrapper>
+      <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
+        <Text fontSize='0.7rem' textDecoration='unset'>
+          <span>{success}</span>
+        </Text>
+      </Wrapper>
     </Wrapper>
   );
 };

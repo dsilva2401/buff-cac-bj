@@ -185,7 +185,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
           dangerouslySetInnerHTML={{ __html: warrantyData?.details }}
         />
         {warrantyData?.mulberry && (
-          <Wrapper width='100%' direction='column' padding='0 0 1rem 0'>
+          <Wrapper width='100%' direction='column'>
             <WarrantyInfo
               title={
                 validateDate(
@@ -221,6 +221,7 @@ const WarrantyDrawer: React.FC<WarrantyDrawerProps> = ({
               width='100%'
               gap='0.5rem'
               cursor='pointer'
+              padding='1rem 0 0 0'
               alignItems='center'
               justifyContent='center'
               onClick={() => {

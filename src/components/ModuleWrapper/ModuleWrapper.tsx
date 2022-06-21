@@ -60,8 +60,8 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
         isVisible={true}
         animationIn='slideInRight'
         animationOut='slideOutLeft'
-        animationInDuration={retractDrawer ? 0 : 300}
-        animationOutDuration={retractDrawer ? 0 : 300}
+        animationInDuration={retractDrawer ? 0 : 200}
+        animationOutDuration={retractDrawer ? 0 : 200}
         style={{
           padding: `${height}px 12px 12px 12px`,
           width: '100%',

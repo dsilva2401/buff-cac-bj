@@ -97,7 +97,7 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
   return (
     <TransitionGroup>
       <CSSTransition
-        timeout={300}
+        timeout={200}
         key={getLocationKey()}
         classNames={getCurrentTransition()}
       >

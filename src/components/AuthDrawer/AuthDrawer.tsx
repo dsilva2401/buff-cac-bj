@@ -41,46 +41,46 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   }, [onAuthOpen]);
 
   return (
-    <Wrapper
-      width='100%'
-      direction='column'
-      justifyContent='flex-start'
-      alignItems='center'
-      height='100%'
-      padding={animated ? '1.5rem 0 2rem 0' : '0 0 2rem 0'}
-      margin={animated ? '1rem 0 0 0' : '3.75rem 0 0 0'}
-      style={{ borderTop: animated ? '2px solid #E7EAEB' : '0' }}
+    <Animated
+      animationIn='slideInRight'
+      animationOut='slideOutLeft'
+      animationInDuration={retractDrawer ? 0 : 200}
+      animationOutDuration={retractDrawer ? 0 : 200}
+      animateOnMount
+      isVisible={true}
+      style={{ width: '100%' }}
     >
-      {html && (
-        <HtmlWrapper
-          width='100%'
-          padding='0 0.75rem'
-          direction='column'
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      )}
-      {!animated && (
-        <Wrapper
-          width='calc(100% - 24px)'
-          height='2px'
-          background='#E7EAEB'
-          margin='1rem 0'
-        />
-      )}
-      <GoogleReCaptchaProvider
-        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+      <Wrapper
+        width='100%'
+        direction='column'
+        justifyContent='flex-start'
+        alignItems='center'
+        height='100%'
+        padding={animated ? '1.5rem 0 2rem 0' : '0 0 2rem 0'}
+        margin={animated ? '1rem 0 0 0' : '3.75rem 0 0 0'}
+        style={{ borderTop: animated ? '2px solid #E7EAEB' : '0' }}
       >
-        <LoginForm isDrawer onLogin={onAuthComplete} />
-      </GoogleReCaptchaProvider>
-      <Animated
-        animationIn='slideInRight'
-        animationOut='slideOutLeft'
-        animationInDuration={retractDrawer ? 0 : 300}
-        animationOutDuration={retractDrawer ? 0 : 300}
-        animateOnMount
-        isVisible={true}
-        style={{ width: '100%' }}
-      >
+        {html && (
+          <HtmlWrapper
+            width='100%'
+            padding='0 0.75rem'
+            direction='column'
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        )}
+        {!animated && (
+          <Wrapper
+            width='calc(100% - 24px)'
+            height='2px'
+            background='#E7EAEB'
+            margin='1rem 0'
+          />
+        )}
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+        >
+          <LoginForm isDrawer onLogin={onAuthComplete} />
+        </GoogleReCaptchaProvider>
         <Wrapper padding='0.5rem 1rem'>
           <Text fontSize='0.625rem' textAlign='left' color='#414149'>
             <p>
@@ -112,8 +112,8 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
             </p>
           </Text>
         </Wrapper>
-      </Animated>
-    </Wrapper>
+      </Wrapper>
+    </Animated>
   );
 };
 
