@@ -1,0 +1,29 @@
+name: Build and deploy
+on:
+  push:
+    branches:
+      - development
+      - feature/ci-cd 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and deploy web app
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install env dependencies
+        env:
+          CI: false
+          REACT_APP_API_URL: ''
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_CI_AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_CI_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+          GITHUB_DEPLOYMENT_TOKEN: ${{ secrets.GH_DEPLOYMENT_TOKEN }}
+        run: |
+          npm install --global yarn -y
+          pip install awscli
+          yarn
+          yarn build-staging-client
+          zip -r build.zip build/
+          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/`node -e "console.log(Date.now())"`
+          curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token `node -e 'console.log(process.env.GITHUB_DEPLOYMENT_TOKEN)'`" https://api.github.com/repos/brij-it/consumer-app-microservice/actions/workflows/build_staging.yml/dispatches -d '{"ref":"development"}'

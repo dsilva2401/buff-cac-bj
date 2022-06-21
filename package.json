@@ -53,6 +53,7 @@
   "scripts": {
     "build-staging-client": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=true REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts build",
     "start-staging-client": "cross-env port=3001 REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
+    "build-staging-client": "cross-env port=3001 REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts build",
     "start-rc-client": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
     "start-staging-client-windows": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
     "start-rc-client-windows": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
