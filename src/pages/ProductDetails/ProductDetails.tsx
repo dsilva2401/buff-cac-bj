@@ -628,6 +628,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                 animated={!!mulberry}
                 showMulberryTerms={!!mulberry}
                 onAuthComplete={onAuthComplete}
+                hideSignupOptions={details?.registration?.hideSignupOptions}
                 onAuthOpen={() => {
                   // If the authdrawer was open that implies
                   // the user was not signed in before

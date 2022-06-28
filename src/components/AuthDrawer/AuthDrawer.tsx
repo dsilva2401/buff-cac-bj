@@ -17,6 +17,7 @@ interface AuthDrawerProps {
   brandName?: string;
   showMulberryTerms?: boolean;
   onAuthOpen?: () => void;
+  hideSignupOptions?: boolean;
 }
 
 const AuthDrawer: React.FC<AuthDrawerProps> = ({
@@ -27,6 +28,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
   productName,
   showMulberryTerms,
   onAuthOpen,
+  hideSignupOptions,
 }) => {
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
@@ -79,7 +81,11 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         <GoogleReCaptchaProvider
           reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
         >
-          <LoginForm isDrawer onLogin={onAuthComplete} />
+          <LoginForm
+            isDrawer
+            onLogin={onAuthComplete}
+            hideSignupOptions={hideSignupOptions}
+          />
         </GoogleReCaptchaProvider>
         <Wrapper padding='0.5rem 1rem'>
           <Text fontSize='0.625rem' textAlign='left' color='#414149'>

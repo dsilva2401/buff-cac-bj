@@ -6,14 +6,20 @@ type ProductCardType = {
 };
 
 export const ProductCard = styled.button<ProductCardType>`
-  width: calc(50vw - 28px);
-  height: calc(50vw - 28px);
   position: relative;
   cursor: pointer;
   justify-self: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 100%;
   img {
-    width: 100%;
+    position: absolute;
     height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
   }
   &::after {
     content: 'Registered';
@@ -27,9 +33,5 @@ export const ProductCard = styled.button<ProductCardType>`
     background-color: ${theme.primary};
     border: 1px solid #fff;
     border-radius: 0 20px 0 0;
-  }
-  @media (min-width: 1024px) {
-    max-width: 160px;
-    height: 160px;
   }
 `;

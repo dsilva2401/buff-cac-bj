@@ -178,10 +178,11 @@ export type ProductDetailsType = {
   };
 
   registration: {
+    confirmationHeader: string;
+    confirmationText: string;
+    hideSignupOptions: boolean;
     registrationText: string;
     registrationType: RegistrationType;
-    confirmationText: string;
-    confirmationHeader: string;
   };
 
   warrantyInformation: {

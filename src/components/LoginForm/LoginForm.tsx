@@ -27,14 +27,17 @@ interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
   onPersonalDetails?: () => void;
+  hideSignupOptions?: boolean;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({
   onLogin = () => {},
   isDrawer,
+  hideSignupOptions,
 }) => {
   const [emailRegistration, toggleEmailRegistration] = useState<boolean>(false);
   const [emailValidated, setEmailValidated] = useState<boolean>(false);
+  const [animateFields, toggleAnimateFields] = useState<boolean>(true);
   const [showRecaptcha, setShowRecaptcha] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isHuman, setHuman] = useState<boolean>(true);
@@ -66,6 +69,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   useEffect(() => {
     if (!emailValidated) setEmailSent(false);
   }, [emailValidated]);
+
+  useEffect(() => {
+    if (isDrawer && hideSignupOptions) {
+      toggleAnimateFields(false);
+      toggleEmailRegistration(true);
+    }
+  }, [hideSignupOptions, isDrawer]);
 
   const registrationType = productDetails?.registration?.registrationType;
 
@@ -197,8 +207,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
         width='100%'
         justifyContent='flex-start'
         alignItems='flex-start'
-        transition='0.2s'
         overflow='hidden'
+        transition={animateFields ? '0.2s' : '0'}
         padding={emailRegistration ? '0.25rem 0 0 0' : '0'}
         margin='0 0 0.25rem 0'
         height={emailRegistration ? '58px' : '0px'}
@@ -272,7 +282,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
       {emailRegistration ? (
         <button
           type='button'
-          onClick={() => toggleEmailRegistration(false)}
+          onClick={() => {
+            toggleEmailRegistration(false);
+            !animateFields && toggleAnimateFields(true);
+          }}
           style={{
             height: '52px',
             width: '100%',
@@ -282,7 +295,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             letterSpacing: '0.3px',
             margin: '0.5rem 0 0 0',
             fontWeight: 'bold',
-            transition: '02s',
+            transition: '0.2s',
             borderRadius: '5rem',
             background: 'transparent',
           }}

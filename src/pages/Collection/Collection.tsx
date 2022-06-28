@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ProductDetailsType } from 'types/ProductDetailsType';
-import { getRedirectResult, getAuth } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { GlobalContext } from 'context';
@@ -48,23 +47,26 @@ const Collection: React.FC = () => {
   }, [getCollection, token]);
 
   useEffect(() => {
-    const allBrandsArr = new Set(
-      collectionDetails.map((item) => item.brand.name)
-    );
-    const outputArr: BrandCollectionType[] = [];
-    allBrandsArr.forEach((brandName) => {
-      outputArr.push({
-        brand: brandName,
-        items: collectionDetails
-          .filter((item) => item.brand.name === brandName)
-          .sort(
-            (a, b) =>
-              new Date(b?.product?.registeredDate).valueOf() -
-              new Date(a?.product?.registeredDate).valueOf()
-          ),
+    if (collectionDetails) {
+      const allBrandsArr = new Set(
+        collectionDetails?.map((item) => item?.brand?.name)
+      );
+      const outputArr: BrandCollectionType[] = [];
+      allBrandsArr.forEach((brandName) => {
+        brandName &&
+          outputArr.push({
+            brand: brandName,
+            items: collectionDetails
+              .filter((item) => item?.brand?.name === brandName)
+              .sort(
+                (a, b) =>
+                  new Date(b?.product?.registeredDate).valueOf() -
+                  new Date(a?.product?.registeredDate).valueOf()
+              ),
+          });
       });
-    });
-    setSortedCollection(outputArr);
+      setSortedCollection(outputArr);
+    }
   }, [collectionDetails]);
 
   const setMenuOpen = useCallback(() => setIsMenuOpen(true), [setIsMenuOpen]);
@@ -122,6 +124,7 @@ const Collection: React.FC = () => {
         direction='column'
         justifyContent='flex-start'
         position='relative'
+        overflow='auto'
       >
         <PageHeader
           title={t('collectionPageTitle')}
