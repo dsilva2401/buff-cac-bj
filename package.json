@@ -58,7 +58,9 @@
     "start-staging-client-windows": "cross-env REACT_APP_NODE_ENV=staging REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=staging.brij.it/c/ react-scripts start",
     "start-rc-client-windows": "cross-env REACT_APP_NODE_ENV=rc REACT_APP_STAND_ALONE_MODE=false REACT_APP_SCAN_VERIFICATION=rc.brij.it/c/ react-scripts start",
     "format": "prettier --write \"src/**/*.ts\" && prettier --write \"src/**/*.tsx\"",
-    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\""
+    "lint": "prettier --check \"src/**/*.ts\" && prettier --check \"src/**/*.tsx\"",
+    "test:functional": "sh -c 'cd test && npm run test:functional'",
+    "test": "npm run test:functional"
   },
   "eslintConfig": {
     "extends": [
