@@ -29,7 +29,7 @@ export const Drawer = styled.div<DrawerProps>`
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
   display: ${(props) => (props.isChildOpen ? 'none' : 'flex')};
-  padding: ${(props) => (props.isDrawerOpen ? '1.25rem 2rem' : '0 2rem')};
+  padding: ${(props) => (props.isDrawerOpen ? '1.25rem 1.5rem' : '0 1.5rem')};
   height: ${(props) => (props.isDrawerOpen ? 'auto' : '5.25rem')};
   justify-content: space-between;
   align-items: center;

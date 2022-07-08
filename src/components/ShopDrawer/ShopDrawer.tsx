@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ShoppingBag } from 'assets/icons/svg/shopping-bag.svg';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import { useGlobal } from 'context/global/GlobalContext';
+import { isDesktop } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { theme } from 'styles/theme';
 import {
@@ -183,28 +184,22 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
 
   return (
-    <ModuleWrapper>
-      <Wrapper
-        width='100%'
-        height='100%'
-        direction='column'
-        justifyContent='flex-start'
-        padding='0 0 1rem 0'
-        position='relative'
-        alignItems='center'
-        overflow='auto'
-      >
-        {data.isDiscountAvailable && (
+    <ModuleWrapper
+      minHeight='4rem'
+      drawerTitle={
+        data.isDiscountAvailable && (
           <Wrapper
             position='absolute'
-            top='-1px'
-            width='auto'
-            height='auto'
+            top='0'
+            left='0'
+            right='0'
+            margin='0 auto'
+            width='max-content'
             borderRadius='0 0 15px 15px'
-            padding='1rem 1.5rem 0.4rem 1.5rem'
+            padding='1rem 1rem 0.4rem 1rem'
             background={brandTheme || theme.primary}
           >
-            <Text fontSize='0.8rem' color='#FFFFFF'>
+            <Text fontSize='0.8rem' color='#FFFFFF' textAlign='center'>
               <p>
                 {t('savingBanner.pre')} {data.discountPercentage!}
                 {t(
@@ -215,13 +210,24 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
               </p>
             </Text>
           </Wrapper>
-        )}
+        )
+      }
+    >
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='flex-start'
+        padding='0 0 1rem 0'
+        position='relative'
+        alignItems='center'
+        overflow='auto'
+      >
         <Wrapper
           width='100%'
           justifyContent='space-between'
           alignItems='center'
-          minHeight='200px'
-          margin='3rem 0 0 0'
+          margin='1rem 0'
         >
           <ProgressiveImage src={chosenOption.image} placeholder={placeholder}>
             {(src: string, loading: boolean) => (
@@ -348,10 +354,10 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                     background: '#FFFFFF',
                     textDecoration: 'underline',
                     boxShadow: '-10px 1px 8px 0px rgba(256,256,256,1)',
+                    bottom: isDesktop ? '2px' : '0',
                     lineHeight: '0.8rem',
                     position: 'absolute',
                     cursor: 'pointer',
-                    bottom: 0,
                     right: 0,
                   }}
                   onClick={() => toggleExpandDescription(!expandDescription)}

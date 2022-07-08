@@ -41,6 +41,7 @@ export const resources = {
       },
       productDetails: {
         viewWarranty: 'View Warranty',
+        fullTermsLink: 'See full terms',
         ageGate: {
           title: 'Confirm your age',
           subtitle: 'Are you 21 or older?',

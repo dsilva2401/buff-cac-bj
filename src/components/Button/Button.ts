@@ -13,7 +13,6 @@ type ButtonProps = {
   transition?: string;
   brandTheme?: string;
   alignItems?: string;
-  paddingLeft?: string;
 };
 
 const hex2rgba = (hex: any, alpha = 1) => {
@@ -30,8 +29,7 @@ const Button = styled.button<ButtonProps>`
   align-items: ${(props) => (props.alignItems ? props.alignItems : 'center')};
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.9rem 0;
-  padding-left: ${(props) => (props.paddingLeft ? props.paddingLeft : '')};
+  padding: 0.9rem 0.5rem;
   cursor: pointer;
   margin: ${(props) => (props.margin ? props.margin : '0')};
   transition: ${(props) =>
@@ -57,6 +55,10 @@ const Button = styled.button<ButtonProps>`
       ? theme.button.warning
       : props.brandTheme || theme.button.primary};
 
+  @media only screen and (max-width: 340px) {
+    font-size: 0.8rem;
+  }
+
   a {
     color: ${(props) =>
       props.variant === 'dark'
@@ -67,30 +69,12 @@ const Button = styled.button<ButtonProps>`
     text-decoration: none;
   }
 
-  @media only screen and (max-width: 340px) {
-    font-size: 0.8rem;
-  }
-
-  @media only screen and (max-width: 290px) {
-    font-size: 0.7rem;
-  }
-
-  @media only screen and (min-width: 1024px) {
-    font-size: 0.8rem;
-  }
-
   svg {
     position: ${(props) => (props.inlineIcon ? 'relative' : 'absolute')};
     ${(props) =>
       props.iconRight ? `right: 1rem;` : props.inlineIcon ? '' : `left: 1rem;`};
     border-radius: 50%;
-
     @media only screen and (max-width: 340px) {
-      width: 16px;
-      height: 16px;
-    }
-
-    @media only screen and (min-width: 1024px) {
       width: 18px;
       height: 18px;
     }

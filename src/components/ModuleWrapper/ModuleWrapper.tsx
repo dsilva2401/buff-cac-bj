@@ -10,6 +10,7 @@ type ModuleWrapperProps = {
   drawerTitle?: string | React.ReactNode;
   tableShown?: boolean;
   tableHeight?: number;
+  minHeight?: string;
 };
 
 const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
@@ -17,6 +18,7 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
   children,
   tableShown,
   tableHeight,
+  minHeight,
 }) => {
   const [headerRef, { height }] = useElementSize();
   const { retractDrawer } = useGlobal();
@@ -35,10 +37,11 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
         <Wrapper
           ref={headerRef}
           width='100%'
+          height='max-content'
           left='0'
           top='-1px'
           zIndex={1}
-          minHeight='4rem'
+          minHeight={minHeight ? minHeight : '4rem'}
           position='fixed'
           borderRadius='26px'
           background='#FFFFFF'

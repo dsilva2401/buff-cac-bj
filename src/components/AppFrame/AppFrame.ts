@@ -8,6 +8,7 @@ const AppFrame = styled.div`
   background-color: #fff;
 
   @media (min-width: 1024px) {
+    min-width: 350px;
     max-width: ${window.innerHeight * (9 / 16)}px;
     max-height: ${window.innerHeight}px;
     border-radius: 15px;

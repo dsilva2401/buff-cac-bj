@@ -584,7 +584,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                             fontWeight='500'
                             color={brandTheme || theme.primary}
                           >
-                            <p>See full terms</p>
+                            <p>{t('fullTermsLink')}</p>
                           </Text>
                         </Wrapper>
                       </Wrapper>
@@ -598,11 +598,10 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                 left='0'
                 top='0'
                 zIndex={1}
-                minHeight='4rem'
-                position='fixed'
-                borderRadius='26px'
+                position='sticky'
                 background='#FFFFFF'
-                padding='1.25rem 4rem 1.25rem 1.75rem'
+                borderRadius='0.5rem'
+                padding='1.25rem 3rem 1rem 0.5rem'
               >
                 <Text fontSize='1rem' fontWeight='600'>
                   <h1>{moduleTitle}</h1>
@@ -613,7 +612,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               width='100%'
               height='100%'
               direction='column'
-              padding='0.5rem 0 0 0'
               transition={animateTable ? '0.3s' : '0'}
               style={{
                 transform: !showCoverageTable
