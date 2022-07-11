@@ -118,6 +118,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
         alignItems='center'
       >
         <Input
+          className='complete-profile-firstname'
           type='text'
           value={firstName}
           placeholder={t('firstNameInputPlaceholder')}
@@ -125,6 +126,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
           margin='0 0 1rem'
         />
         <Input
+          className='complete-profile-lastname'
           type='text'
           value={lastName}
           placeholder={t('lastNameInputPlaceholder')}
@@ -138,6 +140,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
         >
           {() => (
             <Input
+              className='complete-profile-phone'
               type='tel'
               pattern='[+-]?\d+(?:[.,]\d+)?'
               placeholder={t('phoneNumberInputPlaceholder')}

@@ -160,6 +160,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       } finally {
         setEmailSent(true);
       }
+      let w: any = window;
+      w.dataLayer.push({ event: 'userRegistrationEvent' });
     }
   }, [isHuman, getToken, error, username, isPreviewMode]);
 
@@ -220,6 +222,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           position='relative'
         >
           <EditInput
+            className='email-register-input'
             width={width}
             value={username}
             placeholder={
@@ -249,11 +252,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <LoadingIndicator />
         ) : (
           <Button
-            className={
-              !!emailRegistration && !!emailValidated
-                ? 'register-btn email'
-                : ''
-            }
+            className={`${emailRegistration ? '' : 'pre'}register-btn email ${
+              emailValidated ? 'valid-email' : ''
+            }`}
             variant={emailRegistration ? 'dark' : 'light'}
             transition='0.2s'
             brandTheme={brandTheme}

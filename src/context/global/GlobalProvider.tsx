@@ -118,6 +118,12 @@ export const GlobalProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (productDetails) {
+      window.sessionStorage.setItem(
+        'brijProductDetails',
+        JSON.stringify(productDetails)
+      );
+    }
     let pathCheck: boolean = false;
     if (pathname.includes(`c/${slug}`)) pathCheck = true;
     setBrandTheme(

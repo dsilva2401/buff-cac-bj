@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InputWrapper, InputPlaceholder } from './styles';
 
 type EditInputProps = {
+  className?: string;
   placeholder: string;
   value: string | undefined;
   onChange: (value: string) => void;
@@ -11,6 +12,7 @@ type EditInputProps = {
 };
 
 const SearchInput: React.FC<EditInputProps> = ({
+  className = '',
   value,
   placeholder,
   onChange,
@@ -32,6 +34,7 @@ const SearchInput: React.FC<EditInputProps> = ({
     <InputWrapper isFocused={isFocused} width={`${width}px`}>
       <InputPlaceholder isFocused={isFocused}>{placeholder}</InputPlaceholder>
       <input
+        className={className}
         type={type}
         width='100%'
         value={value}

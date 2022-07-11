@@ -3,8 +3,7 @@ name: Functional test
 on:
   push:
     branches:
-      - feature/*
-      - main
+      - test
 
 jobs:
   installDependencies:

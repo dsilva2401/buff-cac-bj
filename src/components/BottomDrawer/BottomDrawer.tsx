@@ -361,6 +361,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
             </DrawerHeader>
             {mainDrawerOpen && !disableModalDismiss && (
               <DrawerClose
+                className='close-expanded-bottom-container-btn'
                 onClick={() => {
                   if (isChildOpen) {
                     closeChild(true);

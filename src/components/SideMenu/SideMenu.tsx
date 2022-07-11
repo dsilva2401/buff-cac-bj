@@ -130,13 +130,17 @@ const SideMenu: React.FC = () => {
       <Menu theme={brandTheme} isMenuOpen={isMenuOpen}>
         <div>
           <span>
-            <button onClick={() => setIsMenuOpen(false)}>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className='close-right-panel-btn'
+            >
               <Close />
             </button>
           </span>
           <nav>
             {signedIn ? (
               <Link
+                className='go-to-my-profile'
                 to={RoutesHashMap.Profile.path}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -146,6 +150,7 @@ const SideMenu: React.FC = () => {
             ) : null}
             {signedIn && location.pathname !== RoutesHashMap.Collection.path ? (
               <Link
+                className='go-to-my-collection'
                 to={RoutesHashMap.Collection.path}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -155,6 +160,7 @@ const SideMenu: React.FC = () => {
             ) : null}
             {showRemoveProductButton && (
               <p
+                className='remove-from-my-collection'
                 onClick={() =>
                   removeProduct({
                     tag: slug,
@@ -176,6 +182,7 @@ const SideMenu: React.FC = () => {
                   }
                   target='_blank'
                   rel='noopener noreferrer'
+                  className='go-to-website'
                   onClick={() => {
                     setIsMenuOpen(false);
                     logEvent({
@@ -190,12 +197,13 @@ const SideMenu: React.FC = () => {
                 </a>
               )}
             {signedIn ? (
-              <p onClick={handleLogoutButtonClicked}>
+              <p className='sign-out' onClick={handleLogoutButtonClicked}>
                 {t('signOut')}
                 {loading ? <LoadingIndicator /> : <Logout />}
               </p>
             ) : (
               <Link
+                className='sign-in'
                 to={isPreviewMode ? `/c/${slug}` : RoutesHashMap.Login.path}
                 onClick={() => setIsMenuOpen(false)}
               >

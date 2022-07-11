@@ -46,7 +46,12 @@ export default function IconButton({
   };
 
   return (
-    <Button brandTheme={brandTheme} variant={variant} onClick={onClick}>
+    <Button
+      className={`icon-button-${iconName}`}
+      brandTheme={brandTheme}
+      variant={variant}
+      onClick={onClick}
+    >
       {children ? children : renderIcon()}
     </Button>
   );
