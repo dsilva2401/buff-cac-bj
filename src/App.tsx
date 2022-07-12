@@ -66,7 +66,7 @@ export default function App() {
   }
 
   const browserRouter = (
-    <div id='portrait'>
+    <div id={isBrowser ? '' : 'portrait'}>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <LastLocationProvider>
           <SideMenu />
@@ -81,7 +81,7 @@ export default function App() {
       <GlobalStyle />
       {isBrowser ? <AppFrame>{browserRouter}</AppFrame> : browserRouter}
       <Text
-        id='landscape'
+        id={isBrowser ? 'hide' : 'landscape'}
         fontSize='18px'
         textAlign='center'
         wrapperWidth='max-content'

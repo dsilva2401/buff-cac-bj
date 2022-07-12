@@ -27,6 +27,10 @@ const AppContainer = styled.div<AppContainerProps>`
       display: flex;
     }
   }
+
+  #hide {
+    display: none;
+  }
 `;
 
 export default AppContainer;
