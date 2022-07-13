@@ -8,7 +8,8 @@ export type PossibleModulesType =
   | 'SHOPPING_MODULE'
   | 'REGISTRATION_MODULE'
   | 'REFERRAL_MODULE'
-  | 'FORMS_MODULE';
+  | 'FORMS_MODULE'
+  | 'VIDEO_MODULE';
 
 export interface Product {
   id: string;
@@ -56,6 +57,7 @@ export type ModuleInfoType = {
     | ShoppingModuleType
     | ReferralModuleType
     | FormDetailModel[]
+    | VideoModuleType
     | null;
 };
 
@@ -65,8 +67,12 @@ export type CustomModuleType = {
   // customModule collection
 
   // content field
-  // @arqam: the content will be html string. We need to render it as an html. It may have image, text, heading etc.
   content: string;
+};
+
+export type VideoModuleType = {
+  // path to the video asset
+  path: string;
 };
 
 export type LinkModuleType = {

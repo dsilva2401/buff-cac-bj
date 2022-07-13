@@ -17,7 +17,6 @@ import dateFormat from 'dateformat';
 import Text from 'components/Text';
 
 type WarrantyDrawerProps = {
-  closePage(): void;
   drawerTitle: string;
   warrantyId: string;
   warrantyData: WarrantyModuleType;

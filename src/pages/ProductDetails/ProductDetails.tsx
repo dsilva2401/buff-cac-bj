@@ -2,10 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
 import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
+import { FormProvider } from 'context/FormDrawerContext/FormDrawerProvider';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FormDetailModel } from 'types/FormTypes';
 import { useTranslation } from 'react-i18next';
 import { Animated } from 'react-animated-css';
 import { useParams } from 'react-router';
@@ -21,7 +23,6 @@ import PageHeader from 'components/PageHeader';
 import AuthDrawer from 'components/AuthDrawer';
 import HtmlWrapper from 'components/HtmlWrapper';
 import BottomDrawer from 'components/BottomDrawer';
-import RegistratonDrawer from 'components/RegistratonDrawer';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
@@ -32,17 +33,18 @@ import {
   ProductDetailsType,
   ReferralModuleType,
   ShoppingModuleType,
+  VideoModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
 import ProductHeroImage from './ProductHeroImage';
 import LoadingIndicator from 'components/LoadingIndicator';
+import RegistratonDrawer from 'components/RegistratonDrawer';
 import FormDrawer from 'components/FormDrawer';
 import CustomDrawer from 'components/CustomDrawer';
 import WarrantyDrawer from 'components/WarrantyDrawer';
 import ReferralDrawer from 'components/ReferralDrawer';
+import VideoDrawer from 'components/VideoDrawer';
 import ShopDrawer from 'components/ShopDrawer';
-import { FormDetailModel } from 'types/FormTypes';
-import { FormProvider } from 'context/FormDrawerContext/FormDrawerProvider';
 
 type UrlParam = {
   id: string;
@@ -650,7 +652,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           case 'WARRANTY_MODULE':
             return (
               <WarrantyDrawer
-                closePage={closeDrawerPage}
                 drawerTitle={getWarrantyDrawerTitle()}
                 warrantyData={module?.moduleInfo as WarrantyModuleType}
                 warrantyId={module?.id}
@@ -672,6 +673,14 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                 minimizeBranding={details.brand.minimizeBranding}
                 productDescription={details.product.productDescription}
                 brand={details?.brand}
+              />
+            );
+          case 'VIDEO_MODULE':
+            return (
+              <VideoDrawer
+                drawerData={module?.moduleInfo as VideoModuleType}
+                closeDrawer={closeDrawerPage}
+                isDrawerPageOpen={isDrawerPageOpen}
               />
             );
           case 'FORMS_MODULE':
