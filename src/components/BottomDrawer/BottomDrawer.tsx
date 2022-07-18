@@ -395,15 +395,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       Call to Action
                     </Button>
                   )}
-                  {buttons?.map((button) => {
+                  {buttons?.map((button, index) => {
                     return (
-                      button.isHighlight && (
+                      index < (buttons.length > 2 ? 1 : 2) && (
                         <Button
                           className='expand-main-module-btn'
                           ref={leadModuleButtonRef}
                           key={button.title}
                           brandTheme={brandTheme}
-                          variant='dark'
+                          variant={index === 0 ? 'dark' : 'light'}
                           inlineIcon
                           onClick={() => {
                             if (button.icon === null) {
@@ -421,17 +421,19 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       )
                     );
                   })}
-                  <Button
-                    className='expand-options-btn'
-                    variant='light'
-                    brandTheme={brandTheme}
-                    onClick={() => {
-                      setPosition({ ...position, y: topHeight });
-                      setRetractDrawer(false);
-                    }}
-                  >
-                    More
-                  </Button>
+                  {buttons && buttons.length > 2 && (
+                    <Button
+                      className='expand-options-btn'
+                      variant='light'
+                      brandTheme={brandTheme}
+                      onClick={() => {
+                        setPosition({ ...position, y: topHeight });
+                        setRetractDrawer(false);
+                      }}
+                    >
+                      More
+                    </Button>
+                  )}
                 </Wrapper>
               )}
               {mainDrawerOpen &&
