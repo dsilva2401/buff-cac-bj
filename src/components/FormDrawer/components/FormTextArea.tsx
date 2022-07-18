@@ -1,7 +1,5 @@
-import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel } from 'types/FormTypes';
-import { FormikProps, FormikValues, useFormik } from 'formik';
-import { FormMatchParams } from '../FormDrawer';
+import { FormikProps, useFormik } from 'formik';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 import { useEffect, useState } from 'react';
@@ -17,18 +15,13 @@ type Props = {
 const FormTextArea = (props: Props) => {
   const { formData, formRef, name } = props;
   const [firstBlur, setFirstBlur] = useState(false);
-  const { params } = useRouteMatch<FormMatchParams>();
-  const optionsArr = formData.options.map((value) => value.text);
-  const defaultOption = formData.options.filter((value) => value.isDefault);
 
   const formikTextArea = useFormik({
     initialValues: {
       textArea: '',
     },
     validationSchema: Yup.object({
-      textArea: Yup.string()
-        .min(2, 'Must have at least two characters')
-        .max(600, 'Max characters 600'),
+      textArea: Yup.string().max(600, 'Max characters 600'),
     }),
     onSubmit: () => {},
   });
@@ -61,16 +54,18 @@ const FormTextArea = (props: Props) => {
       <Text
         color='#000000'
         textAlign='left'
-        fontSize='1.4rem'
+        fontSize='1.2rem'
         fontWeight='bold'
       >
         <span>{formData.text}</span>
       </Text>
-      {/* This is actually a text area!! */}
+      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
+        <span>{formData.subText}</span>
+      </Text>
       <Wrapper direction='column' margin='24px 0 0 0 '>
         <EditTextArea
           name='textArea'
-          rows={4}
+          rows={formData.isLongQuestion ? 4 : 1}
           placeholder='Type your answer here...'
           value={formikTextArea.values.textArea}
           onChange={(value, e) => {

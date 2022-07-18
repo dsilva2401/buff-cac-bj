@@ -1,8 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
-import { useGlobal } from 'context/global/GlobalContext';
-import { Redirect, Route, RouteProps, useRouteMatch } from 'react-router-dom';
-import LoadingIndicator from 'components/LoadingIndicator';
-import Wrapper from 'components/Wrapper';
+import React from 'react';
+import { Redirect, Route, RouteProps, useParams } from 'react-router-dom';
+
 import { RoutesHashMap } from 'routes';
 
 interface totalSteps {
@@ -14,25 +12,24 @@ export interface FormMatchParams {
 }
 
 const ProtectedRoute: React.FC<totalSteps & RouteProps> = (props) => {
-  const { productDetails } = useGlobal();
-  const { params } = useRouteMatch<FormMatchParams>();
-
-  const loadingIndicator = useMemo(
-    () => (
-      <Wrapper height='100vh' padding='5rem 0 0 0'>
-        <LoadingIndicator />
-      </Wrapper>
-    ),
-    []
-  );
-
-  const checkForFormModule = useCallback((): boolean => {
-    // TODO step id isn't present here so let's get it and make sure we don't go over steps.
-    // if (parseInt(params.stepId, 10) <= props.totalSteps) {
-    // }
-    return true;
-  }, [productDetails]);
-
+  const checkForFormModule = () => {
+    // no easy way to get this url param besides using a wrapper so getting the value here
+    const stepId = window.location.pathname.split('/').pop();
+    if (stepId === 'start' || 'complete') {
+      return true;
+    }
+    if (stepId) {
+      let stepIdInt = parseInt(stepId, 10);
+      if (!stepIdInt) {
+        return false;
+      }
+      if (stepIdInt > props.totalSteps) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
   if (checkForFormModule()) {
     return <Route {...props} />;
   }

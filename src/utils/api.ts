@@ -46,7 +46,8 @@ export function useAPI<T>(
           return;
         }
       }
-      let headers: HeadersInit = {
+      let headers: HeadersInit;
+      headers = {
         'content-type': 'application/json',
       };
 
@@ -66,8 +67,9 @@ export function useAPI<T>(
         const signal = controller.signal;
 
         setCancelController(controller);
+        const url = `${API_URL}/app_api/${endpoint}`;
 
-        const res = await fetch(`${API_URL}/app_api/${endpoint}`, {
+        const res = await fetch(url, {
           method,
           signal,
           headers,

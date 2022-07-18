@@ -122,7 +122,8 @@ const Routes: React.FC<WithLastLocationProps> = ({ lastLocation }) => {
                 />
               );
             }
-            if (location.pathname.includes('form/step')) {
+            // Route everything within the form to open magic link to bottom drawer
+            if (location.pathname.includes('/form')) {
               return (
                 <Route
                   exact={routeObject.exact}

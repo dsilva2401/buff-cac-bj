@@ -59,6 +59,10 @@ export type ModuleInfoType = {
     | FormDetailModel[]
     | VideoModuleType
     | null;
+
+  content: string;
+  startScreenContent: string;
+  endScreenContent: string;
 };
 
 export type CustomModuleType = {

@@ -7,6 +7,7 @@ type UploadInputProps = {
 
 export const InputWrapper = styled.div<UploadInputProps>`
   width: 100%;
+  cursor: pointer;
   padding: 0.8rem 1.5rem;
   display: flex;
   position: relative;
@@ -27,6 +28,7 @@ export const InputWrapper = styled.div<UploadInputProps>`
     z-index: -1;
   }
   label {
+    cursor: pointer;
     width: 100%;
     height: 1.8rem;
     font-size: 0.9rem;

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { InputWrapper, InputPlaceholder } from './styles';
+import { InputWrapper } from './styles';
 
 type EditTextAreaProps = {
   placeholder: string;

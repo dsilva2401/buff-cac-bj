@@ -1,7 +1,5 @@
-import { useRouteMatch } from 'react-router-dom';
 import { FormDetailModel, FormDetailOptions } from 'types/FormTypes';
 import { FormikProps } from 'formik';
-import { FormMatchParams } from '../FormDrawer';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 import { useEffect } from 'react';
@@ -51,12 +49,14 @@ const FormCheckBox = (props: Props) => {
       <Text
         color='#000000'
         textAlign='left'
-        fontSize='1.4rem'
+        fontSize='1.2rem'
         fontWeight='bold'
       >
         <span>{formData.text}</span>
       </Text>
-      <Text fontSize='0.8rem'>Select all that apply</Text>
+      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
+        <span>{formData.subText}</span>
+      </Text>
       <Wrapper
         aria-labelledby='checkbox-group'
         justifyContent='flex-start'

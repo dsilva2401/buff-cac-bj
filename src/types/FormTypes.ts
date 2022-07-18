@@ -9,6 +9,7 @@ export interface FormModuleModel {
   type: string;
   content: string;
   formDetails: FormDetailModel;
+  autoDeploy: boolean;
 }
 
 export interface FormDetailOptions {
@@ -21,5 +22,7 @@ export interface FormDetailModel {
   isRequired: boolean;
   text: string;
   options: FormDetailOptions[];
+  subText: string;
+  isLongQuestion?: boolean;
   allowedMultiple?: boolean;
 }

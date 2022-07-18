@@ -121,7 +121,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       if (closeDrawer && isFormNavigation) {
         setIsFormNavigation(false);
         setTimeout(() => {
-          history.replace(`/c/${id}`);
+          history.push(`/c/${id}`);
         }, 0);
       }
     },
@@ -687,25 +687,14 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             const dataForm = details?.modules[currentPage as number]
               ?.moduleInfo as FormDetailModel[];
             return (
-              <Wrapper height='100%'>
-                <Wrapper width='100%' position='absolute' top='10px'>
-                  <Text
-                    wrapperWidth='80%'
-                    whiteSpace='nowrap'
-                    overflow='hidden'
-                    textOverflow='ellipsis'
-                    fontSize='1.2rem'
-                    fontWeight='bold'
-                    padding='12px'
-                  >
-                    <span>
-                      {' '}
-                      {details?.modules[currentPage as number].title}
-                    </span>
-                  </Text>
+              <FormProvider>
+                <Wrapper height='100%'>
+                  <FormDrawer
+                    formModuleData={details.modules[currentPage as number]}
+                    data={dataForm}
+                  />
                 </Wrapper>
-                <FormDrawer data={dataForm} />
-              </Wrapper>
+              </FormProvider>
             );
           default:
             return null;
@@ -730,7 +719,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           html={mulberry ? null : details?.registration?.registrationText}
           showMulberryTerms={!!mulberry}
         >
-          <FormProvider>{renderOtherModules()}</FormProvider>
+          {renderOtherModules()}
         </RegistratonDrawer>
       );
     }

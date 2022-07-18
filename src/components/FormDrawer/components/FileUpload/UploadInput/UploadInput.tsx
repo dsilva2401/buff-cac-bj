@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputPlaceholder, InputWrapper } from './styles';
 import { ReactComponent as Upload } from 'assets/icons/svg/upload.svg';
 import { ReactComponent as Remove } from 'assets/icons/svg/remove.svg';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 import Image from 'components/Image';
-import placeholder from 'assets/images/png/pdf-icon.png';
+import placeholder from 'assets/images/png/pdf-placeholder.png';
+import IFileForm from './model';
 
 type UploadInputProps = {
-  selectedFile: File[] | undefined;
+  selectedFile: IFileForm[] | undefined;
   changeFile(files: FileList | null): void;
   multiple?: boolean;
 };
@@ -32,47 +33,62 @@ const UploadInput: React.FC<UploadInputProps> = ({
         type='file'
         name='file'
         id='file'
+        accept='image/png, image/jpeg, image/jpg, .pdf, .heic'
         multiple={multiple ? true : false}
-        onChange={({ target: { files } }) => changeFile(files)}
+        onChange={(event) => {
+          changeFile(event.target.files);
+          event.target.value = '';
+        }}
       />
       <label
         htmlFor='file'
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        <Wrapper direction='column'>
-          {selectedFile?.map((file, idx) => {
-            return (
+        {selectedFile?.map((file, idx) => {
+          return (
+            <Wrapper key={idx}>
+              <Text className='file-name' fontSize='1rem' fontWeight='400'>
+                <span>{file.fileName}</span>
+              </Text>
               <Wrapper justifyContent='flex-start' key={idx} direction='column'>
-                <Text fontSize='1rem' margin='0 0 10px 0px'>
-                  <span>{file.name}</span>
-                </Text>
-                {file && (
+                {file.fileUrl && (
                   <Image
                     height='105px'
                     width='110px !important'
                     src={
-                      regexPDFExtension.test(file.name)
+                      regexPDFExtension.test(file.fileName)
                         ? placeholder
-                        : URL.createObjectURL(file)
+                        : file.fileUrl
                     }
                   ></Image>
                 )}
               </Wrapper>
-            );
-          })}
-        </Wrapper>
-
-        {/* {selectedFile ? selectedFile.name : ''} */}
+            </Wrapper>
+          );
+        })}
       </label>
       <InputPlaceholder
         isFocused={isFocused}
         isFileSelected={selectedFile ? true : false}
       >
-        {selectedFile ? 'file name' : 'Upload File'}
+        {selectedFile ? (
+          'File Name'
+        ) : (
+          <span className='upload-file'>
+            <Upload />
+            <Text fontSize='1rem' fontWeight='400' color='#202029'>
+              <span>Upload File</span>
+            </Text>
+          </span>
+        )}
       </InputPlaceholder>
 
-      {selectedFile ? <Remove onClick={() => changeFile(null)} /> : <Upload />}
+      {selectedFile ? (
+        <Remove className='remove-icon' onClick={() => changeFile(null)} />
+      ) : (
+        ''
+      )}
     </InputWrapper>
   );
 };

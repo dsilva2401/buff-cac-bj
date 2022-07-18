@@ -1,0 +1,63 @@
+.form-drawer-transistion {
+    width: 100%
+}
+
+.slide {
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    transition: 0.3s ease;
+}
+
+.slide-enter {
+    transform: translateX(100%);
+    transition: 0.3s ease;
+}
+
+.slide-enter.slide-enter-active {
+    transform: translateX(0);
+    transition: 0.3s ease;
+}
+
+.slide-exit {
+    transform: translateX(0);
+    transition: 0.3s ease;
+}
+
+.slide-exit.slide-exit-active {
+    transform: translateX(100%);
+    transition: 0.3s ease;
+}
+
+.inverseslide {
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    transition: 0.3s ease;
+}
+
+.inverseslide-enter {
+    transform: translateX(-100%);
+    transition: 0.3s ease;
+}
+
+.inverseslide-enter.inverseslide-enter-active {
+    transform: translateX(0);
+    transition: 0.3s ease;
+}
+
+.inverseslide-exit {
+    transform: translateX(0);
+    transition: 0.3s ease;
+}
+
+.inverseslide-exit.inverseslide-exit-active {
+    transform: translateX(-100%);
+    transition: 0.3s ease;
+}

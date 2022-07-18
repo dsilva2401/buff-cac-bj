@@ -1,8 +1,7 @@
-import ModuleWrapper from 'components/ModuleWrapper';
 import StepWrapper from 'components/StepWrapper';
 import StepComp from 'components/StepWrapper/StepComp';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   steps: number;
@@ -31,6 +30,7 @@ const FormStepper = (props: Props = { steps: 5 }) => {
             <StepComp
               key={idx}
               background={idx + 1 <= currentStep ? '#4B6EFA' : '#E7EAEB'}
+              animation={idx + 1 <= currentStep ? '0%' : '100'}
             ></StepComp>
           );
         })}

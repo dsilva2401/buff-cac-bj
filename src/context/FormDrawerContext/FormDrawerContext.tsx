@@ -16,6 +16,10 @@ export type FormContextProps = {
   setCurrentForm: React.Dispatch<React.SetStateAction<any>>;
   formData: FormDetailModel[];
   setFormData: React.Dispatch<React.SetStateAction<FormDetailModel[]>>;
+  completionScreen: boolean;
+  setCompletionScreen: React.Dispatch<React.SetStateAction<boolean>>;
+  startScreen: boolean;
+  setStartScreen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const FormContext = createContext<FormContextProps>({
@@ -33,6 +37,10 @@ export const FormContext = createContext<FormContextProps>({
   setCurrentForm: () => {},
   formData: [],
   setFormData: () => {},
+  completionScreen: false,
+  setCompletionScreen: () => {},
+  startScreen: false,
+  setStartScreen: () => {},
 });
 
 export const useFormContext = () => useContext(FormContext);

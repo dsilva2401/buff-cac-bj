@@ -10,6 +10,8 @@ export const FormProvider: React.FC = ({ children }) => {
   const [formModules, setFormModules] = useState([]);
   const [currentForm, setCurrentForm] = useState(null);
   const [formData, setFormData] = useState<FormDetailModel[]>([]);
+  const [completionScreen, setCompletionScreen] = useState<boolean>(false);
+  const [startScreen, setStartScreen] = useState<boolean>(false);
 
   return (
     <FormContext.Provider
@@ -28,6 +30,10 @@ export const FormProvider: React.FC = ({ children }) => {
         setCurrentForm,
         formData,
         setFormData,
+        completionScreen,
+        setCompletionScreen,
+        startScreen,
+        setStartScreen,
       }}
     >
       {children}
