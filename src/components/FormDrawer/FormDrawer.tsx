@@ -35,6 +35,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './styles/formstyles.css';
 import { useSwipeable } from 'react-swipeable';
 import IconButton from 'components/IconButton/IconButton';
+import { showToast } from 'components/Toast/Toast';
 
 type Props = {
   data: FormDetailModel[];
@@ -105,7 +106,13 @@ const FormDrawer = (props: Props) => {
         localStorage.setItem('brij-form-complete', 'true');
         route.push(`/c/${id}/form/complete`);
       },
-      onError: () => {},
+      onError: () => {
+        setIsFormSubmitting(false);
+        showToast({
+          message: 'Form submission error, please retry',
+          type: 'error',
+        });
+      },
     },
     null,
     true
