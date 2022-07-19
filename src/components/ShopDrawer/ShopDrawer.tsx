@@ -183,6 +183,16 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     });
   }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
 
+  const removeFilter = useCallback(
+    (optionItem) => {
+      updateOption((prev) => ({
+        ...prev,
+        [optionItem.name]: '',
+      }));
+    },
+    [updateOption]
+  );
+
   return (
     <ModuleWrapper
       minHeight='4rem'
@@ -396,12 +406,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                         right='17px'
                         background='#FFFFFF'
                         zIndex={10}
-                        onClick={() =>
-                          updateOption((prev) => ({
-                            ...prev,
-                            [optionItem.name]: '',
-                          }))
-                        }
+                        onClick={() => removeFilter(optionItem)}
                       >
                         <Close />
                       </Wrapper>
@@ -417,6 +422,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                           ? filteredOptions[index]?.values
                           : optionItem.values
                       }
+                      optionItem={optionItem}
+                      removeFilter={() => removeFilter(optionItem)}
                       onChange={(value) =>
                         updateOption((prev) => ({
                           ...prev,

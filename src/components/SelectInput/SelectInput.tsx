@@ -10,6 +10,8 @@ type SelectInputProps = {
   placeholder?: string;
   selected?: string;
   onChange: (value: string) => void;
+  removeFilter?: (value: string) => void;
+  optionItem?: string;
 };
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -20,6 +22,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
   placeholder = '',
   onChange,
   selected,
+  removeFilter,
+  optionItem,
 }) => {
   const [opened, setOpened] = useState<boolean>(false);
 
@@ -36,7 +40,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
         onChange={({ target: { value } }) => {
           onChange(String(value));
         }}
-        onOpen={() => setOpened(true)}
+        onOpen={() => {
+          setOpened(true);
+          if (selected && optionItem && removeFilter) {
+            removeFilter(optionItem);
+          }
+        }}
         onClose={() => setOpened(false)}
         MenuProps={{
           anchorOrigin: {
