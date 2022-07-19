@@ -218,7 +218,7 @@ const FormDrawer = (props: Props) => {
     let formResults = formik.current?.values;
     formOrder.forEach((value) => {
       if (value.includes('file-upload')) {
-        answersArray.push(formResults[value][1]);
+        answersArray.push(formResults[value][0].fileUrl);
       } else if (value.includes('checkbox')) {
         const mutipleAns = formResults[value].join(',');
         answersArray.push(mutipleAns);
