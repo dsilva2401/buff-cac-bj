@@ -1,15 +1,17 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
-import React, { ChangeEvent } from 'react';
+import { useGlobal } from 'context/global/GlobalContext';
+import { ChangeEvent } from 'react';
 
 type Props = {
   options: string[];
   name: string;
   defaultValue?: string;
   onChange: (value: string, e: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 };
 
 const RadioButtons = (props: Props) => {
-  const { options, defaultValue, onChange, name } = props;
+  const { options, defaultValue, onChange, name, className = '' } = props;
   return (
     <RadioGroup
       aria-labelledby='demo-controlled-radio-buttons-group'
@@ -22,6 +24,7 @@ const RadioButtons = (props: Props) => {
           <FormControlLabel
             value={value}
             label={value}
+            className={className}
             key={idx}
             control={<Radio disableRipple={true} disableTouchRipple={true} />}
           />

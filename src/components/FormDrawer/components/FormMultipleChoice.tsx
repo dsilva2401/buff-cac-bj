@@ -6,6 +6,8 @@ import Text from 'components/Text';
 import { useEffect } from 'react';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { useFormik } from 'formik';
+import FormStyleWrapper from '../styles/FormStyleWrapper';
+import { useGlobal } from 'context/global/GlobalContext';
 
 type Props = {
   formData: FormDetailModel;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const FormMultipleChoice = (props: Props) => {
+  const { brandTheme } = useGlobal();
   const { formData, formRef, name } = props;
   const optionsArr = formData.options.map((value) => value.text);
 
@@ -56,18 +59,21 @@ const FormMultipleChoice = (props: Props) => {
         alignItems='center'
         justifyContent='flex-start'
       >
-        <RadioButtons
-          name='multipleChoice'
-          defaultValue={formikMultipleChoice.values.multipleChoice}
-          options={optionsArr}
-          onChange={async (value, e) => {
-            await formikMultipleChoice.handleChange(e);
-            if (formikMultipleChoice.isValid) {
-              await formRef.setFieldValue(name, value);
-              formRef.validateForm();
-            }
-          }}
-        />
+        <FormStyleWrapper brandTheme={brandTheme}>
+          <RadioButtons
+            className='form-radio'
+            name='multipleChoice'
+            defaultValue={formikMultipleChoice.values.multipleChoice}
+            options={optionsArr}
+            onChange={async (value, e) => {
+              await formikMultipleChoice.handleChange(e);
+              if (formikMultipleChoice.isValid) {
+                await formRef.setFieldValue(name, value);
+                formRef.validateForm();
+              }
+            }}
+          />
+        </FormStyleWrapper>
       </Wrapper>
     </Wrapper>
   ) : (

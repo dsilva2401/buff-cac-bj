@@ -7,6 +7,8 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import { useFormik } from 'formik';
 import { Checkbox } from '@material-ui/core';
 import { Label } from 'components/SelectInput/styles';
+import { useGlobal } from 'context/global/GlobalContext';
+import FormStyleWrapper from '../styles/FormStyleWrapper';
 type Props = {
   formData: FormDetailModel;
   formRef: FormikProps<any> | null;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const FormCheckBox = (props: Props) => {
+  const { brandTheme } = useGlobal();
   const { formData, formRef, name } = props;
   const formikCheckBox = useFormik({
     initialValues: {
@@ -66,24 +69,27 @@ const FormCheckBox = (props: Props) => {
         {formData.options.map((value, idx) => {
           return (
             <Wrapper key={idx} alignItems='center' justifyContent='flex-start'>
-              <Checkbox
-                id={value.text}
-                name='checked'
-                value={value.text}
-                checked={handleChecked(value)}
-                onChange={async (e) => {
-                  formikCheckBox.handleChange(e);
-                  let copy: string[] = [...checked];
-                  if (!~copy.indexOf(e.target.value)) {
-                    copy = [e.target.value, ...checked];
-                  } else {
-                    copy = copy.filter((value) => value !== e.target.value);
-                  }
-                  await formRef.setFieldValue(name, copy);
-                  formRef.validateField(name);
-                }}
-              ></Checkbox>
-              <Label htmlFor={value.text}>{value.text}</Label>
+              <FormStyleWrapper brandTheme={brandTheme}>
+                <Checkbox
+                  id={value.text}
+                  name='checked'
+                  value={value.text}
+                  className='form-checkbox'
+                  checked={handleChecked(value)}
+                  onChange={async (e) => {
+                    formikCheckBox.handleChange(e);
+                    let copy: string[] = [...checked];
+                    if (!~copy.indexOf(e.target.value)) {
+                      copy = [e.target.value, ...checked];
+                    } else {
+                      copy = copy.filter((value) => value !== e.target.value);
+                    }
+                    await formRef.setFieldValue(name, copy);
+                    formRef.validateField(name);
+                  }}
+                ></Checkbox>
+                <Label htmlFor={value.text}>{value.text}</Label>
+              </FormStyleWrapper>
             </Wrapper>
           );
         })}
