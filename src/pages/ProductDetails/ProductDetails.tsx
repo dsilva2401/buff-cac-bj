@@ -290,6 +290,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     if (details) {
       for (let x = 0; x < details?.modules?.length; x++) {
         let title: string = details.modules[x].title;
+        let moduleType: string = details.modules[x].type;
+        let moduleData: VideoModuleType | LinkModuleType | null = null;
         switch (details.modules[x].type) {
           case 'WARRANTY_MODULE':
             const moduleInfo = details.modules[x]
@@ -297,6 +299,9 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             title = moduleInfo?.activated
               ? t('viewWarranty')
               : details.modules[x].title;
+            break;
+          case 'VIDEO_MODULE':
+            moduleData = details.modules[x].moduleInfo as VideoModuleType;
             break;
           default:
             title = details.modules[x].title;
@@ -326,6 +331,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             });
           },
           isHighlight: x === 0,
+          moduleType: moduleType,
+          moduleData: moduleData?.path,
           locked: details?.modules[x].locked,
           pageState: details?.modules[x].locked
             ? {
@@ -676,13 +683,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               />
             );
           case 'VIDEO_MODULE':
-            return (
-              <VideoDrawer
-                drawerData={module?.moduleInfo as VideoModuleType}
-                closeDrawer={closeDrawerPage}
-                isDrawerPageOpen={isDrawerPageOpen}
-              />
-            );
+            return <VideoDrawer closeDrawer={closeDrawerPage} />;
           case 'FORMS_MODULE':
             const dataForm = details?.modules[currentPage as number]
               ?.moduleInfo as FormDetailModel[];

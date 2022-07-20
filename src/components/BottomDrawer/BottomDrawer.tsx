@@ -2,16 +2,18 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
-  useMemo,
   useState,
+  useMemo,
   useRef,
 } from 'react';
 import { Position } from 'types/Misc';
+import { isDesktop } from 'react-device-detect';
 import { Product } from 'types/ProductDetailsType';
 import { PageStateType } from 'context/global/GlobalContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import phoneCallIcon from 'assets/icons/svg/social-phone-call.svg';
 import instagramIcon from 'assets/icons/svg/social-instagram.svg';
 import facebookIcon from 'assets/icons/svg/social-facebook.svg';
@@ -29,12 +31,12 @@ import Text from 'components/Text';
 import {
   Drawer,
   DragBar,
+  DragZone,
   DrawerBody,
   DrawerClose,
   DrawerFooter,
   DrawerHeader,
   DrawerIconLink,
-  DragZone,
 } from './styles';
 
 export type ButtonType = {
@@ -44,6 +46,8 @@ export type ButtonType = {
   locked: boolean;
   pageState: PageStateType | null;
   icon: ReactElement | null;
+  moduleType: string;
+  moduleData?: string | undefined;
 };
 
 type SocialsType =
@@ -111,6 +115,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     registeringProduct,
   } = useGlobal();
 
+  const handle = useFullScreenHandle();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (handle.active) videoRef?.current.play();
+      else if (!handle.active) videoRef.current?.pause();
+    }
+  }, [handle.active, videoRef.current]);
+
   useEffect(() => {
     if (height) setCollapsedDrawerHeight(height);
   }, [height, setCollapsedDrawerHeight]);
@@ -142,6 +156,31 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     setPageState,
     isChildOpen,
     appZoom,
+  ]);
+
+  useEffect(() => {
+    if (
+      !authFetched ||
+      registeringProduct ||
+      product?.registeredToCurrentUser
+    ) {
+      return;
+    } else if (autoDeploy && buttons && buttons.length > 0) {
+      setTimeout(() => {
+        !autoDeployTriggered &&
+          leadModuleButtonRef.current &&
+          leadModuleButtonRef.current.click();
+        setAutoDeployTriggered(true);
+      }, 500);
+    }
+  }, [
+    buttons,
+    product,
+    autoDeploy,
+    authFetched,
+    registeringProduct,
+    autoDeployTriggered,
+    setAutoDeployTriggered,
   ]);
 
   const handleDrawerClose = useCallback(() => {
@@ -181,37 +220,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       ? true
       : false;
   };
-
-  useEffect(() => {
-    if (!authFetched) {
-      return;
-    }
-
-    if (registeringProduct) {
-      return;
-    }
-
-    if (product?.registeredToCurrentUser) {
-      return;
-    }
-
-    if (autoDeploy && buttons && buttons.length > 0) {
-      setTimeout(() => {
-        !autoDeployTriggered &&
-          leadModuleButtonRef.current &&
-          leadModuleButtonRef.current.click();
-        setAutoDeployTriggered(true);
-      }, 500);
-    }
-  }, [
-    buttons,
-    product,
-    autoDeploy,
-    authFetched,
-    registeringProduct,
-    autoDeployTriggered,
-    setAutoDeployTriggered,
-  ]);
 
   const drawerFooter = useMemo(() => {
     return (
@@ -398,26 +406,87 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   {buttons?.map((button, index) => {
                     return (
                       index < (buttons.length > 2 ? 1 : 2) && (
-                        <Button
-                          className='expand-main-module-btn'
-                          ref={leadModuleButtonRef}
-                          key={button.title}
-                          brandTheme={brandTheme}
-                          variant={index === 0 ? 'dark' : 'light'}
-                          inlineIcon
-                          onClick={() => {
-                            if (button.icon === null) {
-                              setPosition({ ...position, y: topHeight });
-                              setRetractDrawer(true);
-                            }
-                            button.onClick();
-                            if (button.pageState !== null)
-                              setPageState(button.pageState);
-                          }}
-                        >
-                          {button.title}
-                          {button.icon}
-                        </Button>
+                        <>
+                          {button.moduleType === 'VIDEO_MODULE' ? (
+                            <Button
+                              brandTheme={brandTheme}
+                              variant={button.isHighlight ? 'dark' : 'light'}
+                              onClick={() => {
+                                setRetractDrawer(false);
+                                if (!button.locked) {
+                                  isDesktop && handle.enter();
+                                  videoRef.current?.play();
+                                } else {
+                                  setPosition({ ...position, y: topHeight });
+                                  setRetractDrawer(true);
+                                  button.onClick();
+                                }
+                              }}
+                            >
+                              {button.title}
+                              {!button.locked &&
+                                (isDesktop ? (
+                                  <FullScreen handle={handle}>
+                                    <Wrapper
+                                      width={handle.active ? '100%' : '0'}
+                                      height='100%'
+                                      alignItems='center'
+                                      justifyContent='center'
+                                    >
+                                      <video
+                                        ref={videoRef}
+                                        controls
+                                        width='100%'
+                                        height='100%'
+                                        preload='metadata'
+                                        playsInline={false}
+                                        onEnded={() =>
+                                          isDesktop && handle.exit()
+                                        }
+                                        src={button.moduleData || ''}
+                                      >
+                                        Your browser does not support the video
+                                        tag.
+                                      </video>
+                                    </Wrapper>
+                                  </FullScreen>
+                                ) : (
+                                  <Wrapper width='0' height='0'>
+                                    <video
+                                      ref={videoRef}
+                                      controls
+                                      height={0}
+                                      width='100%'
+                                      preload='metadata'
+                                      playsInline={false}
+                                      src={button.moduleData || ''}
+                                    />
+                                  </Wrapper>
+                                ))}
+                            </Button>
+                          ) : (
+                            <Button
+                              className='expand-main-module-btn'
+                              ref={leadModuleButtonRef}
+                              key={button.title}
+                              brandTheme={brandTheme}
+                              variant={index === 0 ? 'dark' : 'light'}
+                              inlineIcon
+                              onClick={() => {
+                                if (button.icon === null) {
+                                  setPosition({ ...position, y: topHeight });
+                                  setRetractDrawer(true);
+                                }
+                                button.onClick();
+                                if (button.pageState !== null)
+                                  setPageState(button.pageState);
+                              }}
+                            >
+                              {button.title}
+                              {button.icon}
+                            </Button>
+                          )}
+                        </>
                       )
                     );
                   })}
@@ -453,28 +522,80 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   </>
                 ) : (
                   <Wrapper width='100%' direction='column' gap='1rem'>
-                    {buttons?.map((button) => (
-                      <Button
-                        className={
-                          button.isHighlight
-                            ? 'expand-main-module-btn'
-                            : 'expand-submodule-btn'
-                        }
-                        key={button.title}
-                        brandTheme={brandTheme}
-                        variant={button.isHighlight ? 'dark' : 'light'}
-                        inlineIcon
-                        onClick={() => {
-                          button.onClick();
-                          setRetractDrawer(false);
-                          if (button.pageState !== null)
-                            setPageState(button.pageState);
-                        }}
-                      >
-                        {button.title}
-                        {button.icon}
-                      </Button>
-                    ))}
+                    {buttons?.map((button) => {
+                      return button.moduleType === 'VIDEO_MODULE' ? (
+                        <Button
+                          brandTheme={brandTheme}
+                          variant={button.isHighlight ? 'dark' : 'light'}
+                          onClick={() => {
+                            setRetractDrawer(false);
+                            if (!button.locked) {
+                              isDesktop && handle.enter();
+                              videoRef.current?.play();
+                            } else button.onClick();
+                          }}
+                        >
+                          {button.title}
+                          {!button.locked &&
+                            (isDesktop ? (
+                              <FullScreen handle={handle}>
+                                <Wrapper
+                                  width={handle.active ? '100%' : '0'}
+                                  height='100%'
+                                  alignItems='center'
+                                  justifyContent='center'
+                                >
+                                  <video
+                                    ref={videoRef}
+                                    controls
+                                    width='100%'
+                                    height='100%'
+                                    preload='metadata'
+                                    playsInline={false}
+                                    onEnded={() => isDesktop && handle.exit()}
+                                    src={button.moduleData}
+                                  >
+                                    Your browser does not support the video tag.
+                                  </video>
+                                </Wrapper>
+                              </FullScreen>
+                            ) : (
+                              <Wrapper width='0' height='0'>
+                                <video
+                                  ref={videoRef}
+                                  controls
+                                  height={0}
+                                  width='100%'
+                                  preload='metadata'
+                                  playsInline={false}
+                                  src={button.moduleData}
+                                />
+                              </Wrapper>
+                            ))}
+                        </Button>
+                      ) : (
+                        <Button
+                          className={
+                            button.isHighlight
+                              ? 'expand-main-module-btn'
+                              : 'expand-submodule-btn'
+                          }
+                          key={button.title}
+                          brandTheme={brandTheme}
+                          variant={button.isHighlight ? 'dark' : 'light'}
+                          inlineIcon
+                          onClick={() => {
+                            button.onClick();
+                            setRetractDrawer(false);
+                            if (button.pageState !== null)
+                              setPageState(button.pageState);
+                          }}
+                        >
+                          {button.title}
+                          {button.icon}
+                        </Button>
+                      );
+                    })}
                   </Wrapper>
                 ))}
             </DrawerBody>
