@@ -1,7 +1,6 @@
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
-import FormStepper from './components/FormStepper';
 import {
   Switch,
   useRouteMatch,
@@ -35,6 +34,7 @@ import './styles/formstyles.css';
 import { useSwipeable } from 'react-swipeable';
 import IconButton from 'components/IconButton/IconButton';
 import { showToast } from 'components/Toast/Toast';
+import FormStepper from './components/FormStepper';
 
 type Props = {
   data: FormDetailModel[];
@@ -73,22 +73,6 @@ const FormDrawer = (props: Props) => {
   const [transistionAnimation, setTransistionAnimation] =
     useState<string>('slide');
   const { user, slug, brandTheme } = useGlobal();
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => {
-      if (!formik.current?.errors[getCurrentFormName(currentStep)]) {
-        handleNextBtnClicked();
-      }
-    },
-    onSwipedRight: () => {
-      if (currentStep !== 1) {
-        handleBackBtnClicked();
-      }
-    },
-    swipeDuration: 500,
-    preventScrollOnSwipe: true,
-    trackMouse: false,
-  });
 
   useEffect(() => {
     setTotalSteps(data.length);
@@ -213,6 +197,34 @@ const FormDrawer = (props: Props) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    const form = localStorage.getItem('brij-form');
+    if (!localStorageSet && form && formik.current) {
+      let values = JSON.parse(form);
+      if (Object.keys(values).length) {
+        setNameObjectYup(values);
+        // below exists for file persistence without a refresh.
+        setLocalStorageSet(true);
+      }
+    }
+  }, [initNameObjectYup]);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (!formik.current?.errors[getCurrentFormName(currentStep)]) {
+        handleNextBtnClicked();
+      }
+    },
+    onSwipedRight: () => {
+      if (currentStep !== 1) {
+        handleBackBtnClicked();
+      }
+    },
+    swipeDuration: 500,
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+  });
+
   const closeSuccess = () => {
     return;
   };
@@ -327,18 +339,6 @@ const FormDrawer = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    const form = localStorage.getItem('brij-form');
-    if (!localStorageSet && form && formik.current) {
-      let values = JSON.parse(form);
-      if (Object.keys(values).length) {
-        setNameObjectYup(values);
-        // below exists for file persistence without a refresh.
-        setLocalStorageSet(true);
-      }
-    }
-  }, [initNameObjectYup]);
-
   const getCurrentTransition = () => {
     return transistionAnimation;
   };
@@ -384,9 +384,7 @@ const FormDrawer = (props: Props) => {
                 margin='0 0 0 0'
               >
                 {!completionScreen && !startScreen && (
-                  <>
-                    <FormStepper steps={data.length}></FormStepper>
-                  </>
+                  <FormStepper steps={data.length} />
                 )}
                 <Wrapper
                   width='100%'

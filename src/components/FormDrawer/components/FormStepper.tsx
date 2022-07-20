@@ -1,40 +1,48 @@
-import StepWrapper from 'components/StepWrapper';
-import StepComp from 'components/StepWrapper/StepComp';
+import Wrapper from 'components/Wrapper';
+import useElementSize from 'hooks/useElementSize';
+import { useGlobal } from 'context/global/GlobalContext';
 import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
-import { useEffect, useState } from 'react';
 
 type Props = {
   steps: number;
 };
 
 const FormStepper = (props: Props = { steps: 5 }) => {
-  const [stepWidth, setStepWidth] = useState(0);
-
-  const { steps } = props;
+  const [stepWrapperRef, { width }] = useElementSize();
   const { currentStep } = useFormContext();
-  useEffect(() => {
-    setStepWidth(100 / steps);
-  }, [steps]);
+  const { brandTheme } = useGlobal();
+  const { steps } = props;
 
   return (
-    <StepWrapper
-      stepWidth={stepWidth}
-      width='100%'
+    <Wrapper
+      ref={stepWrapperRef}
+      position='relative'
       direction='row'
-      justifyContent='space-around'
+      gap='0.25rem'
+      width='100%'
     >
       {Array(steps)
         .fill(null)
-        .map((value, idx) => {
+        .map((value, index) => {
           return (
-            <StepComp
-              key={idx}
-              background={idx + 1 <= currentStep ? '#4B6EFA' : '#E7EAEB'}
-              animation={idx + 1 <= currentStep ? '0%' : '100'}
-            ></StepComp>
+            <Wrapper
+              height='5px'
+              width={`${width / steps}px`}
+              borderRadius='9px'
+              overflow='hidden'
+              background='#E7EAEB'
+              key={`step-${index + 1}-${value}`}
+            >
+              <Wrapper
+                height='100%'
+                transition='0.4s ease'
+                width={index > currentStep - 1 ? '0' : '100%'}
+                background={brandTheme}
+              />
+            </Wrapper>
           );
         })}
-    </StepWrapper>
+    </Wrapper>
   );
 };
 

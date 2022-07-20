@@ -9,8 +9,8 @@ import React, {
 import { Position } from 'types/Misc';
 import { isDesktop } from 'react-device-detect';
 import { Product } from 'types/ProductDetailsType';
+import { useGlobal } from 'context/global/GlobalContext';
 import { PageStateType } from 'context/global/GlobalContext';
-import { useGlobal } from '../../context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
