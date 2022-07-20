@@ -11,7 +11,6 @@ const ProductHeroImage = () => {
   const name = productDetails?.brand?.name;
   const imageSrc = productDetails?.product?.image || '';
   let optimizedImageSrc = imageSrc;
-  let thumbnailSrc = '';
   if (!imageSrc.match(/shopify/gi)) {
     const hostUrl = process.env.REACT_APP_HOST_URL_IMAGE || '';
     const fileId = imageSrc
@@ -21,7 +20,6 @@ const ProductHeroImage = () => {
       .pop()
       ?.split('.')
       .shift();
-    thumbnailSrc = `${hostUrl}/optimized-images/${fileId}/thumbnail.webp`;
     optimizedImageSrc = `${hostUrl}/optimized-images/${fileId}/1000x1000.webp`;
   }
   const [renderOptimizedImage, setRenderOptimizedImage] = useState(true);
@@ -34,7 +32,7 @@ const ProductHeroImage = () => {
             setRenderOptimizedImage(false);
           }}
           src={renderOptimizedImage ? optimizedImageSrc : imageSrc}
-          placeholder={thumbnailSrc}
+          placeholder=''
         >
           {(src: string, loading: boolean) => {
             return !!loading ? (
