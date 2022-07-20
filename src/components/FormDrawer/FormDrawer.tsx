@@ -8,7 +8,6 @@ import {
   useHistory,
   useLocation,
   Route,
-  Router,
 } from 'react-router-dom';
 import FormDropDown from './components/FormDropDown';
 import * as Yup from 'yup';
@@ -73,7 +72,7 @@ const FormDrawer = (props: Props) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [transistionAnimation, setTransistionAnimation] =
     useState<string>('slide');
-  const { user, slug } = useGlobal();
+  const { user, slug, brandTheme } = useGlobal();
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -462,6 +461,7 @@ const FormDrawer = (props: Props) => {
                             disabled={!formik.current?.isValid}
                             onClick={() => handleBtnSubmit()}
                             variant='dark'
+                            brandTheme={brandTheme}
                           >
                             Submit
                           </Button>
@@ -475,6 +475,7 @@ const FormDrawer = (props: Props) => {
                           }
                           onClick={() => handleNextBtnClicked()}
                           variant='dark'
+                          brandTheme={brandTheme}
                         >
                           Next
                         </Button>
