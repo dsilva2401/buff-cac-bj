@@ -112,7 +112,6 @@ const FormDrawer = (props: Props) => {
 
     const showStartScreen = localStorage.getItem('brij-start-screen-shown');
     if (formModuleData.startScreenContent && !showStartScreen) {
-      localStorage.setItem('brij-start-screen-shown', 'true');
       setCurrentStep(1);
       route.push(`/c/${id}/form/start`);
       return;
@@ -263,6 +262,7 @@ const FormDrawer = (props: Props) => {
     if (startScreen) {
       setStartScreen(false);
       setTransistionAnimation('slide');
+      localStorage.setItem('brij-start-screen-shown', 'true');
       route.push(`/c/${id}/form/step/${currentStep}`);
       return;
     }
@@ -356,6 +356,22 @@ const FormDrawer = (props: Props) => {
     >
       {(formikProps) => (
         <Wrapper {...swipeHandlers} width='100%' height='100%'>
+          {startScreen ||
+            (completionScreen && (
+              <Wrapper width='100%' position='absolute' top='20px'>
+                <Text
+                  wrapperWidth='80%'
+                  whiteSpace='nowrap'
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                  fontSize='1.2rem'
+                  fontWeight='bold'
+                  padding='12px'
+                >
+                  <span>{formModuleData.title}</span>
+                </Text>
+              </Wrapper>
+            ))}
           {!completionScreen && !startScreen && (
             <Wrapper width='100%' position='absolute' top='20px'>
               <Text

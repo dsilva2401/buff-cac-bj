@@ -7,7 +7,6 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import { useFormik } from 'formik';
 import UploadInput from './FileUpload/UploadInput';
 import { showToast } from 'components/Toast/Toast';
-import { string } from 'yup/lib/locale';
 import IFileFrom from './FileUpload/UploadInput/model';
 
 type Props = {
