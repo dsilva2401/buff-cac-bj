@@ -197,19 +197,19 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     <ModuleWrapper
       minHeight='4rem'
       drawerTitle={
-        data.isDiscountAvailable && (
-          <Wrapper
-            position='absolute'
-            top='0'
-            left='0'
-            right='0'
-            margin='0 auto'
-            width='max-content'
-            borderRadius='0 0 15px 15px'
-            padding='1rem 1rem 0.4rem 1rem'
-            background={brandTheme || theme.primary}
-          >
-            <Text fontSize='0.8rem' color='#FFFFFF' textAlign='center'>
+        <Wrapper
+          position='absolute'
+          top='0'
+          left='0'
+          right='0'
+          margin='0 auto'
+          width='max-content'
+          borderRadius='0 0 15px 15px'
+          padding={data.isDiscountAvailable ? '1rem 1rem 0.4rem 1rem' : '0'}
+          background={brandTheme || theme.primary}
+        >
+          <Text fontSize='0.8rem' color='#FFFFFF' textAlign='center'>
+            {data.isDiscountAvailable && (
               <p>
                 {t('savingBanner.pre')} {data.discountPercentage!}
                 {t(
@@ -218,9 +218,9 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
                     : 'savingBanner.postWithBranding'
                 )}
               </p>
-            </Text>
-          </Wrapper>
-        )
+            )}
+          </Text>
+        </Wrapper>
       }
     >
       <Wrapper
@@ -237,7 +237,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
           width='100%'
           justifyContent='space-between'
           alignItems='center'
-          margin='1rem 0'
+          margin='0.5rem 0 1rem 0'
         >
           <ProgressiveImage src={chosenOption.image} placeholder={placeholder}>
             {(src: string, loading: boolean) => (
