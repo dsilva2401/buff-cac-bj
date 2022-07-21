@@ -21,7 +21,7 @@ export const Drawer = styled.div<DrawerType>`
   align-items: center;
   gap: 1rem;
   background-color: ${(props) => props.brandTheme || theme.primary};
-  z-index: 5;
+  z-index: 999;
   transition: transform 0.3s ease;
   transform: ${(props) => (props.isOpen ? 'translateY(-10000px)' : 'none')};
 

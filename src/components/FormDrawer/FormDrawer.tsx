@@ -74,7 +74,6 @@ const FormDrawer = (props: Props) => {
     useState<string>('slide');
   const { user, slug, brandTheme } = useGlobal();
 
-
   useEffect(() => {
     setTotalSteps(data.length);
   }, [setTotalSteps, data]);
