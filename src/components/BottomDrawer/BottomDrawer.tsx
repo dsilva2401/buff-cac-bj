@@ -490,7 +490,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       )
                     );
                   })}
-                  {buttons && buttons.length > 2 && (
+                  {buttons && buttons.length !== 2 && (
                     <Button
                       className='expand-options-btn'
                       variant='light'
