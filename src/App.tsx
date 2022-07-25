@@ -34,6 +34,10 @@ export default function App() {
     const auth = getAuth();
 
     getRedirectResult(auth).then((result) => {
+      if (!!result) {
+        let w: any = window;
+        w.dataLayer.push({ event: 'userRegistrationEvent' });
+      }
       let user = result?.user;
       if (user && !existingUser) {
         setUser(user);
