@@ -13,6 +13,7 @@ type Props = {
 };
 
 const FormDropDown = (props: Props) => {
+  const selectText = 'Click to select';
   const { formRef, name, formData } = props;
 
   const formikDropDown = useFormik({
@@ -59,7 +60,7 @@ const FormDropDown = (props: Props) => {
             <FormSelectInput
               id='drop-down'
               selected={formRef.values[name]}
-              label={formData.text}
+              label={selectText}
               onChange={async (value) => {
                 await formikDropDown.setValues({ dropDown: value }, true);
                 if (formikDropDown.isValid) {
@@ -68,7 +69,7 @@ const FormDropDown = (props: Props) => {
                 }
               }}
               options={formData.options.map((value) => value.text)}
-              placeholder={formData.text}
+              placeholder={selectText}
               noInitValue={true}
             ></FormSelectInput>
           )}
