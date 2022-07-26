@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ProductDetailsType } from 'types/ProductDetailsType';
-import { useAPI } from 'utils/api';
+import useCacheAPI from './useCacheAPI';
 
 function useProductDetails(
   slug: string | null,
   token: string | null = null,
-  previewEvent: any
+  previewEvent: any,
+  authFetched: boolean
 ): [
   ProductDetailsType | null,
   () => void,
@@ -17,38 +18,31 @@ function useProductDetails(
   const [productDetails, setProductDetails] =
     useState<ProductDetailsType | null>(null);
 
-  const onSuccess = useCallback(
-    (productDetails: any) => {
-      const { product, modules } = productDetails;
+  const onSuccess = useCallback((productDetails: any) => {
+    const { product, modules } = productDetails;
 
-      // if the product is already registered to some user don't show activate warranty
-      const leadModule = modules[0];
-      let moduleCopy = [...modules];
+    // if the product is already registered to some user don't show activate warranty
+    const leadModule = modules[0];
+    let moduleCopy = [...modules];
 
-      if (
-        !product.registeredToCurrentUser &&
-        product.registered &&
-        product.tagType === 'Unit'
-      ) {
-        moduleCopy = moduleCopy.filter(
-          (module) => module.type !== 'WARRANTY_MODULE'
-        );
-      }
-      // set to undefined if no token.
-      if (!token) {
-        productDetails.product.registeredToCurrentUser = undefined;
-      }
+    if (
+      !product.registeredToCurrentUser &&
+      product.registered &&
+      product.tagType === 'Unit'
+    ) {
+      moduleCopy = moduleCopy.filter(
+        (module) => module.type !== 'WARRANTY_MODULE'
+      );
+    }
 
-      setProductDetails({
-        ...productDetails,
-        modules: [...moduleCopy],
-        leadModule,
-      });
+    setProductDetails({
+      ...productDetails,
+      modules: moduleCopy,
+      leadModule,
+    });
 
-      setProductLoading(false);
-    },
-    [token]
-  );
+    setProductLoading(false);
+  }, []);
 
   const onError = useCallback(
     (error) => {
@@ -59,28 +53,41 @@ function useProductDetails(
     [setProductLoading]
   );
 
-  const [getProduct, _, controller] = useAPI(
+  // @ts-ignore
+  const [getProduct] = useCacheAPI(
     {
       method: 'GET',
       endpoint: `products/${slug}`,
-      onSuccess,
       onError,
     },
-    token
+    token,
+    true,
+    true
   );
 
-  const getProductWithLoading = useCallback(() => {
+  const getProductWithLoading = useCallback(async () => {
     setProductLoading(true);
-    return getProduct();
-  }, [getProduct, setProductLoading]);
+    // @ts-ignore
+    const cache = await getProduct();
+
+    if (cache) {
+      onSuccess(cache);
+      setProductLoading(false);
+    }
+
+    return;
+  }, [getProduct, onSuccess]);
 
   useEffect(() => {
+    if (!authFetched) {
+      return;
+    }
+
     if (slug) {
-      controller && controller.abort();
       getProductWithLoading();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, slug]);
+  }, [slug, authFetched]);
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'product') {

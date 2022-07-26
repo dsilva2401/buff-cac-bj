@@ -1,6 +1,11 @@
 export const resources = {
   en: {
     translation: {
+      registration: {
+        productRegistered: 'Product Registered!',
+        signedUp: "You're Signed Up!",
+        warrantyActivated: 'Warranty Activated!',
+      },
       socialLogin: {
         withGoogleText: 'with Google',
         continueGoogleButton: 'Continue with Google',

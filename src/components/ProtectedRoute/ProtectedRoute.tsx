@@ -20,6 +20,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
   if (!authFetched) {
     return loadingIndicator;
   }
+
   if (user) {
     return <Route {...props} />;
   }

@@ -34,10 +34,10 @@ const CheckAnimation: React.FC<CheckAnimationProps> = ({
   return (
     <Lottie
       key={loading ? 'loading' : 'loaded'}
-      speed={1}
+      speed={0.7}
       options={circularLoadingAnimationConfig}
-      height={100}
-      width={100}
+      height={150}
+      width={150}
       eventListeners={[{ eventName: 'complete', callback: onComplete }]}
     />
   );

@@ -65,6 +65,9 @@ export type GlobalContextProps = {
   setProductDetails: React.Dispatch<React.SetStateAction<any | null>>;
   setRegisteringProduct: React.Dispatch<React.SetStateAction<boolean>>;
   registeringProduct: boolean;
+  redirectResolved: boolean;
+  setRedirectResolved: React.Dispatch<React.SetStateAction<boolean>>;
+  setToken: (newToken: string | null) => void;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -117,6 +120,9 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setProductDetails: () => {},
   setRegisteringProduct: () => {},
   registeringProduct: false,
+  redirectResolved: false,
+  setRedirectResolved: () => {},
+  setToken: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

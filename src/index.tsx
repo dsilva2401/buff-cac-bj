@@ -2,7 +2,11 @@ import React from 'react';
 import App from './App';
 import ReactDOM from 'react-dom';
 import { initializeApp } from '@firebase/app';
-import { GlobalProvider } from './context';
+import {
+  GlobalProvider,
+  APICacheProvider,
+  SuccessDrawerProvider,
+} from './context';
 import getFirebaseConfig from './firebase/config';
 import './i18n';
 
@@ -12,9 +16,13 @@ initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
-    <GlobalProvider>
-      <App />
-    </GlobalProvider>
+    <APICacheProvider>
+      <GlobalProvider>
+        <SuccessDrawerProvider>
+          <App />
+        </SuccessDrawerProvider>
+      </GlobalProvider>
+    </APICacheProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

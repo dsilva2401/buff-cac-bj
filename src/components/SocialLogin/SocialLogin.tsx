@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
 } from 'firebase/auth';
+import { usePreview } from 'hooks/usePreview';
 import { useCallback } from 'react';
 import { ProviderName } from 'types/Auth';
 import { useTranslation } from 'react-i18next';
@@ -29,19 +30,11 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
   const { t } = useTranslation('translation', { keyPrefix: 'socialLogin' });
 
   const auth = getAuth();
-  const { isPreviewMode, productModule } = useGlobal();
+  const { productModule } = useGlobal();
+  const { isPreviewMode, showSuccessPreviewDrawer } = usePreview();
 
   const handleSocialAuth = useCallback(
-    (providerName: ProviderName) => {
-      setLoading(true);
-
-      if (isPreviewMode) {
-        setTimeout(() => {
-          setLoading(false);
-          onSuccess();
-        }, 100);
-        return;
-      }
+    async (providerName: ProviderName) => {
       let provider = null;
       switch (providerName) {
         case ProviderName.Facebook:
@@ -54,8 +47,12 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
           provider = new GoogleAuthProvider();
       }
 
-      localStorage.setItem('currentProductModuleId', productModule);
-      signInWithRedirect(auth, provider);
+      // Only set these if the user is going to be redirect to the slug
+      if (isDrawer) {
+        localStorage.setItem('registringProduct', 'true');
+        localStorage.setItem('currentProductModuleId', productModule);
+      }
+      await signInWithRedirect(auth, provider);
     },
     [auth, onSuccess, setLoading, productModule, isPreviewMode]
   );
@@ -71,7 +68,11 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         className='register-btn google'
         variant='light'
         margin='0.5rem 0'
-        onClick={() => handleSocialAuth(ProviderName.Google)}
+        onClick={() =>
+          isPreviewMode
+            ? showSuccessPreviewDrawer()
+            : handleSocialAuth(ProviderName.Google)
+        }
         style={{ border: '1px solid #636369', color: '#000000' }}
       >
         <GoogleLogo />
@@ -82,7 +83,11 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       <Button
         className='register-btn facebook'
         variant='light'
-        onClick={() => handleSocialAuth(ProviderName.Facebook)}
+        onClick={() =>
+          isPreviewMode
+            ? showSuccessPreviewDrawer()
+            : handleSocialAuth(ProviderName.Facebook)
+        }
         style={{ border: '1px solid #636369', color: '#000000' }}
       >
         <FacebookLogo />

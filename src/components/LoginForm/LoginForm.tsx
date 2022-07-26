@@ -23,6 +23,8 @@ import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import validator from 'validator';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import { usePreview } from 'hooks/usePreview';
 interface LoginFormProps {
   isDrawer?: boolean;
   onLogin?: (isNewUser?: boolean) => void;
@@ -48,12 +50,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
     useState<boolean>(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { brandTheme, productDetails, isPreviewMode } = useGlobal();
+  const { brandTheme, productDetails, isPreviewMode, setRegisteringProduct } =
+    useGlobal();
   const [inputWrapperRef, { width }] = useElementSize();
   const getErrorMessage = useFirebaseError();
   const isVerified = useRecaptchaV3();
   const location = useLocation();
   const auth = getAuth();
+
+  const { openDrawer, closeDrawer } = useSuccessDrawerContext();
+
+  const { showSuccessPreviewDrawer } = usePreview();
 
   // sync isVerified with isHuman
   useEffect(() => {
@@ -100,21 +107,27 @@ const LoginForm: React.FC<LoginFormProps> = ({
         setLoading(false);
         return handleMagicLink();
       } else if (response.token) {
+        if (isDrawer) {
+          openDrawer();
+        }
+
         signInWithCustomToken(auth, response.token)
           .then(() => {
             if (!isDrawer) {
               togglePersonalDetailsForm(true);
             } else {
+              setRegisteringProduct(true);
               onLogin(true);
               setLoading(false);
             }
           })
           .catch((error) => {
+            closeDrawer();
             showToast({ message: getErrorMessage(error.code), type: 'error' });
           });
       }
     },
-    [handleMagicLink, auth, isDrawer, onLogin, getErrorMessage]
+    [handleMagicLink, auth, isDrawer, onLogin, getErrorMessage, closeDrawer]
   );
 
   const [getToken] = useLoginToken(onSuccess);
@@ -139,6 +152,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       setLoading(true);
       if (isPreviewMode) {
         onLogin(false);
+        showSuccessPreviewDrawer();
         return;
       }
 
@@ -159,15 +173,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
       let w: any = window;
       w.dataLayer.push({ event: 'userRegistrationEvent' });
     }
-  }, [
-    isHuman,
-    getToken,
-    error,
-    username,
-    isPreviewMode,
-    emailValidated,
-    onLogin,
-  ]);
+  }, [isHuman, getToken, error, username, isDrawer, isPreviewMode, openDrawer]);
+
+  if (showPersonalDetailsForm) {
+    return (
+      <Wrapper direction='column' width='100%' height='100%' padding='1.25rem'>
+        <PersonalDetails onPersonalDetailsUpdate={onLogin} />
+      </Wrapper>
+    );
+  }
 
   const getRegisterButtonText = () => {
     if (emailRegistration) {
@@ -308,12 +322,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
           {t('useDifferentOption')}
         </button>
       ) : (
-        <SocialLogin
-          isDrawer={isDrawer}
-          setLoading={setLoading}
-          onSuccess={onLogin}
-          buttonPrefix={getRegisterText(registrationType)}
-        />
+        !loading && (
+          <SocialLogin
+            isDrawer={isDrawer}
+            setLoading={setLoading}
+            onSuccess={onLogin}
+            buttonPrefix={getRegisterText(registrationType)}
+          />
+        )
       )}
       <Wrapper width='100%' justifyContent='center' padding='0 1rem'>
         <Text fontSize='0.7rem' textDecoration='unset'>

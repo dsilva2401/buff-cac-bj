@@ -1,22 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
+import { getRegisterText } from 'utils/getRegisterText';
 import {
   Product,
   ModuleInfoType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
-import { TFunction } from 'i18next';
-import { useAPI } from 'utils/api';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
-import dayjs, { ManipulateType } from 'dayjs';
 import PersonalDetails from 'components/PersonalDetails';
-import SuccessDrawer from 'components/SuccessDrawer';
 import HtmlWrapper from 'components/HtmlWrapper';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
+import dayjs, { ManipulateType } from 'dayjs';
+import useRegisterProduct from 'hooks/useRegisterProduct';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import getSuccessTitle from 'utils/getSuccessTitle';
 
 enum PageType {
   CURRENT_MODULE = 'CURRENT_MODULE',
@@ -42,51 +42,6 @@ type RegistrationDrawerProps = {
   showMulberryTerms?: boolean;
 };
 
-const getSuccessTitle = (
-  registrationType: string = RegistrationType.REGISTER,
-  t: TFunction
-): string => {
-  switch (registrationType) {
-    case RegistrationType.REGISTER:
-      return t('successMessage.productRegistered');
-    case RegistrationType.SIGNUP:
-      return t('successMessage.signedUp');
-    case RegistrationType.ACTIVATE:
-      return t('successMessage.warrantyActivated');
-  }
-  return t('successMessage.productRegistered');
-};
-
-const useRegisterProduct = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { slug, reFetchProduct, token } = useGlobal();
-  const [registerProduct] = useAPI(
-    {
-      method: 'POST',
-      endpoint: `products/register/${slug}`,
-    },
-    token
-  );
-
-  const registerProductAndFetch = useCallback(
-    async (warrantyId: string) => {
-      setLoading(true);
-      try {
-        await registerProduct({ warrantyId });
-        reFetchProduct();
-        return;
-      } catch (error) {
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [registerProduct, reFetchProduct]
-  );
-
-  return { registerProductAndFetch, loading };
-};
-
 const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   closePage,
   warrantyData,
@@ -103,9 +58,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   brandName,
   showMulberryTerms,
 }) => {
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [productRegistered, setProductRegistered] = useState<boolean>(false);
-  const [waitingForToken, setWaitingForToken] = useState<boolean>(false);
   const [pageToShow, setPageToShow] = useState<PageType>(PageType.NONE);
   const [productRegisterCallMade, setProductRegisterCallMade] =
     useState<boolean>(false);
@@ -117,19 +70,20 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     isPreviewMode,
     setProductDetails,
     productDetails,
+    setRegisteringProduct,
   } = useGlobal();
 
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
 
-  const closeSuccess = useCallback(() => {
-    setSuccessDrawer(false);
-    closePage();
-  }, [closePage]);
+  const { t: registrationTranslation } = useTranslation('translation', {
+    keyPrefix: 'registration',
+  });
 
-  const { registerProductAndFetch, loading: registerProductLoading } =
-    useRegisterProduct();
+  const { registerProductAndFetch } = useRegisterProduct();
+
+  const { openDrawer, setMeta, showSuccess, open } = useSuccessDrawerContext();
 
   const checkAndRegisterProduct = useCallback(async () => {
     try {
@@ -158,20 +112,33 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
           return module;
         }) || [];
 
+      setRegisteringProduct(false);
+      setProductRegistered(true);
       setProductDetails({
         ...productDetails,
         product: { ...productDetails?.product, registeredToCurrentUser: true },
         modules,
       });
 
-      setProductRegistered(true);
+      setMeta({
+        title:
+          registrationData?.confirmationHeader ||
+          registrationTranslation(
+            getSuccessTitle(registrationData?.registrationType)
+          ),
+        description: registrationData?.confirmationText,
+      });
+
+      showSuccess();
     } catch (error: any) {
+      console.log(error);
       const errorResponse: any = await error.json();
       showToast({ message: errorResponse.error, type: 'error' });
       closePage();
     }
   }, [
     registerProductAndFetch,
+    registrationData,
     warrantyId,
     warrantyData,
     closePage,
@@ -183,40 +150,15 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   const register = useCallback(() => {
     if (productRegisterCallMade) return;
 
-    setSuccessDrawer(true);
+    openDrawer();
     setProductRegisterCallMade(true);
-    if (isPreviewMode) setSuccessDrawer(true);
-    else checkAndRegisterProduct();
+
+    if (isPreviewMode) {
+      openDrawer();
+    } else {
+      checkAndRegisterProduct();
+    }
   }, [checkAndRegisterProduct, isPreviewMode, productRegisterCallMade]);
-
-  useEffect(() => {
-    // if it's a new user call register
-    if (isNewUser && !productRegisterCallMade) {
-      setWaitingForToken(true);
-      setSuccessDrawer(true);
-      if (token) {
-        register();
-        setWaitingForToken(false);
-      }
-    }
-  }, [isNewUser, register, token, productRegisterCallMade]);
-
-  // call register if
-  // registration is Required in order to view the module
-  // if the product is not registered to the user
-  // if user just signedin
-  useEffect(() => {
-    if (!currentModule || (currentModule.registrationRequired && !token))
-      return;
-    if (product.registeredToCurrentUser === undefined) return;
-    if (
-      currentModule.registrationRequired &&
-      !alreadySignedIn &&
-      !product.registeredToCurrentUser
-    ) {
-      register();
-    }
-  }, [currentModule, product, register, alreadySignedIn, token, isNewUser]);
 
   useEffect(() => {
     if (isNewUser) {
@@ -249,19 +191,20 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   useEffect(() => {
     // only update disableModal when user is loggedIn
-    if (user && currentModule?.registrationRequired)
-      setDisableModalDismiss(successDrawer);
-  }, [successDrawer, currentModule, setDisableModalDismiss, user]);
+    if (user && currentModule?.registrationRequired) {
+      setDisableModalDismiss(open);
+    }
+  }, [open, currentModule, setDisableModalDismiss, user]);
 
   useEffect(() => {
     try {
-      if (successDrawer && isPreviewMode) {
+      if (open && isPreviewMode) {
         setTimeout(() => {
           window.parent.postMessage({ type: 'userRegistered' }, '*');
         }, 3000);
       }
     } catch (e) {}
-  }, [successDrawer, isPreviewMode]);
+  }, [open, isPreviewMode]);
 
   const renderPage = useCallback(() => {
     switch (pageToShow) {
@@ -337,7 +280,14 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
                 </p>
               </Text>
             </Wrapper>
-            <Button variant='dark' brandTheme={brandTheme} onClick={register}>
+            <Button
+              variant='dark'
+              brandTheme={brandTheme}
+              onClick={() => {
+                openDrawer();
+                register();
+              }}
+            >
               {getRegisterText(registrationData?.registrationType)}
             </Button>
           </Wrapper>
@@ -358,22 +308,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     slug,
   ]);
 
-  return (
-    <>
-      <SuccessDrawer
-        isOpen={successDrawer}
-        loading={waitingForToken || registerProductLoading}
-        onCompleteAnimation={() => setSuccessDrawer(false)}
-        title={
-          registrationData?.confirmationHeader ||
-          getSuccessTitle(registrationData?.registrationType, t)
-        }
-        description={registrationData?.confirmationText}
-        close={closeSuccess}
-      />
-      {renderPage()}
-    </>
-  );
+  return renderPage();
 };
 
 export default RegistrationDrawer;

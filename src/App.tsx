@@ -3,7 +3,6 @@ import { isBrowser } from 'react-device-detect';
 import { BrowserRouter } from 'react-router-dom';
 import { useGlobal } from './context/global/GlobalContext';
 import { getAuth, getRedirectResult } from 'firebase/auth';
-import { MAGIC_ACTION } from 'context/global/GlobalProvider';
 import { LastLocationProvider } from 'react-router-last-location';
 import AppContainer from 'components/AppContainer/AppContainer';
 import AppFrame from 'components/AppFrame/AppFrame';
@@ -12,17 +11,21 @@ import GlobalStyle from 'styles/global';
 import Toast from 'components/Toast';
 import Text from 'components/Text';
 import Routes from './routes';
+import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import { showToast } from 'components/Toast/Toast';
 
 export default function App() {
   const {
     appZoom,
-    setUser,
     setProductModule,
-    setMagicPayload,
-    setMagicAction,
     setAlreadySignIn,
     user: existingUser,
     setRegisteringProduct,
+    setRedirectResolved,
+    token,
+    isPreviewMode,
+    setToken,
   } = useGlobal();
 
   useLayoutEffect(() => {
@@ -30,36 +33,47 @@ export default function App() {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
 
+  const { openDrawer } = useSuccessDrawerContext();
+
+  useEffect(() => {
+    if (token && isPreviewMode) {
+      setToken(null);
+    }
+  }, [token, isPreviewMode]);
+
   useEffect(() => {
     const auth = getAuth();
 
-    getRedirectResult(auth).then((result) => {
-      if (!!result) {
-        let w: any = window;
-        w.dataLayer.push({ event: 'userRegistrationEvent' });
-      }
-      let user = result?.user;
-      if (user && !existingUser) {
-        setUser(user);
-        let moduleId = localStorage.getItem('currentProductModuleId');
-        if (moduleId) {
-          setProductModule(moduleId);
-          localStorage.removeItem('currentProductModuleId');
-          setMagicAction(MAGIC_ACTION.OPEN_MODULE);
-          setMagicPayload({ moduleId: moduleId });
-          setAlreadySignIn(false);
-          setRegisteringProduct(true);
+    getRedirectResult(auth)
+      .then((result) => {
+        if (!!result) {
+          let w: any = window;
+          w.dataLayer.push({ event: 'userRegistrationEvent' });
         }
-      }
-    });
+        let user = result?.user;
+
+        if (user && !existingUser) {
+          let moduleId = localStorage.getItem('currentProductModuleId');
+          if (moduleId) {
+            setProductModule(moduleId);
+            setAlreadySignIn(false);
+            setRegisteringProduct(true);
+
+            localStorage.removeItem('currentProductModuleId');
+          }
+        }
+
+        setRedirectResolved(true);
+      })
+      .catch((error) => showToast({ message: error, type: 'error' }));
   }, [
     setProductModule,
-    setMagicAction,
-    setMagicPayload,
     setAlreadySignIn,
-    setUser,
     existingUser,
     setRegisteringProduct,
+    openDrawer,
+    setRedirectResolved,
+    token,
   ]);
 
   if (isBrowser) {
@@ -73,6 +87,7 @@ export default function App() {
     <div id={isBrowser ? '' : 'portrait'}>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <LastLocationProvider>
+          <SuccessDrawerWrapper />
           <SideMenu />
           <Routes />
         </LastLocationProvider>

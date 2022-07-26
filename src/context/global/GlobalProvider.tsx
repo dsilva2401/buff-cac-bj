@@ -1,50 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useGlobal, GlobalContext, UserLocationType } from './GlobalContext';
+import React, { useEffect, useState } from 'react';
+import { GlobalContext, UserLocationType } from './GlobalContext';
 import { theme } from 'styles/theme';
-import { getAuth, User } from 'firebase/auth';
 import { EventPayload } from '../../hooks/useLogEvent';
-import usePersonalDetails from 'hooks/usePersonalDetails';
 import useProductDetails from 'hooks/useProductDetails';
 import useCollection from '../../hooks/useCollection';
 import useLogEvent from 'hooks/useLogEvent';
+import useUser from 'hooks/useUser';
 
 export enum MAGIC_ACTION {
   OPEN_MODULE = 'OPEN_MODULE',
   REDIRECT = 'REDIRECT',
 }
-
-const useUser = () => {
-  const [authFetched, setAuthFetched] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [personalDetails, getPersonalDetails, token] = usePersonalDetails(user);
-  const { isPreviewMode } = useGlobal();
-
-  useEffect(() => {
-    const auth = getAuth();
-    auth.onAuthStateChanged(async (user) => {
-      // document.location.href is a hack until we find a better solution
-      // because this code runs even before we get a chance to set isPreviewMode.
-      // maybe because firebase store user information in localStorage and triggers this very quickly.
-      if (
-        !isPreviewMode &&
-        document.location.href.split('/').pop() !== '1234'
-      ) {
-        if (user) setUser(user);
-        else setUser(null);
-        setAuthFetched(true);
-      }
-    });
-  }, [setAuthFetched, setUser, isPreviewMode]);
-
-  return {
-    user,
-    setUser,
-    personalDetails,
-    getPersonalDetails,
-    authFetched,
-    token,
-  };
-};
 
 export const GlobalProvider: React.FC = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -72,8 +38,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
   );
   const [autoDeployTriggered, setAutoDeployTriggered] =
     React.useState<boolean>(false);
-  const [signedIn, setSignedIn] = useState<boolean>(false);
   const [productModule, setProductModule] = useState<string>('');
+  const [redirectResolved, setRedirectResolved] = useState<boolean>(false);
 
   // by default we keep alreadySignedIn true
   // because even if the user was not signed in
@@ -87,10 +53,11 @@ export const GlobalProvider: React.FC = ({ children }) => {
     setUser,
     authFetched,
     token,
+    setToken,
   } = useUser();
 
   const [productDetails, reFetchProduct, productLoading, setProductDetails] =
-    useProductDetails(slug, token, previewEvent);
+    useProductDetails(slug, token, previewEvent, authFetched);
   const [collectionDetails, getCollection] = useCollection(token);
   const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
@@ -103,6 +70,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (slug) setAutoDeployTriggered(false);
   }, [slug]);
+
   useEffect(() => {
     window.addEventListener('popstate', onBackButtonEvent);
     return () => {
@@ -132,7 +100,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
           setPreviewEvent({ ...event.data });
           if (event && event.data && event.data.type === 'enablePreview') {
             setIsPreviewMode(true);
-            setSignedIn(false);
             setUser(null);
             setAppZoom(event.data.zoom);
             let style = document.getElementById('setZoomStyleForDropdowns');
@@ -321,6 +288,9 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setProductDetails,
         setRegisteringProduct,
         registeringProduct,
+        redirectResolved,
+        setRedirectResolved,
+        setToken,
       }}
     >
       {children}

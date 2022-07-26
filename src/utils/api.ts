@@ -1,5 +1,6 @@
+import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 import { useGlobal } from 'context/global/GlobalContext';
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer, useState } from 'react';
 
 interface APIpayload {
   method: string;
@@ -19,11 +20,13 @@ const API_URL =
 export function useAPI<T>(
   payload: APIpayload,
   currentToken: string | null = null,
-  shouldUseToken: boolean = true
+  shouldUseToken: boolean = true,
+  cacheEnabled: boolean = false
 ): UseAPIVars<T> {
   const { token, isPreviewMode } = useGlobal();
   const { method, endpoint, onSuccess, onError } = payload;
   const [cancelController, setCancelController] = useState<any>(null);
+  const { updateCacheForAPI } = useAPICacheContext();
 
   // in some cases we will call the useAPI hook inside useGlobal
   // and in that case the user is not always up to date with global context state
@@ -80,6 +83,12 @@ export function useAPI<T>(
           const response = await res.json();
           setLoading(false);
           onSuccess && onSuccess(response);
+
+          // if cache is enabled for api cache the response
+          if (cacheEnabled) {
+            updateCacheForAPI(endpoint, response);
+          }
+
           return response;
         } else if (res.status === 400 && !isPreviewMode) {
           window.location.href = `${window.location.protocol}//${window.location.host}/app/404`;
@@ -100,6 +109,8 @@ export function useAPI<T>(
       endpoint,
       onSuccess,
       onError,
+      cacheEnabled,
+      updateCacheForAPI,
     ]
   );
 

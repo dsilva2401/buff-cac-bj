@@ -45,6 +45,12 @@ import {
   VideoModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import useRegisterProduct from 'hooks/useRegisterProduct';
+import addWarrantyInformation from 'utils/addWarrantyInformation';
+import getSuccessTitle from 'utils/getSuccessTitle';
+import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
+import { showToast } from 'components/Toast/Toast';
 
 type UrlParam = {
   id: string;
@@ -60,13 +66,13 @@ interface Props {
 }
 
 const ProductDetails: React.FC<Props> = ({ navToForm }) => {
+  const [registerCallMade, setRegisterCallMade] = useState<boolean>(false);
   const [isDrawerPageOpen, setIsDrawerPageOpen] = useState<boolean>(false);
   const [isFormNavigation, setIsFormNavigation] = useState(false);
   const [animateTable, toggleAnimateTable] = useState<boolean>(false);
   const [showCoverageTable, toggleCoverageTable] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string | undefined>('');
   const [currentPage, setCurrentPage] = useState<number | null>(null);
-  const [showAuthPage, setShowAuthPage] = useState<boolean>(false);
   const [mainDrawerOpen, setMainDrawerOpen] = useState<boolean>(false);
   const [isNewUser, setNewUser] = useState<boolean>(false);
   const { topHeight, bottomHeight } = useHeights();
@@ -88,7 +94,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
-    user,
     previewEvent,
     isPreviewMode,
     previewAuthenticated,
@@ -97,8 +102,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     retractDrawer,
     setMagicAction,
     setMagicPayload,
-    magicAction,
-    magicPayload,
+    productModule,
     agegateDisplay,
     toggleAgegateDisplay,
     brandTheme,
@@ -106,10 +110,26 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     setProductModule,
     alreadySignedIn,
     setAlreadySignIn,
+    redirectResolved,
+    registeringProduct,
+    setRegisteringProduct,
+    token,
+    setProductDetails,
+    personalDetails,
+    reFetchProduct,
+    authFetched,
   } = useGlobal();
+
+  const { t: registrationTranslation } = useTranslation('translation', {
+    keyPrefix: 'registration',
+  });
 
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
+  const { registerProductAndFetch } = useRegisterProduct();
+  const { setMeta, showSuccess, closeDrawer, openDrawer } =
+    useSuccessDrawerContext();
+  const { invalidateCache } = useAPICacheContext();
 
   const closeDrawerPage = useCallback(
     (closeDrawer = false) => {
@@ -184,13 +204,9 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   useEffect(() => {
     const event = previewEvent;
     if (event && event.type === 'changeDrawerPage') {
-      const newModule = details?.modules[event.data];
-      if (newModule) setShowAuthPage(newModule?.locked);
       changeDrawerPage(event.data);
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage();
-    } else if (event && event.type === 'setAuthState') {
-      setShowAuthPage(!event.data);
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage, details?.modules]);
 
@@ -211,31 +227,112 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   }, [isFormNavigation, details, topHeight, changeDrawerPage, setMagicAction]);
 
   useEffect(() => {
-    if (
-      magicAction === MAGIC_ACTION.OPEN_MODULE &&
-      user &&
-      details?.modules?.length
-    ) {
-      const { moduleId } = magicPayload;
-      const moduleIndex = details?.modules?.findIndex(
-        (moduleDetail) => moduleDetail.id === moduleId
-      );
-      if (moduleIndex !== -1) {
-        changeDrawerPage(moduleIndex);
-        setPosition({ x: 0, y: topHeight });
-        setMainDrawerOpen(true);
-        setMagicAction(MAGIC_ACTION.REDIRECT);
+    if (registerCallMade) {
+      return;
+    }
+
+    if (!token) {
+      return;
+    }
+
+    if (!registeringProduct) {
+      return;
+    }
+
+    if (!personalDetails) {
+      return;
+    }
+
+    const register = async () => {
+      try {
+        if (!details) {
+          return;
+        }
+
+        openDrawer();
+
+        setRegisterCallMade(true);
+
+        const isItemExist = personalDetails?.profile?.productCollection?.find(
+          (item) => item.tagId === id
+        );
+
+        if (isItemExist) {
+          invalidateCache();
+          await reFetchProduct();
+
+          const moduleIndex = details?.modules?.findIndex(
+            (moduleDetail) => moduleDetail.id === productModule
+          );
+
+          if (moduleIndex !== -1) {
+            changeDrawerPage(moduleIndex);
+            setPosition({ x: 0, y: topHeight });
+            setMainDrawerOpen(true);
+          }
+
+          // HACK: To hide the animation of opening the bottomdrawer
+          setTimeout(() => closeDrawer(), 1000);
+          return;
+        }
+
+        const warrantyModule = getWarrantyModule(details);
+        await registerProductAndFetch(warrantyModule?.id as string);
+
+        const registrationData = details?.registration;
+
+        setMeta({
+          title:
+            registrationData?.confirmationHeader ||
+            registrationTranslation(
+              getSuccessTitle(registrationData?.registrationType)
+            ),
+          description: registrationData?.confirmationText,
+        });
+
+        if (warrantyModule) {
+          const productDetailsWithWarranty = addWarrantyInformation(
+            warrantyModule,
+            details
+          );
+
+          setProductDetails(productDetailsWithWarranty);
+        }
+
+        showSuccess();
+
+        const moduleIndex = details?.modules?.findIndex(
+          (moduleDetail) => moduleDetail.id === productModule
+        );
+
+        if (moduleIndex !== -1) {
+          changeDrawerPage(moduleIndex);
+          setPosition({ x: 0, y: topHeight });
+          setMainDrawerOpen(true);
+        }
+      } catch (error: any) {
+        closeDrawer();
+        showToast({ message: error, type: 'error' });
+      } finally {
+        setRegisteringProduct(false);
       }
+    };
+
+    if (details?.modules?.length) {
+      register();
     }
   }, [
-    magicPayload,
-    changeDrawerPage,
-    setMagicAction,
-    magicAction,
-    user,
-    currentPage,
+    productModule,
     details,
+    registeringProduct,
+    registerCallMade,
+    changeDrawerPage,
     topHeight,
+    personalDetails,
+    id,
+    reFetchProduct,
+    invalidateCache,
+    token,
   ]);
 
   useEffect(() => {
@@ -300,7 +397,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           title,
           onClick: () => {
             const module = details?.modules[x];
-            setShowAuthPage(module?.locked);
             setProductModule(module.id);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
@@ -417,7 +513,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       } else {
         setPreviewAuthenticated(true);
       }
-      setShowAuthPage(false);
       setDisableModalDismiss(false);
     },
     [isPreviewMode, setPreviewAuthenticated]
@@ -444,7 +539,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         }
       }
 
-      if (showAuthPage && (!isPreviewMode || !previewAuthenticated)) {
+      if (module?.registrationRequired && !token) {
         return (
           <Wrapper
             width='100%'
@@ -706,7 +801,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     retractDrawer,
     closeDrawerPage,
     details,
-    showAuthPage,
     previewAuthenticated,
     isPreviewMode,
     toggleAnimateTable,
@@ -735,6 +829,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     </Wrapper>
   );
 
+  const pageLoading = loading || !redirectResolved || !authFetched;
+
   return (
     <>
       {details && <AgeGate />}
@@ -743,58 +839,46 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           <title>{details?.brand?.name} by Brij</title>
         </Helmet>
       )}
-      {loading ? (
-        <>
-          <ProductHeroImage />
-          <Wrapper
-            width='100%'
-            height='100%'
-            direction='column'
-            justifyContent='space-between'
-            overflow='auto'
-            position='relative'
-          >
-            <LoadingIndicator />
-          </Wrapper>
-        </>
-      ) : (
-        <>
-          <ProductHeroImage />
-          <Wrapper
-            width='100%'
-            height='100%'
-            direction='column'
-            justifyContent='space-between'
-            overflow='auto'
-            position='relative'
-          >
-            <PageHeader
-              logo={logo(details?.brand?.image ?? '')}
-              actionButton={menuButton()}
-              border={false}
-              transparent
-            />
-          </Wrapper>
-        </>
-      )}
-      <BottomDrawer
-        title={pageTitle}
-        subtitle={details?.product?.subtitle}
-        buttons={buttonsArray()}
-        socials={details?.brand?.social}
-        isChildOpen={isDrawerPageOpen}
-        closeChild={closeDrawerPage}
-        leadInformation={leadInformation}
-        disableModalDismiss={disableModalDismiss}
-        mainDrawerOpen={mainDrawerOpen}
-        setMainDrawerOpen={setMainDrawerOpen}
-        position={position}
-        setPosition={setPosition}
-        autoDeploy={details?.modules[0]?.autoDeploy}
-        product={details?.product}
+      <ProductHeroImage />
+      <Wrapper
+        width='100%'
+        height='100%'
+        direction='column'
+        justifyContent='space-between'
+        overflow='auto'
+        position='relative'
       >
-        {renderDrawerPage()}
-      </BottomDrawer>
+        {pageLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <PageHeader
+            logo={logo(details?.brand?.image ?? '')}
+            actionButton={menuButton()}
+            border={false}
+            transparent
+          />
+        )}
+      </Wrapper>
+      <div style={pageLoading && !mainDrawerOpen ? { display: 'none' } : {}}>
+        <BottomDrawer
+          title={pageTitle}
+          subtitle={details?.product?.subtitle}
+          buttons={buttonsArray()}
+          socials={details?.brand?.social}
+          isChildOpen={isDrawerPageOpen}
+          closeChild={closeDrawerPage}
+          leadInformation={leadInformation}
+          disableModalDismiss={disableModalDismiss}
+          mainDrawerOpen={mainDrawerOpen}
+          setMainDrawerOpen={setMainDrawerOpen}
+          position={position}
+          setPosition={setPosition}
+          autoDeploy={details?.modules[0]?.autoDeploy}
+          product={details?.product}
+        >
+          {renderDrawerPage()}
+        </BottomDrawer>
+      </div>
     </>
   );
 };

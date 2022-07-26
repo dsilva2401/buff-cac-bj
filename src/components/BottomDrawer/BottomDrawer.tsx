@@ -149,15 +149,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       setMainDrawerOpen(false);
       closeChild();
     }
-  }, [
-    position,
-    topHeight,
-    bottomHeight,
-    closeChild,
-    setMainDrawerOpen,
-    isChildOpen,
-    appZoom,
-  ]);
+  }, [position, topHeight, bottomHeight, closeChild, setMainDrawerOpen]);
 
   useEffect(() => {
     if (
@@ -221,6 +213,38 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       ? true
       : false;
   };
+
+  useEffect(() => {
+    if (!authFetched) {
+      return;
+    }
+
+    if (registeringProduct) {
+      return;
+    }
+
+    if (product?.registeredToCurrentUser) {
+      return;
+    }
+
+    if (autoDeploy && buttons && buttons.length > 0) {
+      setTimeout(() => {
+        !autoDeployTriggered &&
+          leadModuleButtonRef.current &&
+          leadModuleButtonRef.current.click();
+        setAutoDeployTriggered(true);
+      }, 500);
+    }
+  }, [
+    buttons,
+    product,
+    autoDeploy,
+    authFetched,
+    registeringProduct,
+    autoDeployTriggered,
+    setAutoDeployTriggered,
+    leadModuleButtonRef.current,
+  ]);
 
   const drawerFooter = useMemo(() => {
     return (
@@ -314,7 +338,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       >
         <Drawer
           isControlled={isControlled}
-          style={isPreviewMode ? { height: `calc((88vh / ${appZoom}))` } : {}}
+          style={isPreviewMode ? { height: `88%` } : {}}
         >
           <Wrapper
             width='100%'

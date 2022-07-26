@@ -5,7 +5,12 @@ import { useAPI } from 'utils/api';
 
 function usePersonalDetails(
   user: User | null
-): [UserStruct | null, () => void, string | null] {
+): [
+  UserStruct | null,
+  () => void,
+  string | null,
+  (newToken: string | null) => void
+] {
   const [personalDetails, setpersonalDetails] = useState<UserStruct | null>(
     null
   );
@@ -62,7 +67,7 @@ function usePersonalDetails(
     }
   }, [user, getUser, tempToken]);
 
-  return [personalDetails, getUser, token];
+  return [personalDetails, getUser, token, setToken];
 }
 
 export default usePersonalDetails;

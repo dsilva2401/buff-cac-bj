@@ -3,6 +3,7 @@ import PersonalDetails from 'components/PersonalDetails';
 import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from 'context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import {
   getAuth,
   isSignInWithEmailLink,
@@ -20,10 +21,10 @@ const MagicLink = () => {
     setUser,
     signInRedirect,
     setSignInRedirect,
-    setMagicPayload,
     setMagicAction,
     setAlreadySignIn,
     setRegisteringProduct,
+    setProductModule,
   } = useGlobal();
   const [showPersonalDetailsForm, togglePersonalDetailsForm] =
     useState<boolean>(false);
@@ -38,12 +39,14 @@ const MagicLink = () => {
     location.search
   );
 
+  const { openDrawer } = useSuccessDrawerContext();
+
   useEffect(() => {
     if (payload) {
       const payloadObject = JSON.parse(decodeURIComponent(payload as string));
-      setMagicPayload(payloadObject);
+      setProductModule(payloadObject?.moduleId);
     }
-  }, [payload, setMagicPayload]);
+  }, [payload, setProductModule]);
 
   const redirectUser = useCallback(() => {
     if (signInRedirect) {
@@ -69,15 +72,13 @@ const MagicLink = () => {
         case MAGIC_ACTION.OPEN_MODULE: {
           setAlreadySignIn(false);
           setRegisteringProduct(true);
+          openDrawer();
           const productLink = RoutesHashMap.ProductDetails.path(productSlug);
           history.push(productLink);
           break;
         }
 
         default: {
-          // let link = signInRedirect || RoutesHashMap.Collection.path;
-          // SUSH: Temp. change to route to collection. Need to undo and fix
-
           const link = RoutesHashMap.Collection.path;
           history.push(link);
         }
@@ -92,6 +93,7 @@ const MagicLink = () => {
     setSignInRedirect,
     action,
     productSlug,
+    openDrawer,
     setAlreadySignIn,
     setRegisteringProduct,
   ]);

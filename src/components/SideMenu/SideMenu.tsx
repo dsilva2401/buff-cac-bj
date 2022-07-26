@@ -20,6 +20,7 @@ import brijLogo from 'assets/logos/svg/brij.svg';
 import DrawerMask from 'components/DrawerMask';
 import Image from 'components/Image';
 import Menu from './styles';
+import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 
 function usePrevious<T>(value: T) {
   const ref = useRef<T>(value);
@@ -49,31 +50,22 @@ const SideMenu: React.FC = () => {
   const history = useHistory();
   const auth = getAuth();
 
-  const [signedIn, setSignedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      // document.location.href is a hack until we find a better solution
-      // because this code runs even before we get a chance to set isPreviewMode.
-      // maybe because firebase store user information in localStorage and triggers this very quickly.
-      if (
-        !isPreviewMode &&
-        document.location.href.split('/').pop() !== '1234'
-      ) {
-        if (user) {
-          setSignedIn(true);
-        } else setSignedIn(false);
-      }
-    });
-  }, [auth, isPreviewMode]);
+  const { invalidateCache } = useAPICacheContext();
+
+  const userToUse = isPreviewMode ? null : user;
 
   useEffect(() => {
+    if (isPreviewMode) {
+      return;
+    }
+
     if (previousUser && !user) {
       history.push(RoutesHashMap.Login.path);
     }
-  }, [previousUser, user, history]);
+  }, [previousUser, user, history, isPreviewMode]);
 
   const handleLogoutButtonClicked = useCallback(() => {
     if (error !== '') setError('');
@@ -83,14 +75,16 @@ const SideMenu: React.FC = () => {
       .then(() => {
         setLoading(false);
         showToast({ message: t('signOutToastMessage'), type: 'success' });
+        invalidateCache();
       })
       .catch((error) => {
         showToast({ message: error.message, type: 'error' });
       });
     setIsMenuOpen(false);
-  }, [setIsMenuOpen, auth, error, t, setSlug]);
+  }, [setIsMenuOpen, auth, error, t, setSlug, invalidateCache]);
 
   const redirectToCollection = useCallback(() => {
+    invalidateCache();
     history.push(RoutesHashMap.Collection.path);
     showToast({
       message: `${
@@ -100,7 +94,14 @@ const SideMenu: React.FC = () => {
     });
     setSlug(null);
     setIsMenuOpen(false);
-  }, [history, setIsMenuOpen, setSlug, details?.product?.name, slug]);
+  }, [
+    history,
+    setIsMenuOpen,
+    setSlug,
+    details?.product?.name,
+    slug,
+    invalidateCache,
+  ]);
 
   const onRemoveProductError = (error: any) => {
     showToast({ message: error.message, type: 'error' });
@@ -138,7 +139,7 @@ const SideMenu: React.FC = () => {
             </button>
           </span>
           <nav>
-            {signedIn ? (
+            {userToUse ? (
               <Link
                 className='go-to-my-profile'
                 to={RoutesHashMap.Profile.path}
@@ -148,7 +149,8 @@ const SideMenu: React.FC = () => {
                 <Profile />
               </Link>
             ) : null}
-            {signedIn && location.pathname !== RoutesHashMap.Collection.path ? (
+            {userToUse &&
+            location.pathname !== RoutesHashMap.Collection.path ? (
               <Link
                 className='go-to-my-collection'
                 to={RoutesHashMap.Collection.path}
@@ -196,7 +198,7 @@ const SideMenu: React.FC = () => {
                   <External />
                 </a>
               )}
-            {signedIn ? (
+            {userToUse ? (
               <p className='sign-out' onClick={handleLogoutButtonClicked}>
                 {t('signOut')}
                 {loading ? <LoadingIndicator /> : <Logout />}
