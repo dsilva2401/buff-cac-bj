@@ -88,7 +88,24 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({
         showToast({ message: 'Last name is required', type: 'error' });
         return;
       }
-      updateUser(details);
+
+      if (
+        details.phoneNumber &&
+        details.phoneNumber.replace(/[^\d]/g, '').length !== 11
+      ) {
+        showToast({
+          message: 'Please add a valid phone number',
+          type: 'error',
+        });
+        return;
+      }
+
+      updateUser({
+        ...details,
+        phoneNumber: details.phoneNumber
+          ? details.phoneNumber.replace(/[^\d]/g, '').substring(1, 11)
+          : '',
+      });
     },
     [updateUser]
   );
