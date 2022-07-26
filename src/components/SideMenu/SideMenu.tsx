@@ -67,7 +67,7 @@ const SideMenu: React.FC = () => {
         } else setSignedIn(false);
       }
     });
-  }, [auth]);
+  }, [auth, isPreviewMode]);
 
   useEffect(() => {
     if (previousUser && !user) {

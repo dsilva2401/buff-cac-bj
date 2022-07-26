@@ -1,5 +1,4 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
-import { useGlobal } from 'context/global/GlobalContext';
 import { ChangeEvent } from 'react';
 
 type Props = {

@@ -3,15 +3,14 @@ import { ReactComponent as GoogleLogo } from 'assets/logos/svg/google.svg';
 import Button from 'components/Button';
 import Wrapper from 'components/Wrapper';
 import {
-  FacebookAuthProvider,
   getAuth,
+  FacebookAuthProvider,
   GoogleAuthProvider,
   signInWithRedirect,
 } from 'firebase/auth';
-import useFirebaseError from 'hooks/useFirebaseError';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ProviderName } from 'types/Auth';
+import { useTranslation } from 'react-i18next';
 import { useGlobal } from '../../context/global/GlobalContext';
 
 interface SocialLoginProps {
@@ -30,7 +29,6 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
   const { t } = useTranslation('translation', { keyPrefix: 'socialLogin' });
 
   const auth = getAuth();
-  const getFirebaseError = useFirebaseError();
   const { isPreviewMode, productModule } = useGlobal();
 
   const handleSocialAuth = useCallback(
@@ -59,14 +57,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       localStorage.setItem('currentProductModuleId', productModule);
       signInWithRedirect(auth, provider);
     },
-    [
-      auth,
-      onSuccess,
-      getFirebaseError,
-      setLoading,
-      productModule,
-      isPreviewMode,
-    ]
+    [auth, onSuccess, setLoading, productModule, isPreviewMode]
   );
 
   return (
@@ -84,7 +75,9 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
         style={{ border: '1px solid #636369', color: '#000000' }}
       >
         <GoogleLogo />
-        {isDrawer ? `${buttonPrefix} with Google` : t('continueGoogleButton')}
+        {isDrawer
+          ? `${buttonPrefix} ${t('withGoogleText')}`
+          : t('continueGoogleButton')}
       </Button>
       <Button
         className='register-btn facebook'
@@ -94,7 +87,7 @@ const SocialLogin: React.FC<SocialLoginProps> = ({
       >
         <FacebookLogo />
         {isDrawer
-          ? `${buttonPrefix} with Facebook`
+          ? `${buttonPrefix} ${t('withFacebooktext')}`
           : t('continueFacebookButton')}
       </Button>
     </Wrapper>

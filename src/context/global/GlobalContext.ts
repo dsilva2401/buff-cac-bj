@@ -5,12 +5,6 @@ import { MAGIC_ACTION } from './GlobalProvider';
 import { UserStruct } from 'types/User';
 import { User } from 'firebase/auth';
 
-export type PageStateType = {
-  currentPage: number;
-  isDrawerOpen: boolean;
-  pageTitle: string;
-} | null;
-
 export type UserLocationType = {
   latitude: number;
   longitude: number;
@@ -33,8 +27,6 @@ export type GlobalContextProps = {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   signInRedirect: string;
   setSignInRedirect: React.Dispatch<React.SetStateAction<string>>;
-  pageState: PageStateType | null;
-  setPageState: React.Dispatch<React.SetStateAction<PageStateType | null>>;
   user: User | null;
   personalDetails: UserStruct | null;
   productDetails: ProductDetailsType | null;
@@ -92,8 +84,6 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setIsMenuOpen: () => {},
   signInRedirect: '',
   setSignInRedirect: () => {},
-  pageState: null,
-  setPageState: () => {},
   user: null,
   personalDetails: null,
   productDetails: null,

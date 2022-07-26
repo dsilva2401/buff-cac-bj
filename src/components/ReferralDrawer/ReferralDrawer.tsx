@@ -23,7 +23,7 @@ const ReferralDrawer: React.FC<ReferralDrawerProps> = ({
   drawerTitle,
   referralData,
 }) => {
-  const { brandTheme, logEvent } = useGlobal();
+  const { brandTheme } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.referralDrawer',
   });

@@ -2,9 +2,9 @@ export const resources = {
   en: {
     translation: {
       socialLogin: {
-        registerGoogleButton: 'Register with Google',
+        withGoogleText: 'with Google',
         continueGoogleButton: 'Continue with Google',
-        registerFacebookButton: 'Register with Facebook',
+        withFacebooktext: 'with Facebook',
         continueFacebookButton: 'Continue with Facebook',
       },
       signIn: {
@@ -21,6 +21,12 @@ export const resources = {
         emailInputFilledPlaceholder: 'Email',
         signUpLink: 'Sign up!',
         recaptchaVerificationFailed: 'Recaptcha Verification Failed',
+        toastMessages: {
+          invalidEmail: 'Invalid Email',
+          completeRecaptchaVerification:
+            'Please complete Recpatcha Verification',
+          cantVerifyLoginDetails: 'Not able to verify the login details',
+        },
       },
       firebaseErrors: {
         'auth/invalid-email': 'Please provie a valid email',
@@ -91,15 +97,25 @@ export const resources = {
         learnMoreLink: 'https://brij.it/',
       },
       drawers: {
+        bottomDrawer: {
+          callToActionButton: 'Call to Action',
+          moreButton: 'More',
+        },
         authDrawer: {
           termsAndconditions: {
             part1: 'By registering you agree to email communications from ',
             part2: ' and accept ',
             brijBrand: " Brij's ",
             mulberryAndBrijBrand: " mulberry & Brij's ",
-            link: 'Terms & Conditions',
+            linkText: 'Terms & Conditions',
+            link: 'https://brij.it/terms',
             part3: ' For help or questions email ',
             helpEmail: 'help@brij.it',
+          },
+          successMessage: {
+            productRegistered: 'Product Registered!',
+            signedUp: "You're Signed Up",
+            warrantyActivated: 'Warranty Activated!',
           },
         },
         registrationDrawer: {

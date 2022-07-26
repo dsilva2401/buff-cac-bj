@@ -92,6 +92,8 @@ const MagicLink = () => {
     setSignInRedirect,
     action,
     productSlug,
+    setAlreadySignIn,
+    setRegisteringProduct,
   ]);
 
   useEffect(() => {

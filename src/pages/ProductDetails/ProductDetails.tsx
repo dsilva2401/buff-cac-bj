@@ -26,6 +26,15 @@ import BottomDrawer from 'components/BottomDrawer';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
+import FormDrawer from 'components/FormDrawer';
+import ProductHeroImage from './ProductHeroImage';
+import LoadingIndicator from 'components/LoadingIndicator';
+import RegistratonDrawer from 'components/RegistratonDrawer';
+import WarrantyDrawer from 'components/WarrantyDrawer';
+import ReferralDrawer from 'components/ReferralDrawer';
+import CustomDrawer from 'components/CustomDrawer';
+import VideoDrawer from 'components/VideoDrawer';
+import ShopDrawer from 'components/ShopDrawer';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -36,15 +45,6 @@ import {
   VideoModuleType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
-import ProductHeroImage from './ProductHeroImage';
-import LoadingIndicator from 'components/LoadingIndicator';
-import RegistratonDrawer from 'components/RegistratonDrawer';
-import FormDrawer from 'components/FormDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import WarrantyDrawer from 'components/WarrantyDrawer';
-import ReferralDrawer from 'components/ReferralDrawer';
-import VideoDrawer from 'components/VideoDrawer';
-import ShopDrawer from 'components/ShopDrawer';
 
 type UrlParam = {
   id: string;
@@ -85,7 +85,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     useState<boolean>(false);
   const {
     productDetails: details,
-    pageState,
     setSignInRedirect,
     setIsMenuOpen,
     setSlug,
@@ -125,7 +124,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         }, 0);
       }
     },
-    [isFormNavigation]
+    [isFormNavigation, history, id]
   );
 
   useEffect(() => {
@@ -136,23 +135,16 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
 
   useEffect(() => {
     // for enabling back button to correct path and form module.
-    if (location.pathname === `/c/${id}`) {
-      closeDrawerPage();
-    }
+    if (location.pathname === `/c/${id}`) closeDrawerPage();
   }, [location.pathname, closeDrawerPage, id]);
 
   const changeDrawerPage = useCallback(
     (index) => {
       setCurrentPage(index);
-
       // refactor this to be controlled from module config
-
       const newModule = details?.modules[index];
-
       setMagicAction(MAGIC_ACTION.OPEN_MODULE);
-      setMagicPayload({
-        moduleId: newModule?.id,
-      });
+      setMagicPayload({ moduleId: newModule?.id });
 
       if (index) {
         const moduleType = details?.modules[index]?.type;
@@ -164,7 +156,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         setPageTitle(details?.modules[index].title);
       }
     },
-    [details, currentPage, setMagicPayload, setMagicAction]
+    [details, setMagicPayload, setMagicAction]
   );
 
   useEffect(() => {
@@ -187,22 +179,20 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     if (!!details && !isDrawerPageOpen) {
       setPageTitle(details?.product?.name);
     }
-  }, [isDrawerPageOpen, details, currentPage, pageState]);
+  }, [isDrawerPageOpen, details, currentPage]);
 
   useEffect(() => {
     const event = previewEvent;
     if (event && event.type === 'changeDrawerPage') {
       const newModule = details?.modules[event.data];
-      if (newModule) {
-        setShowAuthPage(newModule?.locked);
-      }
+      if (newModule) setShowAuthPage(newModule?.locked);
       changeDrawerPage(event.data);
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage();
     } else if (event && event.type === 'setAuthState') {
       setShowAuthPage(!event.data);
     }
-  }, [previewEvent, changeDrawerPage, closeDrawerPage]);
+  }, [previewEvent, changeDrawerPage, closeDrawerPage, details?.modules]);
 
   // automatically open module upon redirect
   useEffect(() => {
@@ -227,7 +217,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       details?.modules?.length
     ) {
       const { moduleId } = magicPayload;
-
       const moduleIndex = details?.modules?.findIndex(
         (moduleDetail) => moduleDetail.id === moduleId
       );
@@ -273,7 +262,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     }
   }, [details, setSignInRedirect, id]);
 
-  const getWarrantyDrawerTitle = () => {
+  const warrantyDrawerTitle = useMemo(() => {
     let title: string = '';
     if (details && currentPage !== null) {
       const moduleInfo = details.modules[currentPage]
@@ -283,7 +272,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         : details?.modules[currentPage].title;
     }
     return title;
-  };
+  }, [t, details, currentPage]);
 
   let buttonsArray = useCallback(() => {
     let buttons: ButtonType[] = [];
@@ -334,13 +323,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           moduleType: moduleType,
           moduleData: moduleData?.path,
           locked: details?.modules[x].locked,
-          pageState: details?.modules[x].locked
-            ? {
-                currentPage: x,
-                isDrawerOpen: true,
-                pageTitle: details?.modules[x].title,
-              }
-            : null,
           icon:
             details?.modules[x].type === 'LINK_MODULE' ? (
               <ExternalLink
@@ -354,15 +336,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       }
     }
     return buttons;
-  }, [
-    changeDrawerPage,
-    id,
-    details,
-    setSignInRedirect,
-    logEvent,
-    brandTheme,
-    setProductModule,
-  ]);
+  }, [t, details, changeDrawerPage, logEvent, brandTheme, setProductModule]);
 
   const leadModule: any = useMemo(() => {
     return details?.leadModule || {};
@@ -659,7 +633,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           case 'WARRANTY_MODULE':
             return (
               <WarrantyDrawer
-                drawerTitle={getWarrantyDrawerTitle()}
+                drawerTitle={warrantyDrawerTitle}
                 warrantyData={module?.moduleInfo as WarrantyModuleType}
                 warrantyId={module?.id}
               />
@@ -725,6 +699,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       );
     }
   }, [
+    t,
     currentPage,
     animateTable,
     isNewUser,
@@ -738,9 +713,11 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     showCoverageTable,
     height,
     tableRef,
+    brandTheme,
     onAuthComplete,
     alreadySignedIn,
     setAlreadySignIn,
+    warrantyDrawerTitle,
   ]);
 
   const logo = useCallback(

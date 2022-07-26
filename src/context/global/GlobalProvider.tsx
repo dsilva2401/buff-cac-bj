@@ -1,11 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  GlobalContext,
-  PageStateType,
-  useGlobal,
-  UserLocationType,
-} from './GlobalContext';
-import { useAPI } from 'utils/api';
+import React, { useState, useEffect } from 'react';
+import { useGlobal, GlobalContext, UserLocationType } from './GlobalContext';
 import { theme } from 'styles/theme';
 import { getAuth, User } from 'firebase/auth';
 import { EventPayload } from '../../hooks/useLogEvent';
@@ -63,7 +57,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
     latitude: 0,
     longitude: 0,
   });
-  const [pageState, setPageState] = useState<PageStateType | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [appZoom, setAppZoom] = useState(1);
@@ -160,7 +153,7 @@ export const GlobalProvider: React.FC = ({ children }) => {
         false
       );
     }
-  }, []);
+  }, [setUser]);
 
   useEffect(() => {
     try {
@@ -295,8 +288,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setIsMenuOpen,
         signInRedirect,
         setSignInRedirect,
-        pageState,
-        setPageState,
         user,
         productDetails,
         loading: productLoading,

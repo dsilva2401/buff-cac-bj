@@ -48,21 +48,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
     useState<boolean>(false);
 
   const { t } = useTranslation('translation', { keyPrefix: 'signIn' });
-  const { retractDrawer, brandTheme, productDetails, isPreviewMode } =
-    useGlobal();
+  const { brandTheme, productDetails, isPreviewMode } = useGlobal();
   const [inputWrapperRef, { width }] = useElementSize();
-  const isVerified = useRecaptchaV3();
   const getErrorMessage = useFirebaseError();
+  const isVerified = useRecaptchaV3();
   const location = useLocation();
   const auth = getAuth();
 
   // sync isVerified with isHuman
   useEffect(() => {
     // if user is not verified show backup recaptcha
-    if (!isVerified) {
-      setShowRecaptcha(true);
-    }
-
+    if (!isVerified) setShowRecaptcha(true);
     setHuman(isVerified);
   }, [isVerified]);
 
@@ -132,12 +128,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const handleLogin = useCallback(async () => {
     if (!isHuman) {
       showToast({
-        message: 'Please complete Recpatcha verification',
+        message: t('toastMessages.completeRecaptchaVerification'),
         type: 'error',
       });
       return;
     } else if (!emailValidated) {
-      showToast({ type: 'error', message: 'Invalid Email' });
+      showToast({ type: 'error', message: t('toastMessages.invalidEmail') });
       return;
     } else {
       setLoading(true);
@@ -154,7 +150,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       } catch (e) {
         // catch error when user exist in firebase but not in our db
         showToast({
-          message: 'Not able to verify the login details',
+          message: t('toastMessages.cantVerifyLoginDetails'),
           type: 'error',
         });
       } finally {
@@ -163,15 +159,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
       let w: any = window;
       w.dataLayer.push({ event: 'userRegistrationEvent' });
     }
-  }, [isHuman, getToken, error, username, isPreviewMode]);
-
-  if (showPersonalDetailsForm) {
-    return (
-      <Wrapper direction='column' width='100%' height='100%' padding='1.25rem'>
-        <PersonalDetails onPersonalDetailsUpdate={onLogin} />
-      </Wrapper>
-    );
-  }
+  }, [
+    isHuman,
+    getToken,
+    error,
+    username,
+    isPreviewMode,
+    emailValidated,
+    onLogin,
+  ]);
 
   const getRegisterButtonText = () => {
     if (emailRegistration) {
@@ -189,6 +185,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
       else return t('continueWithEmail');
     }
   };
+
+  if (showPersonalDetailsForm) {
+    return (
+      <Wrapper direction='column' width='100%' height='100%' padding='1.25rem'>
+        <PersonalDetails onPersonalDetailsUpdate={onLogin} />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper

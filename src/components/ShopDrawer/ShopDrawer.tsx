@@ -44,13 +44,8 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   productDescription,
   minimizeBranding,
 }) => {
-  const {
-    allOptions,
-    variantDetails,
-    defaultVariantDetails,
-    isProductLevel,
-    discountCode,
-  } = data;
+  const { allOptions, variantDetails, defaultVariantDetails, isProductLevel } =
+    data;
 
   // Selected option
   const [option, updateOption] = useState<{ [key: string]: string }>({});
@@ -99,7 +94,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
         setIsValidCombo(false);
       }
     }
-  }, [option, variantDetails, isProductLevel]);
+  }, [option, allOptions, variantDetails, isProductLevel]);
 
   useEffect(() => {
     const filterItems = (
@@ -144,7 +139,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
       }
       setFilteredOptions(filterItems(choosenOptions, allOptions));
     }
-  }, [option]);
+  }, [option, allOptions, data]);
 
   const populateOptions = (filtered: any, variant: any) => {
     for (let x = 0; x < filtered.length; x++) {
@@ -162,7 +157,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     (link: string, quantity: number) => {
       return findAndReplaceQuantity(link, quantity);
     },
-    [discountCode, data.isDiscountAvailable]
+    []
   );
 
   const handleCheckout = useCallback(() => {

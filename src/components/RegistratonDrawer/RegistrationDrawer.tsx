@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { getRegisterText, RegistrationType } from 'utils/getRegisterText';
 import {
-  ModuleInfoType,
   Product,
+  ModuleInfoType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { TFunction } from 'i18next';
 import { useAPI } from 'utils/api';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
@@ -42,25 +43,23 @@ type RegistrationDrawerProps = {
 };
 
 const getSuccessTitle = (
-  registrationType: string = RegistrationType.REGISTER
+  registrationType: string = RegistrationType.REGISTER,
+  t: TFunction
 ): string => {
   switch (registrationType) {
     case RegistrationType.REGISTER:
-      return 'Product Registered!';
+      return t('successMessage.productRegistered');
     case RegistrationType.SIGNUP:
-      return "You're Signed Up";
+      return t('successMessage.signedUp');
     case RegistrationType.ACTIVATE:
-      return 'Warranty Activated!';
+      return t('successMessage.warrantyActivated');
   }
-
-  return 'Product Registered!';
+  return t('successMessage.productRegistered');
 };
 
 const useRegisterProduct = () => {
   const [loading, setLoading] = useState<boolean>(false);
-
   const { slug, reFetchProduct, token } = useGlobal();
-
   const [registerProduct] = useAPI(
     {
       method: 'POST',
@@ -72,7 +71,6 @@ const useRegisterProduct = () => {
   const registerProductAndFetch = useCallback(
     async (warrantyId: string) => {
       setLoading(true);
-
       try {
         await registerProduct({ warrantyId });
         reFetchProduct();
@@ -83,7 +81,7 @@ const useRegisterProduct = () => {
         setLoading(false);
       }
     },
-    [registerProduct]
+    [registerProduct, reFetchProduct]
   );
 
   return { registerProductAndFetch, loading };
@@ -111,7 +109,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   const [pageToShow, setPageToShow] = useState<PageType>(PageType.NONE);
   const [productRegisterCallMade, setProductRegisterCallMade] =
     useState<boolean>(false);
-
   const {
     user,
     slug,
@@ -122,7 +119,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     productDetails,
   } = useGlobal();
 
-  const { t: authDrawerTranslation } = useTranslation('translation', {
+  const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.authDrawer',
   });
 
@@ -137,13 +134,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   const checkAndRegisterProduct = useCallback(async () => {
     try {
       await registerProductAndFetch(warrantyId);
-
-      if (!warrantyData) {
-        return;
-      }
+      if (!warrantyData) return;
 
       const { period, duration } = warrantyData.moduleInfo;
-
       const purchaseDate = Date.now();
       const expirationDate = dayjs()
         .add(period, duration?.value?.toLowerCase() as ManipulateType)
@@ -162,7 +155,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
               },
             };
           }
-
           return module;
         }) || [];
 
@@ -185,22 +177,16 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     closePage,
     productDetails,
     setProductDetails,
-    isNewUser,
   ]);
 
   // register or activate the warranty
   const register = useCallback(() => {
-    if (productRegisterCallMade) {
-      return;
-    }
+    if (productRegisterCallMade) return;
 
     setSuccessDrawer(true);
     setProductRegisterCallMade(true);
-    if (isPreviewMode) {
-      setSuccessDrawer(true);
-    } else {
-      checkAndRegisterProduct();
-    }
+    if (isPreviewMode) setSuccessDrawer(true);
+    else checkAndRegisterProduct();
   }, [checkAndRegisterProduct, isPreviewMode, productRegisterCallMade]);
 
   useEffect(() => {
@@ -208,7 +194,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
     if (isNewUser && !productRegisterCallMade) {
       setWaitingForToken(true);
       setSuccessDrawer(true);
-
       if (token) {
         register();
         setWaitingForToken(false);
@@ -221,14 +206,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   // if the product is not registered to the user
   // if user just signedin
   useEffect(() => {
-    if (!currentModule || (currentModule.registrationRequired && !token)) {
+    if (!currentModule || (currentModule.registrationRequired && !token))
       return;
-    }
-
-    if (product.registeredToCurrentUser === undefined) {
-      return;
-    }
-
+    if (product.registeredToCurrentUser === undefined) return;
     if (
       currentModule.registrationRequired &&
       !alreadySignedIn &&
@@ -240,11 +220,9 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   useEffect(() => {
     if (isNewUser) {
-      if (product.registeredToCurrentUser || productRegistered) {
+      if (product.registeredToCurrentUser || productRegistered)
         setPageToShow(PageType.PERSONAL_DETAILS_FORM);
-      } else {
-        setPageToShow(PageType.NONE);
-      }
+      else setPageToShow(PageType.NONE);
       return;
     }
 
@@ -271,9 +249,8 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
 
   useEffect(() => {
     // only update disableModal when user is loggedIn
-    if (user && currentModule?.registrationRequired) {
+    if (user && currentModule?.registrationRequired)
       setDisableModalDismiss(successDrawer);
-    }
   }, [successDrawer, currentModule, setDisableModalDismiss, user]);
 
   useEffect(() => {
@@ -332,31 +309,29 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
                 color='#414149'
               >
                 <p>
-                  {authDrawerTranslation('termsAndconditions.part1')}
+                  {t('termsAndconditions.part1')}
                   {brandName}
-                  {authDrawerTranslation('termsAndconditions.part2')}
+                  {t('termsAndconditions.part2')}
                   {showMulberryTerms
-                    ? authDrawerTranslation(
-                        'termsAndconditions.mulberryAndBrijBrand'
-                      )
-                    : authDrawerTranslation('termsAndconditions.brijBrand')}
+                    ? t('termsAndconditions.mulberryAndBrijBrand')
+                    : t('termsAndconditions.brijBrand')}
                   <a
                     target='_blank'
                     rel='noreferrer'
-                    href='https://brij.it/terms'
+                    href={t('termsAndconditions.link')}
                     style={{ cursor: 'pointer', textDecoration: 'underline' }}
                   >
-                    {authDrawerTranslation('termsAndconditions.link')}
+                    {t('termsAndconditions.linkText')}
                   </a>
                   {'.'}
-                  {authDrawerTranslation('termsAndconditions.part3')}
+                  {t('termsAndconditions.part3')}
                   <a
                     target='_blank'
                     rel='noreferrer'
                     href={`mailto:help@brij.it?subject=Help with ${brandName} ${product.name} (${slug})`}
                     style={{ cursor: 'pointer', textDecoration: 'underline' }}
                   >
-                    {authDrawerTranslation('termsAndconditions.helpEmail')}
+                    {t('termsAndconditions.helpEmail')}
                   </a>
                   {'.'}
                 </p>
@@ -369,16 +344,18 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         );
     }
   }, [
+    t,
     onUserUpdate,
     register,
     registrationData,
-    authDrawerTranslation,
     brandName,
     brandTheme,
     children,
     html,
     pageToShow,
     showMulberryTerms,
+    product.name,
+    slug,
   ]);
 
   return (
@@ -389,7 +366,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         onCompleteAnimation={() => setSuccessDrawer(false)}
         title={
           registrationData?.confirmationHeader ||
-          getSuccessTitle(registrationData?.registrationType)
+          getSuccessTitle(registrationData?.registrationType, t)
         }
         description={registrationData?.confirmationText}
         close={closeSuccess}

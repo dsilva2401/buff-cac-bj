@@ -7,10 +7,10 @@ import React, {
   useRef,
 } from 'react';
 import { Position } from 'types/Misc';
+import { useTranslation } from 'react-i18next';
 import { isDesktop } from 'react-device-detect';
 import { Product } from 'types/ProductDetailsType';
 import { useGlobal } from 'context/global/GlobalContext';
-import { PageStateType } from 'context/global/GlobalContext';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
@@ -44,7 +44,6 @@ export type ButtonType = {
   onClick: () => void;
   isHighlight: boolean;
   locked: boolean;
-  pageState: PageStateType | null;
   icon: ReactElement | null;
   moduleType: string;
   moduleData?: string | undefined;
@@ -101,8 +100,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const leadModuleButtonRef = useRef<HTMLButtonElement>(null);
   const [collapsedDrawerRef, { height }] = useElementSize();
   const { topHeight, bottomHeight } = useHeights();
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'drawers.bottomDrawer',
+  });
+
   const {
-    setPageState,
     retractDrawer,
     setRetractDrawer,
     appZoom,
@@ -123,7 +125,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       if (handle.active) videoRef?.current.play();
       else if (!handle.active) videoRef.current?.pause();
     }
-  }, [handle.active, videoRef.current]);
+  }, [handle.active]);
 
   useEffect(() => {
     if (height) setCollapsedDrawerHeight(height);
@@ -153,7 +155,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     bottomHeight,
     closeChild,
     setMainDrawerOpen,
-    setPageState,
     isChildOpen,
     appZoom,
   ]);
@@ -374,10 +375,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   if (isChildOpen) {
                     closeChild(true);
                     if (retractDrawer) handleDrawerClose();
-                  } else {
-                    setPageState(null);
-                    handleDrawerClose();
-                  }
+                  } else handleDrawerClose();
                 }}
               >
                 <Close />
@@ -400,7 +398,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                       brandTheme={brandTheme}
                       variant='dark'
                     >
-                      Call to Action
+                      {t('callToActionButton')}
                     </Button>
                   )}
                   {buttons?.map((button, index) => {
@@ -444,10 +442,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                                           isDesktop && handle.exit()
                                         }
                                         src={button.moduleData || ''}
-                                      >
-                                        Your browser does not support the video
-                                        tag.
-                                      </video>
+                                      />
                                     </Wrapper>
                                   </FullScreen>
                                 ) : (
@@ -478,8 +473,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                                   setRetractDrawer(true);
                                 }
                                 button.onClick();
-                                if (button.pageState !== null)
-                                  setPageState(button.pageState);
                               }}
                             >
                               {button.title}
@@ -500,7 +493,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         setRetractDrawer(false);
                       }}
                     >
-                      More
+                      {t('moreButton')}
                     </Button>
                   )}
                 </Wrapper>
@@ -554,9 +547,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                                     playsInline={false}
                                     onEnded={() => isDesktop && handle.exit()}
                                     src={button.moduleData}
-                                  >
-                                    Your browser does not support the video tag.
-                                  </video>
+                                  />
                                 </Wrapper>
                               </FullScreen>
                             ) : (
@@ -587,8 +578,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           onClick={() => {
                             button.onClick();
                             setRetractDrawer(false);
-                            if (button.pageState !== null)
-                              setPageState(button.pageState);
                           }}
                         >
                           {button.title}

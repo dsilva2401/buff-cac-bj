@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { InputPlaceholder, InputWrapper } from './styles';
 import { ReactComponent as Upload } from 'assets/icons/svg/upload.svg';
 import { ReactComponent as Remove } from 'assets/icons/svg/remove.svg';
