@@ -65,7 +65,6 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
   const {
     user,
     slug,
-    token,
     brandTheme,
     isPreviewMode,
     setProductDetails,
@@ -217,6 +216,7 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
           <PersonalDetails
             saveToShopify={true}
             onPersonalDetailsUpdate={() => {
+              localStorage.removeItem('brij-form-user-update-id');
               setPageToShow(PageType.CURRENT_MODULE);
               onUserUpdate();
             }}

@@ -51,7 +51,7 @@ import addWarrantyInformation from 'utils/addWarrantyInformation';
 import getSuccessTitle from 'utils/getSuccessTitle';
 import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 import { showToast } from 'components/Toast/Toast';
-
+import { useAPI } from 'utils/api';
 type UrlParam = {
   id: string;
 };
@@ -118,6 +118,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     personalDetails,
     reFetchProduct,
     authFetched,
+    formRegistration,
+    setFormRegistration,
   } = useGlobal();
 
   const { t: registrationTranslation } = useTranslation('translation', {
@@ -130,13 +132,44 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const { setMeta, showSuccess, closeDrawer, openDrawer } =
     useSuccessDrawerContext();
   const { invalidateCache } = useAPICacheContext();
+  const onError = (response: any) => {
+    showToast({ type: 'error', message: response.error });
+  };
+
+  useEffect(() => {
+    if (
+      details &&
+      details.registration &&
+      details.registration.isSubmissionRequired
+    ) {
+      getRegistrationForm();
+    }
+  }, [details]);
+
+  const [getRegistrationForm] = useAPI<{ id: string }>(
+    {
+      method: 'GET',
+      endpoint: `form/${details?.registration.formModuleId}`,
+      onSuccess: (form) => {
+        setFormRegistration(form);
+      },
+      onError: onError,
+    },
+    null,
+    true
+  );
 
   const closeDrawerPage = useCallback(
-    (closeDrawer = false) => {
+    (closeDrawer = false, registrationFormCallback = false) => {
       setCurrentPage(null);
       setNewUser(false);
       toggleAnimateTable(false);
       setIsDrawerPageOpen(false);
+      if (registrationFormCallback) {
+        setIsFormNavigation(false);
+        history.replace(`/c/${id}`);
+        return;
+      }
       if (closeDrawer && isFormNavigation) {
         setIsFormNavigation(false);
         setTimeout(() => {
@@ -217,14 +250,14 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       const moduleIndex = details?.modules.findIndex(
         (module) => module.type === 'FORMS_MODULE'
       );
-      if (moduleIndex >= 0) {
+      if (moduleIndex >= 0 && !formRegistration) {
         setMagicAction(MAGIC_ACTION.OPEN_MODULE);
         changeDrawerPage(moduleIndex);
         setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
       }
     }
-  }, [isFormNavigation, details, topHeight, changeDrawerPage, setMagicAction]);
+  }, [isFormNavigation, details, topHeight]);
 
   useEffect(() => {
     if (registerCallMade) {
@@ -414,6 +447,22 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               moduleType: module.type,
               moduleId: module.id,
             });
+            // always remove form on button click to start a new one.
+            localStorage.removeItem('brij-form');
+            // always remove start screen when clicked to stat a new one
+            localStorage.removeItem('brij-start-screen-shown');
+            let isFormRegCompelte = localStorage.getItem(
+              'brij-form-registration-complete'
+            );
+            if (
+              details?.registration.isSubmissionRequired &&
+              module.registrationRequired &&
+              !isFormRegCompelte
+            ) {
+              localStorage.setItem('brij-form-registration', '' + x);
+            } else {
+              localStorage.removeItem('brij-form-registration');
+            }
           },
           isHighlight: x === 0,
           moduleType: moduleType,
@@ -518,7 +567,25 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     [isPreviewMode, setPreviewAuthenticated]
   );
 
+  useEffect(() => {
+    const brijFormRegistration = localStorage.getItem('brij-form-registration');
+    const brijFormReturnModule = parseInt(brijFormRegistration as string, 10);
+    if (brijFormRegistration) {
+      setCurrentPage(brijFormReturnModule);
+    }
+  }, []);
+
   const renderDrawerPage = useCallback(() => {
+    // have a useEffect see if the form value is present on refresh.
+    const brijFormRegistration = localStorage.getItem('brij-form-registration');
+    const brijFormReturnModule = parseInt(brijFormRegistration as string, 10);
+    const isRegistrationFormComplete = localStorage.getItem(
+      'brij-form-registration-complete'
+    );
+    // if brij form is there and no formRegistration wait till we get it.
+    if (brijFormRegistration && !formRegistration) {
+      return;
+    }
     if (details) {
       const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
@@ -537,6 +604,39 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           const warrantyModuleInfo = module?.moduleInfo as WarrantyModuleType;
           mulberry = warrantyModuleInfo.mulberry;
         }
+      }
+
+      // remove the brijFormRegistraion.
+      if (
+        module?.registrationRequired &&
+        formRegistration &&
+        currentPage !== null &&
+        !isRegistrationFormComplete
+      ) {
+        if (brijFormRegistration && formRegistration) {
+          return (
+            <FormProvider>
+              <Wrapper height='100%'>
+                <FormDrawer
+                  formModuleData={formRegistration as ModuleInfoType}
+                  data={formRegistration?.moduleInfo as FormDetailModel[]}
+                  endScreenNavModuleIndex={
+                    isNaN(brijFormReturnModule)
+                      ? currentPage ?? 0
+                      : brijFormReturnModule
+                  }
+                  closeDrawer={closeDrawerPage}
+                  changeDrawerPage={changeDrawerPage}
+                />
+              </Wrapper>
+            </FormProvider>
+          );
+        }
+        return;
+      }
+
+      if (brijFormRegistration) {
+        localStorage.removeItem('brij-form-registration');
       }
 
       if (module?.registrationRequired && !token) {
@@ -812,6 +912,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     alreadySignedIn,
     setAlreadySignIn,
     warrantyDrawerTitle,
+    formRegistration,
+    setFormRegistration,
   ]);
 
   const logo = useCallback(
@@ -836,7 +938,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       {details && <AgeGate />}
       {details && (
         <Helmet>
-          <title>{details?.brand?.name} by Brij</title>
+          <title>{`${details?.brand?.name} by Brij`}</title>
         </Helmet>
       )}
       <ProductHeroImage />

@@ -1,5 +1,8 @@
 import React, { createContext, useContext } from 'react';
-import { ProductDetailsType } from '../../types/ProductDetailsType';
+import {
+  ModuleInfoType,
+  ProductDetailsType,
+} from '../../types/ProductDetailsType';
 import { EventPayload } from '../../hooks/useLogEvent';
 import { MAGIC_ACTION } from './GlobalProvider';
 import { UserStruct } from 'types/User';
@@ -68,6 +71,10 @@ export type GlobalContextProps = {
   redirectResolved: boolean;
   setRedirectResolved: React.Dispatch<React.SetStateAction<boolean>>;
   setToken: (newToken: string | null) => void;
+  formRegistration: ModuleInfoType | null;
+  setFormRegistration: React.Dispatch<
+    React.SetStateAction<ModuleInfoType | null>
+  >;
 };
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -123,6 +130,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
   redirectResolved: false,
   setRedirectResolved: () => {},
   setToken: () => {},
+  formRegistration: null,
+  setFormRegistration: () => {},
 });
 
 export const useGlobal = () => useContext(GlobalContext);

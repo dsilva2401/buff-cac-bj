@@ -33,12 +33,18 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './styles/formstyles.css';
 import { useSwipeable } from 'react-swipeable';
 import IconButton from 'components/IconButton/IconButton';
-import { showToast } from 'components/Toast/Toast';
 import FormStepper from './components/FormStepper';
+import { showToast } from 'components/Toast/Toast';
 
 type Props = {
   data: FormDetailModel[];
   formModuleData: ModuleInfoType;
+  endScreenNavModuleIndex?: number;
+  closeDrawer?: (
+    closeDrawer: boolean,
+    registrationFormCallback?: boolean
+  ) => void;
+  changeDrawerPage?: (moduleIdx: number) => void;
 };
 
 type initNames = {
@@ -64,7 +70,13 @@ const FormDrawer = (props: Props) => {
     setStartScreen,
   } = useFormContext();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
-  const { data, formModuleData } = props;
+  const {
+    data,
+    formModuleData,
+    endScreenNavModuleIndex,
+    closeDrawer,
+    changeDrawerPage,
+  } = props;
   const route = useHistory();
   const location = useLocation();
   const formik = useRef<FormikProps<any>>(null);
@@ -72,7 +84,8 @@ const FormDrawer = (props: Props) => {
   const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [transistionAnimation, setTransistionAnimation] =
     useState<string>('slide');
-  const { user, slug, brandTheme } = useGlobal();
+  const { user, slug, isPreviewMode, setFormRegistration, brandTheme } =
+    useGlobal();
 
   useEffect(() => {
     setTotalSteps(data.length);
@@ -82,17 +95,47 @@ const FormDrawer = (props: Props) => {
     {
       method: 'POST',
       endpoint: 'form/submit_form',
-      onSuccess: () => {
-        setIsFormSubmitting(false);
-        setSuccessDrawer(true);
-
-        localStorage.setItem('brij-form-complete', 'true');
-        route.push(`/c/${id}/form/complete`);
-      },
-      onError: () => {
+      onSuccess: (data: { responseId: string; success: boolean }) => {
         setIsFormSubmitting(false);
         showToast({
           message: 'Form submission error, please retry',
+          type: 'error',
+        });
+        setSuccessDrawer(true);
+        if (
+          endScreenNavModuleIndex !== undefined &&
+          closeDrawer &&
+          changeDrawerPage &&
+          !isPreviewMode
+        ) {
+          // remove form registraion as user already submitted it.
+          setFormRegistration(null);
+          closeDrawer(true, true);
+          changeDrawerPage(endScreenNavModuleIndex);
+          localStorage.removeItem('brij-form-registration');
+          localStorage.removeItem('brij-start-screen-shown');
+          localStorage.setItem('brij-form-registration-complete', 'true');
+          localStorage.removeItem('brij-form');
+          // if there isn't a current user than call update after a registration
+          if (!user?.uid) {
+            localStorage.setItem('brij-form-user-update-id', data.responseId);
+          }
+        }
+        if (endScreenNavModuleIndex !== undefined) {
+          // remove form registraion as user already submitted it.
+          setFormRegistration(null);
+          return;
+        }
+        // if no end screen content go back to main page
+        if (!formModuleData.endScreenContent && closeDrawer) {
+          closeDrawer(true);
+          return;
+        }
+        route.push(`/c/${id}/form/complete`);
+      },
+      onError: () => {
+        showToast({
+          message: 'Form submission failed. Please resubmit',
           type: 'error',
         });
       },
@@ -104,13 +147,18 @@ const FormDrawer = (props: Props) => {
   useEffect(() => {
     const isFormComplete = localStorage.getItem('brij-form-complete');
 
-    if (isFormComplete) {
+    if (isFormComplete && endScreenNavModuleIndex === undefined) {
       route.push(`/c/${id}/form/complete`);
       return;
     }
 
     const showStartScreen = localStorage.getItem('brij-start-screen-shown');
-    if (formModuleData.startScreenContent && !showStartScreen) {
+    if (
+      formModuleData.startScreenContent &&
+      !showStartScreen &&
+      !isPreviewMode
+    ) {
+      localStorage.setItem('brij-start-screen-shown', 'true');
       setCurrentStep(1);
       route.push(`/c/${id}/form/start`);
       return;
@@ -127,6 +175,7 @@ const FormDrawer = (props: Props) => {
 
   useEffect(() => {
     //create formik inital values
+    // this is to play nicely with the api call as the order needs to be persisted.
     if (data && !localStorageSet) {
       const initNamesObject: initNames = {};
       const validationObject: any = {};
@@ -272,7 +321,9 @@ const FormDrawer = (props: Props) => {
       setCurrentStep(currentStep + 1);
     }
 
-    localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+    if (!isPreviewMode) {
+      localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+    }
   };
 
   const handleBackBtnClicked = async () => {
@@ -282,7 +333,9 @@ const FormDrawer = (props: Props) => {
       setCurrentStep(currentStep - 1);
     }
 
-    localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+    if (!isPreviewMode) {
+      localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+    }
   };
 
   const getCurrentFormName = (currentStep: number) => {

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useGlobal, GlobalContext, UserLocationType } from './GlobalContext';
+import { GlobalContext, UserLocationType } from './GlobalContext';
 import { theme } from 'styles/theme';
 import { EventPayload } from '../../hooks/useLogEvent';
 import useProductDetails from 'hooks/useProductDetails';
 import useCollection from '../../hooks/useCollection';
 import useLogEvent from 'hooks/useLogEvent';
 import useUser from 'hooks/useUser';
+import { ModuleInfoType } from 'types/ProductDetailsType';
 
 export enum MAGIC_ACTION {
   OPEN_MODULE = 'OPEN_MODULE',
@@ -40,6 +41,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
     React.useState<boolean>(false);
   const [productModule, setProductModule] = useState<string>('');
   const [redirectResolved, setRedirectResolved] = useState<boolean>(false);
+  const [formRegistration, setFormRegistration] =
+    useState<ModuleInfoType | null>(null);
 
   // by default we keep alreadySignedIn true
   // because even if the user was not signed in
@@ -312,6 +315,8 @@ export const GlobalProvider: React.FC = ({ children }) => {
         redirectResolved,
         setRedirectResolved,
         setToken,
+        formRegistration,
+        setFormRegistration,
       }}
     >
       {children}

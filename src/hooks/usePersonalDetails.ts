@@ -16,11 +16,36 @@ function usePersonalDetails(
   );
   const [token, setToken] = useState<string | null>(null);
   const [tempToken, setTempToken] = useState<string | null>(null);
+  const [shouldRemoveUpdate, setShouldRemoveUpdate] = useState<boolean>(false);
+  const userFormUpdateId = localStorage.getItem('brij-form-user-update-id');
+
+  const [updateForm] = useAPI<{ user: string }>({
+    method: 'PUT',
+    endpoint: `form/form_answers/${userFormUpdateId}`,
+    onSuccess: () => {
+      if (shouldRemoveUpdate) {
+        localStorage.removeItem('brij-form-user-update-id');
+      }
+    },
+    onError: () => {},
+  });
 
   const onSuccess = useCallback(
-    (userDetails) => {
+    (userDetails: UserStruct) => {
       setpersonalDetails(userDetails);
-
+      if (userFormUpdateId) {
+        // phone number is optional so let's check everything
+        // check everything because oauth may not have same validation rules as us.
+        // update form with user name on init then update if first, last, phone is there
+        if (
+          userDetails.profile.firstName ||
+          userDetails.profile.lastName ||
+          userDetails.profile.phoneNumber
+        ) {
+          setShouldRemoveUpdate(true);
+        }
+        updateForm({ user: userDetails._id });
+      }
       // set the real token so all the API's can use it.
       setToken(tempToken);
     },

@@ -1,5 +1,4 @@
 import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
-import { useCallback } from 'react';
 import { useAPI } from 'utils/api';
 
 interface APIpayload {

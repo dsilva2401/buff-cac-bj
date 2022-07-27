@@ -14,8 +14,10 @@ import Routes from './routes';
 import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper';
 import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import { showToast } from 'components/Toast/Toast';
+import { useAPI } from 'utils/api';
 
 export default function App() {
+  const userFormUpdateId = localStorage.getItem('brij-form-user-update-id');
   const {
     appZoom,
     setProductModule,
@@ -41,6 +43,15 @@ export default function App() {
     }
   }, [token, isPreviewMode]);
 
+  const [updateForm] = useAPI<{ user: string }>({
+    method: 'PUT',
+    endpoint: `form/form_answers/${userFormUpdateId}`,
+    onSuccess: () => {
+      localStorage.removeItem('brij-form-user-update-id');
+    },
+    onError: () => {},
+  });
+
   useEffect(() => {
     const auth = getAuth();
 
@@ -53,6 +64,9 @@ export default function App() {
         let user = result?.user;
 
         if (user && !existingUser) {
+          if (userFormUpdateId) {
+            updateForm({ user: user.uid });
+          }
           let moduleId = localStorage.getItem('currentProductModuleId');
           if (moduleId) {
             setProductModule(moduleId);
@@ -74,6 +88,8 @@ export default function App() {
     openDrawer,
     setRedirectResolved,
     token,
+    userFormUpdateId,
+    updateForm,
   ]);
 
   if (isBrowser) {

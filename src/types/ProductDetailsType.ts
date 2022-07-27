@@ -193,6 +193,8 @@ export type ProductDetailsType = {
     hideSignupOptions: boolean;
     registrationText: string;
     registrationType: RegistrationType;
+    isSubmissionRequired: boolean;
+    formModuleId: string;
   };
 
   warrantyInformation: {

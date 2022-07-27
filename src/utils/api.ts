@@ -1,6 +1,6 @@
 import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 import { useGlobal } from 'context/global/GlobalContext';
-import { useCallback, useReducer, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface APIpayload {
   method: string;
