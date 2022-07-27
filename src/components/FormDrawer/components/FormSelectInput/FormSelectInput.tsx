@@ -43,6 +43,7 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
             vertical: 'bottom',
             horizontal: 'left',
           },
+          classes: { list: 'not-draggable' },
           getContentAnchorEl: null,
         }}
       >

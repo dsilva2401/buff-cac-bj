@@ -333,7 +333,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         onStart={handleStart}
         onDrag={handleDrag}
         onStop={handleStop}
-        cancel='a, button, #not-draggable'
+        cancel='a, button, .not-draggable'
         disabled={disableModalDismiss}
       >
         <Drawer
@@ -527,7 +527,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                   <>
                     <DragZone id='draggable' style={{ zIndex: 99 }} />
                     <div
-                      id='not-draggable'
+                      className='not-draggable'
                       style={{
                         width: '100%',
                         height: '100%',

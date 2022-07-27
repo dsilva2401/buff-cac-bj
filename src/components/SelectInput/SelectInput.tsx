@@ -52,6 +52,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
             vertical: 'bottom',
             horizontal: 'left',
           },
+          classes: { list: 'not-draggable' },
           getContentAnchorEl: null,
         }}
       >
