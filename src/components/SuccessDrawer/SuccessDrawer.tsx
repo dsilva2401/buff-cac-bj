@@ -32,15 +32,9 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
         onClick={close}
       />
       <Drawer brandTheme={brandTheme} isOpen={isOpen} appZoom={appZoom}>
-        {isOpen && (
-          <>
-            <CheckAnimation
-              onComplete={onCompleteAnimation}
-              loading={loading}
-              isDrawerOpen={isOpen}
-            />
-          </>
-        )}
+        <>
+          <CheckAnimation onComplete={onCompleteAnimation} loading={loading} />
+        </>
         <div
           style={{
             marginTop: -30,
@@ -53,7 +47,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
             color='#fff'
             textAlign='center'
           >
-            <h3>{title || 'Demo'}</h3>
+            <h3>{title} &nbsp;</h3>
           </Text>
           <Text
             fontSize='1rem'
@@ -61,7 +55,7 @@ const SuccessDrawer: React.FC<SuccessDrawerProps> = ({
             color='#fff'
             textAlign='center'
           >
-            <p>{description || 'Demo'}</p>
+            <p>{description} &nbsp;</p>
           </Text>
         </div>
       </Drawer>

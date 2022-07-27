@@ -3,20 +3,14 @@ import Lottie from 'react-lottie';
 import circularAnimationData from 'assets/lottie-animations/pre-circular-animation.json';
 
 type CheckAnimationProps = {
-  isDrawerOpen: boolean;
   loading: boolean;
   onComplete: () => void;
 };
 
 const CheckAnimation: React.FC<CheckAnimationProps> = ({
-  isDrawerOpen,
   loading,
   onComplete,
 }) => {
-  if (!isDrawerOpen) {
-    return null;
-  }
-
   const circularLoadingAnimationConfig = {
     loop: loading,
     autoplay: true,
