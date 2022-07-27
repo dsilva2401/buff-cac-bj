@@ -70,10 +70,15 @@ const MagicLink = () => {
 
       switch (action) {
         case MAGIC_ACTION.OPEN_MODULE: {
+          if (!productSlug) {
+            const link = RoutesHashMap.Collection.path;
+            history.push(link);
+          }
+
+          const productLink = RoutesHashMap.ProductDetails.path(productSlug);
           setAlreadySignIn(false);
           setRegisteringProduct(true);
           openDrawer();
-          const productLink = RoutesHashMap.ProductDetails.path(productSlug);
           history.push(productLink);
           break;
         }
