@@ -129,7 +129,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
   const { registerProductAndFetch } = useRegisterProduct();
-  const { setMeta, showSuccess, closeDrawer, openDrawer } =
+  const { setMeta, showSuccess, closeDrawer, openDrawer, open } =
     useSuccessDrawerContext();
   const { invalidateCache } = useAPICacheContext();
   const onError = (response: any) => {
@@ -582,10 +582,12 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     const isRegistrationFormComplete = localStorage.getItem(
       'brij-form-registration-complete'
     );
+
     // if brij form is there and no formRegistration wait till we get it.
     if (brijFormRegistration && !formRegistration) {
       return;
     }
+
     if (details) {
       const module = details?.modules[currentPage as number];
       let moduleType: string | undefined = module?.type;
@@ -936,7 +938,11 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     </Wrapper>
   );
 
-  const pageLoading = loading || !redirectResolved || !authFetched;
+  const pageLoading =
+    loading ||
+    !redirectResolved ||
+    !authFetched ||
+    (registeringProduct && !open);
 
   return (
     <>
