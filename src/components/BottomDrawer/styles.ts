@@ -11,7 +11,7 @@ type DrawerHeaderProps = {
 
 export const Drawer = styled.div<DrawerProps>`
   width: 100%;
-  height: 80%;
+  height: 88%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

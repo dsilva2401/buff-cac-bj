@@ -464,8 +464,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                                 }
                               }}
                             >
-                              {button.title}
-                              {!button.locked && renderVideoElement(button.moduleData || '')}
+                              {!button.locked &&
+                                renderVideoElement(button.moduleData || '')}
                             </Button>
                           ) : (
                             <Button
@@ -537,7 +537,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           }}
                         >
                           {button.title}
-                          {!button.locked && renderVideoElement(button.moduleData || '')}
+                          {!button.locked &&
+                            renderVideoElement(button.moduleData || '')}
                         </Button>
                       ) : (
                         <Button

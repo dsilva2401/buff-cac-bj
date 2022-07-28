@@ -8,8 +8,8 @@ type DrawerType = {
 };
 
 export const Drawer = styled.div<DrawerType>`
-  width: 101%;
-  height: 80%;
+  width: 100%;
+  height: calc(88% + 2px);
   position: absolute;
   left: 0;
   display: flex;
@@ -22,7 +22,7 @@ export const Drawer = styled.div<DrawerType>`
   background-color: ${(props) => props.brandTheme || theme.primary};
   z-index: 999;
   transition: bottom 1s ease;
-  bottom: ${(props) => (props.isOpen ? '1px' : '-80%')};
+  bottom: ${(props) => (props.isOpen ? '0px' : 'calc(-88% - 2px)')};
 
   span {
     width: 25%;
