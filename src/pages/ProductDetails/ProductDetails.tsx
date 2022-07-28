@@ -773,15 +773,20 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             ) : (
               <Wrapper
                 width='100%'
+                height='max-content'
                 left='0'
-                top='0'
+                top='-1px'
                 zIndex={1}
-                position='sticky'
+                minHeight='4rem'
+                position='fixed'
+                borderRadius='26px'
                 background='#FFFFFF'
-                borderRadius='0.5rem'
-                padding='1.25rem 3rem 1rem 0.5rem'
               >
-                <Text fontSize='1rem' fontWeight='600'>
+                <Text
+                  fontSize='1rem'
+                  fontWeight='600'
+                  margin='1.25rem 4rem 1.25rem 1.75rem'
+                >
                   <h1>{moduleTitle}</h1>
                 </Text>
               </Wrapper>

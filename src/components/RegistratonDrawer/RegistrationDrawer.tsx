@@ -5,18 +5,19 @@ import {
   ModuleInfoType,
   WarrantyModuleType,
 } from '../../types/ProductDetailsType';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { showToast } from 'components/Toast/Toast';
 import { useTranslation } from 'react-i18next';
+import dayjs, { ManipulateType } from 'dayjs';
 import PersonalDetails from 'components/PersonalDetails';
+import useRegisterProduct from 'hooks/useRegisterProduct';
+import getSuccessTitle from 'utils/getSuccessTitle';
+import ModuleWrapper from 'components/ModuleWrapper';
 import HtmlWrapper from 'components/HtmlWrapper';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
 import Text from 'components/Text';
-import dayjs, { ManipulateType } from 'dayjs';
-import useRegisterProduct from 'hooks/useRegisterProduct';
-import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
-import getSuccessTitle from 'utils/getSuccessTitle';
 
 enum PageType {
   CURRENT_MODULE = 'CURRENT_MODULE',
@@ -224,73 +225,74 @@ const RegistrationDrawer: React.FC<RegistrationDrawerProps> = ({
         );
       case PageType.PRE_REGISTER:
         return (
-          <Wrapper
-            width='100%'
-            direction='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            gap='1.2rem'
-            overflow='auto'
-            margin='3.75rem 0 0 0'
-          >
-            {html && (
-              <HtmlWrapper
-                width='100%'
-                padding='0 1rem'
-                direction='column'
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
-            )}
+          <ModuleWrapper drawerTitle={currentModule.title || <></>}>
             <Wrapper
-              padding='0 1rem'
-              style={{ borderTop: '2px solid #E7EAEB' }}
+              width='100%'
+              direction='column'
+              justifyContent='flex-start'
+              alignItems='center'
+              overflow='auto'
+              gap='1.2rem'
             >
-              <Text
-                margin='1rem 0 0 0'
-                fontSize='0.625rem'
-                textAlign='left'
-                color='#414149'
+              {html && (
+                <HtmlWrapper
+                  width='100%'
+                  direction='column'
+                  dangerouslySetInnerHTML={{ __html: html }}
+                />
+              )}
+              <Wrapper
+                padding='0 1rem'
+                style={{ borderTop: '2px solid #E7EAEB' }}
               >
-                <p>
-                  {t('termsAndconditions.part1')}
-                  {brandName}
-                  {t('termsAndconditions.part2')}
-                  {showMulberryTerms
-                    ? t('termsAndconditions.mulberryAndBrijBrand')
-                    : t('termsAndconditions.brijBrand')}
-                  <a
-                    target='_blank'
-                    rel='noreferrer'
-                    href={t('termsAndconditions.link')}
-                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                  >
-                    {t('termsAndconditions.linkText')}
-                  </a>
-                  {'.'}
-                  {t('termsAndconditions.part3')}
-                  <a
-                    target='_blank'
-                    rel='noreferrer'
-                    href={`mailto:help@brij.it?subject=Help with ${brandName} ${product.name} (${slug})`}
-                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                  >
-                    {t('termsAndconditions.helpEmail')}
-                  </a>
-                  {'.'}
-                </p>
-              </Text>
+                <Text
+                  margin='1rem 0 0 0'
+                  fontSize='0.625rem'
+                  textAlign='left'
+                  color='#414149'
+                >
+                  <p>
+                    {t('termsAndconditions.part1')}
+                    {brandName}
+                    {t('termsAndconditions.part2')}
+                    {showMulberryTerms
+                      ? t('termsAndconditions.mulberryAndBrijBrand')
+                      : t('termsAndconditions.brijBrand')}
+                    <a
+                      target='_blank'
+                      rel='noreferrer'
+                      href={t('termsAndconditions.link')}
+                      style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                      {t('termsAndconditions.linkText')}
+                    </a>
+                    {'.'}
+                    {t('termsAndconditions.part3')}
+                    <a
+                      target='_blank'
+                      rel='noreferrer'
+                      href={`mailto:help@brij.it?subject=Help with ${brandName} ${product.name} (${slug})`}
+                      style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                      {t('termsAndconditions.helpEmail')}
+                    </a>
+                    {'.'}
+                  </p>
+                </Text>
+              </Wrapper>
+              <Button
+                variant='dark'
+                margin='0 0 1rem 0'
+                brandTheme={brandTheme}
+                onClick={() => {
+                  openDrawer();
+                  register();
+                }}
+              >
+                {getRegisterText(registrationData?.registrationType)}
+              </Button>
             </Wrapper>
-            <Button
-              variant='dark'
-              brandTheme={brandTheme}
-              onClick={() => {
-                openDrawer();
-                register();
-              }}
-            >
-              {getRegisterText(registrationData?.registrationType)}
-            </Button>
-          </Wrapper>
+          </ModuleWrapper>
         );
     }
   }, [

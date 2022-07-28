@@ -42,8 +42,6 @@ const useHeights = () => {
     else margin = window.innerHeight * 0.34;
   }
 
-  if (isIOS && !isPreviewMode && !isFirefox) margin = margin - 60;
-
   if (isPreviewMode) bottomHeight = window.innerHeight / appZoom - 290;
   else bottomHeight = window.innerHeight - margin;
 
