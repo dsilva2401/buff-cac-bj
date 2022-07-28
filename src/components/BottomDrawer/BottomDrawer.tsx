@@ -3,14 +3,13 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useMemo,
   useRef,
 } from 'react';
 import { Position } from 'types/Misc';
 import { useTranslation } from 'react-i18next';
-import { isDesktop } from 'react-device-detect';
 import { Product } from 'types/ProductDetailsType';
 import { useGlobal } from 'context/global/GlobalContext';
+import { isAndroid, isDesktop } from 'react-device-detect';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
@@ -97,13 +96,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 }) => {
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
+
   const leadModuleButtonRef = useRef<HTMLButtonElement>(null);
   const [collapsedDrawerRef, { height }] = useElementSize();
   const { topHeight, bottomHeight } = useHeights();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const handle = useFullScreenHandle();
+
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.bottomDrawer',
   });
-
   const {
     retractDrawer,
     setRetractDrawer,
@@ -116,16 +118,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     authFetched,
     registeringProduct,
   } = useGlobal();
-
-  const handle = useFullScreenHandle();
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      if (handle.active) videoRef?.current.play();
-      else if (!handle.active) videoRef.current?.pause();
-    }
-  }, [handle.active]);
 
   useEffect(() => {
     if (height) setCollapsedDrawerHeight(height);
@@ -152,81 +144,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   }, [position, topHeight, bottomHeight, closeChild, setMainDrawerOpen]);
 
   useEffect(() => {
-    if (
-      !authFetched ||
-      registeringProduct ||
-      product?.registeredToCurrentUser
-    ) {
-      return;
-    } else if (autoDeploy && buttons && buttons.length > 0) {
-      setTimeout(() => {
-        !autoDeployTriggered &&
-          leadModuleButtonRef.current &&
-          leadModuleButtonRef.current.click();
-        setAutoDeployTriggered(true);
-      }, 500);
-    }
-  }, [
-    buttons,
-    product,
-    autoDeploy,
-    authFetched,
-    registeringProduct,
-    autoDeployTriggered,
-    setAutoDeployTriggered,
-  ]);
-
-  const handleDrawerClose = useCallback(() => {
-    setPosition({ ...position, y: bottomHeight });
-    setMainDrawerOpen(false);
-  }, [position, setPosition, bottomHeight, setMainDrawerOpen]);
-
-  const handleStart = useCallback(() => {
-    setIsControlled(false);
-  }, []);
-
-  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
-    setPosition({ ...position, y: data.y });
-    setDeltaPosition(data.deltaY);
-  };
-
-  const handleStop = useCallback(() => {
-    setIsControlled(true);
-    if (deltaPosition > 0) {
-      setPosition({ ...position, y: bottomHeight });
-    } else {
-      if (position.y === bottomHeight) {
-        setPosition({ ...position, y: bottomHeight });
-      } else {
-        setPosition({ ...position, y: topHeight });
-      }
-    }
-  }, [topHeight, bottomHeight, deltaPosition, position, setPosition]);
-
-  const validateSocials = (socials: SocialsType) => {
-    return socials?.email ||
-      socials?.facebook ||
-      socials?.instagram ||
-      socials?.phone ||
-      socials?.twitter ||
-      socials?.tiktok
-      ? true
-      : false;
-  };
-
-  useEffect(() => {
-    if (!authFetched) {
-      return;
-    }
-
-    if (registeringProduct) {
-      return;
-    }
-
-    if (product?.registeredToCurrentUser) {
-      return;
-    }
-
+    if (!authFetched) return;
+    if (registeringProduct) return;
+    if (product?.registeredToCurrentUser) return;
     if (autoDeploy && buttons && buttons.length > 0) {
       setTimeout(() => {
         !autoDeployTriggered &&
@@ -246,78 +166,177 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     leadModuleButtonRef.current,
   ]);
 
-  const drawerFooter = useMemo(() => {
-    return (
-      <DrawerFooter>
-        {socials?.phone && (
-          <DrawerIconLink href={`tel:+${socials.phone}`}>
-            <Image src={phoneCallIcon} alt='phone-icon' />
-          </DrawerIconLink>
-        )}
-        {socials?.email && (
-          <DrawerIconLink href={`mailto:${socials?.email}`}>
-            <Image src={emailIcon} alt='email-icon' />
-          </DrawerIconLink>
-        )}
-        {socials?.tiktok && (
-          <DrawerIconLink
-            href={
-              socials?.tiktok.includes('https://') ||
-              socials?.tiktok.includes('http://')
-                ? socials?.tiktok
-                : `https://${socials?.tiktok}`
-            }
-            target='_blank'
-            rel='noopener noreferrer'
+  const handleDrawerClose = useCallback(() => {
+    setPosition({ ...position, y: bottomHeight });
+    setMainDrawerOpen(false);
+  }, [position, setPosition, bottomHeight, setMainDrawerOpen]);
+
+  const handleStart = useCallback(() => {
+    setIsControlled(false);
+  }, []);
+
+  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
+    setPosition({ ...position, y: data.y });
+    setDeltaPosition(data.deltaY);
+  };
+
+  const validateSocials = (socials: SocialsType) => {
+    return socials?.email ||
+      socials?.facebook ||
+      socials?.instagram ||
+      socials?.phone ||
+      socials?.twitter ||
+      socials?.tiktok
+      ? true
+      : false;
+  };
+
+  const handleStop = useCallback(() => {
+    setIsControlled(true);
+    if (deltaPosition > 0) {
+      setPosition({ ...position, y: bottomHeight });
+    } else {
+      if (position.y === bottomHeight) {
+        setPosition({ ...position, y: bottomHeight });
+      } else {
+        setPosition({ ...position, y: topHeight });
+      }
+    }
+  }, [topHeight, bottomHeight, deltaPosition, position, setPosition]);
+
+  const renderVideoElement = (src: string) => {
+    if (isDesktop) {
+      return (
+        <Wrapper
+          width={handle.active ? '100%' : '0'}
+          height='100%'
+          alignItems='center'
+          justifyContent='center'
+        >
+          <FullScreen
+            handle={handle}
+            onChange={(active) => {
+              active ? videoRef.current?.play() : videoRef.current?.pause();
+            }}
           >
-            <Image src={tiktokIcon} alt='tiktok-icon' />
-          </DrawerIconLink>
-        )}
-        {socials?.twitter && (
-          <DrawerIconLink
-            href={
-              socials?.twitter.includes('https://') ||
-              socials?.twitter.includes('http://')
-                ? socials?.twitter
-                : `https://${socials?.twitter}`
-            }
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image src={twitterIcon} alt='twitter-icon' />
-          </DrawerIconLink>
-        )}
-        {socials?.instagram && (
-          <DrawerIconLink
-            href={
-              socials?.instagram.includes('https://') ||
-              socials?.instagram.includes('http://')
-                ? socials?.instagram
-                : `https://${socials?.instagram}`
-            }
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image src={instagramIcon} alt='instagram-icon' />
-          </DrawerIconLink>
-        )}
-        {socials?.facebook && (
-          <DrawerIconLink
-            href={
-              socials?.facebook.includes('https://') ||
-              socials?.facebook.includes('http://')
-                ? socials?.facebook
-                : `https://${socials?.facebook}`
-            }
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image src={facebookIcon} alt='facebook-icon' />
-          </DrawerIconLink>
-        )}
-      </DrawerFooter>
-    );
-  }, [socials]);
+            <video
+              src={src}
+              ref={videoRef}
+              controls
+              width='100%'
+              height='100%'
+              preload='metadata'
+              playsInline={false}
+              onEnded={() => handle.active && handle.exit()}
+            />
+          </FullScreen>
+        </Wrapper>
+      );
+    } else if (isAndroid) {
+      return (
+        <Wrapper width='0' height='0'>
+          <FullScreen handle={handle}>
+            <video
+              src={src}
+              ref={videoRef}
+              onPlay={() => handle.enter()}
+              onEnded={() => handle.exit()}
+              controls
+              height='100%'
+              width='100%'
+              preload='metadata'
+              playsInline={false}
+            />
+          </FullScreen>
+        </Wrapper>
+      );
+    } else {
+      return (
+        <Wrapper width='0' height='0'>
+          <video
+            src={src}
+            ref={videoRef}
+            controls
+            height={0}
+            width='100%'
+            preload='metadata'
+            playsInline={false}
+          />
+        </Wrapper>
+      );
+    }
+  };
+
+  const drawerFooter = (
+    <DrawerFooter>
+      {socials?.phone && (
+        <DrawerIconLink href={`tel:+${socials.phone}`}>
+          <Image src={phoneCallIcon} alt='phone-icon' />
+        </DrawerIconLink>
+      )}
+      {socials?.email && (
+        <DrawerIconLink href={`mailto:${socials?.email}`}>
+          <Image src={emailIcon} alt='email-icon' />
+        </DrawerIconLink>
+      )}
+      {socials?.tiktok && (
+        <DrawerIconLink
+          href={
+            socials?.tiktok.includes('https://') ||
+            socials?.tiktok.includes('http://')
+              ? socials?.tiktok
+              : `https://${socials?.tiktok}`
+          }
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <Image src={tiktokIcon} alt='tiktok-icon' />
+        </DrawerIconLink>
+      )}
+      {socials?.twitter && (
+        <DrawerIconLink
+          href={
+            socials?.twitter.includes('https://') ||
+            socials?.twitter.includes('http://')
+              ? socials?.twitter
+              : `https://${socials?.twitter}`
+          }
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <Image src={twitterIcon} alt='twitter-icon' />
+        </DrawerIconLink>
+      )}
+      {socials?.instagram && (
+        <DrawerIconLink
+          href={
+            socials?.instagram.includes('https://') ||
+            socials?.instagram.includes('http://')
+              ? socials?.instagram
+              : `https://${socials?.instagram}`
+          }
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <Image src={instagramIcon} alt='instagram-icon' />
+        </DrawerIconLink>
+      )}
+      {socials?.facebook && (
+        <DrawerIconLink
+          href={
+            socials?.facebook.includes('https://') ||
+            socials?.facebook.includes('http://')
+              ? socials?.facebook
+              : `https://${socials?.facebook}`
+          }
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <Image src={facebookIcon} alt='facebook-icon' />
+        </DrawerIconLink>
+      )}
+    </DrawerFooter>
+  );
 
   return (
     <>
@@ -446,42 +465,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                               }}
                             >
                               {button.title}
+                              {/* {!button.locked && renderVideoElement(button.moduleData || '')} */}
                               {!button.locked &&
-                                (isDesktop ? (
-                                  <FullScreen handle={handle}>
-                                    <Wrapper
-                                      width={handle.active ? '100%' : '0'}
-                                      height='100%'
-                                      alignItems='center'
-                                      justifyContent='center'
-                                    >
-                                      <video
-                                        ref={videoRef}
-                                        controls
-                                        width='100%'
-                                        height='100%'
-                                        preload='metadata'
-                                        playsInline={false}
-                                        onEnded={() =>
-                                          isDesktop && handle.exit()
-                                        }
-                                        src={button.moduleData || ''}
-                                      />
-                                    </Wrapper>
-                                  </FullScreen>
-                                ) : (
-                                  <Wrapper width='0' height='0'>
-                                    <video
-                                      ref={videoRef}
-                                      controls
-                                      height={0}
-                                      width='100%'
-                                      preload='metadata'
-                                      playsInline={false}
-                                      src={button.moduleData || ''}
-                                    />
-                                  </Wrapper>
-                                ))}
+                                renderVideoElement(
+                                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                                )}
                             </Button>
                           ) : (
                             <Button
@@ -553,40 +541,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           }}
                         >
                           {button.title}
+                          {/* {!button.locked && renderVideoElement(button.moduleData || '')} */}
                           {!button.locked &&
-                            (isDesktop ? (
-                              <FullScreen handle={handle}>
-                                <Wrapper
-                                  width={handle.active ? '100%' : '0'}
-                                  height='100%'
-                                  alignItems='center'
-                                  justifyContent='center'
-                                >
-                                  <video
-                                    ref={videoRef}
-                                    controls
-                                    width='100%'
-                                    height='100%'
-                                    preload='metadata'
-                                    playsInline={false}
-                                    onEnded={() => isDesktop && handle.exit()}
-                                    src={button.moduleData}
-                                  />
-                                </Wrapper>
-                              </FullScreen>
-                            ) : (
-                              <Wrapper width='0' height='0'>
-                                <video
-                                  ref={videoRef}
-                                  controls
-                                  height={0}
-                                  width='100%'
-                                  preload='metadata'
-                                  playsInline={false}
-                                  src={button.moduleData}
-                                />
-                              </Wrapper>
-                            ))}
+                            renderVideoElement(
+                              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                            )}
                         </Button>
                       ) : (
                         <Button
