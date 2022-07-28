@@ -465,11 +465,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                               }}
                             >
                               {button.title}
-                              {/* {!button.locked && renderVideoElement(button.moduleData || '')} */}
-                              {!button.locked &&
-                                renderVideoElement(
-                                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-                                )}
+                              {!button.locked && renderVideoElement(button.moduleData || '')}
                             </Button>
                           ) : (
                             <Button
@@ -541,11 +537,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           }}
                         >
                           {button.title}
-                          {/* {!button.locked && renderVideoElement(button.moduleData || '')} */}
-                          {!button.locked &&
-                            renderVideoElement(
-                              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-                            )}
+                          {!button.locked && renderVideoElement(button.moduleData || '')}
                         </Button>
                       ) : (
                         <Button
