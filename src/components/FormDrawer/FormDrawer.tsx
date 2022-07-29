@@ -97,10 +97,6 @@ const FormDrawer = (props: Props) => {
       endpoint: 'form/submit_form',
       onSuccess: (data: { responseId: string; success: boolean }) => {
         setIsFormSubmitting(false);
-        showToast({
-          message: 'Form submission error, please retry',
-          type: 'error',
-        });
         setSuccessDrawer(true);
         if (
           endScreenNavModuleIndex !== undefined &&
@@ -131,6 +127,8 @@ const FormDrawer = (props: Props) => {
           closeDrawer(true);
           return;
         }
+        localStorage.setItem('brij-form-complete', 'true');
+
         route.push(`/c/${id}/form/complete`);
       },
       onError: () => {
@@ -146,7 +144,6 @@ const FormDrawer = (props: Props) => {
 
   useEffect(() => {
     const isFormComplete = localStorage.getItem('brij-form-complete');
-
     if (isFormComplete && endScreenNavModuleIndex === undefined) {
       route.push(`/c/${id}/form/complete`);
       return;
@@ -560,7 +557,9 @@ const FormDrawer = (props: Props) => {
           <SuccessDrawer
             isOpen={successDrawer}
             loading={false}
-            onCompleteAnimation={() => setSuccessDrawer(false)}
+            onCompleteAnimation={() => {
+              setSuccessDrawer(false);
+            }}
             title={'Form Completed'}
             description={'Thank you for your submission'}
             close={closeSuccess}
