@@ -28,13 +28,13 @@ import FormCompletionPage from './components/FormCompletionPage';
 import FormStartPage from './components/FormStartPage';
 import { useAPI } from 'utils/api';
 import { useGlobal } from 'context/global/GlobalContext';
-import SuccessDrawer from 'components/SuccessDrawer';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './styles/formstyles.css';
 import { useSwipeable } from 'react-swipeable';
 import IconButton from 'components/IconButton/IconButton';
 import FormStepper from './components/FormStepper';
 import { showToast } from 'components/Toast/Toast';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 
 type Props = {
   data: FormDetailModel[];
@@ -81,11 +81,11 @@ const FormDrawer = (props: Props) => {
   const location = useLocation();
   const formik = useRef<FormikProps<any>>(null);
   const [formOrder, setFormOrder] = useState<string[]>([]);
-  const [successDrawer, setSuccessDrawer] = useState<boolean>(false);
   const [transistionAnimation, setTransistionAnimation] =
     useState<string>('slide');
   const { user, slug, isPreviewMode, setFormRegistration, brandTheme } =
     useGlobal();
+  const { openDrawer, setMeta, showSuccess } = useSuccessDrawerContext();
 
   useEffect(() => {
     setTotalSteps(data.length);
@@ -97,7 +97,13 @@ const FormDrawer = (props: Props) => {
       endpoint: 'form/submit_form',
       onSuccess: (data: { responseId: string; success: boolean }) => {
         setIsFormSubmitting(false);
-        setSuccessDrawer(true);
+        setMeta({
+          title: 'Form Completed',
+          description: 'Thank you for your submission!',
+        });
+
+        showSuccess();
+        openDrawer();
         if (
           endScreenNavModuleIndex !== undefined &&
           closeDrawer &&
@@ -269,10 +275,6 @@ const FormDrawer = (props: Props) => {
     preventScrollOnSwipe: true,
     trackMouse: false,
   });
-
-  const closeSuccess = () => {
-    return;
-  };
 
   const handleBtnSubmit = async () => {
     //submit the form
@@ -554,16 +556,6 @@ const FormDrawer = (props: Props) => {
               </Wrapper>
             </ModuleWrapper>
           </Wrapper>
-          <SuccessDrawer
-            isOpen={successDrawer}
-            loading={false}
-            onCompleteAnimation={() => {
-              setSuccessDrawer(false);
-            }}
-            title={'Form Completed'}
-            description={'Thank you for your submission'}
-            close={closeSuccess}
-          />
         </Wrapper>
       )}
     </Formik>

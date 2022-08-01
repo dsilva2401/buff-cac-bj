@@ -132,8 +132,12 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const { setMeta, showSuccess, closeDrawer, openDrawer, open } =
     useSuccessDrawerContext();
   const { invalidateCache } = useAPICacheContext();
-  const onError = (response: any) => {
-    showToast({ type: 'error', message: response.error });
+  const onError = () => {
+    showToast({
+      type: 'error',
+      message:
+        'Registration form fetch unsuccessful. Please refresh and try again.',
+    });
   };
 
   useEffect(() => {
