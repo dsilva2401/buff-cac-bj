@@ -190,7 +190,14 @@ const SideMenu: React.FC = () => {
                     logEvent({
                       eventType: 'ENGAGEMENTS',
                       event: 'WEBSITE_VISITS',
-                      data: details?.brand,
+                      data: {
+                        ...details?.brand,
+                        url:
+                          details?.brand?.website?.includes('https://') ||
+                          details?.brand?.website?.includes('http://')
+                            ? details?.brand?.website
+                            : `https://${details?.brand?.website}`,
+                      },
                     });
                   }}
                 >

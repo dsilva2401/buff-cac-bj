@@ -52,6 +52,7 @@ import getSuccessTitle from 'utils/getSuccessTitle';
 import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 import { showToast } from 'components/Toast/Toast';
 import { useAPI } from 'utils/api';
+import CatchLinkWrapper from 'components/CatchLinkWrapper';
 type UrlParam = {
   id: string;
 };
@@ -162,6 +163,17 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     null,
     true
   );
+
+  const onLinkClick = (href: string) => {
+    logEvent({
+      eventType: 'ENGAGEMENTS',
+      event: 'WEBSITE_VISITS',
+      data: {
+        ...details?.brand,
+        url: href,
+      },
+    });
+  };
 
   const closeDrawerPage = useCallback(
     (closeDrawer = false, registrationFormCallback = false) => {
@@ -977,24 +989,26 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         )}
       </Wrapper>
       <div style={pageLoading && !mainDrawerOpen ? { display: 'none' } : {}}>
-        <BottomDrawer
-          title={pageTitle}
-          subtitle={details?.product?.subtitle}
-          buttons={buttonsArray()}
-          socials={details?.brand?.social}
-          isChildOpen={isDrawerPageOpen}
-          closeChild={closeDrawerPage}
-          leadInformation={leadInformation}
-          disableModalDismiss={disableModalDismiss}
-          mainDrawerOpen={mainDrawerOpen}
-          setMainDrawerOpen={setMainDrawerOpen}
-          position={position}
-          setPosition={setPosition}
-          autoDeploy={details?.modules[0]?.autoDeploy}
-          product={details?.product}
-        >
-          {renderDrawerPage()}
-        </BottomDrawer>
+        <CatchLinkWrapper onLinkClick={onLinkClick}>
+          <BottomDrawer
+            title={pageTitle}
+            subtitle={details?.product?.subtitle}
+            buttons={buttonsArray()}
+            socials={details?.brand?.social}
+            isChildOpen={isDrawerPageOpen}
+            closeChild={closeDrawerPage}
+            leadInformation={leadInformation}
+            disableModalDismiss={disableModalDismiss}
+            mainDrawerOpen={mainDrawerOpen}
+            setMainDrawerOpen={setMainDrawerOpen}
+            position={position}
+            setPosition={setPosition}
+            autoDeploy={details?.modules[0]?.autoDeploy}
+            product={details?.product}
+          >
+            {renderDrawerPage()}
+          </BottomDrawer>
+        </CatchLinkWrapper>
       </div>
     </>
   );

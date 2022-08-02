@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import HtmlWrapper from 'components/HtmlWrapper';
 import ModuleWrapper from 'components/ModuleWrapper';
 import { useIframeModifier } from 'hooks/useIframeModifier';
 import { CustomModuleType } from 'types/ProductDetailsType';
+import { useGlobal } from 'context/global/GlobalContext';
 
 type CustomDrawerProps = {
   drawerTitle: string;
