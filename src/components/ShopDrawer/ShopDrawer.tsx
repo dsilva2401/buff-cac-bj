@@ -59,7 +59,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
   const [expandDescription, toggleExpandDescription] = useState<boolean>(false);
   const [filteredOptions, setFilteredOptions] = useState<any>([]);
   const [contentRef, { height }] = useElementSize();
-  const { logEvent, brandTheme } = useGlobal();
+  const { logEvent, brandTheme, productDetails } = useGlobal();
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.shopDrawer',
   });
@@ -160,11 +160,12 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
     []
   );
 
-  const handleCheckout = useCallback(() => {
+  const handleCheckout = () => {
     const link = modifyUrlToIncludeQuantity(
       chosenOption.checkoutUri,
       selectedQuantity
     );
+
     logEvent({
       eventType: 'ENGAGEMENTS',
       event: 'SHOPPING_CHECK_OUT',
@@ -173,10 +174,20 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
         quantity: selectedQuantity,
       },
     });
+
+    logEvent({
+      eventType: 'ENGAGEMENTS',
+      event: 'WEBSITE_VISITS',
+      data: {
+        ...productDetails?.brand,
+        url: `https://${link}`,
+      },
+    });
+
     setTimeout(() => {
       window.open(`https://${link}`, '_blank');
     });
-  }, [chosenOption, modifyUrlToIncludeQuantity, selectedQuantity, logEvent]);
+  };
 
   const removeFilter = useCallback(
     (optionItem) => {

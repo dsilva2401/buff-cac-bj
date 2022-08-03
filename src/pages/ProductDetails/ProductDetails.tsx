@@ -452,13 +452,16 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             setProductModule(module.id);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
-              window.open(
+
+              const link =
                 moduleData?.link.includes('https://') ||
-                  moduleData?.link.includes('http://')
+                moduleData?.link.includes('http://')
                   ? moduleData?.link
-                  : `https://${moduleData?.link}`,
-                '_blank'
-              );
+                  : `https://${moduleData?.link}`;
+
+              window.open(link, '_blank');
+
+              onLinkClick(link);
             } else changeDrawerPage(x);
             logEvent({
               eventType: 'ENGAGEMENTS',
