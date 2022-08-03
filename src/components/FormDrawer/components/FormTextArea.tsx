@@ -5,6 +5,7 @@ import Text from 'components/Text';
 import { useEffect, useState } from 'react';
 import EditTextArea from 'components/EditTextArea';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   formData: FormDetailModel;
@@ -15,6 +16,10 @@ type Props = {
 const FormTextArea = (props: Props) => {
   const { formData, formRef, name } = props;
   const [firstBlur, setFirstBlur] = useState(false);
+
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'form.formDrawer.textArea',
+  });
 
   const formikTextArea = useFormik({
     initialValues: {
@@ -66,7 +71,7 @@ const FormTextArea = (props: Props) => {
         <EditTextArea
           name='textArea'
           rows={formData.isLongQuestion ? 4 : 1}
-          placeholder='Type your answer here...'
+          placeholder={t('placeHolder')}
           value={formikTextArea.values.textArea}
           onChange={(value, e) => {
             formikTextArea.handleChange(e);

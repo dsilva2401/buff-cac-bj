@@ -127,6 +127,10 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     keyPrefix: 'registration',
   });
 
+  const { t: formTranslation } = useTranslation('translation', {
+    keyPrefix: 'form.formDrawer',
+  });
+
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
   const { registerProductAndFetch } = useRegisterProduct();
@@ -136,8 +140,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const onError = () => {
     showToast({
       type: 'error',
-      message:
-        'Registration form fetch unsuccessful. Please refresh and try again.',
+      message: formTranslation('regFormFetchError'),
     });
   };
 

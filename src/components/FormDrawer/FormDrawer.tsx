@@ -35,6 +35,7 @@ import IconButton from 'components/IconButton/IconButton';
 import FormStepper from './components/FormStepper';
 import { showToast } from 'components/Toast/Toast';
 import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: FormDetailModel[];
@@ -87,6 +88,10 @@ const FormDrawer = (props: Props) => {
     useGlobal();
   const { openDrawer, setMeta, showSuccess } = useSuccessDrawerContext();
 
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'form.formDrawer',
+  });
+
   useEffect(() => {
     setTotalSteps(data.length);
   }, [setTotalSteps, data]);
@@ -98,8 +103,8 @@ const FormDrawer = (props: Props) => {
       onSuccess: (data: { responseId: string; success: boolean }) => {
         setIsFormSubmitting(false);
         setMeta({
-          title: 'Form Completed',
-          description: 'Thank you for your submission!',
+          title: t('formCompletedTitle'),
+          description: t('formCompletedDescription'),
         });
 
         showSuccess();
@@ -139,7 +144,7 @@ const FormDrawer = (props: Props) => {
       },
       onError: () => {
         showToast({
-          message: 'Form submission failed. Please resubmit',
+          message: t('formSubmissionError'),
           type: 'error',
         });
       },
@@ -533,7 +538,7 @@ const FormDrawer = (props: Props) => {
                             variant='dark'
                             brandTheme={brandTheme}
                           >
-                            Submit
+                            {t('submit')}
                           </Button>
                         )
                       ) : (
@@ -547,7 +552,7 @@ const FormDrawer = (props: Props) => {
                           variant='dark'
                           brandTheme={brandTheme}
                         >
-                          Next
+                          {t('next')}
                         </Button>
                       )}
                     </Wrapper>

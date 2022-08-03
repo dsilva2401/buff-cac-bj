@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import UploadInput from './FileUpload/UploadInput';
 import { showToast } from 'components/Toast/Toast';
 import IFileFrom from './FileUpload/UploadInput/model';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   formData: FormDetailModel;
@@ -21,6 +22,9 @@ const FormFileUpload = (props: Props) => {
   const regexFileExtension = new RegExp('(.*?).(png|jpeg|jpg|pdf|heic)$');
   const [extensionError, setExtensionError] = useState(false);
   const [objectUrl, setObjectUrl] = useState<string>('');
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'form.formDrawer.fileUpload',
+  });
 
   const changeSelectedFile = async (files: FileList) => {
     if (files && files.length) {
@@ -55,7 +59,7 @@ const FormFileUpload = (props: Props) => {
         });
       } catch (e) {
         showToast({
-          message: 'File Failed to sync to s3 please upload again.',
+          message: t('syncToS3Error'),
           type: 'error',
         });
         setSelectedFile(undefined);
@@ -142,10 +146,7 @@ const FormFileUpload = (props: Props) => {
         {extensionError && (
           <Wrapper justifyContent='flex-start'>
             <Text color='red' padding='10px'>
-              <span>
-                File extenstion not supported. valid files are .pdf, .jpeg,
-                .jpg, heic and .png
-              </span>
+              <span>{t('fileExtensionError')}</span>
             </Text>
           </Wrapper>
         )}

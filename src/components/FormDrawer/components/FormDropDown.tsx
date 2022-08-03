@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { FormDetailModel } from 'types/FormTypes';
 import { useFormik } from 'formik';
 import FormSelectInput from './FormSelectInput';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   formRef: FormikProps<any> | null;
@@ -13,7 +14,10 @@ type Props = {
 };
 
 const FormDropDown = (props: Props) => {
-  const selectText = 'Click to select';
+  const { t } = useTranslation('translation', {
+    keyPrefix: 'form.formDrawer.dropDown',
+  });
+  const selectText = t('selectText');
   const { formRef, name, formData } = props;
 
   const formikDropDown = useFormik({

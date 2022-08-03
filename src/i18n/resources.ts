@@ -196,6 +196,26 @@ export const resources = {
             comboUnavailable: 'Combination not available',
           },
         },
+        formDrawer: {
+          submit: 'Submit',
+          next: 'Next',
+          regFormFetchError:
+            'Registration form fetch unsuccessful. Please refresh and try again.',
+          formCompletedTitle: 'Form Completed',
+          formCompletedDescription: 'Thank you for your submission!',
+          formSubmissionError: 'Form submisison failed. Please resubmit',
+          fileUpload: {
+            syncToS3Error: 'File Failed to sync to s3 please upload again.',
+            fileExtensionError: `File extenstion not supported. valid files are .pdf, .jpeg,
+              .jpg, heic and .png`,
+          },
+          textArea: {
+            placeHolder: 'Type your answer here...',
+          },
+          dropDown: {
+            selectText: 'Click to select',
+          },
+        },
       },
     },
   },
