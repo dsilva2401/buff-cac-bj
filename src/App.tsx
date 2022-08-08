@@ -15,6 +15,7 @@ import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper'
 import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import { showToast } from 'components/Toast/Toast';
 import { useAPI } from 'utils/api';
+import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 
 export default function App() {
   const userFormUpdateId = localStorage.getItem('brij-form-user-update-id');
@@ -29,6 +30,17 @@ export default function App() {
     isPreviewMode,
     setToken,
   } = useGlobal();
+
+  const { invalidateCache } = useAPICacheContext();
+
+  // TODO: invalid cache
+  useEffect(() => {
+    const productId = localStorage.getItem('currentProductModuleId');
+
+    if (!productId) {
+      invalidateCache();
+    }
+  }, []);
 
   useLayoutEffect(() => {
     let vh = window.innerHeight * 0.01;
