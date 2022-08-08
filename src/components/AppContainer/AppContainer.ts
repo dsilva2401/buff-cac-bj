@@ -11,7 +11,7 @@ const AppContainer = styled.div<AppContainerProps>`
   align-items: center;
   justify-content: center;
   background-color: ${(props) => (props.isBrowser ? '#F5F5F5' : '#FFFFFF')};
-  @media screen and (orientation: landscape) {
+  @media screen and (min-aspect-ratio: 13/9) {
     #landscape {
       display: flex;
     }
@@ -19,7 +19,7 @@ const AppContainer = styled.div<AppContainerProps>`
       display: none;
     }
   }
-  @media screen and (orientation: portrait) {
+  @media screen and (max-aspect-ratio: 13/9) {
     #landscape {
       display: none;
     }
