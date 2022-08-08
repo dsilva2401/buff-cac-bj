@@ -157,7 +157,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
       if (payload.event === 'USER_SCAN_A_TAG') {
         let scanTime: string = new Date().toString();
         let scanSlug: string = payload.data;
-        console.log('SCANNED SLUG: ', scanSlug);
 
         // Get product map from localstorage
         let scanMap: Map<string, string> | null;
@@ -165,30 +164,19 @@ export const GlobalProvider: React.FC = ({ children }) => {
           scanMap = new Map(
             JSON.parse(localStorage.getItem('storedScans') || '{}')
           );
-          console.log('SCAN MAP FOUND IN LOCALSTORAGE: ', scanMap);
-        } else {
-          scanMap = new Map<string, string>();
-          console.log(
-            'NO SCAN MAP FOUND IN LOCALSTORAGE: NEW SCAN MAP CREATED'
-          );
-        }
+        } else scanMap = new Map<string, string>();
 
         // Purge older than threshold entries
         for (let [key, value] of scanMap) {
           if (
             new Date().getTime() - new Date(value).getTime() >
             SCAN_MAP_TIME_THRESHOLD
-          ) {
-            console.log('PURGED VALUE SCANNED > 1HR: ', value);
+          )
             scanMap.delete(key);
-          }
         }
 
         // Purge the map if entries equal to length threshold
-        if (scanMap.size >= SCAN_MAP_ENTRIES_THRESHOLD) {
-          scanMap.clear();
-          console.log('FLUSHED SCAN MAP CREATED > 24HRS');
-        }
+        if (scanMap.size >= SCAN_MAP_ENTRIES_THRESHOLD) scanMap.clear();
 
         if (scanMap instanceof Map) {
           // find if scanned product exists
@@ -206,8 +194,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
                 'storedScans',
                 JSON.stringify(Array.from(scanMap.entries()))
               );
-              console.log('EXPIRED TIMESTAMP UPDATED', scanMap);
-              console.log('EVENT LOGGED: ', payload.event);
               return _logEvent({
                 ...payload,
                 user: user?.uid,
@@ -221,8 +207,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
                 'storedScans',
                 JSON.stringify(Array.from(scanMap.entries()))
               );
-              console.log('DUPLICATE SLUG WITHIN TIME THRESHOLD OF 1HR');
-              console.log('EVENT NOT LOGGED');
               return undefined;
             }
           } else {
@@ -233,8 +217,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
               'storedScans',
               JSON.stringify(Array.from(scanMap.entries()))
             );
-            console.log('NEW SLUG ADDED: ', scanMap);
-            console.log('EVENT LOGGED: ', payload.event);
             return _logEvent({
               ...payload,
               user: user?.uid,
@@ -246,7 +228,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
           }
         }
       } else {
-        console.log('EVENT LOGGED : ', payload.event);
         return _logEvent({
           ...payload,
           user: user?.uid,
