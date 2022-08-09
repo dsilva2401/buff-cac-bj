@@ -47,11 +47,11 @@ export const InputWrapper = styled.div<InputProps>`
 export const InputPlaceholder = styled.span<InputProps>`
   position: absolute;
   color: #98a3aa;
-  transition: all 0.3s ease;
+  transition: 0.3s;
   z-index: 1;
-  font-size: ${(props) => (props.isFocused ? '0.7rem' : '0.9rem')};
+  font-size: ${(props) => (props.isFocused ? '0.5rem' : '0.9rem')};
+  line-height: ${(props) => (props.isFocused ? '0.5rem' : '0.9rem')};
   background-color: ${(props) => (props.isFocused ? '#FFFFFF' : 'transparent')};
-  transform: ${(props) =>
-    props.isFocused ? 'scale(0.8) translate(-10px, -30px)' : 'unset'};
+  transform: ${(props) => (props.isFocused ? 'translate(0, -23px)' : 'unset')};
   opacity: ${(props) => (props.isFocused ? 1 : 0.85)};
 `;
