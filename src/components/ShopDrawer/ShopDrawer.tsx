@@ -172,6 +172,7 @@ const ShopDrawer: React.FC<ShopDrawerProps> = ({
       data: {
         productId: chosenOption.id,
         quantity: selectedQuantity,
+        options: chosenOption.options,
       },
     });
 
