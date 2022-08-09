@@ -133,7 +133,7 @@ export default function App() {
         textAlign='center'
         wrapperWidth='max-content'
       >
-        <span>Please rotate device for Brij experience</span>
+        <span>Please rotate device to view experience</span>
       </Text>
       <Toast />
     </AppContainer>

@@ -28,8 +28,10 @@ const Button = styled.button<ButtonProps>`
   justify-content: center;
   align-items: ${(props) => (props.alignItems ? props.alignItems : 'center')};
   font-size: 1rem;
+  line-height: 1.2rem;
+  height: 52px;
+  padding: 0.9rem 0.75rem;
   font-weight: 600;
-  padding: 0.9rem 0.5rem;
   cursor: pointer;
   margin: ${(props) => (props.margin ? props.margin : '0')};
   transition: ${(props) =>
