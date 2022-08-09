@@ -359,214 +359,200 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
           isControlled={isControlled}
           style={isPreviewMode ? { height: `88%` } : {}}
         >
-          <Wrapper
-            width='100%'
-            height='100%'
-            direction='column'
-            justifyContent='space-between'
-            alignItems='center'
-          >
+          {!isChildOpen && (
             <DrawerHeader
               isDrawerOpen={mainDrawerOpen}
               isChildOpen={isChildOpen}
             >
-              <Wrapper direction='column' width='100%'>
-                {!isChildOpen && (
-                  <Wrapper
-                    justifyContent='space-between'
-                    alignItems='center'
-                    width='100%'
+              <Wrapper
+                width='65%'
+                height='100%'
+                justifyContent='center'
+                direction='column'
+              >
+                {title && (
+                  <LinesEllipsis
+                    trimRight
+                    text={title ? title : ''}
+                    maxLine={subtitle ? 1 : 2}
+                    basedOn='words'
+                    ellipsis='...'
+                    style={{
+                      width: '100%',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      lineHeight: '20px',
+                    }}
+                  />
+                )}
+                {subtitle && (
+                  <Text
+                    color='#636369'
+                    fontSize='0.75rem'
+                    wrapperWidth='max-content'
                   >
-                    <Wrapper
-                      gap='2px'
-                      width='65%'
-                      height='100%'
-                      alignSelf={subtitle ? 'flex-end' : 'center'}
-                      justifyContent='space-between'
-                      direction='column'
-                    >
-                      {title && (
-                        <LinesEllipsis
-                          trimRight
-                          text={title ? title : ''}
-                          maxLine={subtitle ? 1 : 2}
-                          basedOn='words'
-                          ellipsis='...'
-                          style={{
-                            width: '100%',
-                            fontSize: '1rem',
-                            fontWeight: '600',
-                            lineHeight: '20px',
-                          }}
-                        />
-                      )}
-                      {subtitle && (
-                        <Text fontSize='0.75rem' color='#636369'>
-                          <p>{subtitle}</p>
-                        </Text>
-                      )}
-                    </Wrapper>
-                    {mainDrawerOpen ? null : leadInformation}
-                  </Wrapper>
+                    <p>{subtitle}</p>
+                  </Text>
                 )}
               </Wrapper>
+              {mainDrawerOpen ? null : leadInformation}
             </DrawerHeader>
-            {mainDrawerOpen && !disableModalDismiss && (
-              <DrawerClose
-                className='close-expanded-bottom-container-btn'
-                onClick={() => {
-                  if (isChildOpen) {
-                    closeChild(true);
-                    if (retractDrawer) handleDrawerClose();
-                  } else handleDrawerClose();
-                }}
+          )}
+          {mainDrawerOpen && !disableModalDismiss && (
+            <DrawerClose
+              className='close-expanded-bottom-container-btn'
+              onClick={() => {
+                if (isChildOpen) {
+                  closeChild(true);
+                  if (retractDrawer) handleDrawerClose();
+                } else handleDrawerClose();
+              }}
+            >
+              <Close />
+            </DrawerClose>
+          )}
+          <DrawerBody>
+            <DragBar />
+            {!mainDrawerOpen && (
+              <Wrapper
+                gap='1rem'
+                width='100%'
+                direction='column'
+                ref={collapsedDrawerRef}
+                margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
               >
-                <Close />
-              </DrawerClose>
-            )}
-            <DrawerBody>
-              <DragBar />
-              {!mainDrawerOpen && (
-                <Wrapper
-                  gap='1rem'
-                  width='100%'
-                  direction='column'
-                  ref={collapsedDrawerRef}
-                  margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
-                >
-                  {buttons?.length === 0 && isPreviewMode && (
-                    <Button
-                      className='expand-main-module-btn'
-                      key='call-to-action'
-                      brandTheme={brandTheme}
-                      variant='dark'
-                    >
-                      {t('callToActionButton')}
-                    </Button>
-                  )}
-                  {buttons?.map((button, index) => {
-                    return (
-                      index < (buttons.length > 2 ? 1 : 2) && (
-                        <>
-                          {button.moduleType === 'VIDEO_MODULE' ? (
-                            <Button
-                              brandTheme={brandTheme}
-                              variant={button.isHighlight ? 'dark' : 'light'}
-                              onClick={() => {
-                                setRetractDrawer(false);
-                                if (!button.locked) {
-                                  isDesktop && handle.enter();
-                                  videoRef.current?.play();
-                                } else {
-                                  setPosition({ ...position, y: topHeight });
-                                  setRetractDrawer(true);
-                                  button.onClick();
-                                }
-                              }}
-                            >
-                              {button.title}
-                              {!button.locked &&
-                                renderVideoElement(button.moduleData || '')}
-                            </Button>
-                          ) : (
-                            <Button
-                              className='expand-main-module-btn'
-                              ref={leadModuleButtonRef}
-                              key={button.title}
-                              brandTheme={brandTheme}
-                              variant={index === 0 ? 'dark' : 'light'}
-                              inlineIcon
-                              onClick={() => {
-                                if (button.icon === null) {
-                                  setPosition({ ...position, y: topHeight });
-                                  setRetractDrawer(true);
-                                }
+                {buttons?.length === 0 && isPreviewMode && (
+                  <Button
+                    className='expand-main-module-btn'
+                    key='call-to-action'
+                    brandTheme={brandTheme}
+                    variant='dark'
+                  >
+                    {t('callToActionButton')}
+                  </Button>
+                )}
+                {buttons?.map((button, index) => {
+                  return (
+                    index < (buttons.length > 2 ? 1 : 2) && (
+                      <>
+                        {button.moduleType === 'VIDEO_MODULE' ? (
+                          <Button
+                            brandTheme={brandTheme}
+                            variant={button.isHighlight ? 'dark' : 'light'}
+                            onClick={() => {
+                              setRetractDrawer(false);
+                              if (!button.locked) {
+                                isDesktop && handle.enter();
+                                videoRef.current?.play();
+                              } else {
+                                setPosition({ ...position, y: topHeight });
+                                setRetractDrawer(true);
                                 button.onClick();
-                              }}
-                            >
-                              {button.title}
-                              {button.icon}
-                            </Button>
-                          )}
-                        </>
-                      )
+                              }
+                            }}
+                          >
+                            {button.title}
+                            {!button.locked &&
+                              renderVideoElement(button.moduleData || '')}
+                          </Button>
+                        ) : (
+                          <Button
+                            className='expand-main-module-btn'
+                            ref={leadModuleButtonRef}
+                            key={button.title}
+                            brandTheme={brandTheme}
+                            variant={index === 0 ? 'dark' : 'light'}
+                            inlineIcon
+                            onClick={() => {
+                              if (button.icon === null) {
+                                setPosition({ ...position, y: topHeight });
+                                setRetractDrawer(true);
+                              }
+                              button.onClick();
+                            }}
+                          >
+                            {button.title}
+                            {button.icon}
+                          </Button>
+                        )}
+                      </>
+                    )
+                  );
+                })}
+                {buttons && buttons.length !== 2 && (
+                  <Button
+                    className='expand-options-btn'
+                    variant='light'
+                    brandTheme={brandTheme}
+                    onClick={() => {
+                      setPosition({ ...position, y: topHeight });
+                      setRetractDrawer(false);
+                    }}
+                  >
+                    {t('moreButton')}
+                  </Button>
+                )}
+              </Wrapper>
+            )}
+            {mainDrawerOpen &&
+              (isChildOpen ? (
+                <>
+                  <DragZone id='draggable' style={{ zIndex: 99 }} />
+                  <div
+                    className='not-draggable'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      overflow: 'auto',
+                    }}
+                  >
+                    {children}
+                  </div>
+                </>
+              ) : (
+                <Wrapper width='100%' direction='column' gap='1rem'>
+                  {buttons?.map((button) => {
+                    return button.moduleType === 'VIDEO_MODULE' ? (
+                      <Button
+                        brandTheme={brandTheme}
+                        variant={button.isHighlight ? 'dark' : 'light'}
+                        onClick={() => {
+                          setRetractDrawer(false);
+                          if (!button.locked) {
+                            isDesktop && handle.enter();
+                            videoRef.current?.play();
+                          } else button.onClick();
+                        }}
+                      >
+                        {button.title}
+                        {!button.locked &&
+                          renderVideoElement(button.moduleData || '')}
+                      </Button>
+                    ) : (
+                      <Button
+                        className={
+                          button.isHighlight
+                            ? 'expand-main-module-btn'
+                            : 'expand-submodule-btn'
+                        }
+                        key={button.title}
+                        brandTheme={brandTheme}
+                        variant={button.isHighlight ? 'dark' : 'light'}
+                        inlineIcon
+                        onClick={() => {
+                          button.onClick();
+                          setRetractDrawer(false);
+                        }}
+                      >
+                        {button.title}
+                        {button.icon}
+                      </Button>
                     );
                   })}
-                  {buttons && buttons.length !== 2 && (
-                    <Button
-                      className='expand-options-btn'
-                      variant='light'
-                      brandTheme={brandTheme}
-                      onClick={() => {
-                        setPosition({ ...position, y: topHeight });
-                        setRetractDrawer(false);
-                      }}
-                    >
-                      {t('moreButton')}
-                    </Button>
-                  )}
                 </Wrapper>
-              )}
-              {mainDrawerOpen &&
-                (isChildOpen ? (
-                  <>
-                    <DragZone id='draggable' style={{ zIndex: 99 }} />
-                    <div
-                      className='not-draggable'
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        overflow: 'auto',
-                      }}
-                    >
-                      {children}
-                    </div>
-                  </>
-                ) : (
-                  <Wrapper width='100%' direction='column' gap='1rem'>
-                    {buttons?.map((button) => {
-                      return button.moduleType === 'VIDEO_MODULE' ? (
-                        <Button
-                          brandTheme={brandTheme}
-                          variant={button.isHighlight ? 'dark' : 'light'}
-                          onClick={() => {
-                            setRetractDrawer(false);
-                            if (!button.locked) {
-                              isDesktop && handle.enter();
-                              videoRef.current?.play();
-                            } else button.onClick();
-                          }}
-                        >
-                          {button.title}
-                          {!button.locked &&
-                            renderVideoElement(button.moduleData || '')}
-                        </Button>
-                      ) : (
-                        <Button
-                          className={
-                            button.isHighlight
-                              ? 'expand-main-module-btn'
-                              : 'expand-submodule-btn'
-                          }
-                          key={button.title}
-                          brandTheme={brandTheme}
-                          variant={button.isHighlight ? 'dark' : 'light'}
-                          inlineIcon
-                          onClick={() => {
-                            button.onClick();
-                            setRetractDrawer(false);
-                          }}
-                        >
-                          {button.title}
-                          {button.icon}
-                        </Button>
-                      );
-                    })}
-                  </Wrapper>
-                ))}
-            </DrawerBody>
-            {!isChildOpen && validateSocials(socials) && drawerFooter}
-          </Wrapper>
+              ))}
+          </DrawerBody>
+          {!isChildOpen && validateSocials(socials) && drawerFooter}
         </Drawer>
       </Draggable>
     </>

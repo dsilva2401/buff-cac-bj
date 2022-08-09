@@ -4,6 +4,7 @@ type TextProps = {
   fontSize?: string;
   fontWeight?: string;
   fontStyle?: string;
+  lineHeight?: string;
   textDecoration?: string;
   textTransform?: string;
   textAlign?: string;
@@ -42,6 +43,7 @@ const Text = styled.div<TextProps>`
     font-weight: ${(props) =>
       props.fontWeight ? props.fontWeight : 'inherit'};
     font-style: ${(props) => (props.fontStyle ? props.fontStyle : 'inherit')};
+    line-height: ${(props) => (props.lineHeight ? props.lineHeight : 'normal')};
     text-decoration: ${(props) =>
       props.textDecoration ? props.textDecoration : 'inherit'};
     text-transform: ${(props) =>

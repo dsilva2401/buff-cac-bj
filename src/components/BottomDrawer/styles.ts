@@ -29,10 +29,14 @@ export const Drawer = styled.div<DrawerProps>`
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
   display: ${(props) => (props.isChildOpen ? 'none' : 'flex')};
-  padding: ${(props) => (props.isDrawerOpen ? '1.25rem 1.5rem' : '0 1.5rem')};
-  height: ${(props) => (props.isDrawerOpen ? 'auto' : '5.25rem')};
+  margin: ${(props) =>
+    props.isDrawerOpen ? '1rem 0 0.5rem 0' : '0.75rem 0 0 0'};
+  padding: 0 1.5rem 0.25rem;
+  height: 4.25rem;
   justify-content: space-between;
+  flex-direction: row;
   align-items: center;
+  transition: 0.3s;
   width: 100%;
 `;
 
@@ -76,7 +80,7 @@ export const DrawerClose = styled.button`
   min-height: 32px;
   position: absolute;
   right: 32px;
-  top: 16px;
+  top: 20px;
   z-index: 100;
   display: flex;
   border-radius: 50%;
