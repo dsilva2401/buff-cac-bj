@@ -15,7 +15,7 @@ type Props = {
 
 const FormDropDown = (props: Props) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: 'form.formDrawer.dropDown',
+    keyPrefix: 'drawers.formDrawer.dropDown',
   });
   const selectText = t('selectText');
   const { formRef, name, formData } = props;

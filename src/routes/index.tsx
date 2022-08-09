@@ -1,21 +1,23 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, lazy } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import ProtectedRoute from 'components/ProtectedRoute';
-import ProductDetails from 'pages/ProductDetails';
 import PageWrapper from 'components/PageWrapper';
-import Profile from 'pages/Profile/Profile';
-import Collection from 'pages/Collection';
-import MagicLink from 'pages/MagicLink';
-import FourZeroFour from 'pages/404';
-import Landing from 'pages/Landing';
-import Login from 'pages/Login';
 import {
   withLastLocation,
   WithLastLocationProps,
 } from 'react-router-last-location';
 import './style.css';
 import { useGlobal } from '../context/global/GlobalContext';
+
+const Login = lazy(() => import('../pages/Login'));
+const MagicLink = lazy(() => import('../pages/MagicLink'));
+const FourZeroFour = lazy(() => import('../pages/404'));
+const Profile = lazy(() => import('../pages/Profile'));
+const Collection = lazy(() => import('../pages/Collection'));
+const ProductDetails = lazy(() => import('../pages/ProductDetails'));
+const Landing = lazy(() => import('../pages/Landing'));
+
 interface RoutesType {
   [key: string]: any;
 }

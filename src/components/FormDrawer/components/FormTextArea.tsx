@@ -18,7 +18,7 @@ const FormTextArea = (props: Props) => {
   const [firstBlur, setFirstBlur] = useState(false);
 
   const { t } = useTranslation('translation', {
-    keyPrefix: 'form.formDrawer.textArea',
+    keyPrefix: 'drawers.formDrawer.textArea',
   });
 
   const formikTextArea = useFormik({

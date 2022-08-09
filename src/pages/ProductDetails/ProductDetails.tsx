@@ -1,8 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  Suspense,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+} from 'react';
 import { ReactComponent as Arrow } from 'assets/icons/svg/arrow-small.svg';
 import { ReactComponent as MulberryLogo } from 'assets/logos/svg/mulberry-logo.svg';
 import { ReactComponent as ExternalLink } from 'assets/icons/svg/external-link.svg';
-import { FormProvider } from 'context/FormDrawerContext/FormDrawerProvider';
 import { ButtonType } from 'components/BottomDrawer/BottomDrawer';
 import { useGlobal } from '../../context/global/GlobalContext';
 import { MAGIC_ACTION } from 'context/global/GlobalProvider';
@@ -26,15 +32,9 @@ import BottomDrawer from 'components/BottomDrawer';
 import useElementSize from 'hooks/useElementSize';
 import useHeights from 'hooks/useHeights';
 import Wrapper from 'components/Wrapper';
-import FormDrawer from 'components/FormDrawer';
 import ProductHeroImage from './ProductHeroImage';
 import LoadingIndicator from 'components/LoadingIndicator';
 import RegistratonDrawer from 'components/RegistratonDrawer';
-import WarrantyDrawer from 'components/WarrantyDrawer';
-import ReferralDrawer from 'components/ReferralDrawer';
-import CustomDrawer from 'components/CustomDrawer';
-import VideoDrawer from 'components/VideoDrawer';
-import ShopDrawer from 'components/ShopDrawer';
 import {
   CustomModuleType,
   LinkModuleType,
@@ -53,6 +53,14 @@ import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 import { showToast } from 'components/Toast/Toast';
 import { useAPI } from 'utils/api';
 import CatchLinkWrapper from 'components/CatchLinkWrapper';
+import { FormProvider } from 'context';
+const ShopDrawer = lazy(() => import('../../components/ShopDrawer'));
+const VideoDrawer = lazy(() => import('../../components/VideoDrawer'));
+const CustomDrawer = lazy(() => import('../../components/CustomDrawer'));
+const ReferralDrawer = lazy(() => import('../../components/ReferralDrawer'));
+const WarrantyDrawer = lazy(() => import('../../components/WarrantyDrawer'));
+const FormDrawer = lazy(() => import('../../components/FormDrawer'));
+
 type UrlParam = {
   id: string;
 };
@@ -128,7 +136,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   });
 
   const { t: formTranslation } = useTranslation('translation', {
-    keyPrefix: 'form.formDrawer',
+    keyPrefix: 'drawers.formDrawer',
   });
 
   const { id } = useParams<UrlParam>();
@@ -269,14 +277,19 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       const moduleIndex = details?.modules.findIndex(
         (module) => module.type === 'FORMS_MODULE'
       );
-      if (moduleIndex >= 0 && !formRegistration) {
+      let brijFormRegistrationIndex = localStorage.getItem(
+        'brij-form-registration'
+      );
+      if (moduleIndex >= 0) {
         setMagicAction(MAGIC_ACTION.OPEN_MODULE);
-        changeDrawerPage(moduleIndex);
+        if (brijFormRegistrationIndex !== null) {
+          changeDrawerPage(brijFormRegistrationIndex);
+        }
         setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
       }
     }
-  }, [isFormNavigation, details, topHeight]);
+  }, [isFormNavigation, details, topHeight, changeDrawerPage, setMagicAction]);
 
   useEffect(() => {
     if (registerCallMade) {
@@ -849,49 +862,63 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         switch (moduleType) {
           case 'CUSTOM_MODULE':
             return (
-              <CustomDrawer
-                drawerTitle={details?.modules[currentPage as number]?.title}
-                drawerData={module?.moduleInfo as CustomModuleType}
-              />
+              <Suspense fallback={<LoadingIndicator />}>
+                <CustomDrawer
+                  drawerTitle={details?.modules[currentPage as number]?.title}
+                  drawerData={module?.moduleInfo as CustomModuleType}
+                />
+              </Suspense>
             );
           case 'WARRANTY_MODULE':
             return (
-              <WarrantyDrawer
-                drawerTitle={warrantyDrawerTitle}
-                warrantyData={module?.moduleInfo as WarrantyModuleType}
-                warrantyId={module?.id}
-              />
+              <Suspense fallback={<LoadingIndicator />}>
+                <WarrantyDrawer
+                  drawerTitle={warrantyDrawerTitle}
+                  warrantyData={module?.moduleInfo as WarrantyModuleType}
+                  warrantyId={module?.id}
+                />
+              </Suspense>
             );
           case 'REFERRAL_MODULE':
             return (
-              <ReferralDrawer
-                drawerTitle={details?.modules[currentPage as number]?.title}
-                referralData={module?.moduleInfo as ReferralModuleType}
-              />
+              <Suspense fallback={<LoadingIndicator />}>
+                <ReferralDrawer
+                  drawerTitle={details?.modules[currentPage as number]?.title}
+                  referralData={module?.moduleInfo as ReferralModuleType}
+                />
+              </Suspense>
             );
           case 'SHOPPING_MODULE':
             const data = details?.modules[currentPage as number]
               ?.moduleInfo as ShoppingModuleType;
             return (
-              <ShopDrawer
-                data={data}
-                minimizeBranding={details.brand.minimizeBranding}
-                productDescription={details.product.productDescription}
-                brand={details?.brand}
-              />
+              <Suspense fallback={<LoadingIndicator />}>
+                <ShopDrawer
+                  data={data}
+                  minimizeBranding={details.brand.minimizeBranding}
+                  productDescription={details.product.productDescription}
+                  brand={details?.brand}
+                />
+              </Suspense>
             );
           case 'VIDEO_MODULE':
-            return <VideoDrawer closeDrawer={closeDrawerPage} />;
+            return (
+              <Suspense fallback={<LoadingIndicator />}>
+                <VideoDrawer closeDrawer={closeDrawerPage} />
+              </Suspense>
+            );
           case 'FORMS_MODULE':
             const dataForm = details?.modules[currentPage as number]
               ?.moduleInfo as FormDetailModel[];
             return (
               <FormProvider>
                 <Wrapper height='100%'>
-                  <FormDrawer
-                    formModuleData={details.modules[currentPage as number]}
-                    data={dataForm}
-                  />
+                  <Suspense fallback={<LoadingIndicator />}>
+                    <FormDrawer
+                      formModuleData={details.modules[currentPage as number]}
+                      data={dataForm}
+                    />
+                  </Suspense>
                 </Wrapper>
               </FormProvider>
             );

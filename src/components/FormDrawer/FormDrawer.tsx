@@ -89,7 +89,7 @@ const FormDrawer = (props: Props) => {
   const { openDrawer, setMeta, showSuccess } = useSuccessDrawerContext();
 
   const { t } = useTranslation('translation', {
-    keyPrefix: 'form.formDrawer',
+    keyPrefix: 'drawers.formDrawer',
   });
 
   useEffect(() => {
@@ -101,14 +101,19 @@ const FormDrawer = (props: Props) => {
       method: 'POST',
       endpoint: 'form/submit_form',
       onSuccess: (data: { responseId: string; success: boolean }) => {
-        setIsFormSubmitting(false);
-        setMeta({
-          title: t('formCompletedTitle'),
-          description: t('formCompletedDescription'),
-        });
+        if (
+          endScreenNavModuleIndex === null ||
+          endScreenNavModuleIndex === undefined
+        ) {
+          setIsFormSubmitting(false);
+          setMeta({
+            title: 'Form Completed',
+            description: 'Thank you for your submission!',
+          });
 
-        showSuccess();
-        openDrawer();
+          showSuccess();
+          openDrawer();
+        }
         if (
           endScreenNavModuleIndex !== undefined &&
           closeDrawer &&
@@ -416,22 +421,21 @@ const FormDrawer = (props: Props) => {
     >
       {(formikProps) => (
         <Wrapper {...swipeHandlers} width='100%' height='100%'>
-          {startScreen ||
-            (completionScreen && (
-              <Wrapper width='100%' position='absolute' top='20px'>
-                <Text
-                  wrapperWidth='80%'
-                  whiteSpace='nowrap'
-                  overflow='hidden'
-                  textOverflow='ellipsis'
-                  fontSize='1.2rem'
-                  fontWeight='bold'
-                  padding='12px'
-                >
-                  <span>{formModuleData.title}</span>
-                </Text>
-              </Wrapper>
-            ))}
+          {startScreen && (
+            <Wrapper width='100%' position='absolute' top='20px'>
+              <Text
+                wrapperWidth='80%'
+                whiteSpace='nowrap'
+                overflow='hidden'
+                textOverflow='ellipsis'
+                fontSize='1.2rem'
+                fontWeight='bold'
+                padding='12px'
+              >
+                <span>{formModuleData.title}</span>
+              </Text>
+            </Wrapper>
+          )}
           {!completionScreen && !startScreen && (
             <Wrapper width='100%' position='absolute' top='20px'>
               <Text

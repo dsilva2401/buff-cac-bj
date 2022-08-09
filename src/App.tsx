@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect } from 'react';
+import { useLayoutEffect, useEffect, Suspense } from 'react';
 import { isBrowser } from 'react-device-detect';
 import { BrowserRouter } from 'react-router-dom';
 import { useGlobal } from './context/global/GlobalContext';
@@ -15,6 +15,7 @@ import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper'
 import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import { showToast } from 'components/Toast/Toast';
 import { useAPI } from 'utils/api';
+import LoadingIndicator from 'components/LoadingIndicator';
 import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 
 export default function App() {
@@ -117,7 +118,9 @@ export default function App() {
         <LastLocationProvider>
           <SuccessDrawerWrapper />
           <SideMenu />
-          <Routes />
+          <Suspense fallback={<LoadingIndicator />}>
+            <Routes />
+          </Suspense>
         </LastLocationProvider>
       </BrowserRouter>
     </div>

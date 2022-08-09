@@ -69,6 +69,8 @@ const SideMenu: React.FC = () => {
 
   const handleLogoutButtonClicked = useCallback(() => {
     if (error !== '') setError('');
+    // form registraion clean up
+    localStorage.removeItem('brij-form-registration-complete');
     setSlug(null);
     setLoading(true);
     signOut(auth)

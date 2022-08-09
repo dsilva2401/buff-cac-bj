@@ -23,7 +23,7 @@ const FormFileUpload = (props: Props) => {
   const [extensionError, setExtensionError] = useState(false);
   const [objectUrl, setObjectUrl] = useState<string>('');
   const { t } = useTranslation('translation', {
-    keyPrefix: 'form.formDrawer.fileUpload',
+    keyPrefix: 'drawers.formDrawer.fileUpload',
   });
 
   const changeSelectedFile = async (files: FileList) => {
