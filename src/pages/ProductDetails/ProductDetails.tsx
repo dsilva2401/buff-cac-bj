@@ -669,6 +669,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             width='100%'
             direction='column'
             transition='0.3s'
+            margin='4rem 0 0 0'
             height={
               showCoverageTable ? '100%' : `calc(100% - ${height - 100}px)`
             }
@@ -709,7 +710,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                   <HtmlWrapper
                     width='100%'
                     padding='1rem 0'
-                    margin='4rem 0 0 0'
                     direction='column'
                     dangerouslySetInnerHTML={{
                       __html: details?.registration?.registrationText,

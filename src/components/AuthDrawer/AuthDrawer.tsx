@@ -59,7 +59,7 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
         alignItems='center'
         height='100%'
         position='relative'
-        margin={animated ? '5rem 0 0 0' : '4rem 0 0 0'}
+        margin='1.5rem 0'
         padding={animated ? '1.5rem 0 2rem 0' : '0 0 2rem 0'}
         style={{ borderTop: animated ? '2px solid #E7EAEB' : '0' }}
       >
