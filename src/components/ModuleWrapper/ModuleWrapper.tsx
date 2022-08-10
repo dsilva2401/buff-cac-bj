@@ -52,7 +52,7 @@ const ModuleWrapper: React.FC<ModuleWrapperProps> = ({
             <Text
               fontSize='1rem'
               fontWeight='600'
-              margin='1.25rem 4rem 1.25rem 1.75rem'
+              margin='1.5rem 4rem 1.25rem 1.75rem'
             >
               <h1>{drawerTitle}</h1>
             </Text>

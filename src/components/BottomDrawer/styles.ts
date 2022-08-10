@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { isIOS } from 'react-device-detect';
 
 type DrawerProps = {
   isControlled: boolean;
@@ -29,9 +30,8 @@ export const Drawer = styled.div<DrawerProps>`
 
 export const DrawerHeader = styled.div<DrawerHeaderProps>`
   display: ${(props) => (props.isChildOpen ? 'none' : 'flex')};
-  margin: ${(props) =>
-    props.isDrawerOpen ? '1rem 0 0.5rem 0' : '0.75rem 0 0 0'};
-  padding: 0 1.5rem 0.25rem;
+  margin: ${isIOS ? '0.25rem 0 0 0' : '0.5rem 0 0.25rem 0'};
+  padding: 0 1.5rem;
   height: 4.25rem;
   justify-content: space-between;
   flex-direction: row;
@@ -80,7 +80,7 @@ export const DrawerClose = styled.button`
   min-height: 32px;
   position: absolute;
   right: 32px;
-  top: 20px;
+  top: 16px;
   z-index: 100;
   display: flex;
   border-radius: 50%;
