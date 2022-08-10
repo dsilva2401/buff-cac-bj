@@ -29,31 +29,37 @@ const useMagicLinkHandler = (
   const handleMagicLink = useCallback(() => {
     const payload = JSON.stringify(magicPayload);
     const payloadEncodedString = encodeURIComponent(payload);
-
-    const actionCodeSettings = {
-      url: `${window.location.protocol}//${
-        window.location.host
-      }/app/magic-link?email=${encodeURIComponent(
-        email
-      )}&isNewUser=${isNewUser}&action=${magicAction}&productSlug=${slug}&payload=${payloadEncodedString}`,
-      handleCodeInApp: true,
-    };
-
     setLoading(true);
     setError('');
     setSuccess('');
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then((data) =>
+    fetch(
+      `${process.env.REACT_APP_API_URL || ''}/shared-api/auth/send-magic-link`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          isNewUser: isNewUser,
+          magicAction: magicAction,
+          slug: slug,
+          host: window.location.host,
+          payloadEncodedString: payloadEncodedString,
+        }),
+      }
+    )
+      .then(() => {
+        setLoading(false);
         showToast({
           message: t('linkSentToastMessage'),
           type: 'success',
-        })
-      )
-      .catch((error) =>
-        showToast({ message: getErrorMessage(error.code), type: 'error' })
-      )
-      .finally(() => setLoading(false));
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        showToast({ message: getErrorMessage(err.code), type: 'error' });
+      });
   }, [
     t,
     slug,
