@@ -53,16 +53,6 @@ export const DrawerBody = styled.div`
   overflow-x: hidden;
 `;
 
-export const DrawerFooter = styled.div`
-  width: 100%;
-  padding: 1.5rem 2rem;
-  position: relative;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 1rem;
-`;
-
 export const DrawerIconLink = styled.a`
   display: flex;
   justify-content: center;

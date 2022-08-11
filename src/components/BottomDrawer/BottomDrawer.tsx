@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import { Position } from 'types/Misc';
+import { SocialsType } from './DrawerFooter';
 import { useTranslation } from 'react-i18next';
 import { Product } from 'types/ProductDetailsType';
 import { useGlobal } from 'context/global/GlobalContext';
@@ -13,19 +14,14 @@ import { isAndroid, isDesktop } from 'react-device-detect';
 import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
-import phoneCallIcon from 'assets/icons/svg/social-phone-call.svg';
-import instagramIcon from 'assets/icons/svg/social-instagram.svg';
-import facebookIcon from 'assets/icons/svg/social-facebook.svg';
-import twitterIcon from 'assets/icons/svg/social-twitter.svg';
-import tiktokIcon from 'assets/icons/svg/social-tiktok.svg';
-import emailIcon from 'assets/icons/svg/social-email.svg';
+import AndroidPlayer from 'components/AndroidPlayer';
 import useElementSize from 'hooks/useElementSize';
 import LinesEllipsis from 'react-lines-ellipsis';
 import DrawerMask from 'components/DrawerMask';
 import useHeights from 'hooks/useHeights';
+import DrawerFooter from './DrawerFooter';
 import Wrapper from 'components/Wrapper';
 import Button from 'components/Button';
-import Image from 'components/Image';
 import Text from 'components/Text';
 import {
   Drawer,
@@ -33,9 +29,7 @@ import {
   DragZone,
   DrawerBody,
   DrawerClose,
-  DrawerFooter,
   DrawerHeader,
-  DrawerIconLink,
 } from './styles';
 
 export type ButtonType = {
@@ -47,17 +41,6 @@ export type ButtonType = {
   moduleType: string;
   moduleData?: string | undefined;
 };
-
-type SocialsType =
-  | {
-      phone?: string | undefined;
-      email?: string | undefined;
-      twitter?: string | undefined;
-      instagram?: string | undefined;
-      facebook?: string | undefined;
-      tiktok?: string | undefined;
-    }
-  | undefined;
 
 type BottomDrawerProps = {
   title: string | undefined;
@@ -96,6 +79,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 }) => {
   const [deltaPosition, setDeltaPosition] = useState<number>(0);
   const [isControlled, setIsControlled] = useState<boolean>(true);
+  const [videoSource, setVideoSource] = useState<string>('');
 
   const leadModuleButtonRef = useRef<HTMLButtonElement>(null);
   const [collapsedDrawerRef, { height }] = useElementSize();
@@ -125,11 +109,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   useEffect(() => {
     if (isPreviewMode) {
-      if (isChildOpen) {
-        setPosition({ ...position, y: topHeight });
-      } else {
-        setPosition({ ...position, y: bottomHeight });
-      }
+      if (isChildOpen) setPosition({ ...position, y: topHeight });
+      else setPosition({ ...position, y: bottomHeight });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChildOpen, topHeight, bottomHeight, isPreviewMode, appZoom]);
@@ -171,9 +152,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     setMainDrawerOpen(false);
   }, [position, setPosition, bottomHeight, setMainDrawerOpen]);
 
-  const handleStart = useCallback(() => {
-    setIsControlled(false);
-  }, []);
+  const handleStart = useCallback(() => setIsControlled(false), []);
 
   const handleDrag = (e: DraggableEvent, data: DraggableData) => {
     setPosition({ ...position, y: data.y });
@@ -196,16 +175,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     if (deltaPosition > 0) {
       setPosition({ ...position, y: bottomHeight });
     } else {
-      if (position.y === bottomHeight) {
+      if (position.y === bottomHeight)
         setPosition({ ...position, y: bottomHeight });
-      } else {
-        setPosition({ ...position, y: topHeight });
-      }
+      else setPosition({ ...position, y: topHeight });
     }
   }, [topHeight, bottomHeight, deltaPosition, position, setPosition]);
 
   const renderVideoElement = (src: string) => {
-    if (isDesktop) {
+    if (isAndroid || isPreviewMode) {
+      return null;
+    } else if (isDesktop) {
       return (
         <Wrapper
           width={handle.active ? '100%' : '0'}
@@ -232,24 +211,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
           </FullScreen>
         </Wrapper>
       );
-    } else if (isAndroid) {
-      return (
-        <Wrapper width='0' height='0'>
-          <FullScreen handle={handle}>
-            <video
-              src={src}
-              ref={videoRef}
-              onPlay={() => handle.enter()}
-              onEnded={() => handle.exit()}
-              controls
-              height='100%'
-              width='100%'
-              preload='metadata'
-              playsInline={false}
-            />
-          </FullScreen>
-        </Wrapper>
-      );
     } else {
       return (
         <Wrapper width='0' height='0'>
@@ -267,77 +228,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     }
   };
 
-  const drawerFooter = (
-    <DrawerFooter>
-      {socials?.phone && (
-        <DrawerIconLink href={`tel:+${socials.phone}`}>
-          <Image src={phoneCallIcon} alt='phone-icon' />
-        </DrawerIconLink>
-      )}
-      {socials?.email && (
-        <DrawerIconLink href={`mailto:${socials?.email}`}>
-          <Image src={emailIcon} alt='email-icon' />
-        </DrawerIconLink>
-      )}
-      {socials?.tiktok && (
-        <DrawerIconLink
-          href={
-            socials?.tiktok.includes('https://') ||
-            socials?.tiktok.includes('http://')
-              ? socials?.tiktok
-              : `https://${socials?.tiktok}`
-          }
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image src={tiktokIcon} alt='tiktok-icon' />
-        </DrawerIconLink>
-      )}
-      {socials?.twitter && (
-        <DrawerIconLink
-          href={
-            socials?.twitter.includes('https://') ||
-            socials?.twitter.includes('http://')
-              ? socials?.twitter
-              : `https://${socials?.twitter}`
-          }
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image src={twitterIcon} alt='twitter-icon' />
-        </DrawerIconLink>
-      )}
-      {socials?.instagram && (
-        <DrawerIconLink
-          href={
-            socials?.instagram.includes('https://') ||
-            socials?.instagram.includes('http://')
-              ? socials?.instagram
-              : `https://${socials?.instagram}`
-          }
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image src={instagramIcon} alt='instagram-icon' />
-        </DrawerIconLink>
-      )}
-      {socials?.facebook && (
-        <DrawerIconLink
-          href={
-            socials?.facebook.includes('https://') ||
-            socials?.facebook.includes('http://')
-              ? socials?.facebook
-              : `https://${socials?.facebook}`
-          }
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <Image src={facebookIcon} alt='facebook-icon' />
-        </DrawerIconLink>
-      )}
-    </DrawerFooter>
-  );
-
   return (
     <>
       <DrawerMask
@@ -345,6 +235,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         onTouchEnd={() => handleDrawerClose()}
         onClick={() => handleDrawerClose()}
       />
+      {videoSource !== '' && (
+        <AndroidPlayer source={videoSource} setVideoSource={setVideoSource} />
+      )}
       <Draggable
         axis='y'
         bounds={{ top: topHeight, bottom: bottomHeight }}
@@ -442,8 +335,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             onClick={() => {
                               setRetractDrawer(false);
                               if (!button.locked) {
-                                isDesktop && handle.enter();
-                                videoRef.current?.play();
+                                isDesktop && !isPreviewMode && handle.enter();
+                                (isPreviewMode || isAndroid) &&
+                                  setVideoSource(button.moduleData || '');
+                                (!isPreviewMode || !isAndroid) &&
+                                  videoRef.current?.play();
                               } else {
                                 setPosition({ ...position, y: topHeight });
                                 setRetractDrawer(true);
@@ -453,6 +349,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                           >
                             {button.title}
                             {!button.locked &&
+                              !isPreviewMode &&
+                              !isAndroid &&
                               renderVideoElement(button.moduleData || '')}
                           </Button>
                         ) : (
@@ -519,13 +417,22 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         onClick={() => {
                           setRetractDrawer(false);
                           if (!button.locked) {
-                            isDesktop && handle.enter();
-                            videoRef.current?.play();
-                          } else button.onClick();
+                            isDesktop && !isPreviewMode && handle.enter();
+                            (isPreviewMode || isAndroid) &&
+                              setVideoSource(button.moduleData || '');
+                            (!isPreviewMode || !isAndroid) &&
+                              videoRef.current?.play();
+                          } else {
+                            setPosition({ ...position, y: topHeight });
+                            setRetractDrawer(true);
+                            button.onClick();
+                          }
                         }}
                       >
                         {button.title}
                         {!button.locked &&
+                          !isPreviewMode &&
+                          !isAndroid &&
                           renderVideoElement(button.moduleData || '')}
                       </Button>
                     ) : (
@@ -552,7 +459,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 </Wrapper>
               ))}
           </DrawerBody>
-          {!isChildOpen && validateSocials(socials) && drawerFooter}
+          {!isChildOpen && validateSocials(socials) && (
+            <DrawerFooter
+              phone={socials?.phone}
+              email={socials?.email}
+              twitter={socials?.twitter}
+              instagram={socials?.instagram}
+              facebook={socials?.facebook}
+              tiktok={socials?.tiktok}
+            />
+          )}
         </Drawer>
       </Draggable>
     </>
