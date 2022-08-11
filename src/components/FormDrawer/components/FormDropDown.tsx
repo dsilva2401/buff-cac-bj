@@ -59,7 +59,7 @@ const FormDropDown = (props: Props) => {
         <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
           <span>{formData.subText}</span>
         </Text>
-        <Wrapper margin='24px 0 0 0' width='100%'>
+        <Wrapper width='100%'>
           {formRef && formRef.values[name] !== undefined && (
             <FormSelectInput
               id='drop-down'

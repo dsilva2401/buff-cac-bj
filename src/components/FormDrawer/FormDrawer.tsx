@@ -125,9 +125,8 @@ const FormDrawer = (props: Props) => {
           closeDrawer(true, true);
           changeDrawerPage(endScreenNavModuleIndex);
           localStorage.removeItem('brij-form-registration');
-          localStorage.removeItem('brij-start-screen-shown');
           localStorage.setItem('brij-form-registration-complete', 'true');
-          localStorage.removeItem('brij-form');
+          sessionStorage.removeItem('brij-registration-values');
           // if there isn't a current user than call update after a registration
           if (!user?.uid) {
             localStorage.setItem('brij-form-user-update-id', data.responseId);
@@ -141,10 +140,14 @@ const FormDrawer = (props: Props) => {
         // if no end screen content go back to main page
         if (!formModuleData.endScreenContent && closeDrawer) {
           closeDrawer(true);
+          sessionStorage.removeItem('brij-form');
           return;
         }
-        localStorage.setItem('brij-form-complete', 'true');
+        if (!isPreviewMode) {
+          localStorage.setItem('brij-form-complete', 'true');
+        }
 
+        // form complete only available on
         route.push(`/c/${id}/form/complete`);
       },
       onError: () => {
@@ -164,14 +167,19 @@ const FormDrawer = (props: Props) => {
       route.push(`/c/${id}/form/complete`);
       return;
     }
-
-    const showStartScreen = localStorage.getItem('brij-start-screen-shown');
+    let showStartScreen: string | null;
+    if (endScreenNavModuleIndex) {
+      showStartScreen = sessionStorage.getItem(
+        'brij-start-screen-shown-registration'
+      );
+    } else {
+      showStartScreen = localStorage.getItem('brij-start-screen-shown');
+    }
     if (
       formModuleData.startScreenContent &&
       !showStartScreen &&
       !isPreviewMode
     ) {
-      localStorage.setItem('brij-start-screen-shown', 'true');
       setCurrentStep(1);
       route.push(`/c/${id}/form/start`);
       return;
@@ -259,7 +267,15 @@ const FormDrawer = (props: Props) => {
   }, [data]);
 
   useEffect(() => {
-    const form = localStorage.getItem('brij-form');
+    let brijFormRegistrationIndex = localStorage.getItem(
+      'brij-form-registration'
+    );
+    let form: string | null;
+    if (brijFormRegistrationIndex !== null) {
+      form = sessionStorage.getItem('brij-registration-values');
+    } else {
+      form = sessionStorage.getItem('brij-form');
+    }
     if (!localStorageSet && form && formik.current) {
       let values = JSON.parse(form);
       if (Object.keys(values).length) {
@@ -323,7 +339,11 @@ const FormDrawer = (props: Props) => {
     if (startScreen) {
       setStartScreen(false);
       setTransistionAnimation('slide');
-      localStorage.setItem('brij-start-screen-shown', 'true');
+      if (endScreenNavModuleIndex) {
+        sessionStorage.setItem('brij-start-screen-shown-registration', 'true');
+      } else {
+        localStorage.setItem('brij-start-screen-shown', 'true');
+      }
       route.push(`/c/${id}/form/step/${currentStep}`);
       return;
     }
@@ -335,7 +355,20 @@ const FormDrawer = (props: Props) => {
     }
 
     if (!isPreviewMode) {
-      localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+      let brijFormRegistrationIndex = localStorage.getItem(
+        'brij-form-registration'
+      );
+      if (brijFormRegistrationIndex !== null) {
+        sessionStorage.setItem(
+          'brij-registration-values',
+          JSON.stringify(formik.current?.values)
+        );
+      } else {
+        sessionStorage.setItem(
+          'brij-form',
+          JSON.stringify(formik.current?.values)
+        );
+      }
     }
   };
 
@@ -347,7 +380,20 @@ const FormDrawer = (props: Props) => {
     }
 
     if (!isPreviewMode) {
-      localStorage.setItem('brij-form', JSON.stringify(formik.current?.values));
+      let brijFormRegistrationIndex = localStorage.getItem(
+        'brij-form-registration'
+      );
+      if (brijFormRegistrationIndex !== null) {
+        sessionStorage.setItem(
+          'brij-registration-values',
+          JSON.stringify(formik.current?.values)
+        );
+      } else {
+        sessionStorage.setItem(
+          'brij-form',
+          JSON.stringify(formik.current?.values)
+        );
+      }
     }
   };
 

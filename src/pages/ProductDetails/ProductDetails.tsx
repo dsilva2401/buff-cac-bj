@@ -197,7 +197,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         history.replace(`/c/${id}`);
         return;
       }
-      if (closeDrawer && isFormNavigation) {
+      if (isFormNavigation) {
         setIsFormNavigation(false);
         setTimeout(() => {
           history.push(`/c/${id}`);
@@ -284,6 +284,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         setMagicAction(MAGIC_ACTION.OPEN_MODULE);
         if (brijFormRegistrationIndex !== null) {
           changeDrawerPage(brijFormRegistrationIndex);
+        } else {
+          changeDrawerPage(moduleIndex);
         }
         setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
@@ -482,8 +484,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               moduleType: module.type,
               moduleId: module.id,
             });
-            // always remove form on button click to start a new one.
-            localStorage.removeItem('brij-form');
             // always remove start screen when clicked to stat a new one
             localStorage.removeItem('brij-start-screen-shown');
             let isFormRegCompelte = localStorage.getItem(
@@ -652,21 +652,23 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       ) {
         if (brijFormRegistration && formRegistration) {
           return (
-            <FormProvider>
-              <Wrapper height='100%'>
-                <FormDrawer
-                  formModuleData={formRegistration as ModuleInfoType}
-                  data={formRegistration?.moduleInfo as FormDetailModel[]}
-                  endScreenNavModuleIndex={
-                    isNaN(brijFormReturnModule)
-                      ? currentPage ?? 0
-                      : brijFormReturnModule
-                  }
-                  closeDrawer={closeDrawerPage}
-                  changeDrawerPage={changeDrawerPage}
-                />
-              </Wrapper>
-            </FormProvider>
+            <Suspense fallback={<LoadingIndicator />}>
+              <FormProvider>
+                <Wrapper height='100%'>
+                  <FormDrawer
+                    formModuleData={formRegistration as ModuleInfoType}
+                    data={formRegistration?.moduleInfo as FormDetailModel[]}
+                    endScreenNavModuleIndex={
+                      isNaN(brijFormReturnModule)
+                        ? currentPage ?? 0
+                        : brijFormReturnModule
+                    }
+                    closeDrawer={closeDrawerPage}
+                    changeDrawerPage={changeDrawerPage}
+                  />
+                </Wrapper>
+              </FormProvider>
+            </Suspense>
           );
         }
         return;

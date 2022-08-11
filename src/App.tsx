@@ -54,7 +54,7 @@ export default function App() {
     if (token && isPreviewMode) {
       setToken(null);
     }
-  }, [token, isPreviewMode]);
+  }, [token, isPreviewMode, setToken]);
 
   const [updateForm] = useAPI<{ user: string }>({
     method: 'PUT',
