@@ -484,8 +484,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               moduleType: module.type,
               moduleId: module.id,
             });
-            // always remove start screen when clicked to stat a new one
-            localStorage.removeItem('brij-start-screen-shown');
             let isFormRegCompelte = localStorage.getItem(
               'brij-form-registration-complete'
             );
@@ -919,6 +917,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                     <FormDrawer
                       formModuleData={details.modules[currentPage as number]}
                       data={dataForm}
+                      closeDrawer={closeDrawerPage}
+                      changeDrawerPage={changeDrawerPage}
                     />
                   </Suspense>
                 </Wrapper>

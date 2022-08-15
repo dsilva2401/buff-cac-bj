@@ -137,17 +137,15 @@ const FormDrawer = (props: Props) => {
           setFormRegistration(null);
           return;
         }
+        if (!isPreviewMode) {
+          localStorage.setItem('brij-form-complete', 'true');
+        }
         // if no end screen content go back to main page
         if (!formModuleData.endScreenContent && closeDrawer) {
           closeDrawer(true);
           sessionStorage.removeItem('brij-form');
           return;
         }
-        if (!isPreviewMode) {
-          localStorage.setItem('brij-form-complete', 'true');
-        }
-
-        // form complete only available on
         route.push(`/c/${id}/form/complete`);
       },
       onError: () => {
@@ -496,6 +494,21 @@ const FormDrawer = (props: Props) => {
                 <span>
                   {currentStep}/{data.length}
                 </span>
+              </Text>
+            </Wrapper>
+          )}
+          {completionScreen && !formModuleData.endScreenContent && (
+            <Wrapper width='100%' position='absolute' top='20px'>
+              <Text
+                wrapperWidth='80%'
+                whiteSpace='nowrap'
+                overflow='hidden'
+                textOverflow='ellipsis'
+                fontSize='1.2rem'
+                fontWeight='bold'
+                padding='12px'
+              >
+                <span>Submission Successful</span>
               </Text>
             </Wrapper>
           )}
