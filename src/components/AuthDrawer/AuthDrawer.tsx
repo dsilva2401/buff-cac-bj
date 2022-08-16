@@ -100,10 +100,10 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({
               <a
                 target='_blank'
                 rel='noreferrer'
-                href='https://brij.it/terms'
+                href={t('termsAndconditions.link')}
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
               >
-                {t('termsAndconditions.link')}
+                {t('termsAndconditions.linkText')}
               </a>
               {'.'}
               {t('termsAndconditions.part3')}
