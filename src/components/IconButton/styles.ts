@@ -37,6 +37,12 @@ transition: all 0.3s ease;
   box - shadow: ${(props) =>
     props.variant === 'dark' ? '' : '-1px -1px 4px rgba(0, 0, 0, 0.12)'};
 }
+&:disabled {
+  background-color: ${(props) =>
+    props.variant === 'dark' ? '#ccc' : theme.button.secondary};
+  color: ${(props) =>
+    props.variant === 'dark' ? theme.button.secondary : theme.button.disabled};
+}
 `;
 
 export default Button;

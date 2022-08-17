@@ -12,6 +12,7 @@ export const FormProvider: React.FC = ({ children }) => {
   const [formData, setFormData] = useState<FormDetailModel[]>([]);
   const [completionScreen, setCompletionScreen] = useState<boolean>(false);
   const [startScreen, setStartScreen] = useState<boolean>(false);
+  const [fileUploading, setFileUploading] = useState<boolean>(false);
 
   return (
     <FormContext.Provider
@@ -34,6 +35,8 @@ export const FormProvider: React.FC = ({ children }) => {
         setCompletionScreen,
         startScreen,
         setStartScreen,
+        fileUploading,
+        setFileUploading,
       }}
     >
       {children}

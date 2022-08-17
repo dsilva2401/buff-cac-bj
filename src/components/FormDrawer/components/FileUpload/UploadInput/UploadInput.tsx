@@ -7,6 +7,8 @@ import Text from 'components/Text';
 import Image from 'components/Image';
 import placeholder from 'assets/images/png/pdf-placeholder.png';
 import IFileForm from './model';
+import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 type UploadInputProps = {
   selectedFile: IFileForm[] | undefined;
@@ -21,6 +23,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const regexPDFExtension = new RegExp('(.*?).(pdf)$');
+  const { fileUploading } = useFormContext();
 
   return (
     <InputWrapper
@@ -45,28 +48,46 @@ const UploadInput: React.FC<UploadInputProps> = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
-        {selectedFile?.map((file, idx) => {
-          return (
-            <Wrapper key={idx}>
-              <Text className='file-name' fontSize='1rem' fontWeight='400'>
-                <span>{file.fileName}</span>
-              </Text>
-              <Wrapper justifyContent='flex-start' key={idx} direction='column'>
-                {file.fileUrl && (
-                  <Image
-                    height='105px'
-                    width='110px !important'
-                    src={
-                      regexPDFExtension.test(file.fileName)
-                        ? placeholder
-                        : file.fileUrl
-                    }
-                  ></Image>
-                )}
+        {!fileUploading &&
+          selectedFile?.map((file, idx) => {
+            return (
+              <Wrapper key={idx}>
+                <Text
+                  textOverflow='ellipsis'
+                  whiteSpace='nowrap'
+                  overflow='hidden'
+                  wrapperWidth='75%'
+                  className='file-name'
+                  fontSize='1rem'
+                  fontWeight='400'
+                >
+                  <span>{file.fileName}</span>
+                </Text>
+                <Wrapper
+                  justifyContent='flex-start'
+                  key={idx}
+                  direction='column'
+                >
+                  {file.fileUrl && (
+                    <Image
+                      height='105px'
+                      width='110px !important'
+                      src={
+                        regexPDFExtension.test(file.fileName)
+                          ? placeholder
+                          : file.fileUrl
+                      }
+                    ></Image>
+                  )}
+                </Wrapper>
               </Wrapper>
-            </Wrapper>
-          );
-        })}
+            );
+          })}
+        {fileUploading && (
+          <Wrapper width='100%' justifyContent='center' alignContent='center'>
+            <LoadingIndicator />
+          </Wrapper>
+        )}
       </label>
       <InputPlaceholder
         isFocused={isFocused}

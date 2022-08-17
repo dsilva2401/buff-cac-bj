@@ -20,6 +20,8 @@ export type FormContextProps = {
   setCompletionScreen: React.Dispatch<React.SetStateAction<boolean>>;
   startScreen: boolean;
   setStartScreen: React.Dispatch<React.SetStateAction<boolean>>;
+  fileUploading: boolean;
+  setFileUploading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const FormContext = createContext<FormContextProps>({
@@ -41,6 +43,8 @@ export const FormContext = createContext<FormContextProps>({
   setCompletionScreen: () => {},
   startScreen: false,
   setStartScreen: () => {},
+  fileUploading: false,
+  setFileUploading: () => {},
 });
 
 export const useFormContext = () => useContext(FormContext);

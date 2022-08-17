@@ -282,11 +282,11 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       );
       if (moduleIndex >= 0) {
         setMagicAction(MAGIC_ACTION.OPEN_MODULE);
-        if (brijFormRegistrationIndex !== null) {
-          changeDrawerPage(brijFormRegistrationIndex);
-        } else {
-          changeDrawerPage(moduleIndex);
-        }
+        changeDrawerPage(
+          brijFormRegistrationIndex !== null
+            ? brijFormRegistrationIndex
+            : moduleIndex
+        );
         setPosition({ x: 0, y: topHeight });
         setMainDrawerOpen(true);
       }

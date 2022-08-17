@@ -69,6 +69,8 @@ const FormDrawer = (props: Props) => {
     setTotalSteps,
     startScreen,
     setStartScreen,
+    nextDisabled,
+    backDisabled,
   } = useFormContext();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const {
@@ -86,7 +88,13 @@ const FormDrawer = (props: Props) => {
     useState<string>('slide');
   const { user, slug, isPreviewMode, setFormRegistration, brandTheme } =
     useGlobal();
-  const { openDrawer, setMeta, showSuccess } = useSuccessDrawerContext();
+  const {
+    openDrawer,
+    setMeta,
+    showSuccess,
+    closeDrawer: closeSuccessDrawer,
+    closeSuccess,
+  } = useSuccessDrawerContext();
 
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.formDrawer',
@@ -112,7 +120,6 @@ const FormDrawer = (props: Props) => {
           });
 
           showSuccess();
-          openDrawer();
         }
         if (
           endScreenNavModuleIndex !== undefined &&
@@ -146,6 +153,8 @@ const FormDrawer = (props: Props) => {
           sessionStorage.removeItem('brij-form');
           return;
         }
+        setIsFormSubmitting(false);
+        localStorage.setItem('brij-form-complete', 'true');
         route.push(`/c/${id}/form/complete`);
       },
       onError: () => {
@@ -153,6 +162,8 @@ const FormDrawer = (props: Props) => {
           message: t('formSubmissionError'),
           type: 'error',
         });
+        setIsFormSubmitting(false);
+        closeSuccessDrawer();
       },
     },
     null,
@@ -282,16 +293,19 @@ const FormDrawer = (props: Props) => {
         setLocalStorageSet(true);
       }
     }
-  }, [initNameObjectYup]);
+  }, [initNameObjectYup, localStorageSet]);
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      if (!formik.current?.errors[getCurrentFormName(currentStep)]) {
+      if (
+        !formik.current?.errors[getCurrentFormName(currentStep)] &&
+        !nextDisabled
+      ) {
         handleNextBtnClicked();
       }
     },
     onSwipedRight: () => {
-      if (currentStep !== 1) {
+      if (currentStep !== 1 && !backDisabled) {
         handleBackBtnClicked();
       }
     },
@@ -325,6 +339,8 @@ const FormDrawer = (props: Props) => {
       }
     });
     setIsFormSubmitting(true);
+    openDrawer();
+
     await submitForm({
       user: user?.uid,
       formId: formModuleData.id,
@@ -534,49 +550,54 @@ const FormDrawer = (props: Props) => {
                   alignItems='center'
                   overflow='auto'
                 >
-                  <TransitionGroup
-                    className={'form-drawer-transistion'}
-                    exit={false}
-                  >
-                    <CSSTransition
-                      timeout={200}
-                      key={location.key}
-                      classNames={getCurrentTransition()}
+                  <Wrapper width='100%' padding='0px 0px 20px 0px'>
+                    <TransitionGroup
+                      className={'form-drawer-transistion'}
+                      exit={false}
                     >
-                      <Switch location={location}>
-                        <FormProtectedRoute
-                          exact={true}
-                          totalSteps={data.length}
-                          path={`/c/${id}/form/step/:stepId`}
-                          render={({
-                            match: {
-                              params: { stepId },
-                            },
-                          }) => (
-                            <FromStepWrapper>
-                              {Object.keys(formikProps.values).length ? (
-                                renderComponentRoutes(stepId ?? '', formikProps)
-                              ) : (
-                                <LoadingIndicator />
-                              )}
-                            </FromStepWrapper>
-                          )}
-                        />
-                        <Route
-                          path={`/c/${id}/form/complete`}
-                          render={() => (
-                            <FormCompletionPage formData={formModuleData} />
-                          )}
-                        />
-                        <Route
-                          path={`/c/${id}/form/start`}
-                          render={() => (
-                            <FormStartPage formData={formModuleData} />
-                          )}
-                        />
-                      </Switch>
-                    </CSSTransition>
-                  </TransitionGroup>
+                      <CSSTransition
+                        timeout={200}
+                        key={location.key}
+                        classNames={getCurrentTransition()}
+                      >
+                        <Switch location={location}>
+                          <FormProtectedRoute
+                            exact={true}
+                            totalSteps={data.length}
+                            path={`/c/${id}/form/step/:stepId`}
+                            render={({
+                              match: {
+                                params: { stepId },
+                              },
+                            }) => (
+                              <FromStepWrapper>
+                                {Object.keys(formikProps.values).length ? (
+                                  renderComponentRoutes(
+                                    stepId ?? '',
+                                    formikProps
+                                  )
+                                ) : (
+                                  <LoadingIndicator />
+                                )}
+                              </FromStepWrapper>
+                            )}
+                          />
+                          <Route
+                            path={`/c/${id}/form/complete`}
+                            render={() => (
+                              <FormCompletionPage formData={formModuleData} />
+                            )}
+                          />
+                          <Route
+                            path={`/c/${id}/form/start`}
+                            render={() => (
+                              <FormStartPage formData={formModuleData} />
+                            )}
+                          />
+                        </Switch>
+                      </CSSTransition>
+                    </TransitionGroup>
+                  </Wrapper>
                   {!completionScreen && (
                     <Wrapper width='100%' direction='row' gap='0.5rem'>
                       {/* Check current step in module then get name and see form status */}
@@ -588,6 +609,7 @@ const FormDrawer = (props: Props) => {
                             variant='light'
                             iconName='chevron-left'
                             onClick={() => handleBackBtnClicked()}
+                            disabled={backDisabled}
                           />
                         </Wrapper>
                       )}
@@ -596,7 +618,7 @@ const FormDrawer = (props: Props) => {
                           <LoadingIndicator />
                         ) : (
                           <Button
-                            disabled={!formik.current?.isValid}
+                            disabled={!formik.current?.isValid || nextDisabled}
                             onClick={() => handleBtnSubmit()}
                             variant='dark'
                             brandTheme={brandTheme}
@@ -609,7 +631,7 @@ const FormDrawer = (props: Props) => {
                           disabled={
                             !!formik.current?.errors[
                               getCurrentFormName(currentStep)
-                            ]
+                            ] || nextDisabled
                           }
                           onClick={() => handleNextBtnClicked()}
                           variant='dark'

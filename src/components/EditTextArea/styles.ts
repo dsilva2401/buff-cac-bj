@@ -6,6 +6,7 @@ type InputProps = {
 };
 
 export const InputWrapper = styled.div<InputProps>`
+  font-size: 1rem;
   padding: 0.8rem 1.5rem;
   display: flex;
   align-items: center;

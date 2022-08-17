@@ -17,6 +17,7 @@ type IconButtonProps = {
   variant?: 'dark' | 'light';
   iconName?: 'close' | 'close-light' | 'chevron-left' | 'menu' | 'edit';
   children?: React.ReactNode;
+  disabled?: boolean;
   onClick: () => void;
 };
 
@@ -25,6 +26,7 @@ export default function IconButton({
   variant = 'light',
   children,
   onClick,
+  disabled = false,
 }: IconButtonProps) {
   const { brandTheme } = useGlobal();
 
@@ -51,6 +53,7 @@ export default function IconButton({
       brandTheme={brandTheme}
       variant={variant}
       onClick={onClick}
+      disabled={disabled}
     >
       {children ? children : renderIcon()}
     </Button>

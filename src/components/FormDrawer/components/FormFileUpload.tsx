@@ -9,6 +9,7 @@ import UploadInput from './FileUpload/UploadInput';
 import { showToast } from 'components/Toast/Toast';
 import IFileFrom from './FileUpload/UploadInput/model';
 import { useTranslation } from 'react-i18next';
+import { useFormContext } from 'context/FormDrawerContext/FormDrawerContext';
 
 type Props = {
   formData: FormDetailModel;
@@ -25,6 +26,8 @@ const FormFileUpload = (props: Props) => {
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.formDrawer.fileUpload',
   });
+  const { setBackDisabled, setNextDisabled, setFileUploading } =
+    useFormContext();
 
   const changeSelectedFile = async (files: FileList) => {
     if (files && files.length) {
@@ -39,6 +42,9 @@ const FormFileUpload = (props: Props) => {
     setExtensionError(false);
 
     if (files && files.length > 0) {
+      setBackDisabled(true);
+      setNextDisabled(true);
+      setFileUploading(true);
       const fileObject: IFileFrom = { fileName: files[0].name };
       setSelectedFile([fileObject]);
       formikFileUpload.setFieldValue('fileUpload', [fileObject]);
@@ -68,11 +74,15 @@ const FormFileUpload = (props: Props) => {
         formRef?.setFieldValue(name, []);
         formRef?.validateForm();
       }
+      setBackDisabled(false);
+      setNextDisabled(false);
+      setFileUploading(false);
       const resultsParsed = await res.json();
       setObjectUrl(resultsParsed.url);
       formRef?.validateForm();
     } else {
       setSelectedFile(undefined);
+      setObjectUrl('');
       formikFileUpload.setFieldValue('fileUpload', []);
       formikFileUpload.validateForm();
       formRef?.setFieldValue(name, []);
