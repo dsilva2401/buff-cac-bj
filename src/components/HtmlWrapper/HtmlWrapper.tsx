@@ -34,7 +34,7 @@ const HtmlWrapper = styled(Wrapper)`
     cursor: pointer;
     font-weight: 500 !important;
     font-size: 18px !important;
-    color: #ffffff !important;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,6 +43,13 @@ const HtmlWrapper = styled(Wrapper)`
     background: #0a0b0a;
     text-decoration: none !important;
   }
+  & span[style~='color:'] a {
+    color: inherit;
+  }
+  & span {
+    color: inherit;
+  }
+
   & .fr-text-spaced {
     letter-spacing: 0.1em;
   }
