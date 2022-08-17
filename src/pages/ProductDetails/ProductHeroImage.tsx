@@ -1,9 +1,9 @@
 import Image from 'components/Image';
 import Wrapper from 'components/Wrapper';
-import { useGlobal } from 'context/global/GlobalContext';
+import ProgressiveImage from 'react-progressive-image';
 import { Fragment, useState } from 'react';
 import { Animated } from 'react-animated-css';
-import ProgressiveImage from 'react-progressive-image';
+import { useGlobal } from 'context/global/GlobalContext';
 
 const ProductHeroImage = () => {
   const { productDetails, appZoom, collapsedDrawerHeight } = useGlobal();
@@ -35,8 +35,13 @@ const ProductHeroImage = () => {
           placeholder=''
         >
           {(src: string, loading: boolean) => {
-            return !!loading ? (
-              <Wrapper width='100%' height='100%' background={backgroundColor}>
+            return !loading ? (
+              <Wrapper
+                width='100%'
+                height={`${window.innerHeight / appZoom}px`}
+                padding={`0 0 ${collapsedDrawerHeight + 40}px 0`}
+                background={backgroundColor}
+              >
                 <div
                   style={{
                     width: '100%',
@@ -45,7 +50,7 @@ const ProductHeroImage = () => {
                     background: `url(${src}) no-repeat center center`,
                     backgroundSize: 'cover',
                   }}
-                ></div>
+                />
               </Wrapper>
             ) : (
               <Wrapper
