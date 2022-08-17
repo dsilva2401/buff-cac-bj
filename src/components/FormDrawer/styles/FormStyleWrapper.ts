@@ -10,7 +10,8 @@ const FormStyleWrapper = styled.div<FormStyleWrapperProps>`
   align-items: center;
   .Mui-checked {
     path {
-      color: ${(props) => (props.brandTheme ? props.brandTheme : 'unset')};
+      color: ${(props) =>
+        props.brandTheme ? `${props.brandTheme} !important` : 'unset'};
     }
   }
 

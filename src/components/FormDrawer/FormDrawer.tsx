@@ -299,13 +299,14 @@ const FormDrawer = (props: Props) => {
     onSwipedLeft: () => {
       if (
         !formik.current?.errors[getCurrentFormName(currentStep)] &&
-        !nextDisabled
+        !nextDisabled &&
+        !completionScreen
       ) {
         handleNextBtnClicked();
       }
     },
     onSwipedRight: () => {
-      if (currentStep !== 1 && !backDisabled) {
+      if (currentStep !== 1 && !backDisabled && !completionScreen) {
         handleBackBtnClicked();
       }
     },
@@ -339,7 +340,12 @@ const FormDrawer = (props: Props) => {
       }
     });
     setIsFormSubmitting(true);
-    openDrawer();
+    let brijFormRegistrationIndex = localStorage.getItem(
+      'brij-form-registration'
+    );
+    if (brijFormRegistrationIndex === null) {
+      openDrawer();
+    }
 
     await submitForm({
       user: user?.uid,
@@ -599,7 +605,12 @@ const FormDrawer = (props: Props) => {
                     </TransitionGroup>
                   </Wrapper>
                   {!completionScreen && (
-                    <Wrapper width='100%' direction='row' gap='0.5rem'>
+                    <Wrapper
+                      alignItems='flex-end'
+                      width='100%'
+                      direction='row'
+                      gap='0.5rem'
+                    >
                       {/* Check current step in module then get name and see form status */}
                       {/* <Button onClick={() => handleNextBtnClicked()} disabled={!!formik.errors?.dropDown} variant='dark'> */}
                       {currentStep !== 1 && (

@@ -2,7 +2,7 @@ import { FormDetailModel } from 'types/FormTypes';
 import { FormikProps, useFormik } from 'formik';
 import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import EditTextArea from 'components/EditTextArea';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,6 @@ type Props = {
 
 const FormTextArea = (props: Props) => {
   const { formData, formRef, name } = props;
-  const [firstBlur, setFirstBlur] = useState(false);
 
   const { t } = useTranslation('translation', {
     keyPrefix: 'drawers.formDrawer.textArea',
@@ -31,17 +30,9 @@ const FormTextArea = (props: Props) => {
     onSubmit: () => {},
   });
 
-  const handleBlur = () => {
-    if (!firstBlur) {
-      setFirstBlur(true);
-    }
-  };
+  const handleBlur = () => {};
 
-  const handleFocus = () => {
-    if (firstBlur) {
-      setFirstBlur(false);
-    }
-  };
+  const handleFocus = () => {};
 
   useEffect(() => {
     if (formRef && !formRef.values[name] && formData.isRequired) {
@@ -83,8 +74,7 @@ const FormTextArea = (props: Props) => {
         ></EditTextArea>
         {formikTextArea.touched &&
           formikTextArea.dirty &&
-          formikTextArea.errors.textArea &&
-          firstBlur && (
+          formikTextArea.errors.textArea && (
             <Text color='red' fontSize='0.8rem'>
               <span>{formikTextArea.errors.textArea}</span>
             </Text>

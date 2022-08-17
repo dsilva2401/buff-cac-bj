@@ -35,7 +35,7 @@ const ProductHeroImage = () => {
           placeholder=''
         >
           {(src: string, loading: boolean) => {
-            return !loading ? (
+            return !!loading ? (
               <Wrapper
                 width='100%'
                 height={`${window.innerHeight / appZoom}px`}
@@ -50,7 +50,7 @@ const ProductHeroImage = () => {
                     background: `url(${src}) no-repeat center center`,
                     backgroundSize: 'cover',
                   }}
-                />
+                ></div>
               </Wrapper>
             ) : (
               <Wrapper

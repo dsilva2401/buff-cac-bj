@@ -17,7 +17,7 @@ const FormStartPage = (props: Props) => {
 
   useEffect(() => {
     setStartScreen(true);
-  }, []);
+  }, [setStartScreen]);
 
   return (
     <HtmlWrapper
