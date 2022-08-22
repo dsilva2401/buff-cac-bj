@@ -9,7 +9,8 @@ export type PossibleModulesType =
   | 'REGISTRATION_MODULE'
   | 'REFERRAL_MODULE'
   | 'FORMS_MODULE'
-  | 'VIDEO_MODULE';
+  | 'VIDEO_MODULE'
+  | 'DOCUMENT_MODULE';
 
 export interface Product {
   id: string;
@@ -58,6 +59,7 @@ export type ModuleInfoType = {
     | ReferralModuleType
     | FormDetailModel[]
     | VideoModuleType
+    | DocumentModuleType
     | null;
 
   content: string;
@@ -84,7 +86,6 @@ export type LinkModuleType = {
   // leadModule collection
 
   // link refers to destination field
-  // @arqam: This will be a url which when the user clicks will go directly to this page
   link: string;
 };
 
@@ -125,7 +126,7 @@ export type WarrantyModuleType = {
 };
 
 export type ShoppingModuleOptionsType = {
-  /* All options presented as name, values array key pair*/
+  // All options presented as name, values array key pair
   name: string;
   value: string;
   values: string[];
@@ -177,6 +178,11 @@ export type ReferralModuleType = {
   details: string;
   url: string;
   qrcode: string;
+};
+
+export type DocumentModuleType = {
+  // path to the file
+  path: string;
 };
 
 export type ProductDetailsType = {

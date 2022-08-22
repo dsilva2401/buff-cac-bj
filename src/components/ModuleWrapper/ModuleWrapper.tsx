@@ -6,7 +6,7 @@ import Wrapper from 'components/Wrapper';
 import Text from 'components/Text';
 
 type ModuleWrapperProps = {
-  children: any;
+  children?: any;
   drawerTitle?: string | React.ReactNode;
   tableShown?: boolean;
   tableHeight?: number;

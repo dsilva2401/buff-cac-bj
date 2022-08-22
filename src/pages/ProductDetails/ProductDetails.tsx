@@ -37,6 +37,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import RegistratonDrawer from 'components/RegistratonDrawer';
 import {
   CustomModuleType,
+  DocumentModuleType,
   LinkModuleType,
   ModuleInfoType,
   ProductDetailsType,
@@ -59,6 +60,7 @@ const VideoDrawer = lazy(() => import('../../components/VideoDrawer'));
 const CustomDrawer = lazy(() => import('../../components/CustomDrawer'));
 const ReferralDrawer = lazy(() => import('../../components/ReferralDrawer'));
 const WarrantyDrawer = lazy(() => import('../../components/WarrantyDrawer'));
+const DocumentDrawer = lazy(() => import('../../components/DocumentDrawer'));
 const FormDrawer = lazy(() => import('../../components/FormDrawer'));
 
 type UrlParam = {
@@ -467,7 +469,6 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             setProductModule(module.id);
             if (details?.modules[x]?.type === 'LINK_MODULE') {
               let moduleData = module?.moduleInfo as LinkModuleType;
-
               const link =
                 moduleData?.link.includes('https://') ||
                 moduleData?.link.includes('http://')
@@ -475,8 +476,12 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                   : `https://${moduleData?.link}`;
 
               window.open(link, '_blank');
-
               onLinkClick(link);
+            } else if (details?.modules[x]?.type === 'DOCUMENT_MODULE') {
+              let moduleData = module?.moduleInfo as DocumentModuleType;
+              !details?.modules[x].locked
+                ? window.open(moduleData.path, '_self')
+                : changeDrawerPage(x);
             } else changeDrawerPage(x);
             logEvent({
               eventType: 'ENGAGEMENTS',
@@ -860,6 +865,17 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
 
       const renderOtherModules = () => {
         switch (moduleType) {
+          case 'DOCUMENT_MODULE':
+            return (
+              <Suspense fallback={<LoadingIndicator />}>
+                <DocumentDrawer
+                  drawerTitle={details?.modules[currentPage as number]?.title}
+                  drawerData={module?.moduleInfo as DocumentModuleType}
+                  locked={details?.modules[currentPage as number]?.locked}
+                  closeDrawer={closeDrawerPage}
+                />
+              </Suspense>
+            );
           case 'CUSTOM_MODULE':
             return (
               <Suspense fallback={<LoadingIndicator />}>

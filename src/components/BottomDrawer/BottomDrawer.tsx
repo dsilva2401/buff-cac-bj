@@ -364,7 +364,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             inlineIcon
                             onClick={() => {
                               if (button.icon === null) {
-                                setPosition({ ...position, y: topHeight });
+                                if (button.moduleType === 'DOCUMENT_MODULE') {
+                                  button.locked &&
+                                    setPosition({ ...position, y: topHeight });
+                                } else
+                                  setPosition({ ...position, y: topHeight });
                                 setRetractDrawer(true);
                               }
                               button.onClick();
