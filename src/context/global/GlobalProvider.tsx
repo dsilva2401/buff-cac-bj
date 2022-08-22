@@ -150,15 +150,94 @@ export const GlobalProvider: React.FC = ({ children }) => {
         EventPayload,
         'event' | 'eventType' | 'moduleType' | 'moduleId' | 'data'
       >
-    ) =>
-      _logEvent({
-        ...payload,
-        user: user?.uid,
-        location: userLocation,
-        product: productDetails?.product.id,
-        tag: productDetails?.tag.slug,
-        brand: productDetails?.brand.id,
-      }),
+    ) => {
+      const LAST_SCAN_INTERVAL_THRESHOLD: number = 3600000; // 1 hour
+      const SCAN_MAP_ENTRIES_THRESHOLD: number = 100; // 100 entries
+      const SCAN_MAP_TIME_THRESHOLD: number = 86400000; // 24 hours
+      if (payload.event === 'USER_SCAN_A_TAG') {
+        let scanTime: string = new Date().toString();
+        let scanSlug: string = payload.data;
+
+        // Get product map from localstorage
+        let scanMap: Map<string, string> | null;
+        if (localStorage.getItem('storedScans')) {
+          scanMap = new Map(
+            JSON.parse(localStorage.getItem('storedScans') || '{}')
+          );
+        } else scanMap = new Map<string, string>();
+
+        // Purge older than threshold entries
+        for (let [key, value] of scanMap) {
+          if (
+            new Date().getTime() - new Date(value).getTime() >
+            SCAN_MAP_TIME_THRESHOLD
+          )
+            scanMap.delete(key);
+        }
+
+        // Purge the map if entries equal to length threshold
+        if (scanMap.size >= SCAN_MAP_ENTRIES_THRESHOLD) scanMap.clear();
+
+        if (scanMap instanceof Map) {
+          // find if scanned product exists
+          if (scanMap.has(scanSlug)) {
+            let timestamp: string = scanMap.get(scanSlug) || '';
+            // if time threshold has passed since last scan
+            if (
+              timestamp &&
+              new Date().getTime() - new Date(timestamp).getTime() >
+                LAST_SCAN_INTERVAL_THRESHOLD
+            ) {
+              // update entry with new timestamp and log the event
+              scanMap.set(scanSlug, scanTime);
+              localStorage.setItem(
+                'storedScans',
+                JSON.stringify(Array.from(scanMap.entries()))
+              );
+              return _logEvent({
+                ...payload,
+                user: user?.uid,
+                location: userLocation,
+                product: productDetails?.product.id,
+                tag: productDetails?.tag.slug,
+                brand: productDetails?.brand.id,
+              });
+            } else {
+              localStorage.setItem(
+                'storedScans',
+                JSON.stringify(Array.from(scanMap.entries()))
+              );
+              return undefined;
+            }
+          } else {
+            // if slug is uniquely new
+            scanMap.set(scanSlug, scanTime);
+            // Save map into localstorage
+            localStorage.setItem(
+              'storedScans',
+              JSON.stringify(Array.from(scanMap.entries()))
+            );
+            return _logEvent({
+              ...payload,
+              user: user?.uid,
+              location: userLocation,
+              product: productDetails?.product.id,
+              tag: productDetails?.tag.slug,
+              brand: productDetails?.brand.id,
+            });
+          }
+        }
+      } else {
+        return _logEvent({
+          ...payload,
+          user: user?.uid,
+          location: userLocation,
+          product: productDetails?.product.id,
+          tag: productDetails?.tag.slug,
+          brand: productDetails?.brand.id,
+        });
+      }
+    },
     [_logEvent, productDetails, user, userLocation]
   );
 
