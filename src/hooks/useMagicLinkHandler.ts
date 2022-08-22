@@ -32,23 +32,20 @@ const useMagicLinkHandler = (
     setLoading(true);
     setError('');
     setSuccess('');
-    fetch(
-      `${process.env.REACT_APP_API_URL || ''}/shared-api/auth/send-magic-link`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          isNewUser: isNewUser,
-          magicAction: magicAction,
-          slug: slug,
-          host: window.location.host,
-          payloadEncodedString: payloadEncodedString,
-        }),
-      }
-    )
+    fetch(`${window.location.origin}/shared-api/auth/send-magic-link`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        isNewUser: isNewUser,
+        magicAction: magicAction,
+        slug: slug,
+        host: window.location.host,
+        payloadEncodedString: payloadEncodedString,
+      }),
+    })
       .then(() => {
         setLoading(false);
         showToast({
