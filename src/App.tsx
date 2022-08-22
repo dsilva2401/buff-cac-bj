@@ -1,22 +1,22 @@
 import { useLayoutEffect, useEffect, Suspense } from 'react';
+import { useAPI } from 'utils/api';
 import { isBrowser } from 'react-device-detect';
 import { BrowserRouter } from 'react-router-dom';
+import { showToast } from 'components/Toast/Toast';
 import { useGlobal } from './context/global/GlobalContext';
 import { getAuth, getRedirectResult } from 'firebase/auth';
 import { LastLocationProvider } from 'react-router-last-location';
+import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
+import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
+import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper';
+import LoadingIndicator from 'components/LoadingIndicator';
 import AppContainer from 'components/AppContainer/AppContainer';
+import RotationScreen from 'components/RotationScreen';
 import AppFrame from 'components/AppFrame/AppFrame';
 import SideMenu from 'components/SideMenu/SideMenu';
 import GlobalStyle from 'styles/global';
 import Toast from 'components/Toast';
-import Text from 'components/Text';
 import Routes from './routes';
-import SuccessDrawerWrapper from 'components/SuccessDrawer/SuccessDrawerWrapper';
-import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
-import { showToast } from 'components/Toast/Toast';
-import { useAPI } from 'utils/api';
-import LoadingIndicator from 'components/LoadingIndicator';
-import { useAPICacheContext } from 'context/APICacheContext/APICacheContext';
 
 export default function App() {
   const userFormUpdateId = localStorage.getItem('brij-form-user-update-id');
@@ -130,14 +130,7 @@ export default function App() {
     <AppContainer isBrowser={isBrowser} style={{ zoom: appZoom }}>
       <GlobalStyle />
       {isBrowser ? <AppFrame>{browserRouter}</AppFrame> : browserRouter}
-      <Text
-        id={isBrowser ? 'hide' : 'landscape'}
-        fontSize='18px'
-        textAlign='center'
-        wrapperWidth='max-content'
-      >
-        <span>Please rotate device to view experience</span>
-      </Text>
+      <RotationScreen />
       <Toast />
     </AppContainer>
   );

@@ -1,0 +1,80 @@
+{
+  "v": "5.7.4",
+  "fr": 25,
+  "ip": 0,
+  "op": 50,
+  "w": 700,
+  "h": 700,
+  "nm": "Comp 1",
+  "ddd": 0,
+  "assets": [
+    {
+      "id": "image_0",
+      "w": 700,
+      "h": 700,
+      "u": "",
+      "p": "data:image/png;base64,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",
+      "e": 1
+    }
+  ],
+  "layers": [
+    {
+      "ddd": 0,
+      "ind": 1,
+      "ty": 2,
+      "nm": "celular.ai",
+      "cl": "ai",
+      "refId": "image_0",
+      "sr": 1,
+      "ks": {
+        "o": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": [0.833], "y": [0.833] },
+              "o": { "x": [0.167], "y": [0.167] },
+              "t": 0,
+              "s": [0]
+            },
+            {
+              "i": { "x": [0.833], "y": [0.833] },
+              "o": { "x": [0.167], "y": [0.167] },
+              "t": 8,
+              "s": [100]
+            },
+            {
+              "i": { "x": [0.833], "y": [0.833] },
+              "o": { "x": [0.167], "y": [0.167] },
+              "t": 38,
+              "s": [100]
+            },
+            { "t": 50, "s": [0] }
+          ],
+          "ix": 11
+        },
+        "r": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": [0.258], "y": [1.582] },
+              "o": { "x": [0.333], "y": [0] },
+              "t": 8,
+              "s": [0]
+            },
+            { "t": 37, "s": [90] }
+          ],
+          "ix": 10
+        },
+        "p": { "a": 0, "k": [350, 350, 0], "ix": 2, "l": 2 },
+        "a": { "a": 0, "k": [350, 350, 0], "ix": 1, "l": 2 },
+        "s": { "a": 0, "k": [79.004, 79.004, 100], "ix": 6, "l": 2 }
+      },
+      "ao": 0,
+      "ip": 0,
+      "op": 200,
+      "st": 0,
+      "bm": 0
+    }
+  ],
+  "markers": []
+}

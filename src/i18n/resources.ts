@@ -1,6 +1,10 @@
 export const resources = {
   en: {
     translation: {
+      rotationScreen: {
+        message:
+          'Please rotate your device to portrait mode to view experience',
+      },
       registration: {
         productRegistered: 'Product Registered!',
         signedUp: "You're Signed Up!",
