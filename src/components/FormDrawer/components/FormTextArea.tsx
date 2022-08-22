@@ -55,10 +55,10 @@ const FormTextArea = (props: Props) => {
       >
         <span>{formData.text}</span>
       </Text>
-      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
+      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem' fontWeight='600'>
         <span>{formData.subText}</span>
       </Text>
-      <Wrapper direction='column' margin='24px 0 0 0 '>
+      <Wrapper direction='column' margin='12px 0 0 0 '>
         <EditTextArea
           name='textArea'
           rows={formData.isLongQuestion ? 4 : 1}

@@ -85,15 +85,20 @@ const FormDrawer = (props: Props) => {
   const formik = useRef<FormikProps<any>>(null);
   const [formOrder, setFormOrder] = useState<string[]>([]);
   const [transistionAnimation, setTransistionAnimation] =
-    useState<string>('slide');
-  const { user, slug, isPreviewMode, setFormRegistration, brandTheme } =
-    useGlobal();
+    useState<string>('right-to-left');
+  const {
+    user,
+    logEvent,
+    slug,
+    isPreviewMode,
+    setFormRegistration,
+    brandTheme,
+  } = useGlobal();
   const {
     openDrawer,
     setMeta,
     showSuccess,
     closeDrawer: closeSuccessDrawer,
-    closeSuccess,
   } = useSuccessDrawerContext();
 
   const { t } = useTranslation('translation', {
@@ -109,10 +114,16 @@ const FormDrawer = (props: Props) => {
       method: 'POST',
       endpoint: 'form/submit_form',
       onSuccess: (data: { responseId: string; success: boolean }) => {
-        if (
-          endScreenNavModuleIndex === null ||
-          endScreenNavModuleIndex === undefined
-        ) {
+        logEvent({
+          eventType: 'ENGAGEMENTS',
+          event: 'FORM_SUBMISSION',
+          moduleType: formModuleData.type,
+          moduleId: formModuleData.id,
+          data: {
+            registrationForm: endScreenNavModuleIndex === undefined,
+          },
+        });
+        if (endScreenNavModuleIndex === undefined) {
           setIsFormSubmitting(false);
           setMeta({
             title: 'Form Completed',
@@ -142,6 +153,7 @@ const FormDrawer = (props: Props) => {
         if (endScreenNavModuleIndex !== undefined) {
           // remove form registraion as user already submitted it.
           setFormRegistration(null);
+          closeSuccessDrawer();
           return;
         }
         if (!isPreviewMode) {
@@ -177,7 +189,7 @@ const FormDrawer = (props: Props) => {
       return;
     }
     let showStartScreen: string | null;
-    if (endScreenNavModuleIndex) {
+    if (endScreenNavModuleIndex !== undefined) {
       showStartScreen = sessionStorage.getItem(
         'brij-start-screen-shown-registration'
       );
@@ -343,9 +355,7 @@ const FormDrawer = (props: Props) => {
     let brijFormRegistrationIndex = localStorage.getItem(
       'brij-form-registration'
     );
-    if (brijFormRegistrationIndex === null) {
-      openDrawer();
-    }
+    openDrawer();
 
     await submitForm({
       user: user?.uid,
@@ -358,19 +368,23 @@ const FormDrawer = (props: Props) => {
   const handleNextBtnClicked = () => {
     if (startScreen) {
       setStartScreen(false);
-      setTransistionAnimation('slide');
-      if (endScreenNavModuleIndex) {
+      setTransistionAnimation('right-to-left');
+      if (endScreenNavModuleIndex !== undefined) {
         sessionStorage.setItem('brij-start-screen-shown-registration', 'true');
       } else {
         localStorage.setItem('brij-start-screen-shown', 'true');
       }
-      route.push(`/c/${id}/form/step/${currentStep}`);
+      setTimeout(() => {
+        route.push(`/c/${id}/form/step/${currentStep}`);
+      }, 0);
       return;
     }
 
     if (currentStep !== data.length) {
-      setTransistionAnimation('slide');
-      route.push(`/c/${id}/form/step/${currentStep + 1}`);
+      setTransistionAnimation('right-to-left');
+      setTimeout(() => {
+        route.push(`/c/${id}/form/step/${currentStep + 1}`);
+      }, 0);
       setCurrentStep(currentStep + 1);
     }
 
@@ -394,8 +408,10 @@ const FormDrawer = (props: Props) => {
 
   const handleBackBtnClicked = async () => {
     if (currentStep !== 1) {
-      setTransistionAnimation('inverseslide');
-      route.push(`/c/${id}/form/step/${currentStep - 1}`);
+      setTransistionAnimation('left-to-right');
+      setTimeout(() => {
+        route.push(`/c/${id}/form/step/${currentStep - 1}`);
+      }, 0);
       setCurrentStep(currentStep - 1);
     }
 
@@ -558,48 +574,58 @@ const FormDrawer = (props: Props) => {
                 >
                   <Wrapper width='100%' padding='0px 0px 20px 0px'>
                     <TransitionGroup
+                      exit={true}
                       className={'form-drawer-transistion'}
-                      exit={false}
                     >
                       <CSSTransition
-                        timeout={200}
+                        timeout={500}
                         key={location.key}
-                        classNames={getCurrentTransition()}
+                        classNames={
+                          transistionAnimation === 'right-to-left'
+                            ? 'right-to-left'
+                            : 'left-to-right'
+                        }
                       >
                         <Switch location={location}>
-                          <FormProtectedRoute
-                            exact={true}
-                            totalSteps={data.length}
-                            path={`/c/${id}/form/step/:stepId`}
-                            render={({
-                              match: {
-                                params: { stepId },
-                              },
-                            }) => (
-                              <FromStepWrapper>
-                                {Object.keys(formikProps.values).length ? (
-                                  renderComponentRoutes(
-                                    stepId ?? '',
-                                    formikProps
-                                  )
-                                ) : (
-                                  <LoadingIndicator />
+                          <Wrapper className='abs-pos' width='100%'>
+                            <Wrapper position='relative' width='100%'>
+                              <FormProtectedRoute
+                                exact={true}
+                                totalSteps={data.length}
+                                path={`/c/${id}/form/step/:stepId`}
+                                render={({
+                                  match: {
+                                    params: { stepId },
+                                  },
+                                }) => (
+                                  <FromStepWrapper>
+                                    {Object.keys(formikProps.values).length ? (
+                                      renderComponentRoutes(
+                                        stepId ?? '',
+                                        formikProps
+                                      )
+                                    ) : (
+                                      <LoadingIndicator />
+                                    )}
+                                  </FromStepWrapper>
                                 )}
-                              </FromStepWrapper>
-                            )}
-                          />
-                          <Route
-                            path={`/c/${id}/form/complete`}
-                            render={() => (
-                              <FormCompletionPage formData={formModuleData} />
-                            )}
-                          />
-                          <Route
-                            path={`/c/${id}/form/start`}
-                            render={() => (
-                              <FormStartPage formData={formModuleData} />
-                            )}
-                          />
+                              />
+                              <Route
+                                path={`/c/${id}/form/complete`}
+                                render={() => (
+                                  <FormCompletionPage
+                                    formData={formModuleData}
+                                  />
+                                )}
+                              />
+                              <Route
+                                path={`/c/${id}/form/start`}
+                                render={() => (
+                                  <FormStartPage formData={formModuleData} />
+                                )}
+                              />
+                            </Wrapper>
+                          </Wrapper>
                         </Switch>
                       </CSSTransition>
                     </TransitionGroup>

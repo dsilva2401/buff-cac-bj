@@ -144,8 +144,13 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   const { id } = useParams<UrlParam>();
   const [tableRef, { height }] = useElementSize();
   const { registerProductAndFetch } = useRegisterProduct();
-  const { setMeta, showSuccess, closeDrawer, openDrawer, open } =
-    useSuccessDrawerContext();
+  const {
+    setMeta,
+    showSuccess,
+    closeDrawer: closeSuccessDrawer,
+    openDrawer,
+    open,
+  } = useSuccessDrawerContext();
   const { invalidateCache } = useAPICacheContext();
   const onError = () => {
     showToast({
@@ -199,7 +204,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
         history.replace(`/c/${id}`);
         return;
       }
-      if (isFormNavigation) {
+      if (isFormNavigation && closeDrawer) {
         setIsFormNavigation(false);
         setTimeout(() => {
           history.push(`/c/${id}`);
@@ -341,7 +346,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           }
 
           // HACK: To hide the animation of opening the bottomdrawer
-          setTimeout(() => closeDrawer(), 1000);
+          setTimeout(() => closeSuccessDrawer(), 1000);
           return;
         }
 
@@ -380,7 +385,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           setMainDrawerOpen(true);
         }
       } catch (error: any) {
-        closeDrawer();
+        closeSuccessDrawer();
         showToast({ message: error, type: 'error' });
       } finally {
         setRegisteringProduct(false);

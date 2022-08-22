@@ -139,7 +139,7 @@ const FormFileUpload = (props: Props) => {
       >
         <span>{formData.text}</span>
       </Text>
-      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
+      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem' fontWeight='600'>
         <span>{formData.subText}</span>
       </Text>
       <Wrapper

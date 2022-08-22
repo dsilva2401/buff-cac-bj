@@ -120,8 +120,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
       setMainDrawerOpen(true);
     } else if (position.y === bottomHeight) {
       setMainDrawerOpen(false);
-      // whenever we close the drawer route back to main product route
-      closeChild(true);
     }
   }, [position, topHeight, bottomHeight, closeChild, setMainDrawerOpen]);
 
@@ -149,6 +147,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   ]);
 
   const handleDrawerClose = useCallback(() => {
+    // whenever we close the drawer route back to main product route
+    closeChild(true);
     setPosition({ ...position, y: bottomHeight });
     setMainDrawerOpen(false);
   }, [position, setPosition, bottomHeight, setMainDrawerOpen]);

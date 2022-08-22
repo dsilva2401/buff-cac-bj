@@ -46,9 +46,11 @@ export const FormSelect = styled(SelectMaterial)`
   }
   .MuiSelect-select {
     width: 100%;
+    background: #fff;
     background: ${(props) =>
       props.open || props.value ? '#ffffff' : '#f4f4f4'};
-    border: 3px solid #f4f4f4;
+    border: ${(props) =>
+      props.open || props.value ? '3px solid #E7EAEB' : '3px solid #f4f4f4'};
     display: flex;
     align-items: center;
     padding: 0 1.5rem;

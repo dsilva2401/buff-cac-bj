@@ -9,9 +9,10 @@ const FormStyleWrapper = styled.div<FormStyleWrapperProps>`
   justify-content: center;
   align-items: center;
   .Mui-checked {
-    path {
-      color: ${(props) =>
-        props.brandTheme ? `${props.brandTheme} !important` : 'unset'};
+    color: ${(props) => (props.brandTheme ? `${props.brandTheme}` : 'black')};
+    svg {
+      fill: ${(props) =>
+        props.brandTheme ? `${props.brandTheme} !important` : 'black'};
     }
   }
 

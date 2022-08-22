@@ -51,11 +51,11 @@ const FormMultipleChoice = (props: Props) => {
       >
         <span>{formData.text}</span>
       </Text>
-      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem'>
+      <Text color='#98A3AA' textAlign='left' fontSize='0.8rem' fontWeight='600'>
         <span>{formData.subText}</span>
       </Text>
       <Wrapper
-        margin='24px 0 0 0'
+        margin='12px 0 0 0'
         alignItems='center'
         justifyContent='flex-start'
       >

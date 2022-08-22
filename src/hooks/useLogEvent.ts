@@ -18,7 +18,9 @@ export type EventName =
   // all module clicked along with moduleId, eventType: ENGAGEMENTS
   | 'MODULE_CLICKED'
   // when user clicks on checkout button, eventType: ENGAGEMENTS
-  | 'SHOPPING_CHECK_OUT';
+  | 'SHOPPING_CHECK_OUT'
+  // when the user submits a form
+  | 'FORM_SUBMISSION';
 
 export type EventPayload = {
   // Provided by event call
