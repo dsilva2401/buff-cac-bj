@@ -426,7 +426,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
   useEffect(() => {
     if (details) {
       for (let x = 0; x < details?.modules?.length; x++) {
-        if (details?.modules[x]?.locked) {
+        if (details?.modules[x]?.registrationRequired) {
           setSignInRedirect(`/c/${id}`);
         }
       }
@@ -484,7 +484,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
               onLinkClick(link);
             } else if (details?.modules[x]?.type === 'DOCUMENT_MODULE') {
               let moduleData = module?.moduleInfo as DocumentModuleType;
-              !details?.modules[x].locked
+              !details?.modules[x].registrationRequired
                 ? window.open(moduleData.path, '_self')
                 : changeDrawerPage(x);
             } else changeDrawerPage(x);
@@ -510,7 +510,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
           isHighlight: x === 0,
           moduleType: moduleType,
           moduleData: moduleData?.path,
-          locked: details?.modules[x].locked,
+          registrationRequired: details?.modules[x].registrationRequired,
           icon:
             details?.modules[x].type === 'LINK_MODULE' ? (
               <ExternalLink
@@ -876,7 +876,10 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                 <DocumentDrawer
                   drawerTitle={details?.modules[currentPage as number]?.title}
                   drawerData={module?.moduleInfo as DocumentModuleType}
-                  locked={details?.modules[currentPage as number]?.locked}
+                  registrationRequired={
+                    details?.modules[currentPage as number]
+                      ?.registrationRequired
+                  }
                   closeDrawer={closeDrawerPage}
                 />
               </Suspense>

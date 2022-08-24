@@ -36,7 +36,7 @@ export type ButtonType = {
   title: any | undefined;
   onClick: () => void;
   isHighlight: boolean;
-  locked: boolean;
+  registrationRequired: boolean;
   icon: ReactElement | null;
   moduleType: string;
   moduleData?: string | undefined;
@@ -335,7 +335,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             variant={button.isHighlight ? 'dark' : 'light'}
                             onClick={() => {
                               setRetractDrawer(false);
-                              if (!button.locked) {
+                              if (!button.registrationRequired) {
                                 isDesktop && !isPreviewMode && handle.enter();
                                 (isPreviewMode || isAndroid) &&
                                   setVideoSource(button.moduleData || '');
@@ -349,7 +349,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             }}
                           >
                             {button.title}
-                            {!button.locked &&
+                            {!button.registrationRequired &&
                               !isPreviewMode &&
                               !isAndroid &&
                               renderVideoElement(button.moduleData || '')}
@@ -365,7 +365,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                             onClick={() => {
                               if (button.icon === null) {
                                 if (button.moduleType === 'DOCUMENT_MODULE') {
-                                  button.locked &&
+                                  button.registrationRequired &&
                                     setPosition({ ...position, y: topHeight });
                                 } else
                                   setPosition({ ...position, y: topHeight });
@@ -421,7 +421,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         variant={button.isHighlight ? 'dark' : 'light'}
                         onClick={() => {
                           setRetractDrawer(false);
-                          if (!button.locked) {
+                          if (!button.registrationRequired) {
                             isDesktop && !isPreviewMode && handle.enter();
                             (isPreviewMode || isAndroid) &&
                               setVideoSource(button.moduleData || '');
@@ -435,7 +435,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                         }}
                       >
                         {button.title}
-                        {!button.locked &&
+                        {!button.registrationRequired &&
                           !isPreviewMode &&
                           !isAndroid &&
                           renderVideoElement(button.moduleData || '')}

@@ -5,22 +5,22 @@ import { DocumentModuleType } from 'types/ProductDetailsType';
 type DocumentDrawerProps = {
   drawerTitle: string;
   drawerData: DocumentModuleType;
-  locked: boolean;
+  registrationRequired: boolean;
   closeDrawer: () => void;
 };
 
 const DocumentDrawer: React.FC<DocumentDrawerProps> = ({
   drawerTitle,
   drawerData,
-  locked,
+  registrationRequired,
   closeDrawer,
 }) => {
   useEffect(() => {
-    if (!locked) {
+    if (!registrationRequired) {
       window.open(drawerData.path, '_self');
       closeDrawer();
     }
-  }, [locked, drawerData.path, closeDrawer]);
+  }, [registrationRequired, drawerData.path, closeDrawer]);
 
   return <ModuleWrapper drawerTitle={drawerTitle} />;
 };

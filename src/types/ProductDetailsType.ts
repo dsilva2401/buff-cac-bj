@@ -48,9 +48,8 @@ export type ModuleInfoType = {
   // this indicates if the lead module should open automatically on page load
   autoDeploy: boolean;
   // this indicates whether we need an actual login to unlock this module
-  locked: boolean;
   registrationRequired: boolean;
-  // actual module info. Note, this field is optional. It will be present if locked is set to false. If locked is true, then this field is set to null
+  // actual module info. Note, this field is optional. It will be present if registrationRequired is set to false. If registrationRequired is true, then this field is set to null
   moduleInfo:
     | CustomModuleType
     | LinkModuleType
@@ -68,7 +67,7 @@ export type ModuleInfoType = {
 };
 
 export type CustomModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
+  // All of these fields here should not be populated if registrationRequired is true and user token is not present
 
   // customModule collection
 
@@ -82,7 +81,7 @@ export type VideoModuleType = {
 };
 
 export type LinkModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
+  // All of these fields here should not be populated if registrationRequired is true and user token is not present
   // leadModule collection
 
   // link refers to destination field
@@ -90,7 +89,7 @@ export type LinkModuleType = {
 };
 
 export type WarrantyModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
+  // All of these fields here should not be populated if registrationRequired is true and user token is not present
   // Find this in warrantyModule collection
 
   // details field
@@ -160,7 +159,7 @@ export type VariantDetails = {
 };
 
 export type ShoppingModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
+  // All of these fields here should not be populated if registrationRequired is true and user token is not present
   defaultVariantDetails: VariantDetails;
   isDiscountAvailable: boolean;
   discountPercentage?: number;
@@ -171,7 +170,7 @@ export type ShoppingModuleType = {
 };
 
 export type ReferralModuleType = {
-  // All of these fields here should not be populated if locked is true and user token is not present
+  // All of these fields here should not be populated if registrationRequired is true and user token is not present
   // Find this in referralModule collection
 
   // This is from text field rich html text
