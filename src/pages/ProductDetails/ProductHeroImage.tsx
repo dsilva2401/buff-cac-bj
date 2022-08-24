@@ -1,9 +1,9 @@
 import Image from 'components/Image';
 import Wrapper from 'components/Wrapper';
 import ProgressiveImage from 'react-progressive-image';
-import { Fragment, useState } from 'react';
-import { Animated } from 'react-animated-css';
+import { Fragment, useEffect, useState } from 'react';
 import { useGlobal } from 'context/global/GlobalContext';
+import { Animated } from 'react-animated-css';
 
 const ProductHeroImage = () => {
   const { productDetails, appZoom, collapsedDrawerHeight } = useGlobal();
@@ -22,11 +22,15 @@ const ProductHeroImage = () => {
       .shift();
     optimizedImageSrc = `${hostUrl}/optimized-images/${fileId}/1000x1000.webp`;
   }
-  const [renderOptimizedImage, setRenderOptimizedImage] = useState(true);
+  const [renderOptimizedImage, setRenderOptimizedImage] = useState(false);
+
+  useEffect(() => {
+    if (collapsedDrawerHeight !== 0) setRenderOptimizedImage(true);
+  }, [collapsedDrawerHeight]);
 
   return (
     <Fragment>
-      {!!productDetails && (
+      {!!productDetails && !!collapsedDrawerHeight && (
         <ProgressiveImage
           onError={() => {
             setRenderOptimizedImage(false);
