@@ -57,8 +57,6 @@ export type GlobalContextProps = {
   setMagicPayload: React.Dispatch<React.SetStateAction<any>>;
   agegateDisplay: boolean;
   toggleAgegateDisplay: React.Dispatch<React.SetStateAction<boolean>>;
-  collapsedDrawerHeight: number;
-  setCollapsedDrawerHeight: React.Dispatch<React.SetStateAction<number>>;
   autoDeployTriggered: boolean;
   setAutoDeployTriggered: React.Dispatch<React.SetStateAction<boolean>>;
   productModule: string;
@@ -116,8 +114,6 @@ export const GlobalContext = createContext<GlobalContextProps>({
   setMagicPayload: () => {},
   agegateDisplay: false,
   toggleAgegateDisplay: () => {},
-  collapsedDrawerHeight: 0,
-  setCollapsedDrawerHeight: () => {},
   autoDeployTriggered: false,
   setAutoDeployTriggered: () => {},
   productModule: '',

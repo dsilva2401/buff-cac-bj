@@ -15,7 +15,6 @@ import { ReactComponent as Close } from 'assets/icons/svg/close.svg';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import AndroidPlayer from 'components/AndroidPlayer';
-import useElementSize from 'hooks/useElementSize';
 import LinesEllipsis from 'react-lines-ellipsis';
 import DrawerMask from 'components/DrawerMask';
 import useHeights from 'hooks/useHeights';
@@ -82,7 +81,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   const [videoSource, setVideoSource] = useState<string>('');
 
   const leadModuleButtonRef = useRef<HTMLButtonElement>(null);
-  const [collapsedDrawerRef, { height }] = useElementSize();
   const { topHeight, bottomHeight } = useHeights();
   const videoRef = useRef<HTMLVideoElement>(null);
   const handle = useFullScreenHandle();
@@ -96,16 +94,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     appZoom,
     brandTheme,
     isPreviewMode,
-    setCollapsedDrawerHeight,
     autoDeployTriggered,
     setAutoDeployTriggered,
     authFetched,
     registeringProduct,
   } = useGlobal();
-
-  useEffect(() => {
-    if (height) setCollapsedDrawerHeight(height);
-  }, [height, setCollapsedDrawerHeight]);
 
   useEffect(() => {
     if (isPreviewMode) {
@@ -312,7 +305,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
                 gap='1rem'
                 width='100%'
                 direction='column'
-                ref={collapsedDrawerRef}
                 margin={isChildOpen ? '5.25rem 0 0 0' : '0'}
               >
                 {buttons?.length === 0 && isPreviewMode && (

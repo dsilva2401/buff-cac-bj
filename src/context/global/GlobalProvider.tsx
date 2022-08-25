@@ -62,7 +62,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
   const [productDetails, reFetchProduct, productLoading, setProductDetails] =
     useProductDetails(slug, token, previewEvent, authFetched);
   const [collectionDetails, getCollection] = useCollection(token);
-  const [collapsedDrawerHeight, setCollapsedDrawerHeight] = useState<number>(0);
 
   const pathname: string = window.location.pathname;
 
@@ -281,8 +280,6 @@ export const GlobalProvider: React.FC = ({ children }) => {
         setMagicPayload,
         agegateDisplay,
         toggleAgegateDisplay,
-        collapsedDrawerHeight,
-        setCollapsedDrawerHeight,
         autoDeployTriggered,
         setAutoDeployTriggered,
         productModule,
