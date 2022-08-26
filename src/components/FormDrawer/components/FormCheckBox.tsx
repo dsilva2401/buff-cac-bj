@@ -88,7 +88,9 @@ const FormCheckBox = (props: Props) => {
                     formRef.validateField(name);
                   }}
                 ></Checkbox>
-                <Label htmlFor={value.text}>{value.text}</Label>
+                <Label className='form-checkbox-label' htmlFor={value.text}>
+                  {value.text}
+                </Label>
               </FormStyleWrapper>
             </Wrapper>
           );

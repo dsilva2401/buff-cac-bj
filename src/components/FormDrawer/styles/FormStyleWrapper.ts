@@ -8,16 +8,26 @@ const FormStyleWrapper = styled.div<FormStyleWrapperProps>`
   display: flex;
   justify-content: center;
   align-items: center;
+  .form-radio {
+    .MuiTypography-body1 {
+      font-weight: 600;
+    }
+  }
+
   .Mui-checked {
-    color: ${(props) => (props.brandTheme ? `${props.brandTheme}` : 'black')};
+    color: ${(props) => (props.brandTheme ? `${props.brandTheme}` : '#000')};
     svg {
       fill: ${(props) =>
-        props.brandTheme ? `${props.brandTheme} !important` : 'black'};
+        props.brandTheme ? `${props.brandTheme} !important` : '#000'};
     }
   }
 
   Label {
     color: black;
+  }
+
+  .form-checkbox-label {
+    font-weight: 600;
   }
 `;
 

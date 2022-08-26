@@ -29,6 +29,9 @@ const FormSelectInput: React.FC<FormSelectInputProps> = ({
       <FormSelect
         name={name}
         open={opened}
+        renderValue={() => (
+          <span className='rendered-element-option'>{selected}</span>
+        )}
         placeholder={placeholder}
         labelId={selected ?? options[0]}
         value={selected}

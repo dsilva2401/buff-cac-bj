@@ -68,6 +68,12 @@ export const FormSelect = styled(SelectMaterial)`
   .MuiSelect-icon {
     right: 1.5rem;
   }
+
+  .rendered-element-option {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 20px);
+  }
 `;
 
 export const Option = styled(MenuItem)``;

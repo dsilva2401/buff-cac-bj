@@ -13,17 +13,16 @@ export const InputWrapper = styled.div<UploadInputProps>`
   justify-content: center;
   background-color: ${(props) =>
     props.isFileSelected || props.isFocused ? 'transparent' : '#fff'};
-  border: 1px solid
-    ${(props) =>
-      props.isFileSelected || props.isFocused ? '#1b1b1b' : 'transparent'};
+  border: ${(props) =>
+    props.isFileSelected || props.isFocused
+      ? '2px solid #E7EAEB '
+      : '1px solid #E7EAEB'};
   height: ${(props) => (props.isFileSelected ? '180px' : 'auto')};
   border-radius: 30px;
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid
-    ${(props) =>
-      props.isFileSelected || props.isFocused ? '#1b1b1b' : '#E7EaEb'};
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.16);
+  box-shadow: ${(props) =>
+    props.isFileSelected ? 'none' : '0px 1px 4px rgba(0, 0, 0, 0.16)'};
   input {
     width: 0.1px;
     height: 0.1px;
@@ -57,10 +56,8 @@ export const InputWrapper = styled.div<UploadInputProps>`
   svg {
     margin-right: 8px;
     right: 1rem;
-    color: #000;
+    color: #202029;
     z-index: ${(props) => (props.isFileSelected ? 3 : 1)};
-    opacity: ${(props) => (props.isFileSelected || props.isFocused ? 1 : 0.3)};
-    transition: opacity 0.3s ease;
     path {
       fill: #000;
     }
@@ -69,11 +66,11 @@ export const InputWrapper = styled.div<UploadInputProps>`
 
 export const InputPlaceholder = styled.span<UploadInputProps>`
   position: absolute;
-  font-weight: 400;
+  font-weight: ${(props) => (props.isFileSelected ? '400' : '600')};
   padding: 0
     ${(props) => (props.isFileSelected || props.isFocused ? '0.6rem' : '0')};
   color: ${(props) =>
-    props.isFileSelected || props.isFocused ? '#000' : '#202029'};
+    props.isFileSelected || props.isFocused ? '#98A3AA' : '#202029'};
   transition: all 0.3s ease;
   z-index: 1;
   top: ${(props) => (props.isFileSelected ? '20px' : 'auto')};

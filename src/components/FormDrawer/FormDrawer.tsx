@@ -36,6 +36,8 @@ import FormStepper from './components/FormStepper';
 import { showToast } from 'components/Toast/Toast';
 import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDrawerContext';
 import { useTranslation } from 'react-i18next';
+// import Lottie from 'react-lottie';
+// import formSwipeAnimation from 'assets/lottie-animations/form-swipe-animation.json';
 
 type Props = {
   data: FormDetailModel[];
@@ -61,7 +63,9 @@ const FormDrawer = (props: Props) => {
   const [validationYup, setValidationYup] = useState<any>({});
   const [initNameObjectYup, setNameObjectYup] = useState<any>({});
   const [localStorageSet, setLocalStorageSet] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
   const { params } = useRouteMatch<FormMatchParams>();
+  // const [loadSwipeLottie, setLoadSwipeLottie] = useState(false);
   const {
     currentStep,
     setCurrentStep,
@@ -111,6 +115,16 @@ const FormDrawer = (props: Props) => {
   useEffect(() => {
     setTotalSteps(data.length);
   }, [setTotalSteps, data]);
+
+
+  //Lottie swipe animation commented
+  // useEffect(() => {
+  //   if (startScreen) {
+  //     setTimeout(() => {
+  //       setLoadSwipeLottie(true);
+  //     }, 5000)
+  //   }
+  // }, [startScreen])
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'changeFormStep') {
@@ -189,10 +203,14 @@ const FormDrawer = (props: Props) => {
         if (!formModuleData.endScreenContent && closeDrawer) {
           closeDrawer(true);
           sessionStorage.removeItem('brij-form');
+          sessionStorage.removeItem('brij-form');
           return;
         }
-        setIsFormSubmitting(false);
-        localStorage.setItem('brij-form-complete', 'true');
+        if (!isPreviewMode) {
+          localStorage.setItem('brij-form-complete', 'true');
+        }
+
+        // form complete only available on
         route.push(`/c/${id}/form/complete`);
       },
       onError: () => {
@@ -286,7 +304,7 @@ const FormDrawer = (props: Props) => {
                 .max(600)
                 .required();
             } else {
-              validationObject[`${value.type}${idx + 1}`] = Yup.string();
+              validationObject[`${value.type}${idx + 1}`] = Yup.string().max(600);
             }
             break;
           case FormDetailTypesEnum.CHECKBOX:
@@ -339,6 +357,9 @@ const FormDrawer = (props: Props) => {
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
+      if (startScreen) {
+        handleNextBtnClicked();
+      }
       if (
         !formik.current?.errors[getCurrentFormName(currentStep)] &&
         !nextDisabled &&
@@ -348,7 +369,7 @@ const FormDrawer = (props: Props) => {
       }
     },
     onSwipedRight: () => {
-      if (currentStep !== 1 && !backDisabled && !completionScreen) {
+      if (!startScreen && !backDisabled && !completionScreen) {
         handleBackBtnClicked();
       }
     },
@@ -356,6 +377,12 @@ const FormDrawer = (props: Props) => {
     preventScrollOnSwipe: true,
     trackMouse: false,
   });
+
+  useEffect(() => {
+    //dynamically set height of relative positioned container
+    const containerElement = document.querySelector('.form-abs-pos-container');
+    setContainerHeight(containerElement?.scrollHeight ?? 0);
+  }, [location]);
 
   const handleBtnSubmit = async () => {
     if (isPreviewMode) {
@@ -404,9 +431,6 @@ const FormDrawer = (props: Props) => {
       }
     });
     setIsFormSubmitting(true);
-    let brijFormRegistrationIndex = localStorage.getItem(
-      'brij-form-registration'
-    );
     openDrawer();
 
     await submitForm({
@@ -423,16 +447,26 @@ const FormDrawer = (props: Props) => {
       setTransistionAnimation('right-to-left');
       if (endScreenNavModuleIndex !== undefined) {
         sessionStorage.setItem('brij-start-screen-shown-registration', 'true');
+        setTimeout(() => {
+          route.push(`/c/${id}/form/step/${currentStep}`);
+        }, 0);
       } else {
-        localStorage.setItem('brij-start-screen-shown', 'true');
+        if (endScreenNavModuleIndex) {
+          sessionStorage.setItem(
+            'brij-start-screen-shown-registration',
+            'true'
+          );
+        } else {
+          localStorage.setItem('brij-start-screen-shown', 'true');
+        }
+        setTimeout(() => {
+          route.push(`/c/${id}/form/step/${currentStep}`);
+        }, 0);
+        return;
       }
-      setTimeout(() => {
-        route.push(`/c/${id}/form/step/${currentStep}`);
-      }, 0);
-      return;
     }
 
-    if (currentStep !== data.length) {
+    if (currentStep !== data.length && !startScreen) {
       setTransistionAnimation('right-to-left');
       setTimeout(() => {
         route.push(`/c/${id}/form/step/${currentStep + 1}`);
@@ -465,6 +499,13 @@ const FormDrawer = (props: Props) => {
         route.push(`/c/${id}/form/step/${currentStep - 1}`);
       }, 0);
       setCurrentStep(currentStep - 1);
+    }
+
+    if (currentStep === 1) {
+      setTransistionAnimation('left-to-right');
+      setTimeout(() => {
+        route.push(`/c/${id}/form/start`);
+      }, 0);
     }
 
     if (!isPreviewMode) {
@@ -539,9 +580,11 @@ const FormDrawer = (props: Props) => {
     }
   };
 
-  const getCurrentTransition = () => {
-    return transistionAnimation;
-  };
+  useEffect(() => {
+    console.log(formik.current?.errors[
+      getCurrentFormName(currentStep)])
+  }, [formik.current?.errors])
+
   let { id } = params;
 
   return (
@@ -549,7 +592,7 @@ const FormDrawer = (props: Props) => {
       enableReinitialize={true}
       innerRef={formik}
       initialValues={initNameObjectYup}
-      onSubmit={() => {}}
+      onSubmit={() => { }}
       validationSchema={validationYup}
       validateOnChange={true}
     >
@@ -626,8 +669,9 @@ const FormDrawer = (props: Props) => {
                 >
                   <Wrapper width='100%' padding='0px 0px 20px 0px'>
                     <TransitionGroup
-                      exit={true}
+                      exit={false}
                       className={'form-drawer-transistion'}
+                      style={{ height: containerHeight }}
                     >
                       <CSSTransition
                         timeout={500}
@@ -639,7 +683,10 @@ const FormDrawer = (props: Props) => {
                         }
                       >
                         <Switch location={location}>
-                          <Wrapper className='abs-pos' width='100%'>
+                          <Wrapper
+                            className='form-abs-pos-container'
+                            width='100%'
+                          >
                             <Wrapper position='relative' width='100%'>
                               <FormProtectedRoute
                                 exact={true}
@@ -682,55 +729,75 @@ const FormDrawer = (props: Props) => {
                       </CSSTransition>
                     </TransitionGroup>
                   </Wrapper>
-                  {!completionScreen && (
-                    <Wrapper
-                      alignItems='flex-end'
-                      width='100%'
-                      direction='row'
-                      gap='0.5rem'
-                    >
-                      {/* Check current step in module then get name and see form status */}
-                      {/* <Button onClick={() => handleNextBtnClicked()} disabled={!!formik.errors?.dropDown} variant='dark'> */}
-                      {currentStep !== 1 && (
-                        // 1px margin to account for box shadow bleeding
-                        <Wrapper margin='1px'>
-                          <IconButton
-                            variant='light'
-                            iconName='chevron-left'
-                            onClick={() => handleBackBtnClicked()}
-                            disabled={backDisabled}
-                          />
-                        </Wrapper>
-                      )}
-                      {currentStep === data.length ? (
-                        !!isFormSubmitting ? (
-                          <LoadingIndicator />
+                  <Wrapper
+                    alignItems='flex-end'
+                    width='100%'
+                    direction='column'
+                  >
+                    {/* {startScreen && loadSwipeLottie && (
+                      <Lottie
+                        speed={1}
+                        options={{
+                          loop: true,
+                          autoplay: false,
+                          animationData: formSwipeAnimation,
+                        }}
+                        height={150}
+                        width={150}
+                      />
+                    )} */}
+                    {!completionScreen && (
+                      <Wrapper
+                        alignItems='flex-end'
+                        width='100%'
+                        direction='row'
+                        gap='0.5rem'
+                      >
+                        {/* Check current step in module then get name and see form status */}
+                        {/* <Button onClick={() => handleNextBtnClicked()} disabled={!!formik.errors?.dropDown} variant='dark'> */}
+                        {!startScreen && (
+                          // 1px margin to account for box shadow bleeding
+                          <Wrapper margin='1px'>
+                            <IconButton
+                              variant='light'
+                              iconName='chevron-left'
+                              onClick={() => handleBackBtnClicked()}
+                              disabled={backDisabled}
+                            />
+                          </Wrapper>
+                        )}
+                        {currentStep === data.length ? (
+                          !!isFormSubmitting ? (
+                            <LoadingIndicator />
+                          ) : (
+                            <Button
+                              disabled={
+                                !formik.current?.isValid || nextDisabled
+                              }
+                              onClick={() => handleBtnSubmit()}
+                              variant='dark'
+                              brandTheme={brandTheme}
+                            >
+                              {t('submit')}
+                            </Button>
+                          )
                         ) : (
                           <Button
-                            disabled={!formik.current?.isValid || nextDisabled}
-                            onClick={() => handleBtnSubmit()}
+                            disabled={
+                              !!formik.current?.errors[
+                              getCurrentFormName(currentStep)
+                              ] && !startScreen
+                            }
+                            onClick={() => handleNextBtnClicked()}
                             variant='dark'
                             brandTheme={brandTheme}
                           >
-                            {t('submit')}
+                            {t('next')}
                           </Button>
-                        )
-                      ) : (
-                        <Button
-                          disabled={
-                            !!formik.current?.errors[
-                              getCurrentFormName(currentStep)
-                            ] || nextDisabled
-                          }
-                          onClick={() => handleNextBtnClicked()}
-                          variant='dark'
-                          brandTheme={brandTheme}
-                        >
-                          {t('next')}
-                        </Button>
-                      )}
-                    </Wrapper>
-                  )}
+                        )}
+                      </Wrapper>
+                    )}
+                  </Wrapper>
                 </Wrapper>
               </Wrapper>
             </ModuleWrapper>

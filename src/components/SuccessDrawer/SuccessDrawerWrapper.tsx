@@ -2,13 +2,17 @@ import { useSuccessDrawerContext } from 'context/SuccessDrawerContext/SuccessDra
 import SuccessDrawer from './SuccessDrawer';
 
 const SuccessDrawerWrapper = () => {
-  const { open, success, closeDrawer, meta } = useSuccessDrawerContext();
+  const { open, success, closeDrawer, meta, closeSuccess } =
+    useSuccessDrawerContext();
 
   return (
     <SuccessDrawer
       isOpen={open}
       loading={!success}
-      onCompleteAnimation={() => closeDrawer()}
+      onCompleteAnimation={() => {
+        closeDrawer();
+        closeSuccess();
+      }}
       title={meta.title}
       description={meta.description}
       close={closeDrawer}

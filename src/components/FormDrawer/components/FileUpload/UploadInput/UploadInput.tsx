@@ -98,7 +98,7 @@ const UploadInput: React.FC<UploadInputProps> = ({
         ) : (
           <span className='upload-file'>
             <Upload />
-            <Text fontSize='1rem' fontWeight='400' color='#202029'>
+            <Text fontSize='1rem' fontWeight='600' color='#202029'>
               <span>Upload File</span>
             </Text>
           </span>

@@ -25,14 +25,14 @@ const FormTextArea = (props: Props) => {
       textArea: '',
     },
     validationSchema: Yup.object({
-      textArea: Yup.string().max(600, 'Max characters 600'),
+      textArea: Yup.string().max(601, 'Max characters 600'),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
 
-  const handleBlur = () => {};
+  const handleBlur = () => { };
 
-  const handleFocus = () => {};
+  const handleFocus = () => { };
 
   useEffect(() => {
     if (formRef && !formRef.values[name] && formData.isRequired) {
