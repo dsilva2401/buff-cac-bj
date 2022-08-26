@@ -272,6 +272,8 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
     const event = previewEvent;
     if (event && event.type === 'changeDrawerPage') {
       changeDrawerPage(event.data);
+      setPosition({ x: 0, y: topHeight });
+      setMainDrawerOpen(true);
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage();
     } else if (event && event.type === 'openMenu') {

@@ -114,7 +114,11 @@ const FormDrawer = (props: Props) => {
 
   useEffect(() => {
     if (previewEvent && previewEvent.type === 'changeFormStep') {
-      if (previewEvent.data.step === currentStep) {
+      if (
+        previewEvent.data.step === currentStep &&
+        !startScreen &&
+        !completionScreen
+      ) {
         return;
       }
       if (parseInt(previewEvent.data.step) == previewEvent.data.step) {
@@ -129,7 +133,7 @@ const FormDrawer = (props: Props) => {
         setStartScreen(false);
       }
     }
-  }, [previewEvent, currentStep]);
+  }, [previewEvent, currentStep, startScreen, completionScreen]);
 
   const [submitForm] = useAPI<any>(
     {
