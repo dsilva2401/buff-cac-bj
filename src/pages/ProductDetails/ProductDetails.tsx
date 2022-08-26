@@ -274,6 +274,11 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
       changeDrawerPage(event.data);
     } else if (event && event.type === 'closeDrawerPage') {
       closeDrawerPage();
+    } else if (event && event.type === 'openMenu') {
+      setMainDrawerOpen(true);
+    } else if (event && event.type === 'closeMenu') {
+      closeDrawerPage();
+      setMainDrawerOpen(false);
     }
   }, [previewEvent, changeDrawerPage, closeDrawerPage, details?.modules]);
 
@@ -485,7 +490,10 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
             } else if (details?.modules[x]?.type === 'DOCUMENT_MODULE') {
               let moduleData = module?.moduleInfo as DocumentModuleType;
               !details?.modules[x].registrationRequired
-                ? window.open(moduleData.path, '_self')
+                ? window.open(
+                    moduleData.path,
+                    isPreviewMode ? '_blank' : '_self'
+                  )
                 : changeDrawerPage(x);
             } else changeDrawerPage(x);
             logEvent({
@@ -881,6 +889,7 @@ const ProductDetails: React.FC<Props> = ({ navToForm }) => {
                       ?.registrationRequired
                   }
                   closeDrawer={closeDrawerPage}
+                  isPreviewMode={isPreviewMode}
                 />
               </Suspense>
             );

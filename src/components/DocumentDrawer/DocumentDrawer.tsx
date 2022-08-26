@@ -7,6 +7,7 @@ type DocumentDrawerProps = {
   drawerData: DocumentModuleType;
   registrationRequired: boolean;
   closeDrawer: () => void;
+  isPreviewMode: boolean;
 };
 
 const DocumentDrawer: React.FC<DocumentDrawerProps> = ({
@@ -14,13 +15,14 @@ const DocumentDrawer: React.FC<DocumentDrawerProps> = ({
   drawerData,
   registrationRequired,
   closeDrawer,
+  isPreviewMode,
 }) => {
   useEffect(() => {
     if (!registrationRequired) {
-      window.open(drawerData.path, '_self');
+      window.open(drawerData.path, isPreviewMode ? '_blank' : '_self');
       closeDrawer();
     }
-  }, [registrationRequired, drawerData.path, closeDrawer]);
+  }, [registrationRequired, drawerData.path, closeDrawer, isPreviewMode]);
 
   return <ModuleWrapper drawerTitle={drawerTitle} />;
 };

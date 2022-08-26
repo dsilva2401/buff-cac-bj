@@ -66,6 +66,7 @@ const FormDrawer = (props: Props) => {
     currentStep,
     setCurrentStep,
     completionScreen,
+    setCompletionScreen,
     setTotalSteps,
     startScreen,
     setStartScreen,
@@ -93,11 +94,13 @@ const FormDrawer = (props: Props) => {
     isPreviewMode,
     setFormRegistration,
     brandTheme,
+    previewEvent,
   } = useGlobal();
   const {
     openDrawer,
     setMeta,
     showSuccess,
+    closeSuccess,
     closeDrawer: closeSuccessDrawer,
   } = useSuccessDrawerContext();
 
@@ -108,6 +111,25 @@ const FormDrawer = (props: Props) => {
   useEffect(() => {
     setTotalSteps(data.length);
   }, [setTotalSteps, data]);
+
+  useEffect(() => {
+    if (previewEvent && previewEvent.type === 'changeFormStep') {
+      if (previewEvent.data.step === currentStep) {
+        return;
+      }
+      if (parseInt(previewEvent.data.step) == previewEvent.data.step) {
+        route.push(`/c/${id}/form/step/${previewEvent.data.step}`);
+      } else {
+        route.push(`/c/${id}/form/${previewEvent.data.step}`);
+      }
+      if (previewEvent.data.step !== 'complete') {
+        setCompletionScreen(false);
+      }
+      if (previewEvent.data.step !== 'start') {
+        setStartScreen(false);
+      }
+    }
+  }, [previewEvent, currentStep]);
 
   const [submitForm] = useAPI<any>(
     {
@@ -198,8 +220,7 @@ const FormDrawer = (props: Props) => {
     }
     if (
       formModuleData.startScreenContent &&
-      !showStartScreen &&
-      !isPreviewMode
+      (!showStartScreen || isPreviewMode)
     ) {
       setCurrentStep(1);
       route.push(`/c/${id}/form/start`);
@@ -284,6 +305,11 @@ const FormDrawer = (props: Props) => {
       });
       setNameObjectYup(initNamesObject);
       setValidationYup(Yup.object().shape(validationObject));
+      if (formik.current) {
+        try {
+          formik.current.validateForm();
+        } catch {}
+      }
     }
   }, [data]);
 
@@ -328,6 +354,28 @@ const FormDrawer = (props: Props) => {
   });
 
   const handleBtnSubmit = async () => {
+    if (isPreviewMode) {
+      setIsFormSubmitting(true);
+      closeSuccess();
+      openDrawer();
+
+      setTimeout(() => {
+        setIsFormSubmitting(false);
+        setMeta({
+          title: 'Form Completed',
+          description: 'Thank you for your submission!',
+        });
+        showSuccess();
+
+        if (!formModuleData.endScreenContent && closeDrawer) {
+          closeDrawer(true);
+        } else {
+          route.push(`/c/${id}/form/complete`);
+        }
+      }, 1000);
+
+      return;
+    }
     //submit the form
     // prepare for submit.
     let answersArray: string[] = [];

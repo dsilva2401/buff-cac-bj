@@ -102,11 +102,16 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
 
   useEffect(() => {
     if (isPreviewMode) {
-      if (isChildOpen) setPosition({ ...position, y: topHeight });
-      else setPosition({ ...position, y: bottomHeight });
+      if (isChildOpen || mainDrawerOpen) {
+        setPosition({ ...position, y: topHeight });
+      } else {
+        setPosition({ ...position, y: bottomHeight });
+        // remove video player on closing modules
+        setVideoSource('');
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isChildOpen, topHeight, bottomHeight, isPreviewMode, appZoom]);
+  }, [topHeight, bottomHeight, isPreviewMode, appZoom, mainDrawerOpen]);
 
   useEffect(() => {
     if (position.y === topHeight) {
