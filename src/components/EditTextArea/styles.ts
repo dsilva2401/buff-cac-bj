@@ -4,10 +4,11 @@ type InputProps = {
   isFocused: boolean;
   width?: string;
   height?: string;
+  fontSize?: string;
 };
 
 export const InputWrapper = styled.div<InputProps>`
-  font-size: 1rem;
+  font-size: ${(props) => (props.fontSize ? props.fontSize : '1rem')};
   padding: 0.8rem 1.5rem;
   display: flex;
   align-items: center;

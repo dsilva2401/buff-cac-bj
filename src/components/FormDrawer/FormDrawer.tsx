@@ -65,6 +65,8 @@ const FormDrawer = (props: Props) => {
   const [localStorageSet, setLocalStorageSet] = useState(false);
   const [containerHeight, setContainerHeight] = useState(0);
   const { params } = useRouteMatch<FormMatchParams>();
+  // transistion and animation progress comments
+  // const [containerHeight, setContainerHeight] = useState(0);
   // const [loadSwipeLottie, setLoadSwipeLottie] = useState(false);
   const {
     currentStep,
@@ -115,7 +117,6 @@ const FormDrawer = (props: Props) => {
   useEffect(() => {
     setTotalSteps(data.length);
   }, [setTotalSteps, data]);
-
 
   //Lottie swipe animation commented
   // useEffect(() => {
@@ -304,7 +305,8 @@ const FormDrawer = (props: Props) => {
                 .max(600)
                 .required();
             } else {
-              validationObject[`${value.type}${idx + 1}`] = Yup.string().max(600);
+              validationObject[`${value.type}${idx + 1}`] =
+                Yup.string().max(600);
             }
             break;
           case FormDetailTypesEnum.CHECKBOX:
@@ -378,11 +380,13 @@ const FormDrawer = (props: Props) => {
     trackMouse: false,
   });
 
-  useEffect(() => {
-    //dynamically set height of relative positioned container
-    const containerElement = document.querySelector('.form-abs-pos-container');
-    setContainerHeight(containerElement?.scrollHeight ?? 0);
-  }, [location]);
+  // useEffect(() => {
+  //   //dynamically set height of relative positioned container
+  //   if (data) {
+  //     const containerElement = document.querySelector('.form-abs-pos-container');
+  //     setContainerHeight(containerElement?.scrollHeight ?? 0);
+  //   }
+  // }, [location, data]);
 
   const handleBtnSubmit = async () => {
     if (isPreviewMode) {
@@ -501,7 +505,7 @@ const FormDrawer = (props: Props) => {
       setCurrentStep(currentStep - 1);
     }
 
-    if (currentStep === 1) {
+    if (currentStep === 1 && formModuleData.startScreenContent) {
       setTransistionAnimation('left-to-right');
       setTimeout(() => {
         route.push(`/c/${id}/form/start`);
@@ -524,6 +528,10 @@ const FormDrawer = (props: Props) => {
         );
       }
     }
+  };
+
+  const isHiddenBackBtn = (): boolean => {
+    return currentStep === 1 && !formModuleData.startScreenContent;
   };
 
   const getCurrentFormName = (currentStep: number) => {
@@ -580,11 +588,6 @@ const FormDrawer = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(formik.current?.errors[
-      getCurrentFormName(currentStep)])
-  }, [formik.current?.errors])
-
   let { id } = params;
 
   return (
@@ -605,7 +608,7 @@ const FormDrawer = (props: Props) => {
                 whiteSpace='nowrap'
                 overflow='hidden'
                 textOverflow='ellipsis'
-                fontSize='1.2rem'
+                fontSize='1.0rem'
                 fontWeight='bold'
                 padding='12px'
               >
@@ -671,7 +674,8 @@ const FormDrawer = (props: Props) => {
                     <TransitionGroup
                       exit={false}
                       className={'form-drawer-transistion'}
-                      style={{ height: containerHeight }}
+                      // style={{ height: containerHeight }}
+
                     >
                       <CSSTransition
                         timeout={500}
@@ -683,10 +687,7 @@ const FormDrawer = (props: Props) => {
                         }
                       >
                         <Switch location={location}>
-                          <Wrapper
-                            className='form-abs-pos-container'
-                            width='100%'
-                          >
+                          <Wrapper width='100%'>
                             <Wrapper position='relative' width='100%'>
                               <FormProtectedRoute
                                 exact={true}
@@ -755,7 +756,7 @@ const FormDrawer = (props: Props) => {
                       >
                         {/* Check current step in module then get name and see form status */}
                         {/* <Button onClick={() => handleNextBtnClicked()} disabled={!!formik.errors?.dropDown} variant='dark'> */}
-                        {!startScreen && (
+                        {!startScreen && !isHiddenBackBtn() && (
                           // 1px margin to account for box shadow bleeding
                           <Wrapper margin='1px'>
                             <IconButton
@@ -785,7 +786,7 @@ const FormDrawer = (props: Props) => {
                           <Button
                             disabled={
                               !!formik.current?.errors[
-                              getCurrentFormName(currentStep)
+                                getCurrentFormName(currentStep)
                               ] && !startScreen
                             }
                             onClick={() => handleNextBtnClicked()}

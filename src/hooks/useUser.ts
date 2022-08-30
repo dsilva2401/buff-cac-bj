@@ -21,8 +21,8 @@ const useUser = () => {
   }, [setAuthFetched, setUser]);
 
   useEffect(() => {
-    if (personalDetails) setAuthFetched(true);
-  }, [personalDetails]);
+    if (personalDetails && token) setAuthFetched(true);
+  }, [personalDetails, token]);
 
   return {
     user,

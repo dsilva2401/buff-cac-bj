@@ -76,4 +76,7 @@ export const FormSelect = styled(SelectMaterial)`
   }
 `;
 
-export const Option = styled(MenuItem)``;
+export const Option = styled(MenuItem)`
+  word-break: break-word;
+  white-space: normal !important;
+`;

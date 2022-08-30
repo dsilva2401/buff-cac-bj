@@ -33,7 +33,11 @@ const SearchInput: React.FC<EditTextAreaProps> = ({
   }, [value]);
 
   return (
-    <InputWrapper isFocused={isFocused} height={rows === 1 ? '52px' : ''}>
+    <InputWrapper
+      fontSize='0.8rem'
+      isFocused={isFocused}
+      height={rows === 1 ? '52px' : ''}
+    >
       <textarea
         rows={rows}
         name={name}
