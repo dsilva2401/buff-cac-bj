@@ -595,7 +595,7 @@ const FormDrawer = (props: Props) => {
       enableReinitialize={true}
       innerRef={formik}
       initialValues={initNameObjectYup}
-      onSubmit={() => { }}
+      onSubmit={() => {}}
       validationSchema={validationYup}
       validateOnChange={true}
     >
@@ -675,7 +675,6 @@ const FormDrawer = (props: Props) => {
                       exit={false}
                       className={'form-drawer-transistion'}
                       // style={{ height: containerHeight }}
-
                     >
                       <CSSTransition
                         timeout={500}

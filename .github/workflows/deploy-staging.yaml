@@ -25,5 +25,4 @@ jobs:
           yarn
           yarn build-staging-client
           zip -r build.zip build/
-          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/`node -e "console.log(Date.now())"`
-          curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token `node -e 'console.log(process.env.GITHUB_DEPLOYMENT_TOKEN)'`" https://api.github.com/repos/brij-it/consumer-app-microservice/actions/workflows/build_staging.yml/dispatches -d '{"ref":"development"}'
+          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/builds/`node -e "console.log(Date.now())"`

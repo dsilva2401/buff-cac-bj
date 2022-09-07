@@ -17,8 +17,8 @@ const SearchInput: React.FC<EditTextAreaProps> = ({
   placeholder,
   onChange,
   name,
-  onBlur = (value) => { },
-  onFocus = () => { },
+  onBlur = (value) => {},
+  onFocus = () => {},
   rows = 2,
   height = '52px',
 }: EditTextAreaProps) => {
