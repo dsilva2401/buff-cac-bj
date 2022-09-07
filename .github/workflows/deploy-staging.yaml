@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - development
-      - feature/ci-cd 
+      - feature/staging-deployment-pipeline-updated
 
 jobs:
   build:
@@ -25,4 +25,5 @@ jobs:
           yarn
           yarn build-staging-client
           zip -r build.zip build/
-          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/builds/`node -e "console.log(Date.now())"`
+          echo "`node -e "console.log(Date.now())"`" > .versionCode
+          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/builds/`echo .versionCode`
