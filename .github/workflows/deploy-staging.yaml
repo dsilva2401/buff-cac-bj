@@ -26,4 +26,4 @@ jobs:
           yarn build-staging-client
           zip -r build.zip build/
           echo "`node -e "console.log(Date.now())"`" > .versionCode
-          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/staging/builds/`echo .versionCode`
+          aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode`
