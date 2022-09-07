@@ -2,8 +2,12 @@ name: Deploy version
 
 on:
   workflow_dispatch:
-    description:
-      description: 'Description'
+    stage:
+      description: 'stage'
+      required: false 
+      type: string
+    versionCode:
+      description: 'versionCode'
       required: false 
       type: string
 
