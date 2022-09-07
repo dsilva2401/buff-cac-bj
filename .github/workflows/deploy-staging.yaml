@@ -24,7 +24,7 @@ jobs:
           pip install awscli
           yarn
           yarn build-staging-client
-          zip -r build.zip build/*
+          zip -r build.zip build/
           echo "`node -e "console.log(Date.now())"`" > .versionCode
           aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode`
 
@@ -33,4 +33,6 @@ jobs:
           echo "Expanding..."
           unzip buff-build.zip -d build-out
           echo "Output:"
-          ls build-out
+          ls build-out/build
+          echo "Uploading..."
+          aws s3 cp build-out/build s3://brij-deployment-assets/consumer-app-v2/staging/ --recursive
