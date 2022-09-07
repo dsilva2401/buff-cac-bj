@@ -27,3 +27,10 @@ jobs:
           zip -r build.zip build/
           echo "`node -e "console.log(Date.now())"`" > .versionCode
           aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode`
+
+          echo "Downloading..."
+          aws s3 cp s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode` buff-build.zip
+          echo "Expanding..."
+          unzip buff-build.zip -d build-out
+          echo "Output:"
+          ls build-out
