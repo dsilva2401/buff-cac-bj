@@ -31,6 +31,6 @@ jobs:
           echo "Downloading..."
           aws s3 cp s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode` buff-build.zip
           echo "Expanding..."
-          unzip buff-build.zip -d build-out
+          unzip buff-build.zip
           echo "Output:"
-          ls build-out
+          ls 
