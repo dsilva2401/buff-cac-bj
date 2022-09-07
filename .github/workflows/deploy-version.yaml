@@ -1,0 +1,36 @@
+name: Deploy version
+
+on:
+  workflow_dispatch:
+    description:
+      description: 'Description'
+      required: false 
+      type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy web app
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install env dependencies
+        env:
+          CI: false
+          REACT_APP_API_URL: ''
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_CI_AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_CI_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+          GITHUB_DEPLOYMENT_TOKEN: ${{ secrets.GH_DEPLOYMENT_TOKEN }}
+        run: |
+          npm install --global yarn -y
+          pip install awscli
+
+          echo "${{ on.workflow_dispatch.inputs.versionCode }}" > .versionCode
+          echo "Downloading..."
+          aws s3 cp s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode` buff-build.zip
+          echo "Expanding..."
+          unzip buff-build.zip -d build-out
+          echo "Output:"
+          ls build-out/build
+          echo "Uploading..."
+          aws s3 cp build-out/build s3://brij-deployment-assets/consumer-app-v2/${{ on.workflow_dispatch.inputs.stage }}/ --recursive --acl public-read
