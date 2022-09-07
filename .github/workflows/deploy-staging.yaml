@@ -35,4 +35,4 @@ jobs:
           echo "Output:"
           ls build-out/build
           echo "Uploading..."
-          aws s3 cp build-out/build s3://brij-deployment-assets/consumer-app-v2/staging/ --recursive
+          aws s3 cp build-out/build s3://brij-deployment-assets/consumer-app-v2/staging/ --recursive --acl public-read
