@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - development
+      - feature/staging-deployment-pipeline-updated
 
 jobs:
   build:
@@ -26,4 +27,4 @@ jobs:
           zip -r build.zip build/
           echo "`node -e "console.log(Date.now())"`" > .versionCode
           aws s3 cp build.zip s3://brij-deployment-assets/consumer-app-v2/builds/`cat .versionCode`
-          curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token `node -e 'console.log(process.env.GITHUB_DEPLOYMENT_TOKEN)'`" https://api.github.com/repos/brij-it/consumer-app-v2/actions/workflows/deploy-version.yaml/dispatches -d '{"ref":"main", "inputs": { "stage": "staging", "versionCode": "`cat .versionCode`" }}'
+          curl -X POST -H "Accept: application/json" https://eew8kgj9bh.execute-api.us-east-1.amazonaws.com/deploy-consumer-app-client -d '{ "stage": "staging", "versionCode": "`cat .versionCode`" }'
